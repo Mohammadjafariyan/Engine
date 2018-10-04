@@ -1,0 +1,43 @@
+@model WebAppIDEEngine.Models.Core.NavigationProperty
+
+@{
+    Layout = "~/Areas/System/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>NavigationProperty</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NavigationPropertyType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NavigationPropertyType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Prev)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Prev.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

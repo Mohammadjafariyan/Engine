@@ -1,0 +1,84 @@
+@model WebAppIDEEngine.Models.Core.Property
+
+@{
+    Layout = "~/Areas/System/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Property</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="Id" />
+        <dt>
+            @Html.DisplayNameFor(model => model.NameInModel)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NameInModel)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NameInTable)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NameInTable)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PropertyType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PropertyType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PropertyInDatabaseType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PropertyInDatabaseType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NotMapped)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NotMapped)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Size)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Size)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Distinct)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Distinct)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nullable)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nullable)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NavigationProperty)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NavigationProperty.Id)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

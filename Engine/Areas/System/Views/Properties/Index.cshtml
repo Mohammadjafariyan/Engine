@@ -1,0 +1,95 @@
+﻿@model IEnumerable<WebAppIDEEngine.Models.Core.Property>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/System/Views/Shared/_Layout.cshtml";
+}
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-controller="Models" asp-action="index" method="get">
+    <input name="searchTerm" value="@ViewData["searchTerm"]" />
+    <input type="submit" name="جستجو" />
+</form>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NameInModel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NameInTable)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PropertyType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PropertyInDatabaseType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NotMapped)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Size)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Distinct)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nullable)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NavigationProperty)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameInModel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameInTable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PropertyType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PropertyInDatabaseType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NotMapped)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Size)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Distinct)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nullable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NavigationProperty.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

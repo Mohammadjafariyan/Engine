@@ -198,12 +198,22 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\App\AppAreaRegistration.cs" />
+    <Compile Include="Areas\App\Controllers\FormsController.cs" />
+    <Compile Include="Areas\App\Data\EngineContext.cs" />
+    <Compile Include="Areas\System\Controllers\ModelsController.cs" />
+    <Compile Include="Areas\System\SystemAreaRegistration.cs" />
+    <Compile Include="Controllers\AbstractControllers\ApiController.cs" />
+    <Compile Include="Controllers\AbstractControllers\BaseEngineController.cs" />
+    <Compile Include="Controllers\AbstractControllers\AppController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BookController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -222,6 +232,15 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\App\Views\web.config" />
+    <Content Include="Areas\System\Views\web.config" />
+    <Content Include="Areas\System\Views\Models\Create.cshtml" />
+    <Content Include="Areas\System\Views\Models\Delete.cshtml" />
+    <Content Include="Areas\System\Views\Models\Details.cshtml" />
+    <Content Include="Areas\System\Views\Models\Edit.cshtml" />
+    <Content Include="Areas\System\Views\Models\Index.cshtml" />
+    <Content Include="App_Data\EngineHelpers.cshtml" />
+    <Content Include="Areas\App\Views\Forms\GetDataTable.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -267,9 +286,16 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Book\GetDataTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="Areas\App\Models\" />
+    <Folder Include="Areas\App\Views\Shared\" />
+    <Folder Include="Areas\System\Models\" />
+    <Folder Include="Areas\System\Views\Shared\" />
+    <Folder Include="ViewModel\" />
+    <Folder Include="Views\BaseCRUD\" />
+    <Folder Include="Views\BaseEngine\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -285,6 +311,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{a33e250d-e100-4cca-914e-7aaeac1617f6}</Project>
+      <Name>Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj">
+      <Project>{387E507D-122A-4FE6-9896-13FBAD09446E}</Project>
+      <Name>ServiceLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewModel\ViewModel.csproj">
+      <Project>{8dc7798c-7c7a-4418-9b48-f9e54555fdbc}</Project>
+      <Name>ViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

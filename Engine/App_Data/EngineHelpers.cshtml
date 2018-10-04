@@ -1,0 +1,123 @@
+﻿
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+
+@helper ShowForm(IModel model, ViewDataDictionary ViewData)
+{
+
+if (model == null)
+{
+        <div></div>
+    return;
+}
+
+var properties = model.GetType().GetProperties();
+for (int i = 0; i < properties.Length; i++)
+{
+    var property = properties[i];
+    var attributes = property.GetCustomAttributes(true);
+
+    var dropDownAttribute = attributes.FirstOrDefault(a => a is DropDownAttribute);
+    var dataTableAttribute = attributes.FirstOrDefault(a => a is DataTableAttribute);
+    var treeAttribute = attributes.FirstOrDefault(a => a is TreeAttribute);
+    var multiSelectAttribute = attributes.FirstOrDefault(a => a is MultiSelectAttribute);
+    var dateTimeAttribute = attributes.FirstOrDefault(a => a is DateTimeAttribute);
+
+    if (dropDownAttribute != null)
+    {
+        RenderDropDown(dropDownAttribute as DropDownAttribute, property, model, ViewData);
+    }
+    if (dataTableAttribute != null)
+    {
+        RenderDataTable(dataTableAttribute as DataTableAttribute, property, model, ViewData);
+    }
+    if (treeAttribute != null)
+    {
+        RenderTree(treeAttribute as TreeAttribute, property, model, ViewData);
+    }
+    if (multiSelectAttribute != null)
+    {
+        RenderMultiSelect(multiSelectAttribute as MultiSelectAttribute, property, model, ViewData);
+    }
+    if (dateTimeAttribute != null)
+    {
+        RenderDateTime(dateTimeAttribute as DateTimeAttribute, property, model, ViewData);
+    }
+
+}
+
+
+
+
+}
+
+@*// آیا قسمت جسجتو دارد
+    var hasSearch=model.GetType().CustomAttributes.Where(c => c is DropDownAttribute).FirstOrDefault();
+    if(hasSearch!=null)
+    {
+
+    }*@
+
+
+@helper Validate(BaseAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
+{
+
+if (attr == null)
+{
+    throw new Exception("دروپداون نال است");
+}
+if (m == null)
+{
+    throw new Exception("مدل نال است");
+}
+
+
+if (ViewData[p.Name] == null)
+{
+    throw new Exception("ViewData[p.Name] نال است");
+}
+
+
+}
+@helper RenderDropDown(DropDownAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
+{
+Validate(attr, p, m, ViewData);
+var options = ViewData[p.Name] as List<IDropDownOption>;
+if (options == null)
+{
+    throw new Exception("options نال است");
+
+}
+Html.DropDownList(p.Name, p.GetValue(m), options.Select(o => new
+   System.Web.WebPages.Html.SelectListItem
+{ Text = o.Value, Value = o.Id }));
+
+
+}
+
+
+
+@helper RenderMultiSelect(MultiSelectAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
+{
+<div>multiSelect</div>
+}
+
+
+@helper RenderDataTable(DataTableAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
+{
+    <div>RenderDataTable</div>
+
+}
+
+@helper RenderTree(TreeAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
+{
+    <div>RenderTree</div>
+}
+
+@helper RenderDateTime(DateTimeAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
+{
+    <div>RenderDateTime</div>
+}

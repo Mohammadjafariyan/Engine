@@ -1,0 +1,48 @@
+@model WebAppIDEEngine.Models.Core.NavigationProperty
+
+@{
+    Layout = "~/Areas/System/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>NavigationProperty</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="Id" />
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NavigationPropertyType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NavigationPropertyType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Prev)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Prev.Id)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>
