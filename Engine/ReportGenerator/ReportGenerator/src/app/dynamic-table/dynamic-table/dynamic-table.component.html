@@ -1,0 +1,31 @@
+
+
+<p-dialog [(visible)]="display">
+  <p-header>
+    انتخاب جدول
+  </p-header>
+
+  <p-table  *ngIf="models" [value]="models"
+           selectionMode="single" [(selection)]="selected" dataKey="Id">
+    <ng-template pTemplate="header" let-columns>
+      <tr >
+        <th *ngFor="let f of fields" >{{f.translate}}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <ng-template let-f ngFor [ngForOf]="fields" >
+          <td >{{rowData[f.name]}}</td>
+        </ng-template>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+
+    </ng-template>
+  </p-table>
+
+  <p-footer>
+    <button class="btn bg-danger" (click)="select()">انتخاب</button>
+    <button class="btn bg-danger" (click)="display=false">لغو</button>
+  </p-footer>
+</p-dialog>
