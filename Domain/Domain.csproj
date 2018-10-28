@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.7.0\lib\net45\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -41,39 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\BaseAttribute.cs" />
-    <Compile Include="Attributes\DateTimeAttribute.cs" />
-    <Compile Include="Attributes\DropDownAttribute.cs" />
-    <Compile Include="Attributes\IEngineAttribute.cs" />
-    <Compile Include="Attributes\MultiSelectAttribute.cs" />
-    <Compile Include="Attributes\TableAttribute.cs" />
-    <Compile Include="Attributes\TreeAttribute.cs" />
-    <Compile Include="Models\CoreEnum\CoreEnums.cs" />
-    <Compile Include="Models\Core\Action.cs" />
-    <Compile Include="Models\Core\Field.cs" />
-    <Compile Include="Models\Core\FieldAction.cs" />
-    <Compile Include="Models\Core\Form.cs" />
-    <Compile Include="Models\Core\MethodParameter.cs" />
-    <Compile Include="Models\Core\Model.cs" />
-    <Compile Include="Models\Core\NavigationProperty.cs" />
-    <Compile Include="Models\Core\Panel.cs" />
-    <Compile Include="Models\Core\Parameter.cs" />
-    <Compile Include="Models\Core\Property.cs" />
-    <Compile Include="Models\Core\Query.cs" />
-    <Compile Include="Models\Core\QueryBuild\Column.cs" />
-    <Compile Include="Models\Core\QueryBuild\Result.cs" />
-    <Compile Include="Models\Core\QueryBuild\SelectColumn.cs" />
-    <Compile Include="Models\Core\QueryBuild\Sort.cs" />
-    <Compile Include="Models\Core\QueryBuild\Where.cs" />
-    <Compile Include="Models\ICore\IModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Systems\Book.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ViewModel\ViewModel.csproj">
       <Project>{8DC7798C-7C7A-4418-9B48-F9E54555FDBC}</Project>
       <Name>ViewModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

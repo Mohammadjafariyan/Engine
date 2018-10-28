@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-2">
+    <app-tools (removed)="display=true;showRemoveConfirm()" (refreshed)="refresh()"
+               (buttonSelected)="buttonSelected($event)"
+               [computeButtons]="computeButtonsInTools"></app-tools>
+
+  </div>
+  <div class="col-md-10" #myBounds>
+    <ng-template ngFor let-computeButton [ngForOf]="computeButtonsInDesign" let-i="index">
+      <button (click)="select(computeButton)" [class.selected]="computeButton.isSelected"
+              *ngIf="computeButton.type==BetweenButtonType.And
+|| computeButton.type==BetweenButtonType.end
+|| computeButton.type==BetweenButtonType.Or
+|| computeButton.type==BetweenButtonType.start
+|| computeButton.type==constButtonType.notNull" style="float: left;" type="button" class="btn btn-light"
+      >{{computeButton.name}}
+      </button>
+
+      <div (click)="select(computeButton)" *ngIf="computeButton.type==InputButtonType.text">
+        <input [class.selected]="computeButton.isSelected" [(ngModel)]="computeButton.value"
+               type="text">
+      </div>
+      <div (click)="select(computeButton)" *ngIf="computeButton.type==InputButtonType.number">
+        <input [class.selected]="computeButton.isSelected" [(ngModel)]="computeButton.value"
+               type="number">
+      </div>
+
+
+      <div (click)="select(computeButton)" *ngIf="computeButton.type==SelectButtonType.many
+|| computeButton.type==SelectButtonType.one
+|| computeButton.type==SelectButtonType.multi">
+        <select [class.selected]="computeButton.isSelected" [(ngModel)]="computeButton.value"
+                [attr.multiple]="computeButton.type==SelectButtonType.multi ? 'multe' : null">
+          <ng-template ngFor let-keyValue [ngForOf]="computeButton.possibleValue">
+            <option [value]="keyValue.value">{{keyValue.name}}</option>
+          </ng-template>
+        </select>
+      </div>
+
+
+    </ng-template>
+  </div>
+</div>
+
+<!--(dragover)="dragOver(computeButton)"
+                [inBounds]="inBounds" ngDraggable [position]="computeButton.position"
+                [bounds]="myBounds"-->
+
+
+<p-dialog [(visible)]="display">
+  <p-header>
+    تاکید عملیات
+  </p-header>
+
+  <p>آیا از حذف این {{toRemoveCount}} مورد اطمینان دارید ؟</p>
+
+  <p-footer>
+    <button type="button" (click)="remove();display=false" class="btn btn-dark">بله</button>
+    <button type="button" (click)="display=false" class="btn btn-warning">خیر</button>
+
+  </p-footer>
+</p-dialog>

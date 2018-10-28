@@ -10,12 +10,14 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ViewModel.ActionTypes;
 using WebAppIDEEngine.Models.ICore;
+using WebAppIDEEngine.Models;
 
 namespace Engine.Controllers.AbstractControllers
 {
     public abstract class BaseEngineController<T,Parameter> : Controller where Parameter : IActionParameter where T:IModel
     {
-        protected IEngineService<T> _engineService;
+        protected Service.AbstractControllers.IEngineService<T> _engineService;
+        protected Utitliy.Injector _injector;
 
 
         protected virtual Task<IDropDownOption> GetDropDown(Parameter p)

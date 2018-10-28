@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServiceLayer.Systems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,10 @@ namespace Engine.Areas.App.Controllers
     public class FormsController : AppController<Form, FormParameter>
     {
         
+        public FormsController()
+        {
+            this._engineService = new FormService();
+        }
     
     }
 }

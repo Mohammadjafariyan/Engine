@@ -40,10 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionTypes\IDataTable.cs" />
-    <Compile Include="ActionTypes\IDropDown.cs" />
-    <Compile Include="ActionTypes\ITree.cs" />
-    <Compile Include="ActionTypes\Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

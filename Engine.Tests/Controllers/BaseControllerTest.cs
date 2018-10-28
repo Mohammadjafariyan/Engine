@@ -7,8 +7,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Engine;
 using Engine.Controllers;
 using Engine.Controllers.AbstractControllers;
-using ViewModel.ActionTypes;
-using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Tests.Controllers
 {

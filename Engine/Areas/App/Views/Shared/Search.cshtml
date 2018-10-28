@@ -1,0 +1,24 @@
+﻿@using WebAppIDEEngine.Models.Core
+@model dynamic
+
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+
+@{ 
+        var action = ViewBag.SearchAction as string ?? "GetDataTable";
+        var controller = ViewBag.SearchController as string ?? ViewBag.SaveController as string;
+        var AjaxOptions = ViewBag.AjaxOptions as AjaxOptions ?? new AjaxOptions {HttpMethod="post",UpdateTargetId="DefaultDataTable" };
+    }
+@using (Ajax.BeginForm(action, controller, new { ReturnUrl = ViewBag.ReturnUrl }, AjaxOptions, new { role = "form" }))
+{
+    <div>
+        @EngineHelpers.ShowForm(Model, ViewData, Html, ViewBag)
+    </div>
+    <hr />
+        <button class="btn btn-primary" type="submit">جستجو</button>
+}
+
+

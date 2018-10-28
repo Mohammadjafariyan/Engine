@@ -11,25 +11,49 @@ using ViewModel.ActionTypes;
 using ViewModel.Parameters;
 using WebAppIDEEngine.Models;
 using WebAppIDEEngine.Models.ICore;
+using System.Collections.Specialized;
+using Engine.ServiceLayer.Systems.Engine;
+using Engine.Service.AbstractControllers;
 
 namespace WebAppIDEEngine.Areas.App.Controllers
 {
-    public abstract class AppController<T,Parameter> : BaseEngineController<T,Parameter> where Parameter : IActionParameter where T:IModel
+    public abstract class AppController<T, Parameter> : BaseEngineController<T, Parameter> where Parameter : IActionParameter where T : IModel,new()
     {
-        // GET: App/Models
-        protected async Task<ActionResult> GetDataTable(IDataTableParameter p)
+
+        public RelationshipLinkService relationshipLinkService = new RelationshipLinkService();
+        public AppController()
         {
-            return View(await _engineService.GetDataTableAsync(p));
+            _injector = new Engine.Utitliy.Injector();
         }
 
+
+        public virtual void SetToolsbarLinks(IModel r)
+        {
+            var modelTypeName = r.GetType().Name;
+            ViewData[GlobalNames.RelationshipLink] = relationshipLinkService.RelationshipLinks
+                .Where(rel => rel.Form == modelTypeName).ToList();
+        }
+
+        // GET: App/Models
+        public async Task<ActionResult> GetDataTable(IDataTableParameter p)
+        {
+            var res = await _engineService.GetDataTableAsync(p);
+            res.RecordsList = await res.Records.ToListAsync();
+            this.SetToolsbarLinks(new T());
+            return View(res);
+        }
+
+    
+
         // GET: App/Models/Details/5
-        protected async Task<ActionResult> Details(long? id)
+        public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
             {
                 return HttpNotFound();
             }
-            var model = await _engineService.GetByIdAsync(id.Value);
+
+            var model =  _engineService.GetById(id.Value);
             await this.RenderFormAsync(model);
             if (model == null)
             {
@@ -44,25 +68,35 @@ namespace WebAppIDEEngine.Areas.App.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 
-        protected async Task<ActionResult> Save(IModelPostParameter<T> model)
+        public async Task<ActionResult> Save(T model)
         {
             if (ModelState.IsValid)
             {
-                await _engineService.SaveAsync(model);
-                return RedirectToAction("Index");
+                if (model.Id == 0)
+                {
+                    _engineService.Insert(model);
+                }
+                else
+                {
+                    _engineService.Update(model);
+                }
+                await _engineService.EngineContext.SaveChangesAsync();
+                return RedirectToAction("GetDataTable");
             }
             return View(model);
         }
 
         // GET: App/Models/Edit/5
-        protected async Task<ActionResult> ForEdit(long? id)
+        public async Task<ActionResult> ForEdit(long? id)
         {
             if (id == null)
             {
-                return HttpNotFound();
+                var m = _injector.Inject<T>();
+                await this.RenderFormAsync(m);
+                return View(m);
             }
 
-            var model = await _engineService.GetForEditAsync(id.Value);
+            var model =  _engineService.GetForEdit(id.Value);
             await this.RenderFormAsync(model);
             if (model == null)
             {
@@ -78,33 +112,67 @@ namespace WebAppIDEEngine.Areas.App.Controllers
         // POST: App/Models/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        protected async Task<ActionResult> Delete(long id)
+        public async Task<ActionResult> Delete(long id)
         {
-            var model = await _engineService.DeleteAsync(id);
+            var model =  _engineService.Delete(id);
+            await _engineService.EngineContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
 
-        protected virtual async Task RenderFormAsync(IModel r)
+        public virtual async Task RenderFormAsync(IModel r)
         {
             if (r == null)
-                throw new BaseEngineException("پارامتر نال است");
+                throw new Engine.Controllers.AbstractControllers.BaseEngineException("پارامتر نال است");
+
+
+            var parameters = Request?.Params;
+
+            IDropDownParameter dropdownparam = GetDropDownParams(parameters);
+            ITreeParameter _ITreeParameter = GetTreeParams(parameters);
+            IMultiSelectParameter _IMultiSelectParameter = GetMultiSelectParams(parameters);
+            IDataTableParameter _IDataTableParameter = GetDataTableParams(parameters);
 
             Dictionary<string, DropDownAttribute> dropdowns = _engineService.GetModelDropdownAttributes<T>();
             Dictionary<string, DataTableAttribute> datatables = _engineService.GetModelTableAttributes<T>();
             Dictionary<string, TreeAttribute> trees = _engineService.GetModelTreeAttributes<T>();
             Dictionary<string, MultiSelectAttribute> multiselects = _engineService.GetModelMultiSelectAttributes<T>();
+            Dictionary<string, List<SelectListItem>> enums = _engineService.GetEnumsAttributes<T>(r);
 
-            Dictionary<string, List<IDropDownOption>> dropdownData = await _engineService.GetDropdownDataAsync(dropdowns);
-            Dictionary<string, IQueryable<IDataTable>> dataTableData = await _engineService.GetDataTableDataAsync(datatables);
-            Dictionary<string, ITreeNode> treeData = await _engineService.GetTreeDataAsync(trees);
-            Dictionary<string, List<IDropDownOption>> multiSelectData = await _engineService.GetMultiSelectDataAsync(multiselects);
+            Dictionary<string, List<IDropDownOption>> dropdownData = await _engineService.GetDropdownDataAsync(dropdowns, dropdownparam);
+            Dictionary<string, IQueryable<IDataTable>> dataTableData = await _engineService.GetDataTableDataAsync(datatables, _IDataTableParameter);
+            Dictionary<string, ITreeNode> treeData = await _engineService.GetTreeDataAsync(trees, _ITreeParameter);
+            Dictionary<string, List<IDropDownOption>> multiSelectData = await _engineService.GetMultiSelectDataAsync(multiselects, _IMultiSelectParameter);
 
-            _engineService.SetData<ViewDataDictionary>(dropdownData.Keys.ToArray(), datatables.Values.ToArray(), ViewData);
-            _engineService.SetData<ViewDataDictionary>(dataTableData.Keys.ToArray(), datatables.Values.ToArray(), ViewData);
-            _engineService.SetData<ViewDataDictionary>(treeData.Keys.ToArray(), datatables.Values.ToArray(), ViewData);
-            _engineService.SetData<ViewDataDictionary>(multiSelectData.Keys.ToArray(), datatables.Values.ToArray(), ViewData);
+            _engineService.SetData(dropdownData.Keys.ToArray(), dropdownData.Values.ToArray(), ViewData);
+            _engineService.SetData(dataTableData.Keys.ToArray(), datatables.Values.ToArray(), ViewData);
+            _engineService.SetData(treeData.Keys.ToArray(), treeData.Values.ToArray(), ViewData);
+            _engineService.SetData(multiSelectData.Keys.ToArray(), multiSelectData.Values.ToArray(), ViewData);
+            _engineService.SetData(enums.Keys.ToArray(), enums.Values.ToArray(), ViewData);
 
+
+          
+
+        }
+
+        protected virtual IDataTableParameter GetDataTableParams(NameValueCollection parameters)
+        {
+            return null;
+        }
+
+        protected virtual IMultiSelectParameter GetMultiSelectParams(NameValueCollection parameters)
+        {
+            return null;
+        }
+
+        protected virtual ITreeParameter GetTreeParams(NameValueCollection parameters)
+        {
+            return null;
+        }
+
+        protected virtual IDropDownParameter GetDropDownParams(NameValueCollection parameters)
+        {
+            return null;
         }
     }
 

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DDAD96EE-D006-436D-890E-DE8D1ED259E3}</ProjectGuid>
+    <ProjectGuid>{FFBA8368-2F7F-4087-8AC9-38BBCB971FFF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Entities</RootNamespace>
@@ -30,6 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -41,17 +53,51 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionTypes\IDataTable.cs" />
+    <Compile Include="ActionTypes\IDropDown.cs" />
+    <Compile Include="ActionTypes\ITree.cs" />
+    <Compile Include="ActionTypes\Parameter.cs" />
+    <Compile Include="Data\ApplicationDBContext.cs" />
+    <Compile Include="Data\ConnectionProvider.cs" />
+    <Compile Include="Data\EngineContext.cs" />
+    <Compile Include="DomainLayer\Attributes\BaseAttribute.cs" />
+    <Compile Include="DomainLayer\Attributes\DateTimeAttribute.cs" />
+    <Compile Include="DomainLayer\Attributes\DropDownAttribute.cs" />
+    <Compile Include="DomainLayer\Attributes\EnumAttribute.cs" />
+    <Compile Include="DomainLayer\Attributes\IEngineAttribute.cs" />
+    <Compile Include="DomainLayer\Attributes\MultiSelectAttribute.cs" />
+    <Compile Include="DomainLayer\Attributes\TableAttribute.cs" />
+    <Compile Include="DomainLayer\Attributes\TextAttribute.cs" />
+    <Compile Include="DomainLayer\Attributes\TreeAttribute.cs" />
+    <Compile Include="DomainLayer\Systems\Book.cs" />
+    <Compile Include="Models\CoreEnum\CoreEnums.cs" />
+    <Compile Include="Models\Core\Action.cs" />
+    <Compile Include="Models\Core\Field.cs" />
+    <Compile Include="Models\Core\FieldAction.cs" />
+    <Compile Include="Models\Core\Form.cs" />
+    <Compile Include="Models\Core\Model.cs" />
+    <Compile Include="Models\Core\NavigationProperty.cs" />
+    <Compile Include="Models\Core\Panel.cs" />
+    <Compile Include="Models\Core\Property.cs" />
+    <Compile Include="Models\Core\Query.cs" />
+    <Compile Include="Models\Core\QueryBuild\AddParameterForm.cs" />
+    <Compile Include="Models\Core\QueryBuild\JoinTable.cs" />
+    <Compile Include="Models\Core\QueryBuild\QueryViewModel.cs" />
+    <Compile Include="Models\Core\QueryModel.cs" />
+    <Compile Include="Models\Core\QueryProperty.cs" />
+    <Compile Include="Models\Core\ViewGeneration\RelationshipLinks.cs" />
+    <Compile Include="Models\ICore\IModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\GlobalMessages.cs" />
+    <Compile Include="Utility\MyExtentions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj">
-      <Project>{A33E250D-E100-4CCA-914E-7AAEAC1617F6}</Project>
-      <Name>Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Engine\Engine.csproj">
-      <Project>{11222F9E-E3B9-4397-B51F-9281C0A19652}</Project>
-      <Name>Engine</Name>
-    </ProjectReference>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

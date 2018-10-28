@@ -56,25 +56,20 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Engine\BaseEngineServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj">
-      <Project>{A33E250D-E100-4CCA-914E-7AAEAC1617F6}</Project>
-      <Name>Domain</Name>
+    <ProjectReference Include="..\Engine\Engine.csproj">
+      <Project>{11222F9E-E3B9-4397-B51F-9281C0A19652}</Project>
+      <Name>Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj">
-      <Project>{387E507D-122A-4FE6-9896-13FBAD09446E}</Project>
-      <Name>ServiceLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ViewModel\ViewModel.csproj">
-      <Project>{8DC7798C-7C7A-4418-9B48-F9E54555FDBC}</Project>
-      <Name>ViewModel</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Engine\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -9,7 +9,7 @@ namespace Engine.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(WebAppIDEEngine.Models.EngineContext context)

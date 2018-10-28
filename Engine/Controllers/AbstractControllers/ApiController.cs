@@ -13,7 +13,7 @@ namespace Engine.Controllers.AbstractControllers
 {
     public abstract class BaseApiController<T,Parameter> : ApiController where Parameter:IActionParameter where T:IModel
     {
-        protected IEngineService<T> _engineService;
+        protected Service.AbstractControllers.IEngineService<T> _engineService;
 
 
         protected virtual Task<IDropDownOption> GetDropDown(Parameter p)

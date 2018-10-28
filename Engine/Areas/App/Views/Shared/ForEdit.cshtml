@@ -1,0 +1,39 @@
+﻿@using WebAppIDEEngine.Models.Core
+@model dynamic
+
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+
+@{
+    var Class = "";
+    if (ViewData["inline"] != null)
+    {
+        Class = "form-inline";
+    }
+}
+<h3 style="text-align:center">@ViewBag.Title</h3>
+<hr />
+@using (Html.BeginForm(ViewBag.SaveAction as string, ViewBag.SaveController as string, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form",@class=Class }))
+{
+    <div>
+        @EngineHelpers.ShowForm(Model, ViewData, Html, ViewBag)
+    </div>
+    <hr />
+
+    if (ViewBag.ForEditDisabled == true)
+    {
+        <input name="id" value="@Model.Id" hidden="hidden" />
+            <button class="btn btn-primary" type="submit">حذف|</button>
+    }
+    else
+    {
+        <button class="btn btn-primary" type="submit">ثبت</button>
+    }
+
+}
+
+
+@Html.ActionLink(" لیست", "GetDataTable")

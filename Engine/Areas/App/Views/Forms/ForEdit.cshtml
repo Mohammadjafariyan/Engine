@@ -1,0 +1,11 @@
+﻿@using WebAppIDEEngine.Models.Core
+@model dynamic
+
+@{
+    ViewBag.Title = "فرم ها";
+    ViewBag.SaveAction = ViewBag.SaveAction ?? "Save";
+    ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("~/Areas/App/Views/Shared/ForEdit.cshtml")

@@ -1,0 +1,114 @@
+﻿@using WebAppIDEEngine.Models.Core
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+@using System.Web.Mvc.Html;
+
+
+
+
+@helper DataTable(IDataTable datatable, ViewDataDictionary ViewData, HtmlHelper<IDataTable> _html
+    ,string TableId, ViewContext ViewContext)
+{
+
+if (datatable == null || datatable.Headers == null || datatable.RecordsList == null)
+{
+    throw new Exception("مدلها نال است");
+}
+
+var headers = datatable.Headers;
+var RecordsList = datatable.RecordsList;
+
+object rec = RecordsList.FirstOrDefault();
+System.Reflection.PropertyInfo[] props = null;
+if (rec != null)
+{
+    props = rec.GetType().GetProperties();
+}
+
+
+    @*<form class="form-control">
+            <label></label>
+            <input  name="searchTerm"/>
+
+        </form>*@
+
+    <table class="table table-striped" id="@TableId">
+        <thead>
+            <tr>
+                @foreach (var th in headers)
+                {
+                    <th>@th</th>
+                }
+                <th>ویرایش</th>
+                <th>حذف</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in RecordsList)
+    {
+        if (props != null)
+        {
+                    <tr>
+                        @foreach (var property in props)
+                        {
+                            <td>@property.GetValue(record)</td>
+                        }
+                        <td>@_html.ActionLink("ویرایش", "ForEdit", new { id = record.Id })</td>
+                        <td>@_html.ActionLink("حذف", "Delete", new { id = record.Id })</td>
+
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+
+
+   
+
+}
+
+
+@helper Validate(BaseAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
+{
+
+if (attr == null)
+{
+    throw new Exception("دروپداون نال است");
+}
+if (m == null)
+{
+    throw new Exception("مدل نال است");
+}
+
+
+if (ViewData[p.Name] == null)
+{
+    throw new Exception("ViewData[p.Name] نال است");
+}
+
+
+}
+@helper RenderSearch(DropDownAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
+{
+Validate(attr, p, m, ViewData);
+
+    <form action="/GetDataTable">
+        <div class="form-group">
+            <label for="SearchTerm">جستجو :</label>
+            <input type="text" class="form-control" id="SearchTerm">
+        </div>
+
+        <button type="submit" class="btn btn-primary" placeHolder="جستجو...">جستجو</button>
+    </form>
+
+}
+
+
+
+

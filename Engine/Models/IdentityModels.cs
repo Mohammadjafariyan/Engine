@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Entities.Data;
 
 namespace Engine.Models
 {
@@ -21,8 +22,9 @@ namespace Engine.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+          //  : base("DefaultConnection", throwIfV1Schema: false)
         {
+            Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
         }
 
         public static ApplicationDbContext Create()
