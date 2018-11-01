@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {DataComponent} from "../data/data.component";
 import {ActivatedRoute} from "@angular/router";
 import {Model, QueryModel} from "../../model/model";
+import {TablesComponent} from "../../database/tables/tables.component";
+import {QueriesComponent} from "../../database/queries/queries.component";
 
 @Component({
   selector: 'app-query-app',
@@ -16,6 +18,26 @@ export class QueryAppComponent implements OnInit {
 
   showTables = false;
   showQueries = false;
+
+  @ViewChild('tables')
+  tables:TablesComponent;
+
+
+  @ViewChild('queries')
+  queries:QueriesComponent;
+
+  openModalTables(){
+    this.showTables=true;
+    if(this.tables)
+    this.tables.display=true;
+  }
+
+
+  openModalQueries(){
+    this.showQueries=true;
+    if(this.queries)
+      this.queries.display=true;
+  }
 
   constructor(public DataComponent: DataComponent,
               public activatedRoute: ActivatedRoute) {

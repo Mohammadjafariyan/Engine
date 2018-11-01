@@ -234,13 +234,14 @@ namespace Engine.Service.AbstractControllers
         }
 
 
-        public  static string[] GetPropertyNames<M>()
+        public  static  Dictionary<string,string> GetPropertyNames<M>()
         {
             var names = typeof(M).GetProperties()
-                        .Select(property => property.GetCustomAttributes().Where(c => c is IEngineAttribute)
+                .ToDictionary(key => key.Name, property =>
+                    property.GetCustomAttributes().Where(c => c is IEngineAttribute && !(c is HiddenColumnAttribute))
                         .Select(c => c as IEngineAttribute)
-                        .Select(c => c.Name).FirstOrDefault() ?? property.Name)
-                        .ToArray();
+                        .Select(c => c.Name).FirstOrDefault() ?? property.Name);
+          
             return names;
         }
 
@@ -320,7 +321,13 @@ namespace Engine.Service.AbstractControllers
 
         public virtual T Delete(long id)
         {
-            throw new NotImplementedException();
+            var entity=_entities.Find(id);
+            if (entity == null)
+            {
+                throw new BaseEngineException("رکورد یافت نشد");
+            }
+            EngineContext.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
+            return entity;
         }
 
         public virtual T GetForEdit(long id)

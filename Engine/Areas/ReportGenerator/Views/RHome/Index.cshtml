@@ -1,0 +1,17 @@
+﻿@*@{
+}
+   @section SPAViews {
+    @Html.Partial("_Home")
+}
+
+
+@section scripts{
+    
+    Scripts.Render("~/bundles/knockout")
+    Scripts.Render("~/bundles/app")
+    }*@
+
+@{ 
+    Layout = "~/Areas/ReportGenerator/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("~/Areas/ReportGenerator/Views/RHome/_Home.cshtml")

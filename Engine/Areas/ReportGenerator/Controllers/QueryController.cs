@@ -1,6 +1,7 @@
 ﻿using Engine.DomainLayer.Models.Core.QueryBuild;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,7 +10,7 @@ using WebAppIDEEngine.Models;
 using WebAppIDEEngine.Models.Core;
 using WebAppIDEEngine.Models.Core.QueryBuild;
 
-namespace ReportGenerator.Controllers
+namespace Engine.Areas.ReportGenerator.Controllers
 {
     public class QueryController : ApiController
     {
@@ -20,7 +21,7 @@ namespace ReportGenerator.Controllers
         {
             // خخالی بود تمامی را برگردان
             if (lastIndex == null || count == null)
-                return new CustomResult { result = _context.Queries.ToList(), Status = CustomResultType.success };
+                return new CustomResult {result = _context.Queries.ToList(), Status = CustomResultType.success};
 
             // مواظب خطا ها باش
             count = count == 0 ? 10 : count;
@@ -35,9 +36,9 @@ namespace ReportGenerator.Controllers
             }
 
             // با paging برگردان
-            return new CustomResult { result = dt, Status = CustomResultType.success };
-
+            return new CustomResult {result = dt, Status = CustomResultType.success};
         }
+
         [HttpGet]
         public CustomResult LoadQuery(long id)
         {
@@ -46,17 +47,44 @@ namespace ReportGenerator.Controllers
                 var finded = _context.Queries.Find(id);
                 if (finded == null)
                     throw new Exception("کوئری یافت نشد");
-                return new CustomResult { result = finded, Status = CustomResultType.success };
+                return new CustomResult {result = finded, Status = CustomResultType.success};
             }
             catch (Exception e)
             {
-                return new CustomResult { Message = e.Message + " خطا در عملیات ", Status = CustomResultType.fail };
+                return new CustomResult {Message = e.Message + " خطا در عملیات ", Status = CustomResultType.fail};
             }
+
             return new CustomResult
             {
                 Message = "عملیات با موفقیت انجام شد ",
                 Status = CustomResultType.success
             };
+        }
+
+
+        private void InsertQurey(Query query)
+        {
+            foreach (var queryJoinTable in query.joinTables)
+            {
+                queryJoinTable.leftTable = _context.Models.Find(queryJoinTable.leftTable.Id);
+                queryJoinTable.rightTable = _context.Models.Find(queryJoinTable.leftTable.Id);
+
+                queryJoinTable.rightProperty = _context.Properties.Find(queryJoinTable.rightProperty.Id);
+                queryJoinTable.leftProperty = _context.Properties.Find(queryJoinTable.leftProperty.Id);
+            }
+
+            foreach (var queryModel in query.models)
+            {
+                queryModel.Model = _context.Models.Find(queryModel.Model.Id);
+            }
+
+            foreach (var querySelectedProperty in query.selectedProperties)
+            {
+                querySelectedProperty.Property = _context.Properties.Find(querySelectedProperty.Property.Id);
+            }
+
+            query.mainTable = _context.Models.Find(query.mainTable.Id);
+            _context.Queries.Add(query);
         }
 
         [HttpPost]
@@ -68,7 +96,8 @@ namespace ReportGenerator.Controllers
                 {
                     if (query.Id == 0)
                     {
-                        _context.Queries.Add(query);
+
+                        InsertQurey(query);
                     }
                     else
                     {
@@ -76,29 +105,29 @@ namespace ReportGenerator.Controllers
                         if (indb == null)
                             throw new Exception("پیدا نشد");
 
-                        _context.Entry(indb).State = System.Data.Entity.EntityState.Deleted;
-
 
                         DeleteList(indb.joinTables);
                         DeleteList(indb.addParameterFields);
                         DeleteList(indb.selectedProperties);
+                        _context.Entry(indb).State = EntityState.Deleted;
+
+
 
                         _context.SaveChanges();
-                        _context.Queries.Add(query);
-
+                        InsertQurey(query);
                     }
+
                     _context.SaveChanges();
                     tr.Commit();
-
                 }
                 catch (Exception e)
                 {
                     tr.Rollback();
-                    return new CustomResult { Message = e.Message + "خطا در عملیات ", Status = CustomResultType.fail };
+                    return new CustomResult {Message = e.Message + "خطا در عملیات ", Status = CustomResultType.fail};
                 }
             }
-            return new CustomResult { Message = "عملیات با موفقیت انجام شد ", Status = CustomResultType.success };
 
+            return new CustomResult {Message = "عملیات با موفقیت انجام شد ", Status = CustomResultType.success};
         }
 
 
@@ -106,7 +135,7 @@ namespace ReportGenerator.Controllers
         {
             foreach (var item in list.ToList())
             {
-                _context.Entry<T>(item).State = System.Data.Entity.EntityState.Deleted;
+                _context.Entry<T>(item).State = EntityState.Deleted;
             }
         }
     }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+﻿import {Component, OnInit} from '@angular/core';
 import {SQLServerSchemaProviderComponent} from "../db-schema-provider/sqlserver-schema-provider/sqlserver-schema-provider.component";
 import {Model, PanelQueryType, Property, PropertyModel, Query, QueryModel, QueryType} from "../../model/model";
 import {DbSchemaProviderComponent} from "../db-schema-provider/db-schema-provider.component";
@@ -34,7 +34,11 @@ getPropertiesOnly(){
   }
   return arr;
 }
-  saveQuery() {
+saveQuery() {
+  if (!this.mainTable) {
+    alert('جدول اصلی انتخاب نشده است');
+    return;
+  }
     var m = new Query();
     m.models = this.models;
     m.selectedProperties = this.selectedProperties;

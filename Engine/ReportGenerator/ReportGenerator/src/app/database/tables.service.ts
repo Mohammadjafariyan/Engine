@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Model} from "../model/model";
+import {Model, Property} from "../model/model";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -26,14 +26,41 @@ export class TablesService {
 
 
   get getAreaAndPath() {
-    return 'api/query/';
+    return 'api/Tables/';
   }
 
 
 
-  getAllNames(searchTerm?, lastIndex?,  count?):Observable<Model[]>{
-
-    return this.http.get<Model[]>(`${this.getRootUrl}${this.getAreaAndPath}/GetAllNames`,  this.headers
+  getAllNames(searchTerm?, lastIndex?,  count?):Observable<CustomResultGeneric<Model[]>>{
+    return this.http.get<CustomResultGeneric<Model[]>>
+    (`${this.getRootUrl}${this.getAreaAndPath}/GetAllNames?SearchTerm=&lastIndex=&count=`,  this.headers
     );
   }
+
+  GetWithProperties(Id: number) {
+    return this.http.get<CustomResultGeneric<Property[]>>(`${this.getRootUrl}${this.getAreaAndPath}/GetWithProperties?Id=${Id}`,  this.headers);
+  }
 }
+
+
+export class CustomResultGeneric<T>
+{
+  result:T;
+
+  Message;
+  Status:CustomResultType;
+}
+
+export class CustomResult
+{
+  result:any;
+
+   Message;
+Status:CustomResultType;
+}
+
+export enum CustomResultType
+{
+  success, fail
+}
+

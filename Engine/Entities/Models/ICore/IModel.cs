@@ -11,6 +11,8 @@ namespace WebAppIDEEngine.Models.ICore
     {
         [Key]
         long Id { get; set; }
+        
+        string Name { get; set; }
 
     }
 
@@ -18,6 +20,8 @@ namespace WebAppIDEEngine.Models.ICore
     {
         [Key]
         public long Id { get; set; }
+      
+        public string Name { get; set; }
 
 
     }

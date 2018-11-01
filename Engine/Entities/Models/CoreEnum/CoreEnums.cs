@@ -86,7 +86,7 @@ namespace WebAppIDEEngine.Models.CoreEnum
     /// </summary>
     public enum QueryType
     {
-        Join, LinQ, LinQJoin, StoredProcedure
+        Join, LinQ, LinQJoin, StoredProcedure,SQL
     }
 
 
@@ -162,4 +162,28 @@ namespace WebAppIDEEngine.Models.CoreEnum
         OuterRightjoin,
         OuterJoin,
     }
+
+
+    /// <summary>
+    /// نوع خروجی مقدار بازگشتی متد
+    /// </summary>
+    public enum ServiceReturnMethodType
+    {
+        Model,Dynamic,ViewModel,INT,STRING,
+        LONG,OBJECT,BOOLEAN,
+    }
+    
+    /// <summary>
+    /// نوع مقدار بازگشتی متد
+    /// </summary>
+    public enum ServiceItemReturnType
+    {
+IQueryable,List,
+        First,
+        FirstOrDefault,
+        Last,
+        LastOrDefault
+    }
+
+    
 }

@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 using WebAppIDEEngine.Models.CoreEnum;
 using WebAppIDEEngine.Models.ICore;
 
@@ -15,6 +17,7 @@ namespace WebAppIDEEngine.Models.Core
 
         [DropDown(Name = "فرم| ها", Service = GlobalNames.FormService, MethodName = GlobalNames.GetDropDownAsync)]
         public long FormId { get; set; }
+        
         [Text(Name="نام")]
         public string Name { get; set; }
 
@@ -31,6 +34,8 @@ namespace WebAppIDEEngine.Models.Core
         [DropDown(Name = "کوئری", Service = GlobalNames.ActionService, MethodName = GlobalNames.GetDropDownAsync)]
         public long? QueryId { get; set; }
 
+        [JsonIgnore]
+        [XmlIgnore]
         public ICollection<Field> Fields { get; set; }
 
 

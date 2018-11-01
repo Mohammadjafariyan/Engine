@@ -1,4 +1,6 @@
-﻿@using WebAppIDEEngine.Models.Core
+﻿@using System.Collections
+@using System.Reflection
+@using WebAppIDEEngine.Models.Core
 @using ViewModel.ActionTypes
 @using WebAppIDEEngine.Models.ICore
 @using Engine.Attributes
@@ -6,6 +8,8 @@
 @using ViewModel.ActionTypes
 @using Domain.Attributes
 @using System.Web.Mvc.Html;
+@using System.Web.Routing
+@using Engine.Service.AbstractControllers
 
 
 
@@ -21,13 +25,16 @@ if (datatable == null || datatable.Headers == null || datatable.RecordsList == n
 
 var headers = datatable.Headers;
 var RecordsList = datatable.RecordsList;
+    var currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
 
-object rec = RecordsList.FirstOrDefault();
+
+object rec = RecordsList.FirstOrDefault() ;
 System.Reflection.PropertyInfo[] props = null;
 if (rec != null)
 {
-    props = rec.GetType().GetProperties();
+    props = rec.GetType().GetProperties().Where(p=>!(p is HiddenColumnAttribute )).ToArray();
 }
+
 
 
     @*<form class="form-control">
@@ -41,7 +48,7 @@ if (rec != null)
             <tr>
                 @foreach (var th in headers)
                 {
-                    <th>@th</th>
+                    <th>@th.Value</th>
                 }
                 <th>ویرایش</th>
                 <th>حذف</th>
@@ -51,18 +58,106 @@ if (rec != null)
         <tbody>
             @foreach (var record in RecordsList)
     {
-        if (props != null)
-        {
                     <tr>
-                        @foreach (var property in props)
+                        @foreach (var header in headers)
                         {
-                            <td>@property.GetValue(record)</td>
+                            var property = record.GetType()?.GetProperty(header.Key);
+
+                            if (property.PropertyType == typeof(string)
+                                || property.PropertyType == typeof(int) ||
+                                property.PropertyType == typeof(long) ||
+                                property.PropertyType == typeof(decimal)
+                                )
+                            {
+                                var name = property?.GetValue(record);
+                                <td>@name</td>
+                            }
+                            else if (property.PropertyType.IsGenericType ||
+                                     property.PropertyType.IsInterface)
+                            {
+                                @*var openDataTableAttribute =property.GetCustomAttributes(true)
+                                    .FirstOrDefault(g => g is OpenDataTableAttribute) as OpenDataTableAttribute;
+                                if (openDataTableAttribute != null)
+                                {
+                                    var parms = openDataTableAttribute.Parameters.Split(',');
+                                    var dyna = new RouteValueDictionary();
+                                    foreach (var s in parms)
+                                    {
+                                        var arr=s.Split(':');
+                                        dyna[arr.Length==2 ? arr[0] : "Id"] = arr.Length==2 ? arr[1] : arr[0];
+                                    }
+                                    dyna["Area"] = openDataTableAttribute.Area;
+                                    <td>@_html.ActionLink(openDataTableAttribute.Name,
+                                            openDataTableAttribute.Action
+                                            , openDataTableAttribute.Controller,
+                                            dyna)</td>
+                                }
+                                else
+                                {*@
+                                    <td>@property.Name</td>
+                                
+                            }
+                            else if (property.PropertyType.IsEnum)
+                            {
+                                var enm = @property?.GetValue(record);
+                                <td>@enm</td>
+                            }
+                            else
+                            {
+                                <td>@property.GetValue(record)</td>
+                            }
+                           @*if (property.PropertyType.IsClass)
+                            {
+                                <td>@property.Name</td>
+     }
+                           else
+                           {
+                               <td>@property.GetValue(record)</td>
+                           }*@
+                            @*else if (property.PropertyType==typeof(IModel))
+                            {
+                                var el = (property as IModel);
+                                <td>@el.Name</td>
+                                
+                            }
+                            else if (property.PropertyType==typeof(ICollection<>))
+                            {
+                                
+                                <td>@property.Name</td>
+                                var openDataTableAttribute = property.GetCustomAttributes(true).FirstOrDefault(g =>
+                                    g is OpenDataTableAttribute) as OpenDataTableAttribute;
+                                if (openDataTableAttribute != null)
+                                {
+                                    var parms=openDataTableAttribute.Parameters.Split(',');
+                                    var dyna = new RouteValueDictionary();
+                                    foreach (var s in parms)
+                                    {
+                                        dyna[s.Split(':')[0]]=s.Split(':')[1] ;
+                                    }
+                                    dyna["Area"] = openDataTableAttribute.Area;
+                                    <td>@_html.ActionLink(openDataTableAttribute.Name,
+                                            openDataTableAttribute.Action
+                                            ,openDataTableAttribute.Controller,
+                                            dyna)</td>
+                                } 
+                            }*@
                         }
-                        <td>@_html.ActionLink("ویرایش", "ForEdit", new { id = record.Id })</td>
-                        <td>@_html.ActionLink("حذف", "Delete", new { id = record.Id })</td>
+                        <td>@_html.ActionLink("ویرایش", $"ForEdit", new { id = record.Id })</td>
+                       
+                        
+                        @*
+                        <form action="delete?id=@record.Id" method="post">
+                   
+                        </form>*@
+                        
+                        @using(_html.BeginForm("delete",currentController,new {id= record.Id})){
+                          
+                            @_html.AntiForgeryToken()
+                            <td><button type="submit" class="btn btn-danger" >حذف </button></td>
+       
+                        }
 
                     </tr>
-                }
             }
 
         </tbody>

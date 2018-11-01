@@ -59,9 +59,9 @@
                                                                                               data-glyph="check">ذخیره</span></a>
           </li>
           <li><a class="btn  text-success"
-                 (click)="showTables=true"><span >انتخاب کوئری</span></a>
+                 (click)="openModalQueries()"><span >انتخاب کوئری</span></a>
           <li><a class="btn  text-success"
-                 (click)="showQueries=true"><span >انتخاب جدول</span></a>
+                 (click)="openModalTables()"><span >انتخاب جدول</span></a>
           </li>
 
         </ul>
@@ -88,8 +88,8 @@
 </div>
 
 
-<app-tables *ngIf="showTables" [display]="showTables" ></app-tables>
-<app-queries *ngIf="showQueries" [display]="showQueries" ></app-queries>
+<app-tables #tables *ngIf="showTables" [display]="showTables" ></app-tables>
+<app-queries #queries *ngIf="showQueries" [display]="showQueries" ></app-queries>
 
 <!-- Modal -->
 <div class="modal fade"

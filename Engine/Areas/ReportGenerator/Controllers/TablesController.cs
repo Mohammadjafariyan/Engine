@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using WebAppIDEEngine.Models;
 
-namespace ReportGenerator.Controllers
+namespace Engine.Areas.ReportGenerator.Controllers
 {
     public class TablesController : ApiController
     {
@@ -16,7 +16,7 @@ namespace ReportGenerator.Controllers
         {
             // خخالی بود تمامی را برگردان
             if (lastIndex == null || count == null)
-                return new CustomResult { result = _context.Queries.ToList(), Status = CustomResultType.success };
+                return new CustomResult { result = _context.Models.ToList(), Status = CustomResultType.success };
 
             // مواظب خطا ها باش
             count = count == 0 ? 10 : count;
@@ -53,7 +53,7 @@ namespace ReportGenerator.Controllers
             }
 
             // با paging برگردان
-            return new CustomResult { result = model, Status = CustomResultType.success };
+            return new CustomResult { result = model.Properties.ToList(), Status = CustomResultType.success };
 
         }
 

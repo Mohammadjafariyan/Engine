@@ -14,14 +14,14 @@ export class JDynamicTableComponent implements OnInit {
   @Input()
   fields: Field[];
 
-  @Output()
+  @Input()
   selected: any;
 
   @Input()
   display;
 
   @Output()
-  selectedEv = new EventEmitter();
+  selectedEv:EventEmitter<any> = new EventEmitter<any>();
 
   select() {
     this.selectedEv.emit(this.selected);

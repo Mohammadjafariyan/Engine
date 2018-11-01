@@ -12,6 +12,10 @@ namespace Engine.Controllers
     {
         public ActionResult Index()
         {
+
+            var str = "shi";
+            var str2 = str;
+            var str3 = str;
             return View();
         }
 

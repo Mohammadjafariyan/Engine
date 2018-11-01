@@ -1,4 +1,7 @@
-﻿namespace Engine.Service.AbstractControllers
+﻿using System;
+using ServiceLayer.Systems;
+
+namespace Engine.Service.AbstractControllers
 {
     public class GlobalMessages
     {
@@ -26,11 +29,35 @@
         public const string FormService = "FormService";
         public const string ModelService = "ModelService";
         public const string NavigationPropertiesService = "NavigationPropertiesService";
+        
+        public const string SubSystemServiceName = nameof(SubSystemService);
+        public const string SubSystemServiceServiceName = nameof(SubSystemServiceService);
+        public const string QueryServiceName = nameof(QueryService);
+        public const string DefineControllerServiceName = nameof(DefineControllerService);
+        public const string DefineServiceMethodService = nameof(ServiceMethodService);
+
+
+
+        
         public const string EnumType = "EnumType";
 
         public const string RelationshipLink = "relationshipLink";
-        
 
 
+        public const string FormsController = nameof(Areas.App.Controllers.FormsController);
+        public const string PropertiesController = nameof(Areas.App.Controllers.PropertiesController);
+
+        public const string AppArea = "AppArea";
+    }
+
+    public class GlobalUtilities
+    {
+        public static object MakeNew(object o)
+        {
+            if (o == null)
+                return null;
+            
+            return Activator.CreateInstance(o.GetType());
+        }
     }
 }

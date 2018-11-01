@@ -116,7 +116,7 @@ namespace WebAppIDEEngine.Areas.App.Controllers
         {
             var model =  _engineService.Delete(id);
             await _engineService.EngineContext.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("GetDataTable");
         }
 
 

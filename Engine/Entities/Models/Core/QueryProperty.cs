@@ -5,7 +5,7 @@ namespace WebAppIDEEngine.Models.Core
     public class QueryProperty:BaseEntity
     {
 
-        public long ModelId { get; set; }
+        public long PropertyId { get; set; }
         public long QueryId { get; set; }
 
         public virtual Property Property { get; set; }

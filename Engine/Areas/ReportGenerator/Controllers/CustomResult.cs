@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using WebAppIDEEngine.Models.Core;
 
-namespace ReportGenerator.Controllers
+namespace Engine.Areas.ReportGenerator.Controllers
 {
     public class CustomResult
     {

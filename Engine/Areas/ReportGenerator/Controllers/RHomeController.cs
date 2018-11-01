@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace ReportGenerator.Controllers
+namespace Engine.Areas.ReportGenerator.Controllers
 {
    // [Authorize]
-    public class HomeController : Controller
+    public class RHomeController : Controller
     {
         public ActionResult Index()
         {

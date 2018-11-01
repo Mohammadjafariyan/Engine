@@ -4,6 +4,7 @@ using Engine.Service.AbstractControllers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAppIDEEngine.Models.Core.QueryBuild;
@@ -22,6 +23,8 @@ namespace WebAppIDEEngine.Models.Core
         public long ModelId { get; set; }
         [Text(Name="نام در مدل")]
         public string NameInModel { get; set; }
+      
+        
         [Text(Name="نام در جدول")]
         public string NameInTable { get; set; }
 
@@ -33,7 +36,8 @@ namespace WebAppIDEEngine.Models.Core
         public bool NotMapped { get; set; }
 
         [Text(Name = "نام در جدول")]
-        public string NameInTableAsName { get; set; }
+        public string NameInTableAsName {
+            get { return NameInTable; }}
 
         [Text(Name = "نام  مدل")]
         public string ModelName { get; set; }
@@ -61,6 +65,9 @@ namespace WebAppIDEEngine.Models.Core
         [DropDown(Name = "پروپرتی رابطه", Service = GlobalNames.NavigationPropertiesService, MethodName = GlobalNames.GetDropDownAsync)]
         public long? NavigationPropertyId { get; set; }
 
+        
+        
+        
         public ICollection<JoinTable> JoinRightTables { get; set; }
         public ICollection<JoinTable> JoinLeftTables { get; set; }
 

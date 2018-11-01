@@ -24,10 +24,10 @@ namespace Entities.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-        //      : base("DefaultConnection", throwIfV1Schema: false)
+             : base("DefaultConnection", throwIfV1Schema: false)
         {
-            Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
-
+          //  Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
+         //   Database.Connection.ConnectionString = new ConnectionProviderFactory().Current.GetConnectionString();
         }
 
         public static ApplicationDbContext Create()

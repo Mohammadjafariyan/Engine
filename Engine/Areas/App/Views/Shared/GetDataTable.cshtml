@@ -25,7 +25,7 @@
     }
 }
 
-@Html.ActionLink("رکورد جدید", "ForEdit",new { },new { @class= "btn btn-info" })
+@Html.ActionLink("رکورد جدید", $"ForEdit",new { },new { @class= "btn btn-info" })
 <hr />
 
 @EngineDataTables.DataTable(Model, ViewData, Html, tableName, ViewContext)

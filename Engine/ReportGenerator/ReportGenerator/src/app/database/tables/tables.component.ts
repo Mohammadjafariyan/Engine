@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+﻿import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Model, QueryModel} from "../../model/model";
 import {TableService} from "primeng/table";
 import {TablesService} from "../tables.service";
@@ -35,6 +35,13 @@ export class TablesComponent implements OnInit {
     qm.Model = ev;
     qm.Query = this.DataComponent.currentQuery;
     this.DataComponent.models.push(qm);
+
+    this.tableService.GetWithProperties(qm.Model.Id).toPromise().then(r => {
+      qm.Model.Properties = r.result;
+      qm.Model.AsName = qm.Model.Name;
+      qm.Model.JoinTables=[];
+    });
+
   }
 
 
@@ -44,8 +51,8 @@ export class TablesComponent implements OnInit {
 
   ngOnInit() {
     this.tableService.getAllNames().toPromise().then(r => {
-      this.models = r;
-    })
+      this.models = r.result;
+    });
 
     this.fields = generateDynamicFormFields(new Model());
 

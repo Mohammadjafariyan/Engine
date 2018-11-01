@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+﻿import {Component, OnInit} from '@angular/core';
 import {IDbSchemaProviderComponent} from "./idb-schema-provider";
-import {Model, NavigationProperty, NavigationPropertyType, Property, QueryModel} from "../../model/model";
+import {Model, NavigationProperty, NavigationPropertyType, Property, Query, QueryModel} from "../../model/model";
 import {Observable, of, Subject} from "rxjs";
-import {Query} from "../data/data.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {JoinTable} from "../select-columns-and-join/table-design/table-design.component";
 
@@ -52,20 +51,20 @@ export class DbSchemaProviderComponent implements OnInit, IDbSchemaProviderCompo
 
   saveQuery(query: Query): Observable<any> {
    // this.removeCircularity(query);
-    var json = JSON.stringify(query, function (key, value) {
+    console.log(query);
+    /*var json = JSON.stringify(query, function (key, value) {
       if (key == 'leftTable' ||
         key == 'rightTable' ||
         key == 'leftProperty' ||
         key == 'rightProperty') {
       }
       else {
-        return value;
+        return value; 
       }
-    });
-    console.log(json);
+    });*/
     console.log(query);
     return this.http.post
-    (`${this.getRootUrl}${this.getAreaAndPath}/saveQuery`, json, this.headers
+      (`${this.getRootUrl}${this.getAreaAndPath}/saveQuery`, query, this.headers
     );
   }
 
@@ -224,11 +223,11 @@ export class DbSchemaProviderComponent implements OnInit, IDbSchemaProviderCompo
     var quermodel3 = new QueryModel();
     quermodel3.Model = rent;
 
-    quermodels.push(quermodel1)
-    quermodels.push(quermodel2)
-    quermodels.push(quermodel3)
+    quermodels.push(quermodel1);
+    quermodels.push(quermodel2);
+    quermodels.push(quermodel3);
 
-    return of(quermodels);
+    return of([]);
   }
 
 }

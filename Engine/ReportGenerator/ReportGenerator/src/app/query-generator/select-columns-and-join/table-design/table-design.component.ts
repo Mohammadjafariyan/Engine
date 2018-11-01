@@ -30,6 +30,14 @@ export class TableDesignComponent implements OnInit {
 
     if (left && right) {
       var join = new JoinTable();
+
+      if(!this.rightJoinTable.JoinTables){
+        this.rightJoinTable.JoinTables=[];
+      }
+      if(!this.leftJoinTable.JoinTables){
+        this.leftJoinTable.JoinTables=[];
+      }
+
       join.rightTable = cloneAll(this.rightJoinTable);
       join.leftTable = cloneAll(this.leftJoinTable);
 
@@ -41,6 +49,8 @@ export class TableDesignComponent implements OnInit {
         j.leftProperty == join.leftProperty &&
         j.rightProperty == join.rightProperty);
       if (!finded) {
+
+
         join.leftTable.JoinTables.push(join);
         join.rightTable.JoinTables.push(join);
 

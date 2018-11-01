@@ -8,7 +8,7 @@ namespace ViewModel.ActionTypes
 {
     public interface IBaseDataTable
     {
-        string[] Headers { get; set; }
+        Dictionary<string,string> Headers { get; set; }
         int? Total { get; set; }
         int? LastIndex { get; set; }
         int? Page { get; set; }
@@ -22,7 +22,7 @@ namespace ViewModel.ActionTypes
     {
         public List<dynamic> RecordsList { get; set; }
         public IQueryable<dynamic> Records { get; set; }
-        public string[] Headers { get; set; }
+        public  Dictionary<string,string> Headers { get; set; }
         public int? Total { get; set; }
         public int? LastIndex { get; set; }
         public int? Page { get; set; }
@@ -30,7 +30,7 @@ namespace ViewModel.ActionTypes
     public abstract class BaseDataTable<T>: IDataTable<T>
     {
         public IQueryable<T> Records { get; set; }
-        public string[] Headers { get; set; }
+        public  Dictionary<string,string> Headers { get; set; }
         public int? Total { get; set; }
         public int? LastIndex { get; set; }
         public int? Page { get; set; }

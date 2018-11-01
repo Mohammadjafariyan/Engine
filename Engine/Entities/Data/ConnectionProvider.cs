@@ -8,42 +8,57 @@ using System.Threading.Tasks;
 
 namespace Entities.Data
 {
-    public class ConnectionProvider
+    public class SQLServerDefaultConnectionProvider : IConnectionProvider
     {
-        public static string GetSqlConnectionString()
-        {
-            SqlConnectionStringBuilder sqlString = new SqlConnectionStringBuilder()
-
-            {
-
-                DataSource = "SOURAV-PC", // Server name
-
-                InitialCatalog = "efDB",  //Database
-
-             //   UserID = "sourav",         //Username
-
-           //     Password = "mypassword",  //Password
-
-            };
-            return sqlString.ConnectionString;
-        }
-        public static  string GetEntityConnectionString()
+        
+        public string GetConnectionString()
         {
             //Build an Entity Framework connection string
 
-            EntityConnectionStringBuilder entityString = new EntityConnectionStringBuilder()
-
+            SqlConnectionStringBuilder sqlString = new SqlConnectionStringBuilder()
             {
 
-                Provider = "System.Data.SqlClient",
+                DataSource = "sobhansystems.ir", // Server name
 
-                Metadata = @"Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-Engine-20180928024320.mdf;Initial Catalog=aspnet-Engine-20180928024320;Integrated Security=True",
+                InitialCatalog = "buludco1_demiral",  //Database
 
-               // ProviderConnectionString = sqlString.ToString()
+                   UserID = "buludco1_d2",         //Username
+
+                     Password = "Mktz8^64",  //Password
+            };
+            
+            EntityConnectionStringBuilder entityString = new EntityConnectionStringBuilder()
+            {
+
+                
+
+                //Metadata = @"Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-Engine-20180928024320.mdf;Initial Catalog=aspnet-Engine-20180928024320;Integrated Security=True",
+                Metadata = "res://*",
+
+                ProviderConnectionString = sqlString.ToString()
 
             };
 
-            return @"Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-Engine-20180928024320.mdf;Initial Catalog=aspnet-Engine-20180928024320;Integrated Security=True";
+            return
+                sqlString
+                    .ToString(); //@"Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-Engine-20180928024320.mdf;Initial Catalog=aspnet-Engine-20180928024320;Integrated Security=True";
         }
     }
+
+    public class ConnectionProviderFactory
+    {
+        private IConnectionProvider _current;
+
+        public IConnectionProvider Current
+        {
+            get
+            {
+                if(_current==null)
+                    _current=new SQLServerDefaultConnectionProvider();
+                return _current;
+            }
+            set { _current = value; }
+        }
+    }
+
 }

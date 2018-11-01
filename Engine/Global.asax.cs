@@ -2,12 +2,14 @@
 using StructureMap;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using WebAppIDEEngine.Models;
 
 namespace Engine
 {
@@ -17,6 +19,7 @@ namespace Engine
         {
             AreaRegistration.RegisterAllAreas();
             var container1 = new Container(new EngineRegistry());
+            Database.SetInitializer<EngineContext>(null);
 
 
 

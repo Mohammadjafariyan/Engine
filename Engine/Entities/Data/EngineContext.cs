@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Services.Description;
+using Engine.Entities.Models.Core.AppGeneration;
+using ServiceLayer.Systems;
 using WebAppIDEEngine.Models.Core;
 using WebAppIDEEngine.Models.Core.QueryBuild;
 
@@ -12,9 +15,11 @@ namespace WebAppIDEEngine.Models
 {
     public class EngineContext : DbContext
     {
-        public EngineContext()
+        public EngineContext():base("EngineContext")
         {
-            Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
+
+           //Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
+         //  Database.Connection.ConnectionString = new ConnectionProviderFactory().Current.GetConnectionString();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -81,7 +86,11 @@ namespace WebAppIDEEngine.Models
 
 
             modelBuilder.Entity<Core.Query>().HasMany(f => f.selectedProperties).
-         WithRequired(f => f.Query).HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
+                WithRequired(f => f.Query).HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<Core.Property>().HasMany(f => f.UsedInQueries).
+                WithRequired(f => f.Property).HasForeignKey(f => f.PropertyId).WillCascadeOnDelete(false);
 
 
 
@@ -99,8 +108,9 @@ namespace WebAppIDEEngine.Models
     WithMany(f => f.JoinLeftTables).HasForeignKey(f => f.leftPropertyId).WillCascadeOnDelete(false);
 
             #endregion
-            
 
+            modelBuilder.Entity<Property>().HasOptional(f => f.NavigationProperty).
+WithOptionalDependent(f => f.Property);
 
             //            modelBuilder.Entity<Core.Query>().HasMany(f => f.SelectColumns).
             //         WithRequired(f => f.Query).HasForeignKey(f => f.QueryId);
@@ -134,13 +144,67 @@ namespace WebAppIDEEngine.Models
 
 
 
-            //modelBuilder.Entity<Property>().HasMany(f => f.Columns).
-            //    WithOptional(f => f.Property).HasForeignKey(f => f.PropertyId);
+           #region appGeneration
+           modelBuilder.Entity<SubSystem>().HasMany(f => f.DefineServices).
+              WithRequired(f => f.SubSystem)
+              .HasForeignKey(f => f.SubSystemId).WillCascadeOnDelete(false);
+         
+           
+           modelBuilder.Entity<DefineService>().HasRequired(f => f.Model).
+              WithMany(f => f.DefineServices)
+              .HasForeignKey(f => f.ModelId).WillCascadeOnDelete(false);
 
+          
+           modelBuilder.Entity<DefineService>().HasMany(f => f.ServiceMethods).
+              WithOptional(f => f.DefineService)
+              .HasForeignKey(f => f.SubSystemServiceClassId)
+              .WillCascadeOnDelete(false);
 
-            //modelBuilder.Entity<NavigationProperty>().HasMany(f => f.Columns).
-            //    WithOptional(f => f.NavigationProperty).HasForeignKey(f => f.NavigationPropertyId);
+           
+           modelBuilder.Entity<ServiceMethod>().HasRequired(f => f.Query).
+              WithMany(f => f.ServiceMethods).HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
 
+           
+           modelBuilder.Entity<DefineController>().HasRequired(f => f.Model).
+              WithMany(f => f.DefineControllers)
+              .HasForeignKey(f => f.ModelId).WillCascadeOnDelete(false);
+           
+           modelBuilder.Entity<DefineController>().HasRequired(f => f.SubSystem).
+              WithMany(f => f.DefineControllers)
+              .HasForeignKey(f => f.SubSystemId).WillCascadeOnDelete(false);
+           
+           modelBuilder.Entity<DefineControllerMethod>().HasRequired(f => f.DefineController).
+              WithMany(f => f.DefineControllerMethod)
+              .HasForeignKey(f => f.DefineControllerId).WillCascadeOnDelete(false);
+
+           
+           modelBuilder.Entity<DefineControllerMethod>().HasRequired(f => f.Model).
+              WithMany(f => f.DefineControllerMethods)
+              .HasForeignKey(f => f.DefineControllerId).WillCascadeOnDelete(false);
+           
+           
+           modelBuilder.Entity<DefineControllerMethod>().HasRequired(f => f.ServiceMethod).
+              WithMany(f => f.DefineControllerMethods)
+              .HasForeignKey(f => f.DefineControllerId).WillCascadeOnDelete(false);
+           
+           modelBuilder.Entity<DefineService>().HasRequired(f => f.Model).
+              WithMany(f => f.DefineServices)
+              .HasForeignKey(f => f.ModelId).WillCascadeOnDelete(false);
+
+           /*
+           modelBuilder.Entity<DefineService>().HasRequired(f => f.SubSystem).
+              WithMany(f => f.DefineServices)
+              .HasForeignKey(f => f.SubSystemId);
+*/
+
+           
+           modelBuilder.Entity<DefineService>().HasMany(f => f.ServiceMethods).
+              WithRequired(f => f.DefineService)
+              .HasForeignKey(f => f.DefineServiceId);
+          
+           #endregion
+           
+           
             base.OnModelCreating(modelBuilder);
         }
 
@@ -163,6 +227,16 @@ namespace WebAppIDEEngine.Models
         public DbSet<WebAppIDEEngine.Models.Core.NavigationProperty> NavigationProperties { get; set; }
         public DbSet<WebAppIDEEngine.Models.Core.Model> Models { get; set; }
         #endregion
+
+       #region appGeneration
+
+       public DbSet<SubSystem> SubSystem { get; set; }
+       public DbSet<DefineService> DefineServices { get; set; }
+       public DbSet<ServiceMethod> ServiceMethods { get; set; }
+
+       public DbSet<DefineController> DefineControllers { get; set; }
+       public DbSet<DefineControllerMethod> DefineControllerMethodes{ get; set; }
+       #endregion
 
 
 
