@@ -38952,13 +38952,14 @@ var ToolsComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DatabaseModule", function() { return DatabaseModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _tables_tables_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tables/tables.component */ "./src/app/database/tables/tables.component.ts");
-/* harmony import */ var primeng_primeng__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! primeng/primeng */ "./node_modules/primeng/primeng.js");
-/* harmony import */ var primeng_primeng__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(primeng_primeng__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! primeng/table */ "./node_modules/primeng/table.js");
-/* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(primeng_table__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _dynamic_table_dynamic_table_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../dynamic-table/dynamic-table.module */ "./src/app/dynamic-table/dynamic-table.module.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _tables_tables_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tables/tables.component */ "./src/app/database/tables/tables.component.ts");
+/* harmony import */ var primeng_primeng__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! primeng/primeng */ "./node_modules/primeng/primeng.js");
+/* harmony import */ var primeng_primeng__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(primeng_primeng__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! primeng/table */ "./node_modules/primeng/table.js");
+/* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(primeng_table__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _queries_queries_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./queries/queries.component */ "./src/app/database/queries/queries.component.ts");
+/* harmony import */ var _dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dynamic-table/dynamic-table.component */ "./src/app/database/dynamic-table/dynamic-table.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -38971,20 +38972,126 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 var DatabaseModule = /** @class */ (function () {
     function DatabaseModule() {
     }
     DatabaseModule = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
             imports: [
-                primeng_primeng__WEBPACK_IMPORTED_MODULE_2__["DataTableModule"],
-                primeng_primeng__WEBPACK_IMPORTED_MODULE_2__["DialogModule"], primeng_table__WEBPACK_IMPORTED_MODULE_3__["TableModule"], _dynamic_table_dynamic_table_module__WEBPACK_IMPORTED_MODULE_4__["JDynamicTableModule"]
+                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
+                primeng_primeng__WEBPACK_IMPORTED_MODULE_3__["DataTableModule"],
+                primeng_primeng__WEBPACK_IMPORTED_MODULE_3__["DialogModule"], primeng_table__WEBPACK_IMPORTED_MODULE_4__["TableModule"]
             ],
-            declarations: [_tables_tables_component__WEBPACK_IMPORTED_MODULE_1__["TablesComponent"], _queries_queries_component__WEBPACK_IMPORTED_MODULE_5__["QueriesComponent"]],
-            exports: [_tables_tables_component__WEBPACK_IMPORTED_MODULE_1__["TablesComponent"], _queries_queries_component__WEBPACK_IMPORTED_MODULE_5__["QueriesComponent"]]
+            declarations: [_tables_tables_component__WEBPACK_IMPORTED_MODULE_2__["TablesComponent"], _queries_queries_component__WEBPACK_IMPORTED_MODULE_5__["QueriesComponent"], _dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_6__["JDynamicTableComponent"]],
+            exports: [_tables_tables_component__WEBPACK_IMPORTED_MODULE_2__["TablesComponent"], _queries_queries_component__WEBPACK_IMPORTED_MODULE_5__["QueriesComponent"]]
         })
     ], DatabaseModule);
     return DatabaseModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/database/dynamic-table/dynamic-table.component.css":
+/*!********************************************************************!*\
+  !*** ./src/app/database/dynamic-table/dynamic-table.component.css ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/database/dynamic-table/dynamic-table.component.html":
+/*!*********************************************************************!*\
+  !*** ./src/app/database/dynamic-table/dynamic-table.component.html ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n\n<div class=\"ui-rtl\" dir=\"rtl\">\n<p-dialog [(visible)]=\"display\" (onHide)=\"onHide($event)\" [maximizable]=\"true\" [draggable]=\"true\" [minWidth]=\"300\">\n  <p-header>\n    انتخاب جدول\n  </p-header>\n\n  <p-table  *ngIf=\"models\" [value]=\"models\"\n           selectionMode=\"single\" [(selection)]=\"selected\" dataKey=\"Id\">\n    <ng-template pTemplate=\"header\" let-columns>\n      <tr >\n        <th *ngFor=\"let f of fields\" >{{f.translate}}</th>\n      </tr>\n    </ng-template>\n    <ng-template pTemplate=\"body\" let-rowData let-columns=\"columns\">\n      <tr [pSelectableRow]=\"rowData\">\n        <ng-template let-f ngFor [ngForOf]=\"fields\" >\n          <td >{{rowData[f.name]}}</td>\n        </ng-template>\n      </tr>\n    </ng-template>\n    <!--<ng-template pTemplate=\"summary\">\n\n    </ng-template>-->\n  </p-table>\n\n  <p-footer>\n    <button class=\"btn bg-danger\" (click)=\"select()\">انتخاب</button>\n    <button class=\"btn bg-danger\" (click)=\"cancel()\">لغو</button>\n  </p-footer>\n</p-dialog>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/database/dynamic-table/dynamic-table.component.ts":
+/*!*******************************************************************!*\
+  !*** ./src/app/database/dynamic-table/dynamic-table.component.ts ***!
+  \*******************************************************************/
+/*! exports provided: JDynamicTableComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JDynamicTableComponent", function() { return JDynamicTableComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var JDynamicTableComponent = /** @class */ (function () {
+    function JDynamicTableComponent() {
+        this._display = false;
+        this.selectedEv = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+    }
+    Object.defineProperty(JDynamicTableComponent.prototype, "display", {
+        get: function () {
+            return this._display;
+        },
+        set: function (value) {
+            this._display = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    JDynamicTableComponent.prototype.select = function () {
+        this.selectedEv.emit(this.selected);
+    };
+    JDynamicTableComponent.prototype.ngOnInit = function () {
+    };
+    JDynamicTableComponent.prototype.onHide = function (ev) {
+        this._display = false;
+    };
+    JDynamicTableComponent.prototype.cancel = function () {
+        this._display = false;
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Boolean),
+        __metadata("design:paramtypes", [Boolean])
+    ], JDynamicTableComponent.prototype, "display", null);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Array)
+    ], JDynamicTableComponent.prototype, "models", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Array)
+    ], JDynamicTableComponent.prototype, "fields", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], JDynamicTableComponent.prototype, "selected", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
+    ], JDynamicTableComponent.prototype, "selectedEv", void 0);
+    JDynamicTableComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-dynamic-table',
+            template: __webpack_require__(/*! ./dynamic-table.component.html */ "./src/app/database/dynamic-table/dynamic-table.component.html"),
+            styles: [__webpack_require__(/*! ./dynamic-table.component.css */ "./src/app/database/dynamic-table/dynamic-table.component.css")]
+        })
+    ], JDynamicTableComponent);
+    return JDynamicTableComponent;
 }());
 
 
@@ -39260,7 +39367,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n\r\n<app-dynamic-table [display]=\"display\" [models]=\"models\"\r\n  [fields]=\"fields\" (selected)=\"selected\" (selectedEv)=\"selectedEvent($event)\"></app-dynamic-table>\r\n"
+module.exports = "\r\n\r\n<app-dynamic-table  #dynaTable  [display]=\"display\" [models]=\"models\"\r\n  [fields]=\"fields\" [selected]=\"selected\" (selectedEv)=\"selectedEvent($event)\"></app-dynamic-table>\r\n\r\n"
 
 /***/ }),
 
@@ -39281,6 +39388,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tables_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../tables.service */ "./src/app/database/tables.service.ts");
 /* harmony import */ var _form_generator_models__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../form-generator/models */ "./src/app/form-generator/models.ts");
 /* harmony import */ var _query_generator_data_data_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../query-generator/data/data.component */ "./src/app/query-generator/data/data.component.ts");
+/* harmony import */ var _dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dynamic-table/dynamic-table.component */ "./src/app/database/dynamic-table/dynamic-table.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -39296,12 +39404,25 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var TablesComponent = /** @class */ (function () {
-    function TablesComponent(tableService, DataComponent) {
+    function TablesComponent(tableService, DataComponent, chd) {
         this.tableService = tableService;
         this.DataComponent = DataComponent;
+        this.chd = chd;
         this.selectedEv = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
     }
+    Object.defineProperty(TablesComponent.prototype, "display", {
+        get: function () {
+            return this._display;
+        },
+        set: function (value) {
+            this._display = value;
+            this.dynaTable.display = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     TablesComponent.prototype.selectedEvent = function (ev) {
         this.selected = ev;
         console.log(ev);
@@ -39326,9 +39447,14 @@ var TablesComponent = /** @class */ (function () {
         this.fields = Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_4__["generateDynamicFormFields"])(new _model_model__WEBPACK_IMPORTED_MODULE_1__["Model"]());
     };
     __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('dynaTable'),
+        __metadata("design:type", _dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_6__["JDynamicTableComponent"])
+    ], TablesComponent.prototype, "dynaTable", void 0);
+    __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Object)
-    ], TablesComponent.prototype, "display", void 0);
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], TablesComponent.prototype, "display", null);
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
         __metadata("design:type", Object)
@@ -39341,144 +39467,10 @@ var TablesComponent = /** @class */ (function () {
             providers: [primeng_table__WEBPACK_IMPORTED_MODULE_2__["TableService"]]
         }),
         __metadata("design:paramtypes", [_tables_service__WEBPACK_IMPORTED_MODULE_3__["TablesService"],
-            _query_generator_data_data_component__WEBPACK_IMPORTED_MODULE_5__["DataComponent"]])
+            _query_generator_data_data_component__WEBPACK_IMPORTED_MODULE_5__["DataComponent"],
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"]])
     ], TablesComponent);
     return TablesComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/dynamic-table/dynamic-table.module.ts":
-/*!*******************************************************!*\
-  !*** ./src/app/dynamic-table/dynamic-table.module.ts ***!
-  \*******************************************************/
-/*! exports provided: JDynamicTableModule */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JDynamicTableModule", function() { return JDynamicTableModule; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! primeng/table */ "./node_modules/primeng/table.js");
-/* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(primeng_table__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var primeng_dialog__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! primeng/dialog */ "./node_modules/primeng/dialog.js");
-/* harmony import */ var primeng_dialog__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(primeng_dialog__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dynamic-table/dynamic-table.component */ "./src/app/dynamic-table/dynamic-table/dynamic-table.component.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
-
-
-
-
-var JDynamicTableModule = /** @class */ (function () {
-    function JDynamicTableModule() {
-    }
-    JDynamicTableModule = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
-            imports: [
-                _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
-                primeng_table__WEBPACK_IMPORTED_MODULE_2__["TableModule"],
-                primeng_dialog__WEBPACK_IMPORTED_MODULE_3__["DialogModule"]
-            ],
-            declarations: [_dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_4__["JDynamicTableComponent"]],
-            exports: [_dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_4__["JDynamicTableComponent"]]
-        })
-    ], JDynamicTableModule);
-    return JDynamicTableModule;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/dynamic-table/dynamic-table/dynamic-table.component.css":
-/*!*************************************************************************!*\
-  !*** ./src/app/dynamic-table/dynamic-table/dynamic-table.component.css ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
-/***/ "./src/app/dynamic-table/dynamic-table/dynamic-table.component.html":
-/*!**************************************************************************!*\
-  !*** ./src/app/dynamic-table/dynamic-table/dynamic-table.component.html ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n\n<div class=\"ui-rtl\" dir=\"rtl\">\n<p-dialog [(visible)]=\"display\" [maximizable]=\"true\" [draggable]=\"true\" [minWidth]=\"300\">\n  <p-header>\n    انتخاب جدول\n  </p-header>\n\n  <p-table  *ngIf=\"models\" [value]=\"models\"\n           selectionMode=\"single\" [(selection)]=\"selected\" dataKey=\"Id\">\n    <ng-template pTemplate=\"header\" let-columns>\n      <tr >\n        <th *ngFor=\"let f of fields\" >{{f.translate}}</th>\n      </tr>\n    </ng-template>\n    <ng-template pTemplate=\"body\" let-rowData let-columns=\"columns\">\n      <tr [pSelectableRow]=\"rowData\">\n        <ng-template let-f ngFor [ngForOf]=\"fields\" >\n          <td >{{rowData[f.name]}}</td>\n        </ng-template>\n      </tr>\n    </ng-template>\n    <!--<ng-template pTemplate=\"summary\">\n\n    </ng-template>-->\n  </p-table>\n\n  <p-footer>\n    <button class=\"btn bg-danger\" (click)=\"select()\">انتخاب</button>\n    <button class=\"btn bg-danger\" (click)=\"display=false\">لغو</button>\n  </p-footer>\n</p-dialog>\n</div>\n"
-
-/***/ }),
-
-/***/ "./src/app/dynamic-table/dynamic-table/dynamic-table.component.ts":
-/*!************************************************************************!*\
-  !*** ./src/app/dynamic-table/dynamic-table/dynamic-table.component.ts ***!
-  \************************************************************************/
-/*! exports provided: JDynamicTableComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JDynamicTableComponent", function() { return JDynamicTableComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-var JDynamicTableComponent = /** @class */ (function () {
-    function JDynamicTableComponent() {
-        this.selectedEv = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-    }
-    JDynamicTableComponent.prototype.select = function () {
-        this.selectedEv.emit(this.selected);
-    };
-    JDynamicTableComponent.prototype.ngOnInit = function () {
-    };
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Array)
-    ], JDynamicTableComponent.prototype, "models", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Array)
-    ], JDynamicTableComponent.prototype, "fields", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Object)
-    ], JDynamicTableComponent.prototype, "selected", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Object)
-    ], JDynamicTableComponent.prototype, "display", void 0);
-    __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
-        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
-    ], JDynamicTableComponent.prototype, "selectedEv", void 0);
-    JDynamicTableComponent = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'app-dynamic-table',
-            template: __webpack_require__(/*! ./dynamic-table.component.html */ "./src/app/dynamic-table/dynamic-table/dynamic-table.component.html"),
-            styles: [__webpack_require__(/*! ./dynamic-table.component.css */ "./src/app/dynamic-table/dynamic-table/dynamic-table.component.css")]
-        })
-    ], JDynamicTableComponent);
-    return JDynamicTableComponent;
 }());
 
 
@@ -40211,7 +40203,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  data works!\n</p>\n"
+module.exports = "<p>\n  data works!\n</p>\n\n"
 
 /***/ }),
 

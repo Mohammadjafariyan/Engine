@@ -3375,6 +3375,10 @@
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\database-routing.module.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\database.module.spec.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\database.module.ts" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\database\dynamic-table\dynamic-table.component.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\database\dynamic-table\dynamic-table.component.html" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\database\dynamic-table\dynamic-table.component.spec.ts" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\database\dynamic-table\dynamic-table.component.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\queries.service.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\queries\queries.component.css" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\queries\queries.component.html" />
@@ -3386,12 +3390,6 @@
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\tables\tables.component.html" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\tables\tables.component.spec.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\database\tables\tables.component.ts" />
-    <Content Include="ReportGenerator\ReportGenerator\src\app\dynamic-table\dynamic-table.module.spec.ts" />
-    <Content Include="ReportGenerator\ReportGenerator\src\app\dynamic-table\dynamic-table.module.ts" />
-    <Content Include="ReportGenerator\ReportGenerator\src\app\dynamic-table\dynamic-table\dynamic-table.component.css" />
-    <Content Include="ReportGenerator\ReportGenerator\src\app\dynamic-table\dynamic-table\dynamic-table.component.html" />
-    <Content Include="ReportGenerator\ReportGenerator\src\app\dynamic-table\dynamic-table\dynamic-table.component.spec.ts" />
-    <Content Include="ReportGenerator\ReportGenerator\src\app\dynamic-table\dynamic-table\dynamic-table.component.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\form-generator\form-app\form-app.component.css" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\form-generator\form-app\form-app.component.html" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\form-generator\form-app\form-app.component.spec.ts" />

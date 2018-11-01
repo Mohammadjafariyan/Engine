@@ -4,16 +4,17 @@ import { TablesComponent } from './tables/tables.component';
 import {TablesService} from "./tables.service";
 import {DataTableModule, DialogModule} from "primeng/primeng";
 import {TableModule} from "primeng/table";
-import {JDynamicTableModule} from "../dynamic-table/dynamic-table.module";
 import {QueriesService} from "./queries.service";
 import {QueriesComponent} from "./queries/queries.component";
+import {JDynamicTableComponent} from "./dynamic-table/dynamic-table.component";
 
 @NgModule({
   imports: [
+    CommonModule,
     DataTableModule,
-    DialogModule,TableModule,JDynamicTableModule
+    DialogModule,TableModule
   ],
-  declarations: [TablesComponent, QueriesComponent],
+  declarations: [TablesComponent, QueriesComponent,JDynamicTableComponent],
   exports:[TablesComponent,QueriesComponent]
 })
 export class DatabaseModule { }

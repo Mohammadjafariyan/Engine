@@ -1,7 +1,7 @@
 
 
 <div class="ui-rtl" dir="rtl">
-<p-dialog [(visible)]="display" [maximizable]="true" [draggable]="true" [minWidth]="300">
+<p-dialog [(visible)]="display" (onHide)="onHide($event)" [maximizable]="true" [draggable]="true" [minWidth]="300">
   <p-header>
     انتخاب جدول
   </p-header>
@@ -27,7 +27,7 @@
 
   <p-footer>
     <button class="btn bg-danger" (click)="select()">انتخاب</button>
-    <button class="btn bg-danger" (click)="display=false">لغو</button>
+    <button class="btn bg-danger" (click)="cancel()">لغو</button>
   </p-footer>
 </p-dialog>
 </div>

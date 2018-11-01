@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Model} from "../../model/model";
-import {TablesService} from "../../database/tables.service";
 import {Field} from "../../form-generator/models";
 
 @Component({
@@ -9,6 +8,14 @@ import {Field} from "../../form-generator/models";
   styleUrls: ['./dynamic-table.component.css']
 })
 export class JDynamicTableComponent implements OnInit {
+  get display(): boolean {
+    return this._display;
+  }
+
+  @Input()
+  set display(value: boolean) {
+    this._display = value;
+  }
   @Input()
   models: any[];
   @Input()
@@ -17,8 +24,7 @@ export class JDynamicTableComponent implements OnInit {
   @Input()
   selected: any;
 
-  @Input()
-  display;
+   private _display=false;
 
   @Output()
   selectedEv:EventEmitter<any> = new EventEmitter<any>();
@@ -30,4 +36,13 @@ export class JDynamicTableComponent implements OnInit {
   ngOnInit() {
   }
 
+
+  onHide(ev){
+    this._display=false;
+  }
+
+
+  cancel(){
+    this._display=false;
+  }
 }

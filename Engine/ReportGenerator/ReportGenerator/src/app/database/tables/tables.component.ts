@@ -1,9 +1,10 @@
-﻿import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+﻿import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Model, QueryModel} from "../../model/model";
 import {TableService} from "primeng/table";
 import {TablesService} from "../tables.service";
 import {Field, generateDynamicFormFields} from "../../form-generator/models";
 import {DataComponent} from "../../query-generator/data/data.component";
+import {JDynamicTableComponent} from "../dynamic-table/dynamic-table.component";
 
 @Component({
   selector: 'app-tables',
@@ -12,19 +13,31 @@ import {DataComponent} from "../../query-generator/data/data.component";
   providers: [TableService]
 })
 export class TablesComponent implements OnInit {
+  get display() {
+    return this._display;
+  }
+
+  @ViewChild('dynaTable')
+  dynaTable:JDynamicTableComponent;
+
+  @Input()
+  set display(value) {
+    this._display = value;
+    this.dynaTable.display=value;
+  }
 
   fields: Field[];
   models: Model[];
   selected: Model;
 
-  @Input()
-  display;
+   private _display;
 
   @Output()
   selectedEv = new EventEmitter();
 
   constructor(public  tableService: TablesService,
-              public DataComponent: DataComponent) {
+              public DataComponent: DataComponent,
+              public chd:ChangeDetectorRef) {
   }
 
   selectedEvent(ev) {
