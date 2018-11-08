@@ -40,10 +40,8 @@ namespace WebAppIDEEngine.Models.Core
             this.Properties=new List<Property>();
             this.NavigationProperties=new List<NavigationProperty>();
             this.Forms=new List<Form>();
-            this.MainTableQueries=new List<Query>();
             this.DefineControllerMethods=new List<DefineControllerMethod>();
-            this.JoinRightTables=new List<JoinTable>();
-            this.JoinLeftTables = new List<JoinTable>();
+   
             this.DefineServices = new List<DefineService>();
             this.DefineControllers = new List<DefineController>();
             this.UsedInQueries = new List<QueryModel>();
@@ -54,8 +52,7 @@ namespace WebAppIDEEngine.Models.Core
                     Controller = GlobalNames.PropertiesController
                     ,Area = GlobalNames.AppArea,Parameters = "Id:ModelId")]*/
 
-        [JsonIgnore]
-        [XmlIgnore]
+      
         public virtual List<Property> Properties { get; set; }
 
         /*[OpenDataTable(Name = "فرم ها",
@@ -78,18 +75,8 @@ namespace WebAppIDEEngine.Models.Core
         public virtual ICollection<QueryModel> UsedInQueries { get; set; }
 
 
-        [JsonIgnore]
-        [XmlIgnore]
-        public virtual ICollection<JoinTable> JoinRightTables { get; set; }
-
-        [JsonIgnore]
-        [XmlIgnore]
-        public virtual ICollection<JoinTable> JoinLeftTables { get; set; }
-
-        [JsonIgnore]
-        [XmlIgnore]
-        public virtual ICollection<Query> MainTableQueries { get; set; }
-
+     
+        
         [JsonIgnore]
         [XmlIgnore]
         public virtual ICollection<DefineService> DefineServices { get; set; }

@@ -2,17 +2,18 @@
 
 <div class="row" #myBounds [style.height]="panelHeight+'px'">
   <table  [bounds]="myBounds" [inBounds]="true" #tables ngDraggable class="table col-md-1" style="border:2px solid #17a2b8"
-         (movingOffset)="onMoving($event)"
+         (movingOffset)="onMoving($event)" [attr.Id]="'pt'+table.uniqId"
          *ngFor="let table of DataComponent.models;let tableI=index;">
     <thead>
     <tr >
       <th scope="col" colspan="1">
-        <input type="radio" name="selectMainTable"  (click)="selectMainTable(table.Model)">
+        <input type="radio" name="selectMainTable" [attr.Id]="'t'+table.uniqId" [attr.checked]="table.IsMainTable ? 'checked' : null "  (click)="selectMainTable(table)">
       </th>
 
       <th scope="col" colspan="3" style="text-align:center;font-weight: bold">
 
-        {{table.Model.Name}}
+        {{table.Model && table.Model.Name ? table.Model.Name : null}}
+
       </th>
     </tr>
     <tr>
@@ -23,12 +24,16 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let property of table.Model.Properties;let propertyI=index;">
-      <th scope="row"><input type="radio" #rightRadio (click)="rightJoin(tableI,propertyI,$event.target)"></th>
-      <td><input type="checkbox" (click)="selectColumn(property)" [checked]="property.onOutPut"></td>
+
+
+    <ng-template *ngIf="table && table.Model && table.Model.Properties"  [ngForOf]="table.Model.Properties" let-property ngFor let-propertyI="index">
+    <tr  >
+      <th scope="row"><input type="radio" [attr.Id]="'r'+property.Id" #rightRadio (click)="rightJoin(tableI,propertyI,$event.target)"></th>
+      <td><input type="checkbox" (click)="selectColumn(property)" [attr.checked]="property.onOutPut? 'checked' : null"></td>
       <td>{{property.NameInModel}}</td>
-      <td><input type="radio"  (click)="leftJoin(tableI,propertyI,$event.target)"></td>
+      <td><input type="radio" [attr.Id]="'l'+property.Id" (click)="leftJoin(tableI,propertyI,$event.target)"></td>
     </tr>
+    </ng-template>
     </tbody>
   </table>
 
@@ -64,8 +69,8 @@
     position: absolute;
 }">
     <ng-template let-line ngFor [ngForOf]="DataComponent.joinTables">
-      <line   [attr.x1]="line.leftTable.elementX | HoldValue" [attr.y1]="line.leftTable.elementY | HoldValue"
-            [attr.x2]="line.rightTable.elementX | HoldValue" [attr.y2]="line.rightTable.elementY | HoldValue"
+      <line   [attr.x1]="line.lelementX | HoldValue" [attr.y1]="line.lelementY | HoldValue"
+            [attr.x2]="line.relementX | HoldValue" [attr.y2]="line.relementY | HoldValue"
             style="stroke:rgb(255,0,0);stroke-width:2"></line>
     </ng-template>
   </svg>

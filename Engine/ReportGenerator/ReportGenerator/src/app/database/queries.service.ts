@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Model, Query} from "../model/model";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
+import {CustomResult, CustomResultGeneric} from "./tables.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class QueriesService {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
-  }
+  };
   constructor(public http: HttpClient) {
   }
 
@@ -30,11 +31,11 @@ export class QueriesService {
   }
 
 
+  getAllQueries(searchTerm?, lastIndex?,  count?):Observable<CustomResultGeneric<Query[]>>{
+    return this.http.get<CustomResultGeneric<Query[]>>(`${this.getRootUrl}${this.getAreaAndPath}/getAll?lastIndex=&count=`,  this.headers );
+  }
 
-  getAllQueries(searchTerm?, lastIndex?,  count?):Observable<Query[]>{
-    return of(null);
-/*
-    return this.http.get<Model[]>(`${this.getRootUrl}${this.getAreaAndPath}/GetAllQueries`,  this.headers
-    );*/
+  deleteById(Id) {
+    return this.http.post<CustomResult>(`${this.getRootUrl}${this.getAreaAndPath}/deleteById?id=${Id}`,  this.headers );
   }
 }

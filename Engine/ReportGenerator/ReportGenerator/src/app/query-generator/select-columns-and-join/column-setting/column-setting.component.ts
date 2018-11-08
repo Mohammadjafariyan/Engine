@@ -22,7 +22,7 @@ export class ColumnSettingComponent implements OnInit {
 
 
   initAddParams() {
-    debugger;
+
     this.addParameterFields = generateDynamicFormFields(this.parameterForm);
   }
 
@@ -37,7 +37,7 @@ export class ColumnSettingComponent implements OnInit {
 
   saveParameter() {
 
-    debugger;
+
     mapFormInputValues(this.parameterForm, this.addParameterFields);
 
     //EDIT

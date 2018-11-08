@@ -4,6 +4,7 @@ import {Model, NavigationProperty, NavigationPropertyType, Property, Query, Quer
 import {Observable, of, Subject} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {JoinTable} from "../select-columns-and-join/table-design/table-design.component";
+import {CustomResult, CustomResultGeneric} from "../../database/tables.service";
 
 
 @Component({
@@ -38,18 +39,18 @@ export class DbSchemaProviderComponent implements OnInit, IDbSchemaProviderCompo
   }
 
   removeCircularity(query: Query) {
-    for (let i = 0; i < query.joinTables.length; i++) {
+   /* for (let i = 0; i < query.joinTables.length; i++) {
       query.joinTables[i].leftTableId = query.joinTables[i].leftTable.Id
       query.joinTables[i].rightTableId = query.joinTables[i].rightTable.Id
 
       query.joinTables[i].leftPropertyId = query.joinTables[i].leftProperty.Id
       query.joinTables[i].rightPropertyId = query.joinTables[i].rightProperty.Id
     }
-
+*/
   }
 
 
-  saveQuery(query: Query): Observable<any> {
+  saveQuery(query: Query): Observable<CustomResult> {
    // this.removeCircularity(query);
     console.log(query);
     /*var json = JSON.stringify(query, function (key, value) {
@@ -59,18 +60,18 @@ export class DbSchemaProviderComponent implements OnInit, IDbSchemaProviderCompo
         key == 'rightProperty') {
       }
       else {
-        return value; 
+        return value;
       }
     });*/
     console.log(query);
-    return this.http.post
+    return this.http.post<CustomResult>
       (`${this.getRootUrl}${this.getAreaAndPath}/saveQuery`, query, this.headers
     );
   }
 
-  loadQuery(id: number): Observable<Query> {
-    return this.http.get<Query>(
-      `${this.getRootUrl}/${this.getAreaAndPath}/loadQuery?id=${id}`);
+  loadQuery(id: number): Observable<CustomResultGeneric<Query>> {
+    return this.http.get<CustomResultGeneric<Query>>(
+      `${this.getRootUrl}${this.getAreaAndPath}/loadQuery?id=${id}`);
   }
 
 

@@ -12,7 +12,7 @@ export class Utility {
 
   public static generateNewIdNumber() {
     var newId = '';
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 7; i++) {
       var index = randomIntFromInterval(0, this.numbers.length - 1);
       newId += this.numbers[index];
     }
@@ -39,4 +39,18 @@ export class Globals {
 function randomIntFromInterval(min, max) // min and max included
 {
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function cloneAll(obj) {
+  /*  let newObj = JSON.parse(JSON.stringify(obj));
+    console.log(obj, newObj);*/
+  var clone = Object.create(Object.getPrototypeOf(obj));
+
+  var props = Object.getOwnPropertyNames(obj);
+  props.forEach(function (key) {
+    var desc = Object.getOwnPropertyDescriptor(obj, key);
+    Object.defineProperty(clone, key, desc);
+  });
+
+  return clone;
 }

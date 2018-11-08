@@ -45,6 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AppSourceGenerator, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\AppSourceGenerator\bin\Debug\AppSourceGenerator.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -219,6 +222,7 @@
     <Compile Include="Areas\AppGeneration\Controllers\DefineControllerMethodController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\DefineServiceController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\DefineServiceMethodController.cs" />
+    <Compile Include="Areas\AppGeneration\Controllers\ExportController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\SubSystemController.cs" />
     <Compile Include="Areas\App\AppAreaRegistration.cs" />
     <Compile Include="Areas\App\Controllers\NavigationPropertiesController.cs" />
@@ -295,10 +299,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201811010657596_EngineContext.cs" />
-    <Compile Include="Migrations\201811010657596_EngineContext.Designer.cs">
-      <DependentUpon>201811010657596_EngineContext.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelRegistery\ModelRegistery.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -329,9 +329,11 @@
     <Content Include="Areas\AppGeneration\Views\DefineService\Delete.cshtml" />
     <Content Include="Areas\AppGeneration\Views\DefineService\ForEdit.cshtml" />
     <Content Include="Areas\AppGeneration\Views\DefineService\GetDataTable.cshtml" />
+    <Content Include="Areas\AppGeneration\Views\Export\GetDataTable.cshtml" />
     <Content Include="Areas\AppGeneration\Views\SubSystem\Delete.cshtml" />
     <Content Include="Areas\AppGeneration\Views\SubSystem\ForEdit.cshtml" />
     <Content Include="Areas\AppGeneration\Views\SubSystem\GetDataTable.cshtml" />
+    <Content Include="Areas\ReportGenerator\Controllers\ModelsClassDiagram.puml" />
     <Content Include="Content\Bootstrap-rtl.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -3476,6 +3478,7 @@
     <Content Include="ReportGenerator\ReportGenerator\src\assets\iconic\open-iconic.min.css" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\jquery\jquery.js" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\jquery\proper.js" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\pace.js" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\primeicons\fonts\primeicons.eot" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\primeicons\fonts\primeicons.svg" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\primeicons\fonts\primeicons.ttf" />
@@ -3649,11 +3652,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201811010657596_EngineContext.resx">
-      <DependentUpon>201811010657596_EngineContext.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

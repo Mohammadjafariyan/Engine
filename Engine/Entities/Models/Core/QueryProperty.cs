@@ -1,14 +1,32 @@
-﻿using WebAppIDEEngine.Models.ICore;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
+using Engine.DomainLayer.Models.Core.QueryBuild;
+using Newtonsoft.Json;
+using WebAppIDEEngine.Models.ICore;
 
 namespace WebAppIDEEngine.Models.Core
 {
     public class QueryProperty:BaseEntity
     {
-
         public long PropertyId { get; set; }
         public long QueryId { get; set; }
+        public long uniqId { get; set; }
+        
+        
 
         public virtual Property Property { get; set; }
-        public virtual Query Query { get; set; }
+        public  Query Query { get; set; }
+            
+        public bool onOutPut { get; set; }
+        
+        [JsonIgnore]
+        [XmlIgnore]
+        public ICollection<JoinTable> JoinRightTables { get; set; }
+      
+       
+        [JsonIgnore]
+        [XmlIgnore] 
+        public ICollection<JoinTable> JoinLeftTables { get; set; }
+
     }
 }

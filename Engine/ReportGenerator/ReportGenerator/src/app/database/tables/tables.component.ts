@@ -5,6 +5,7 @@ import {TablesService} from "../tables.service";
 import {Field, generateDynamicFormFields} from "../../form-generator/models";
 import {DataComponent} from "../../query-generator/data/data.component";
 import {JDynamicTableComponent} from "../dynamic-table/dynamic-table.component";
+import {Utility} from "../../query-generator/utility";
 
 @Component({
   selector: 'app-tables',
@@ -18,41 +19,49 @@ export class TablesComponent implements OnInit {
   }
 
   @ViewChild('dynaTable')
-  dynaTable:JDynamicTableComponent;
+  dynaTable: JDynamicTableComponent;
 
   @Input()
   set display(value) {
     this._display = value;
-    this.dynaTable.display=value;
+    this.dynaTable.display = value;
+    this.ngOnInit();
+
   }
 
   fields: Field[];
   models: Model[];
   selected: Model;
 
-   private _display;
+  private _display;
 
   @Output()
   selectedEv = new EventEmitter();
 
   constructor(public  tableService: TablesService,
               public DataComponent: DataComponent,
-              public chd:ChangeDetectorRef) {
+              public chd: ChangeDetectorRef) {
   }
 
-  selectedEvent(ev) {
+  selectedEvent(event) {
+    const ev = Object.assign({}, event);
+
     this.selected = ev;
 
     console.log(ev);
     var qm = new QueryModel();
     qm.Model = ev;
-    qm.Query = this.DataComponent.currentQuery;
+    // qm.Query = this.DataComponent.currentQuery;
     this.DataComponent.models.push(qm);
 
     this.tableService.GetWithProperties(qm.Model.Id).toPromise().then(r => {
-      qm.Model.Properties = r.result;
+      qm.Model = r.result;
+     // qm.Model.Properties = r.result.properties;
+
+      //qm.Model.Properties.forEach(p=>p.uniqId=Utility.generateNewIdNumber());
       qm.Model.AsName = qm.Model.Name;
-      qm.Model.JoinTables=[];
+      qm.LeftJoinTables = [];
+      qm.RightJoinTables = [];
     });
 
   }

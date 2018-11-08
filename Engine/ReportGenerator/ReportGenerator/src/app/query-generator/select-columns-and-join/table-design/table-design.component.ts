@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+﻿import {Component, Input, OnInit} from '@angular/core';
 import {DataComponent} from "../../data/data.component";
-import {Model, Property, PropertyModel} from "../../../model/model";
+import {BaseEntity, Model, Property, PropertyModel, QueryModel} from "../../../model/model";
 
 declare var $: any;
 
@@ -11,16 +11,21 @@ declare var $: any;
   moduleId: 'TableDesignComponent'
 })
 export class TableDesignComponent implements OnInit {
-  rightJoinTable: Model;
-  rightJoinProperty: Property;
-  leftJoinTable: Model;
-  leftJoinProperty: Property;
+  rightJoinTable: QueryModel;
+  rightJoinProperty: PropertyModel;
+  leftJoinTable: QueryModel;
+  leftJoinProperty: PropertyModel;
 
+
+  /// اسفتاده در جوین
+  relements: any[];
+  lelements: any[];
 
   @Input()
   panelHeight;
 
   constructor(public DataComponent: DataComponent) {
+    this.DataComponent.tableDesign_active = this;
   }
 
   ngOnInit() {
@@ -31,18 +36,27 @@ export class TableDesignComponent implements OnInit {
     if (left && right) {
       var join = new JoinTable();
 
-      if(!this.rightJoinTable.JoinTables){
-        this.rightJoinTable.JoinTables=[];
+      if (!this.rightJoinTable.LeftJoinTables) {
+
+        this.rightJoinTable.RightJoinTables = [];
+        this.rightJoinTable.LeftJoinTables = [];
       }
-      if(!this.leftJoinTable.JoinTables){
-        this.leftJoinTable.JoinTables=[];
+      if (!this.leftJoinTable.RightJoinTables) {
+        this.leftJoinTable.RightJoinTables = [];
+        this.leftJoinTable.LeftJoinTables = [];
       }
 
+
       join.rightTable = cloneAll(this.rightJoinTable);
+      join.rightTableUniqId = this.rightJoinTable.uniqId;
+      join.leftTableUniqId = this.leftJoinTable.uniqId;
       join.leftTable = cloneAll(this.leftJoinTable);
 
       join.rightProperty = cloneAll(this.rightJoinProperty);
       join.leftProperty = cloneAll(this.leftJoinProperty);
+
+      join.relement = this.relements.pop();
+      join.lelement = this.lelements.pop();
 
       var finded = this.DataComponent.joinTables.find(j => j.leftTable == join.leftTable
         && j.rightTable == join.rightTable &&
@@ -51,8 +65,10 @@ export class TableDesignComponent implements OnInit {
       if (!finded) {
 
 
-        join.leftTable.JoinTables.push(join);
-        join.rightTable.JoinTables.push(join);
+       join.leftTable.LeftJoinTables.push(join);
+
+
+        join.rightTable.RightJoinTables.push(join);
 
         join.joinType = JoinTableType.Join;
 
@@ -70,7 +86,8 @@ export class TableDesignComponent implements OnInit {
   }
 
   rightJoin(table: number, property: number, rightRadio: HTMLInputElement) {
-    console.log($(rightRadio).offset());
+    this.relements = [];
+    this.relements.push(rightRadio);
     this.getTableAndProperty
     ('rightJoinTable', 'rightJoinProperty',
       table, property, rightRadio);
@@ -79,12 +96,18 @@ export class TableDesignComponent implements OnInit {
   }
 
 
-  getTableAndProperty(WhichTable, whichproperty, table: number, property: number, lefttRadio: HTMLInputElement) {
-    this[WhichTable] = this.DataComponent.models[table].Model;
-    this[whichproperty] = this.DataComponent.models[table].Model.Properties[property];
+  getTableAndProperty(WhichTable, whichproperty, table: number,
+                      property: number,
+                      lefttRadio: HTMLInputElement) {
+    this[WhichTable] = this.DataComponent.models[table];
 
 
-    this[WhichTable].element = lefttRadio;
+    const prop = new PropertyModel();
+    prop.Property = this.DataComponent.models[table].Model.Properties[property]
+    this[whichproperty] = prop;
+
+
+    //  this[WhichTable][whichElement] = lefttRadio;
     //  let rect:any = lefttRadio.getBoundingClientRect();
     /*    this[whichproperty].X = window.scrollX+parseInt( rect.left.toString())+20;
      this[whichproperty].Y =window.scrollY+ parseInt(rect.top.toString()) -30;;
@@ -100,6 +123,8 @@ export class TableDesignComponent implements OnInit {
 
   leftJoin(table: number, property: number, lefttRadio: HTMLInputElement) {
 
+    this.lelements = [];
+    this.lelements.push(lefttRadio);
     this.getTableAndProperty
     ('leftJoinTable', 'leftJoinProperty',
       table, property, lefttRadio);
@@ -109,20 +134,28 @@ export class TableDesignComponent implements OnInit {
   selectColumn(property: Property) {
 
     var index = this.DataComponent.selectedProperties.findIndex
-    (s => s.Property == property);
+    (s => s.Property.uniqId==property.uniqId);
     if (index != -1) {
-      this.DataComponent.selectedProperties[index].Property.onOutPut = false;
+      this.DataComponent.selectedProperties[index].onOutPut = false;
+      property.onOutPut = false;
       this.DataComponent.selectedProperties.splice(index, 1);
     }
     else {
-      property.onOutPut = true;
       var propertyModel = new PropertyModel();
       propertyModel.Property = property;
       propertyModel.PropertyId = property.Id;
+      propertyModel.onOutPut = true;
+      property.onOutPut = true;
 
+      // یعنی پروپرتی استفاده شده است
+      property.uniqId=Utility.generateNewIdNumber();
+
+      TableDesignComponent.makeSureUniqIdIsDistinct(this.DataComponent.selectedProperties,'uniqId',propertyModel);
       this.DataComponent.selectedProperties.push(propertyModel);
     }
   }
+
+
 
   getPossiionX(element: HTMLInputElement) {
     let rect: any = element.getBoundingClientRect();
@@ -132,14 +165,21 @@ export class TableDesignComponent implements OnInit {
 //    return $(element).offset().left;
   }
 
+  getElementFromDom() {
+
+  }
+
   onMoving(event) {
     for (var i = 0; i < this.DataComponent.joinTables.length; i++) {
-      this.DataComponent.joinTables[i].leftTable.elementY = this.getPossiionY(this.DataComponent.joinTables[i].leftTable.element);
-      this.DataComponent.joinTables[i].leftTable.elementX = this.getPossiionX(this.DataComponent.joinTables[i].leftTable.element);
 
+      /*  if(!this.DataComponent.joinTables[i].leftTable.element){
+          this.DataComponent.joinTables[i].leftTable.element=this.getElementFromDom(this.DataComponent.joinTables[i].leftTable.element);
+        }*/
+      this.DataComponent.joinTables[i].lelementY = this.getPossiionY(this.DataComponent.joinTables[i].lelement);
+      this.DataComponent.joinTables[i].lelementX = this.getPossiionX(this.DataComponent.joinTables[i].lelement);
 
-      this.DataComponent.joinTables[i].rightTable.elementY = this.getPossiionY(this.DataComponent.joinTables[i].rightTable.element);
-      this.DataComponent.joinTables[i].rightTable.elementX = this.getPossiionX(this.DataComponent.joinTables[i].rightTable.element);
+      this.DataComponent.joinTables[i].relementY = this.getPossiionY(this.DataComponent.joinTables[i].relement);
+      this.DataComponent.joinTables[i].relementX = this.getPossiionX(this.DataComponent.joinTables[i].relement);
     }
   }
 
@@ -151,8 +191,11 @@ export class TableDesignComponent implements OnInit {
     //return $(element).offset().top;
   }
 
-  selectMainTable(table) {
+  selectMainTable(table: QueryModel) {
     this.DataComponent.mainTable = table;
+    this.DataComponent.models.forEach(m=>m.IsMainTable=false);
+    table.IsMainTable=true;
+    // this.DataComponent.mainTable.isMainTable=true;
   }
 
   toggleAllProperties(table: Model) {
@@ -161,20 +204,49 @@ export class TableDesignComponent implements OnInit {
       this.selectColumn(table.Properties[i]);
     }
   }
+
+  static makeSureUniqIdIsDistinct(selectedProperties: any[], uniqId: string, propertyModel: any) {
+
+    if(!propertyModel[uniqId]){
+      propertyModel[uniqId]=  Utility.generateNewIdNumber();
+    }
+    var any=selectedProperties.find(s=>s[uniqId]==propertyModel[uniqId]);
+    if(any){
+      propertyModel[uniqId]=null;
+      return this.makeSureUniqIdIsDistinct( propertyModel[uniqId],uniqId,propertyModel);
+    }
+    return  propertyModel[uniqId];
+
+  }
+
 }
 
 
-export class JoinTable {
-  leftTable: Model;
-  rightTable: Model;
-  rightProperty: Property;
-  leftProperty: Property;
+export class JoinTable extends BaseEntity{
+  leftTable: QueryModel;
+  rightTable: QueryModel;
+  rightProperty: PropertyModel;
+  leftProperty: PropertyModel;
   joinType: JoinTableType;
 
-   rightTableId:number ;
- leftTableId :number;
- rightPropertyId:number;
- leftPropertyId :number;
+  rightTableId: number;
+  leftTableId: number;
+  rightPropertyId: number;
+  leftPropertyId: number;
+
+
+  lelementX: number;
+  lelementY: number;
+  lelement: HTMLInputElement;
+
+  relementX: number;
+  relementY: number;
+  relement: HTMLInputElement;
+  rightTableUniqId: number;
+  leftTableUniqId: number;
+
+
+  uniqId;
 }
 
 export enum JoinTableType {
@@ -190,6 +262,7 @@ export enum JoinTableType {
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {analyzeFileForInjectables} from "@angular/compiler";
+import {cloneAll, Utility} from "../../utility";
 
 /*
  * Raise the value exponentially
@@ -207,17 +280,3 @@ export class HoldValuePipe implements PipeTransform {
   }
 }
 
-
-function cloneAll(obj) {
-  /*  let newObj = JSON.parse(JSON.stringify(obj));
-    console.log(obj, newObj);*/
-  var clone = Object.create(Object.getPrototypeOf(obj));
-
-  var props = Object.getOwnPropertyNames(obj);
-  props.forEach(function (key) {
-    var desc = Object.getOwnPropertyDescriptor(obj, key);
-    Object.defineProperty(clone, key, desc);
-  });
-
-  return clone;
-}

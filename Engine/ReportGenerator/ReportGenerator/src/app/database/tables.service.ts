@@ -38,7 +38,7 @@ export class TablesService {
   }
 
   GetWithProperties(Id: number) {
-    return this.http.get<CustomResultGeneric<Property[]>>(`${this.getRootUrl}${this.getAreaAndPath}/GetWithProperties?Id=${Id}`,  this.headers);
+    return this.http.get<CustomResultGeneric< Model>>(`${this.getRootUrl}${this.getAreaAndPath}/GetWithProperties?Id=${Id}`,  this.headers);
   }
 }
 

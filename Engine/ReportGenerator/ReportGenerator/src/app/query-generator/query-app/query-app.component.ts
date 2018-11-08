@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {DataComponent} from "../data/data.component";
 import {ActivatedRoute} from "@angular/router";
-import {Model, QueryModel} from "../../model/model";
+import {Model, Query, QueryModel} from "../../model/model";
 import {TablesComponent} from "../../database/tables/tables.component";
 import {QueriesComponent} from "../../database/queries/queries.component";
 
@@ -33,6 +33,13 @@ export class QueryAppComponent implements OnInit {
   }
 
 
+  querySelect(ev:Query){
+
+    this.DataComponent.loadQuery(ev.Id);
+
+  }
+
+
   openModalQueries(){
     this.showQueries=true;
     if(this.queries)
@@ -45,7 +52,7 @@ export class QueryAppComponent implements OnInit {
 
   ngOnInit() {
     var id = this.activatedRoute.snapshot.params['id'];
-    debugger;
+
     if (id) {
       //UPDATE
       this.DataComponent.loadQuery(id);

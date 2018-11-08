@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 using WebAppIDEEngine.Models.Core.QueryBuild;
 using WebAppIDEEngine.Models.CoreEnum;
 using WebAppIDEEngine.Models.ICore;
@@ -17,7 +19,8 @@ namespace WebAppIDEEngine.Models.Core
     /// <summary>
     /// فیلد های مدل های سیستم
     /// </summary>
-    public class Property : BaseEntity
+    public class 
+        Property : BaseEntity
     {
         [DropDown(Name = "مدل ", Service = GlobalNames.ModelService, MethodName = GlobalNames.GetDropDownAsync)]
         public long ModelId { get; set; }
@@ -57,8 +60,15 @@ namespace WebAppIDEEngine.Models.Core
         public bool FK { get; set; }
 
 
+        
+        
+        [JsonIgnore]
+        [XmlIgnore]
         public Model Model { get; set; }
        // public ICollection<Column> Columns { get; set; }
+        
+        [JsonIgnore]
+        [XmlIgnore]
         public ICollection<QueryProperty> UsedInQueries { get; set; }
         
         public NavigationProperty NavigationProperty { get; set; }
@@ -66,10 +76,6 @@ namespace WebAppIDEEngine.Models.Core
         public long? NavigationPropertyId { get; set; }
 
         
-        
-        
-        public ICollection<JoinTable> JoinRightTables { get; set; }
-        public ICollection<JoinTable> JoinLeftTables { get; set; }
 
     }
 }

@@ -3,6 +3,7 @@ using Engine.DomainLayer.Models.Core.QueryBuild;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Engine.Entities.Models.Core.AppGeneration;
@@ -33,11 +34,13 @@ namespace WebAppIDEEngine.Models.Core
             this.Actions=new List<Action>();
             this.ServiceMethods = new List<ServiceMethod>();
             this.addParameterFields = new List<AddParameterForm>();
-            this.joinTables = new List<JoinTable>();
+         //   this.joinTables = new List<JoinTable>();
             this.models = new List<QueryModel>();
             this.selectedProperties = new List<QueryProperty>();
             
         }
+        
+        
         /// <summary>   
         /// نوع کوئری
         /// </summary>
@@ -53,21 +56,25 @@ namespace WebAppIDEEngine.Models.Core
         /// </summary>
         public virtual ICollection<QueryProperty> selectedProperties { get; set; }
 
+        /*/// <summary>
+        /// جدول اصلی
+        /// </summary>
+        public virtual QueryModel mainTable { get; set; }
+
+
         /// <summary>
         /// جدول اصلی
         /// </summary>
-        public virtual Model mainTable { get; set; }
+        public long? mainTableId { get; set; }*/
+/*
 
-
-        /// <summary>
-        /// جدول اصلی
-        /// </summary>
-        public long mainTableId { get; set; }
-
+        [NotMapped]
         /// <summary>
         /// جداول جوین شده
         /// </summary>
         public virtual ICollection<JoinTable> joinTables { get; set; }
+
+*/
 
         /// <summary>
         /// پارامتر های تعریف شده

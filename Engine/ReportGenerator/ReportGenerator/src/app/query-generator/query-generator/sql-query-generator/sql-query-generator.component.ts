@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {IQueryGenerator} from "../iquery-generator";
-import {Model, NavigationProperty, Property} from "../../../model/model";
+import {Model, NavigationProperty, Property, PropertyModel, QueryModel} from "../../../model/model";
 import {Observable, of} from "rxjs";
 import {JoinTable, JoinTableType} from "../../select-columns-and-join/table-design/table-design.component";
 import {AppComponent} from "../../../app.component";
@@ -40,18 +40,18 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
     return variables;
   }
 
-  Generate(properties: Property[],
+  Generate(properties: PropertyModel[],
            navigationProperties: NavigationProperty[],
-           joinTables: JoinTable[], mainTable: Model): Observable<string> {
+           joinTables: JoinTable[], mainTable: QueryModel): Observable<string> {
 
     if (!mainTable) {
       AppComponent.ShowMsg('', 'اشکال', 'جدول اصلی انتخاب نشده است');
       return;
     }
-    if (!mainTable.TableName) {
+    if (!mainTable.Model.TableName) {
       AppComponent.ShowMsg('', 'اشکال', 'جدول اصلی نام ندارد');
     }
-    debugger;
+
     let variables = this.getDefinedQueryVariables(this.dataComponent.addParameterFields);
     let columns = this.GetColumns(properties, navigationProperties);
     let conditions = this.GetConditions(properties, navigationProperties);
@@ -62,8 +62,8 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
 
     let select = `${variables}  
     
-    select ${columns} from ${mainTable.TableName} as
-     ${SqlQueryGeneratorComponent.GetAsName(mainTable.Name, SqlQueryGeneratorComponent.tableAsNames, mainTable)} `;
+    select ${columns} from ${mainTable.Model.TableName} as
+     ${SqlQueryGeneratorComponent.GetAsName(mainTable.Model.Name, SqlQueryGeneratorComponent.tableAsNames, mainTable)} `;
 
     if (joins) {
       select += ` ${joins}`;
@@ -75,55 +75,60 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
     return of(select);
   }
 
-  GetColumns(properties: Property[], navigationProperties: NavigationProperty[]): string {
+  GetColumns(properties: PropertyModel[], navigationProperties: NavigationProperty[]): string {
     let columns = properties.filter(p => p.onOutPut);
     let compWithAs = this.GetAsOfColumns(columns);
     return compWithAs;
   }
 
 
-  GetConditions(properties: Property[], navigationProperties: NavigationProperty[]): string {
+  GetConditions(properties: PropertyModel[], navigationProperties: NavigationProperty[]): string {
     return this.dataComponent.WhereStatement;
   }
 
-  GetJoins(properties: Property[],
-           navigationProperties: NavigationProperty[], mainTable: Model): string {
+  GetJoins(properties: PropertyModel[],
+           navigationProperties: NavigationProperty[], mainTable: QueryModel): string {
 
     if (!mainTable)
       AppComponent.ShowMsg('', '', 'mainTable is null');
 
+
+    let JoinTables=[];
+    mainTable.LeftJoinTables.forEach(l=>JoinTables.push(l));
+    mainTable.RightJoinTables.forEach(l=>JoinTables.push(l));
+
     let joins = '';
-    for (let i = 0; i < mainTable.JoinTables.length; i++) {
-      let joinTable = mainTable.JoinTables[i];
+    for (let i = 0; i < JoinTables.length; i++) {
+      let joinTable = JoinTables[i];
 
       // جداول اصلی و پروپرتی ها را مشخص کن که کدام اصلی و فرعی است
-      let firstTableTmp = this.GetMainForJoin(joinTable, mainTable);
+      let firstTableTmp = this.GetMainForJoin(joinTable, mainTable.Model);
       let dependentTable = this.GetDependentTableForJoin(joinTable, firstTableTmp);
 
 
       // اگر برابر بود که هیچ در غیر اینصورت عوض کن جای آن ها را
-      let firstTable;
+      let firstTable:Model;
       if (firstTableTmp == mainTable) {
-        firstTable = firstTableTmp;
+        firstTable = firstTableTmp.Model;
       } else {
-        firstTable = dependentTable;
+        firstTable = dependentTable.Model;
         dependentTable = firstTableTmp;
       }
 
       var modelName = this.dataComponent.findModelName(joinTable.rightProperty);
       let mainProperty = firstTable.Name == modelName ? joinTable.rightProperty : joinTable.leftProperty;
-      let dependentProperty = dependentTable.Name == modelName ? joinTable.rightProperty : joinTable.leftProperty;
+      let dependentProperty = dependentTable.Model.Name == modelName ? joinTable.rightProperty : joinTable.leftProperty;
 
       let jointype: string = this.GetJoinType(joinTable);
 
       let join;
       // اگر اولی باشد جوین نزن
-      join = `${jointype} ${dependentTable.TableName}
-          as ${SqlQueryGeneratorComponent.GetAsName(dependentTable.Name, SqlQueryGeneratorComponent.tableAsNames, dependentTable)} on 
+      join = `${jointype} ${dependentTable.Model.TableName}
+          as ${SqlQueryGeneratorComponent.GetAsName(dependentTable.Model.Name, SqlQueryGeneratorComponent.tableAsNames, dependentTable)} on 
            ${SqlQueryGeneratorComponent.GetAsName(firstTable.Name, SqlQueryGeneratorComponent.tableAsNames, firstTable)}.
-           ${mainProperty.NameInTableAsName}=
-           ${SqlQueryGeneratorComponent.GetAsName(dependentTable.Name, SqlQueryGeneratorComponent.tableAsNames, dependentTable)}.
-           ${dependentProperty.NameInTableAsName}`;
+           ${mainProperty.Property.NameInTableAsName}=
+           ${SqlQueryGeneratorComponent.GetAsName(dependentTable.Model.Name, SqlQueryGeneratorComponent.tableAsNames, dependentTable)}.
+           ${dependentProperty.Property.NameInTableAsName}`;
 
       /*     // اگر اولی باشد جوین نزن
            join = `${jointype} ${dependentTable.TableName}
@@ -151,11 +156,11 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
 
 
   private GetMainForJoin(table: JoinTable, Ftable) {
-    return table.rightTable.Name == Ftable.Name ? table.leftTable : table.rightTable;
+    return table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
   }
 
   private GetDependentTableForJoin(table: JoinTable, Ftable) {
-    return table.rightTable.Name == Ftable.Name ? table.leftTable : table.rightTable;
+    return table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
   }
 
   GetJoinType(table: JoinTable): string {
@@ -185,14 +190,14 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
   }
 
 
-  GetAsOfColumns(columns: Property[]): string {
+  GetAsOfColumns(columns: PropertyModel[]): string {
     let c = 0;
     let names = '';
     for (let i = 0; i < columns.length; i++) {
       let name = `${this.dataComponent.findModel(columns[i]).Model.AsName}.
-      ${columns[i].NameInTable}  
+      ${columns[i].Property.NameInTable}  
       as  
-       ${columns[i].NameInTableAsName} `
+       ${columns[i].Property.NameInTableAsName} `
       names += ' ' + name;
 
       // آخری نباشد

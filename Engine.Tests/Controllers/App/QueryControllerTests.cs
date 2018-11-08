@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using AppSourceGenerator;
 using Engine.Areas.ReportGenerator.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using WebAppIDEEngine.Models;
+using WebAppIDEEngine.Models.Core;
 
 namespace Engine.Tests.Controllers.App
 {
@@ -100,9 +102,17 @@ namespace Engine.Tests.Controllers.App
         [TestMethod]
         public void TestMethod1()
         {
-            //
-            // TODO: Add test logic here
-            //
+            var q = new Query();
+
+            using (var db = new EngineContext())
+            {
+                db.Queries.Add(q);
+                db.SaveChanges();
+
+                db.Queries.Remove(q);
+                db.SaveChanges();
+
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Engine.Areas.ReportGenerator.Controllers
     {
         public EngineContext _context = new EngineContext();
         [HttpGet]
+        [Route("~/api/Tables/GetAllNames")]
         public CustomResult GetAllNames(string searchTerm, int? lastIndex, int? count)
         {
             // خخالی بود تمامی را برگردان
@@ -43,9 +44,9 @@ namespace Engine.Areas.ReportGenerator.Controllers
         }
 
         [HttpGet]
+        [Route("~/api/Tables/GetWithProperties")]
         public CustomResult GetWithProperties(long id)
         {
-
             var model = _context.Models.Find(id);
             if (model == null)
             {
@@ -53,7 +54,7 @@ namespace Engine.Areas.ReportGenerator.Controllers
             }
 
             // با paging برگردان
-            return new CustomResult { result = model.Properties.ToList(), Status = CustomResultType.success };
+            return new CustomResult { result =model, Status = CustomResultType.success };
 
         }
 

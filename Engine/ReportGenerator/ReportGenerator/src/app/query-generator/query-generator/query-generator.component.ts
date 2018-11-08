@@ -10,7 +10,6 @@ import {DataComponent} from "../data/data.component";
 })
 export class QueryGeneratorComponent implements OnInit {
 
-  SQL;
 
   constructor(public sqlQueryGeneratorComponent: SqlQueryGeneratorComponent,
               public dataComponent: DataComponent) {
@@ -22,13 +21,13 @@ export class QueryGeneratorComponent implements OnInit {
       null, this.dataComponent.joinTables,
       this.dataComponent.mainTable
     ).toPromise().then(r => {
-      debugger;
-      this.SQL = r;
+
       this.dataComponent.SQL = r;
     });
   }
 
   ngOnInit() {
+
 
   }
 

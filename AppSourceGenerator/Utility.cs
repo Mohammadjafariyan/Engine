@@ -16,19 +16,19 @@ namespace AppSourceGenerator
     {
         public static string ModelsNamespace = "Models";
         public static string ControllersNamespace = "Engine";
+
         public static string[] ControllerUsigs =
         {
             "using Engine.Areas.ReportGenerator.Controllers;",
             "using System.Linq;",
-            "using "+ModelsNamespace+";",
+            "using " + ModelsNamespace + ";",
         };
 
-        
-        
+
         public static string[] ServiceUsigs =
         {
             "using System.Linq;",
-            "using "+ModelsNamespace+";",
+            "using " + ModelsNamespace + ";",
         };
 
         public static string GetRegisterAreaContent(string areaName)
@@ -82,7 +82,7 @@ namespace Engine.Areas.AppGeneration
 
             string content = @"
 using " + ModelsNamespace + ";\n" + @"
-"+string.Join("\n",ServiceUsigs)+@"
+" + string.Join("\n", ServiceUsigs) + @"
 using ServiceLayer.Systems;
 namespace ServiceLayer." + subSystemName + @"
 {
@@ -104,13 +104,16 @@ namespace ServiceLayer." + subSystemName + @"
             string returnType = "";
             string inputParameters = "";
 
+            inputParameters = getInputParameters(serviceMethodQuery);
+            var SqlinputParameters = getSQLParameters(serviceMethodQuery);
+
             returnType = GetDetermineReturnType
                 (serviceMethodServiceReturnMethodType, serviceMethodServiceItemReturnType, serviceMethodQuery);
 
-            var itemType=GetDetermineReturnItemType(serviceMethodServiceReturnMethodType, serviceMethodQuery);
+            var itemType = GetDetermineReturnItemType(serviceMethodServiceReturnMethodType, serviceMethodQuery);
 
             var s1 = $@"public {returnType} {serviceMethodName}({inputParameters}) " + "{" +
-                     $@"var dt={context}.Database.SqlQuery<{itemType}>(""{serviceMethodQuery.SQL}"");";
+                     $@"var dt={context}.Database.SqlQuery<{itemType}>("" {SqlinputParameters+"\n"}  {serviceMethodQuery.SQL}"");";
             switch (serviceMethodServiceItemReturnType)
             {
                 case ServiceItemReturnType.List:
@@ -149,8 +152,43 @@ namespace ServiceLayer." + subSystemName + @"
             return s1;
         }
 
-        private static string GetDetermineReturnItemType(ServiceReturnMethodType 
-            serviceMethodServiceReturnMethodType ,Query serviceMethodQuery)
+        private static string getSQLParameters(Query serviceMethodQuery)
+        {
+            var paramerters = "";
+            for (int i = 0; i < serviceMethodQuery.addParameterFields.Count; i++)
+            {
+                var addParameterField = serviceMethodQuery.addParameterFields.ElementAt(i);
+                var type = addParameterField.typeInSQL.ToString();
+                paramerters += $@"DECLARE {addParameterField.nameInSQL} {type}{addParameterField.range};"+"\n";
+
+            }
+
+            return paramerters;
+        }
+
+
+        private static string getInputParameters(Query serviceMethodQuery)
+        {
+            var paramerters = "";
+            for (int i = 0; i < serviceMethodQuery.addParameterFields.Count; i++)
+            {
+                var addParameterField = serviceMethodQuery.addParameterFields.ElementAt(i);
+                var isnullable = addParameterField.nullable ? "?" : "";
+                var type = DetermineType(addParameterField.typeInModel);
+
+                paramerters += $@"{type}{isnullable} {addParameterField.nameInMethod}";
+
+                if (i != serviceMethodQuery.addParameterFields.Count - 1)
+                {
+                    paramerters += ",";
+                }
+            }
+
+            return paramerters;
+        }
+
+        private static string GetDetermineReturnItemType(ServiceReturnMethodType
+            serviceMethodServiceReturnMethodType, Query serviceMethodQuery)
         {
             var returnType = "";
             switch (serviceMethodServiceReturnMethodType)
@@ -159,7 +197,7 @@ namespace ServiceLayer." + subSystemName + @"
                     returnType = "dynamic";
                     break;
                 case ServiceReturnMethodType.Model:
-                    returnType = serviceMethodQuery.mainTable.Name;
+                    returnType = serviceMethodQuery.models.Where(m=>m.IsMainTable).Select(m=>m.Name).FirstOrDefault();
                     break;
                 case ServiceReturnMethodType.INT:
                     returnType = "int";
@@ -191,7 +229,7 @@ namespace ServiceLayer." + subSystemName + @"
         {
             string returnType = "";
 
-            returnType=GetDetermineReturnItemType(serviceMethodServiceReturnMethodType,serviceMethodQuery);
+            returnType = GetDetermineReturnItemType(serviceMethodServiceReturnMethodType, serviceMethodQuery);
 
             if (serviceMethodServiceItemReturnType ==
                 ServiceItemReturnType.List)
@@ -227,6 +265,8 @@ namespace ServiceLayer." + subSystemName + @"
         public static string GetControllerMethod(DefineControllerMethod controllerMethod)
         {
             string inputParameters = "";
+            inputParameters = getInputParameters(controllerMethod.ServiceMethod.Query);
+
             var s1 = $@" 
 [HttpGet]
 public ActionResult {controllerMethod.Name}({inputParameters}) " + "{";
@@ -250,7 +290,7 @@ try{
 
         public static string GetControllerContent(DefineController controller, string translate, string serviceName,
             string baseClassName, object baseInterfaces, string serviceContent, string description, object genericModel,
-            string subSystemName,bool isMVC=true)
+            string subSystemName, bool isMVC = true)
         {
             baseClassName = baseClassName != null ? ":" + baseClassName : "";
             baseClassName = baseClassName + (genericModel != null ? "<" + genericModel + ">" : "");
@@ -288,17 +328,16 @@ try{
             serviceUsings = !string.IsNullOrEmpty(serviceUsings) ? serviceUsings + "\n" : "";
 
 
-
             var mvcOrapi = isMVC ? "using System.Web.Mvc;" : "using System.Web.Http;";
             string content = serviceUsings + @"
 
-" + string.Join("\n",ControllerUsigs) + @"
+" + string.Join("\n", ControllerUsigs) + @"
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using WebAppIDEEngine.Models;
-"+ mvcOrapi+@"
+" + mvcOrapi + @"
 
 
 
@@ -316,15 +355,15 @@ namespace " + ControllersNamespace + @".Areas." + subSystemName + @".Controllers
             content += constructure + "\n";
             content += serviceContent + "\n";
 
-            content += @"} " + "\n" ;
+            content += @"} " + "\n";
 
             return content;
         }
 
-        public static string GetProperty(Property property)
+        public static string DetermineType(PropertyType PropertyType)
         {
             var type = "";
-            switch (property.PropertyType)
+            switch (PropertyType)
             {
                 case PropertyType.Boolean:
                     type = "bool";
@@ -351,9 +390,17 @@ namespace " + ControllersNamespace + @".Areas." + subSystemName + @".Controllers
                     type = "string";
                     break;
                 default:
-                    type = property.PropertyType.ToString();
+                    type = PropertyType.ToString();
                     break;
             }
+
+            return type;
+        }
+
+        public static string GetProperty(Property property)
+        {
+            var type = "";
+            type = DetermineType(property.PropertyType);
 
             var prop = "public" + " " + type + " " + property.Name +
                        "{get;set;}" + "\n";

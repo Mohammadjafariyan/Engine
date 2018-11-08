@@ -1,0 +1,94 @@
+﻿@using WebAppIDEEngine.Models.Core
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+
+@model IDataTable /*<Engine.Entities.Models.Core.AppGeneration.SubSystem>*/
+@{
+    ViewBag.Title = "کنترولر ها";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var records = Model.Records;
+}
+
+
+@if (ViewBag.alertmsg != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>خطا!</strong> @ViewBag.alertmsg
+    </div>
+}
+
+@if (ViewBag.successmsg != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>توجه!</strong> @ViewBag.alertmsg
+    </div>
+}
+
+<table class="table">
+    <tr>
+        @{
+            foreach (var header in Model.Headers)
+            {
+                <th>
+                    @Html.DisplayNameFor(model => header)
+                </th>
+            }
+        }
+        <th></th>
+    </tr>
+
+    @foreach (var item in records)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Translate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsInstalled)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.lastUpdate)
+            </td>
+            <td>
+                <script type="text/javascript">
+                    function getfolder(e) {
+                        var files = e.target.files;
+                        var path = files[0].webkitRelativePath;
+                        var Folder = path.split("/");
+                    }
+                </script>
+
+                @using (Html.BeginForm("Export", "Export", FormMethod.Post, htmlAttributes: new {area = "appGeneration"}))
+                {
+                    <input name="filepath" type="file" id="flup" onchange="getfolder(event)" webkitdirectory mozdirectory msdirectory odirectory directory multiple/>
+                    <div class="form-group">
+                        <label for="sel1">نوع:</label>
+                        <select class="form-control" name="type">
+                            <option value="1">حذف و ایجاد</option>
+                            <option value="2">آپدیت</option>
+                        </select>
+                    </div>
+                    
+                    <input name="subsystemId" type="hidden" value="@item.Id"/>
+                      <button type="submit" class="btn btn-primary">ایجاد خروجی</button>
+                }
+
+
+            </td>
+        </tr>
+    }
+
+</table>

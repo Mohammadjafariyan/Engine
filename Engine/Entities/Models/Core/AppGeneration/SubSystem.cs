@@ -13,6 +13,11 @@ namespace Engine.Entities.Models.Core.AppGeneration
     /// </summary>
     public class SubSystem:BaseEntity
     {
+        
+        
+        
+        public string lastUpdate{ get; set; }
+
         /// <summary>
         /// نام
         /// </summary>

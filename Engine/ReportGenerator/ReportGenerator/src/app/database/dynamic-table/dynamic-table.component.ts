@@ -29,9 +29,14 @@ export class JDynamicTableComponent implements OnInit {
   @Output()
   selectedEv:EventEmitter<any> = new EventEmitter<any>();
 
+
+
   select() {
     this.selectedEv.emit(this.selected);
   }
+
+  @Input()
+  buttons:DynaButton[];
 
   ngOnInit() {
   }
@@ -45,4 +50,8 @@ export class JDynamicTableComponent implements OnInit {
   cancel(){
     this._display=false;
   }
+}
+export class DynaButton {
+  Name;
+  onclick;
 }

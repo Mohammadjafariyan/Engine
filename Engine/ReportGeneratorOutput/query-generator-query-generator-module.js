@@ -39012,7 +39012,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n<div class=\"ui-rtl\" dir=\"rtl\">\n<p-dialog [(visible)]=\"display\" (onHide)=\"onHide($event)\" [maximizable]=\"true\" [draggable]=\"true\" [minWidth]=\"300\">\n  <p-header>\n    انتخاب جدول\n  </p-header>\n\n  <p-table  *ngIf=\"models\" [value]=\"models\"\n           selectionMode=\"single\" [(selection)]=\"selected\" dataKey=\"Id\">\n    <ng-template pTemplate=\"header\" let-columns>\n      <tr >\n        <th *ngFor=\"let f of fields\" >{{f.translate}}</th>\n      </tr>\n    </ng-template>\n    <ng-template pTemplate=\"body\" let-rowData let-columns=\"columns\">\n      <tr [pSelectableRow]=\"rowData\">\n        <ng-template let-f ngFor [ngForOf]=\"fields\" >\n          <td >{{rowData[f.name]}}</td>\n        </ng-template>\n      </tr>\n    </ng-template>\n    <!--<ng-template pTemplate=\"summary\">\n\n    </ng-template>-->\n  </p-table>\n\n  <p-footer>\n    <button class=\"btn bg-danger\" (click)=\"select()\">انتخاب</button>\n    <button class=\"btn bg-danger\" (click)=\"cancel()\">لغو</button>\n  </p-footer>\n</p-dialog>\n</div>\n"
+module.exports = "<div class=\"ui-rtl\" dir=\"rtl\">\n  <p-dialog [(visible)]=\"display\" (onHide)=\"onHide($event)\" [maximizable]=\"true\" [draggable]=\"true\" [minWidth]=\"300\">\n    <p-header>\n      انتخاب  از جدول\n    </p-header>\n\n    <p-table *ngIf=\"models\" [value]=\"models\"\n             selectionMode=\"single\" [(selection)]=\"selected\" dataKey=\"Id\">\n      <ng-template pTemplate=\"header\" let-columns>\n        <tr>\n          <th *ngFor=\"let f of fields\">{{f.translate}}</th>\n        </tr>\n      </ng-template>\n      <ng-template pTemplate=\"body\" let-rowData let-columns=\"columns\">\n        <tr [pSelectableRow]=\"rowData\">\n          <ng-template let-f ngFor [ngForOf]=\"fields\">\n            <td>{{rowData[f.name]}}</td>\n          </ng-template>\n\n          <ng-template let-b ngFor [ngForOf]=\"buttons\">\n            <td class=\"btn btn-primary \" (click)=\"b.onclick ? b.onclick(rowData) : null\">{{b.Name}}</td>\n          </ng-template>\n\n        </tr>\n      </ng-template>\n      <!--<ng-template pTemplate=\"summary\">\n\n      </ng-template>-->\n    </p-table>\n\n    <p-footer>\n      <button class=\"btn bg-danger\" (click)=\"select()\">انتخاب</button>\n      <button class=\"btn bg-danger\" (click)=\"cancel()\">لغو</button>\n    </p-footer>\n  </p-dialog>\n</div>\n"
 
 /***/ }),
 
@@ -39020,12 +39020,13 @@ module.exports = "\n\n<div class=\"ui-rtl\" dir=\"rtl\">\n<p-dialog [(visible)]=
 /*!*******************************************************************!*\
   !*** ./src/app/database/dynamic-table/dynamic-table.component.ts ***!
   \*******************************************************************/
-/*! exports provided: JDynamicTableComponent */
+/*! exports provided: JDynamicTableComponent, DynaButton */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JDynamicTableComponent", function() { return JDynamicTableComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DynaButton", function() { return DynaButton; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -39084,6 +39085,10 @@ var JDynamicTableComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
         __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"])
     ], JDynamicTableComponent.prototype, "selectedEv", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Array)
+    ], JDynamicTableComponent.prototype, "buttons", void 0);
     JDynamicTableComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-dynamic-table',
@@ -39092,6 +39097,12 @@ var JDynamicTableComponent = /** @class */ (function () {
         })
     ], JDynamicTableComponent);
     return JDynamicTableComponent;
+}());
+
+var DynaButton = /** @class */ (function () {
+    function DynaButton() {
+    }
+    return DynaButton;
 }());
 
 
@@ -39110,7 +39121,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QueriesService", function() { return QueriesService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -39120,7 +39130,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 var QueriesService = /** @class */ (function () {
@@ -39151,10 +39160,10 @@ var QueriesService = /** @class */ (function () {
         configurable: true
     });
     QueriesService.prototype.getAllQueries = function (searchTerm, lastIndex, count) {
-        return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])(null);
-        /*
-            return this.http.get<Model[]>(`${this.getRootUrl}${this.getAreaAndPath}/GetAllQueries`,  this.headers
-            );*/
+        return this.http.get("" + this.getRootUrl + this.getAreaAndPath + "/getAll?lastIndex=&count=", this.headers);
+    };
+    QueriesService.prototype.deleteById = function (Id) {
+        return this.http.post("" + this.getRootUrl + this.getAreaAndPath + "/deleteById?id=" + Id, this.headers);
     };
     QueriesService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
@@ -39187,7 +39196,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-dynamic-table [display]=\"display\" [models]=\"queries\"\n                   [fields]=\"fields\" [selected]=\"selected\"\n                   (selectedEv)=\"selectedEvent($event)\"></app-dynamic-table>\n"
+module.exports = "<app-dynamic-table [buttons]=\"buttons\" #dynaTable [display]=\"display\" [models]=\"queries\"\n                   [fields]=\"fields\" [selected]=\"selected\"\n                   (selectedEv)=\"selectedEvent($event)\"></app-dynamic-table>\n"
 
 /***/ }),
 
@@ -39205,6 +39214,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _form_generator_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../form-generator/models */ "./src/app/form-generator/models.ts");
 /* harmony import */ var _model_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../model/model */ "./src/app/model/model.ts");
 /* harmony import */ var _queries_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../queries.service */ "./src/app/database/queries.service.ts");
+/* harmony import */ var _dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../dynamic-table/dynamic-table.component */ "./src/app/database/dynamic-table/dynamic-table.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -39218,13 +39228,27 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var QueriesComponent = /** @class */ (function () {
     function QueriesComponent(queriesService) {
         this.queriesService = queriesService;
         this.selectedEv = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
     }
+    Object.defineProperty(QueriesComponent.prototype, "display", {
+        get: function () {
+            return this._display;
+        },
+        set: function (value) {
+            this._display = value;
+            this.dynaTable.display = value;
+            this.ngOnInit();
+        },
+        enumerable: true,
+        configurable: true
+    });
     QueriesComponent.prototype.selectedEvent = function (e) {
         this.selected = e;
+        this.selectedEv.emit(this.selected);
     };
     QueriesComponent.prototype.select = function () {
         this.selectedEv.emit(this.selected);
@@ -39232,14 +39256,31 @@ var QueriesComponent = /** @class */ (function () {
     QueriesComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.queriesService.getAllQueries().toPromise().then(function (r) {
-            _this.queries = r;
+            _this.queries = r.result;
         });
+        var b = new _dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_4__["DynaButton"]();
+        b.Name = "حذف";
+        b.onclick = function (el) {
+            _this.queriesService.deleteById(el.Id).toPromise().then(function (r) {
+                alert(r.Message);
+                _this.queriesService.getAllQueries().toPromise().then(function (r) {
+                    _this.queries = r.result;
+                });
+            });
+        };
+        this.buttons = [];
+        this.buttons.push(b);
         this.fields = Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_1__["generateDynamicFormFields"])(new _model_model__WEBPACK_IMPORTED_MODULE_2__["Query"]());
     };
     __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('dynaTable'),
+        __metadata("design:type", _dynamic_table_dynamic_table_component__WEBPACK_IMPORTED_MODULE_4__["JDynamicTableComponent"])
+    ], QueriesComponent.prototype, "dynaTable", void 0);
+    __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
-        __metadata("design:type", Object)
-    ], QueriesComponent.prototype, "display", void 0);
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], QueriesComponent.prototype, "display", null);
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
         __metadata("design:type", Object)
@@ -39419,21 +39460,26 @@ var TablesComponent = /** @class */ (function () {
         set: function (value) {
             this._display = value;
             this.dynaTable.display = value;
+            this.ngOnInit();
         },
         enumerable: true,
         configurable: true
     });
-    TablesComponent.prototype.selectedEvent = function (ev) {
+    TablesComponent.prototype.selectedEvent = function (event) {
+        var ev = Object.assign({}, event);
         this.selected = ev;
         console.log(ev);
         var qm = new _model_model__WEBPACK_IMPORTED_MODULE_1__["QueryModel"]();
         qm.Model = ev;
-        qm.Query = this.DataComponent.currentQuery;
+        // qm.Query = this.DataComponent.currentQuery;
         this.DataComponent.models.push(qm);
         this.tableService.GetWithProperties(qm.Model.Id).toPromise().then(function (r) {
-            qm.Model.Properties = r.result;
+            qm.Model = r.result;
+            // qm.Model.Properties = r.result.properties;
+            //qm.Model.Properties.forEach(p=>p.uniqId=Utility.generateNewIdNumber());
             qm.Model.AsName = qm.Model.Name;
-            qm.Model.JoinTables = [];
+            qm.LeftJoinTables = [];
+            qm.RightJoinTables = [];
         });
     };
     TablesComponent.prototype.select = function () {
@@ -40037,6 +40083,10 @@ var PanelQueryType;
 var BaseEntity = /** @class */ (function () {
     function BaseEntity() {
     }
+    __decorate([
+        Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_1__["InputField"])('Id', 'کد', FieldType.Text),
+        __metadata("design:type", Object)
+    ], BaseEntity.prototype, "Id", void 0);
     return BaseEntity;
 }());
 
@@ -40045,9 +40095,22 @@ var Query = /** @class */ (function (_super) {
     function Query() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.type = QueryViewModelType.Select;
+        _this.queryName = null;
         _this.QueryType = QueryType.Join;
         return _this;
     }
+    __decorate([
+        Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_1__["InputField"])('type', 'نوع', FieldType.Text),
+        __metadata("design:type", Number)
+    ], Query.prototype, "type", void 0);
+    __decorate([
+        Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_1__["InputField"])('queryName', 'نام', FieldType.Text),
+        __metadata("design:type", String)
+    ], Query.prototype, "queryName", void 0);
+    __decorate([
+        Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_1__["InputField"])('QueryType', 'نوع کوئری', FieldType.Text),
+        __metadata("design:type", Number)
+    ], Query.prototype, "QueryType", void 0);
     return Query;
 }(BaseEntity));
 
@@ -40061,7 +40124,9 @@ var QueryViewModelType;
 var QueryModel = /** @class */ (function (_super) {
     __extends(QueryModel, _super);
     function QueryModel() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.uniqId = _query_generator_utility__WEBPACK_IMPORTED_MODULE_0__["Utility"].generateNewIdNumber();
+        return _this;
     }
     return QueryModel;
 }(BaseEntity));
@@ -40085,7 +40150,6 @@ var Model = /** @class */ (function (_super) {
         _this.Properties = [];
         //public List<Form> Forms ;
         _this.NavigationProperties = [];
-        _this.JoinTables = [];
         _this._AsName = null;
         return _this;
         // MethodParameters:MethodParameter[] ;
@@ -40203,7 +40267,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  data works!\n</p>\n\n"
+module.exports = "<p>\n  data works!\n</p>\n"
 
 /***/ }),
 
@@ -40221,6 +40285,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _db_schema_provider_sqlserver_schema_provider_sqlserver_schema_provider_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../db-schema-provider/sqlserver-schema-provider/sqlserver-schema-provider.component */ "./src/app/query-generator/db-schema-provider/sqlserver-schema-provider/sqlserver-schema-provider.component.ts");
 /* harmony import */ var _model_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../model/model */ "./src/app/model/model.ts");
 /* harmony import */ var _utility__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utility */ "./src/app/query-generator/utility.ts");
+/* harmony import */ var _database_tables_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../database/tables.service */ "./src/app/database/tables.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -40234,9 +40299,11 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var DataComponent = /** @class */ (function () {
-    function DataComponent(DataService) {
+    function DataComponent(DataService, tableService) {
         this.DataService = DataService;
+        this.tableService = tableService;
         this.selectedProperties = [];
         this.joinTables = [];
         this.addParameterFields = [];
@@ -40245,10 +40312,20 @@ var DataComponent = /** @class */ (function () {
     DataComponent.prototype.getPropertiesOnly = function () {
         var arr = [];
         for (var i = 0; i < this.selectedProperties.length; i++) {
-            arr.push(this.selectedProperties[i].Property);
+            arr.push(this.selectedProperties[i]);
         }
         return arr;
     };
+    /*
+    
+      selectMain(models:QueryModel[],mainTable:QueryModel) {
+        if (mainTable) {
+          models.forEach(m => m.IsMainTable = false);
+          models.find(m => m.Id == mainTable.Id).IsMainTable = true;
+        }
+          }
+    
+    */
     DataComponent.prototype.saveQuery = function () {
         var _this = this;
         if (!this.mainTable) {
@@ -40256,25 +40333,114 @@ var DataComponent = /** @class */ (function () {
             return;
         }
         var m = new _model_model__WEBPACK_IMPORTED_MODULE_2__["Query"]();
-        m.models = this.models;
-        m.selectedProperties = this.selectedProperties;
-        m.mainTable = this.mainTable;
-        m.joinTables = this.joinTables;
+        if (this.currentQuery) {
+            m.Id = this.currentQuery.Id;
+        }
+        m.models = [];
+        for (var i = 0; i < this.models.length; i++) {
+            var j = Object(_utility__WEBPACK_IMPORTED_MODULE_3__["cloneAll"])(this.models[i]);
+            j.ModelId = this.models[i].Model.Id;
+            j.Model = null;
+            j.QueryId = 0;
+            m.models.push(j);
+        }
+        m.selectedProperties = [];
+        for (var i = 0; i < this.selectedProperties.length; i++) {
+            var j = Object(_utility__WEBPACK_IMPORTED_MODULE_3__["cloneAll"])(this.selectedProperties[i]);
+            j.PropertyId = this.selectedProperties[i].Property.Id;
+            j.Property = null;
+            m.selectedProperties.push(j);
+        }
+        //   this.selectMain(m.models,this.mainTable);
+        for (var i = 0; i < m.models.length; i++) {
+            var j = m.models[i];
+            for (var k = 0; k < j.LeftJoinTables.length; k++) {
+                j.LeftJoinTables[k].leftTable = null;
+                j.LeftJoinTables[k].rightTable = null;
+                j.LeftJoinTables[k].rightProperty.QueryId = 0;
+                j.LeftJoinTables[k].rightProperty.Id = 0;
+                j.LeftJoinTables[k].leftProperty.QueryId = 0;
+                j.LeftJoinTables[k].leftProperty.Id = 0;
+            }
+            for (var k = 0; k < j.RightJoinTables.length; k++) {
+                j.RightJoinTables[k].leftTable = null;
+                j.RightJoinTables[k].rightTable = null;
+                j.RightJoinTables[k].rightProperty.QueryId = 0;
+                j.RightJoinTables[k].rightProperty.Id = 0;
+                j.RightJoinTables[k].leftProperty.QueryId = 0;
+                j.RightJoinTables[k].leftProperty.Id = 0;
+            }
+            m.models[i] = (j);
+        }
+        //m.joinTables=this.joinTables;
         m.addParameterFields = this.addParameterFields;
         m.WhereStatement = this.WhereStatement;
         m.SQL = this.SQL;
         m.queryName = this.queryName;
+        this.currentQuery = m;
         this.DataService.saveQuery(m).toPromise().then(function (res) {
-            _this.models = res;
+            //this.models = res;
+            _this.currentQuery.Id = res.result;
+            alert(res.Message);
         });
     };
     DataComponent.prototype.loadQuery = function (id) {
         var _this = this;
-        this.DataService.loadQuery(id).toPromise().then(function (res) {
+        this.DataService.loadQuery(id).toPromise().then(function (result) {
+            var res = result.result;
+            _this.currentQuery = res;
+            _this.mainTable = res.models.find(function (m) { return m.IsMainTable; });
             _this.models = res.models;
+            // this.selectMain();
+            var asyncesHolder = [];
+            var modelCounter = 0;
+            _this.models = _this.models ? _this.models : [];
+            var _loop_1 = function (i) {
+                /* if (this.models[i].Id == this.mainTable.Id) {
+                   this.models[i].Model.isMainTable = true;
+                   document.getElementById('t'+this.mainTable.Id).click();
+                 }*/
+                _this.tableService.GetWithProperties(_this.models[i].ModelId).toPromise().then(function (r) {
+                    modelCounter++;
+                    _this.models[i].Model = r.result;
+                    // this.models[i].Model.Properties = r.result.properties;
+                    _this.models[i].Model.AsName = _this.models[i].Model.Name;
+                    //  this.models[i].Model.JoinTables = [];
+                    _this.selectedProperties = _this.selectedProperties ? _this.selectedProperties : [];
+                    var _loop_2 = function (j) {
+                        var id_1 = _this.selectedProperties[j].Property.Id;
+                        var exist = _this.models[i].Model.Properties.find(function (p) { return p.Id == id_1; });
+                        if (exist) {
+                            _this.selectedProperties[j].onOutPut = true;
+                            _this.selectedProperties[j].Property.onOutPut = true;
+                            exist.onOutPut = true;
+                        }
+                    };
+                    for (var j = 0; j < _this.selectedProperties.length; j++) {
+                        _loop_2(j);
+                    }
+                    if (modelCounter == _this.models.length - 1) {
+                        setTimeout(function () {
+                            _this.joinTables = [];
+                            if (res.models) {
+                                console.log(res.models);
+                                for (var t = 0; t < res.models.length; t++) {
+                                    var queryModel = res.models[t];
+                                    _this.ClickHelp(queryModel.LeftJoinTables);
+                                    _this.ClickHelp(queryModel.RightJoinTables);
+                                }
+                                _this.tableDesign_active.onMoving(null);
+                            }
+                            document.getElementById('t' + _this.mainTable.uniqId).click();
+                        }, 1000);
+                    }
+                });
+            };
+            for (var i = 0; i < _this.models.length; i++) {
+                _loop_1(i);
+            }
             _this.selectedProperties = res.selectedProperties;
-            _this.mainTable = res.mainTable;
-            _this.joinTables = res.joinTables;
+            _this.selectedProperties = _this.selectedProperties ? _this.selectedProperties : [];
             _this.addParameterFields = res.addParameterFields;
             _this.WhereStatement = res.WhereStatement;
             _this.SQL = res.SQL;
@@ -40290,7 +40456,7 @@ var DataComponent = /** @class */ (function () {
     DataComponent.prototype.ngOnInit = function () {
     };
     DataComponent.prototype.findModel = function (rightProperty) {
-        var m = this.models.find(function (m) { return m.Model.Id == rightProperty.ModelId; });
+        var m = this.models.find(function (m) { return m.Model.Id == rightProperty.Property.ModelId; });
         if (!m) {
             console.error('m is null');
         }
@@ -40300,14 +40466,49 @@ var DataComponent = /** @class */ (function () {
         var m = this.findModel(rightProperty);
         return m.Model.Name;
     };
+    DataComponent.prototype.clickSelect = function (rc, lc) {
+        if (rc) {
+            rc.click();
+        }
+        if (lc) {
+            lc.click();
+        }
+    };
+    DataComponent.prototype.ClickHelp = function (JoinTables) {
+        for (var pl = 0; pl < JoinTables.length; pl++) {
+            var jt = JoinTables[pl];
+            var ll2 = void 0;
+            var a = '#pt' + jt.leftTableUniqId;
+            var b = '#l' + jt.leftProperty.Property.Id;
+            //ll2 = document.querySelector(a).querySelector(b);
+            ll2 = $(a).find(b);
+            jt.lelement = ll2[0];
+            var a2 = '#pt' + jt.rightTableUniqId;
+            var b2 = '#r' + jt.rightProperty.Property.Id;
+            var rr2 = void 0;
+            rr2 = $(a2).find(b2);
+            //      rr2= document.querySelector(a2).querySelector(b2);
+            /*if (JoinTables[t].rightTableId)
+              rr2= document.querySelector('#pt' + JoinTables[t].rightTableId).
+              querySelector(' #r' + JoinTables[t].rightProperty.Property.Id);*/
+            jt.relement = rr2[0];
+            /*  console.log(jt.rightTableUniqId,jt.leftTableUniqId);
+              console.log(ll2,rr2);
+              console.log('-----------------------------------');
+        */
+            this.joinTables.push(jt);
+            //  this.clickSelect(ll2, rr2);
+        }
+    };
     DataComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-data',
             template: __webpack_require__(/*! ./data.component.html */ "./src/app/query-generator/data/data.component.html"),
             styles: [__webpack_require__(/*! ./data.component.css */ "./src/app/query-generator/data/data.component.css")],
-            providers: [_db_schema_provider_sqlserver_schema_provider_sqlserver_schema_provider_component__WEBPACK_IMPORTED_MODULE_1__["SQLServerSchemaProviderComponent"]]
+            providers: [_db_schema_provider_sqlserver_schema_provider_sqlserver_schema_provider_component__WEBPACK_IMPORTED_MODULE_1__["SQLServerSchemaProviderComponent"], _database_tables_service__WEBPACK_IMPORTED_MODULE_4__["TablesService"]]
         }),
-        __metadata("design:paramtypes", [_db_schema_provider_sqlserver_schema_provider_sqlserver_schema_provider_component__WEBPACK_IMPORTED_MODULE_1__["SQLServerSchemaProviderComponent"]])
+        __metadata("design:paramtypes", [_db_schema_provider_sqlserver_schema_provider_sqlserver_schema_provider_component__WEBPACK_IMPORTED_MODULE_1__["SQLServerSchemaProviderComponent"],
+            _database_tables_service__WEBPACK_IMPORTED_MODULE_4__["TablesService"]])
     ], DataComponent);
     return DataComponent;
 }());
@@ -40395,12 +40596,14 @@ var DbSchemaProviderComponent = /** @class */ (function () {
     DbSchemaProviderComponent.prototype.ngOnInit = function () {
     };
     DbSchemaProviderComponent.prototype.removeCircularity = function (query) {
-        for (var i = 0; i < query.joinTables.length; i++) {
-            query.joinTables[i].leftTableId = query.joinTables[i].leftTable.Id;
-            query.joinTables[i].rightTableId = query.joinTables[i].rightTable.Id;
-            query.joinTables[i].leftPropertyId = query.joinTables[i].leftProperty.Id;
-            query.joinTables[i].rightPropertyId = query.joinTables[i].rightProperty.Id;
-        }
+        /* for (let i = 0; i < query.joinTables.length; i++) {
+           query.joinTables[i].leftTableId = query.joinTables[i].leftTable.Id
+           query.joinTables[i].rightTableId = query.joinTables[i].rightTable.Id
+     
+           query.joinTables[i].leftPropertyId = query.joinTables[i].leftProperty.Id
+           query.joinTables[i].rightPropertyId = query.joinTables[i].rightProperty.Id
+         }
+     */
     };
     DbSchemaProviderComponent.prototype.saveQuery = function (query) {
         // this.removeCircularity(query);
@@ -40419,7 +40622,7 @@ var DbSchemaProviderComponent = /** @class */ (function () {
         return this.http.post("" + this.getRootUrl + this.getAreaAndPath + "/saveQuery", query, this.headers);
     };
     DbSchemaProviderComponent.prototype.loadQuery = function (id) {
-        return this.http.get(this.getRootUrl + "/" + this.getAreaAndPath + "/loadQuery?id=" + id);
+        return this.http.get("" + this.getRootUrl + this.getAreaAndPath + "/loadQuery?id=" + id);
     };
     DbSchemaProviderComponent.prototype.getAllQueries = function (id) {
         return this.http.get(this.getRootUrl + "/" + this.getAreaAndPath + "/loadQuery?id=" + id);
@@ -40635,7 +40838,7 @@ module.exports = ":host >>> *{\r\n  direction: rtl;\r\n  text-align: right;\r\n}
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ul class=\"nav nav-tabs\">\n  <li class=\"nav-item\">\n    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#home\"\n       (click)=\"activeTab=1\">طراحی</a>\n  </li>\n  <li class=\"nav-item\">\n    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu2\" (click)=\"activeTab=3\">\n      تنظیمات ستون ها</a>\n  </li>\n  <li class=\"nav-item\">\n    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu1\" (click)=\"activeTab=2\">\n      خروجی Query</a>\n  </li>\n\n\n  <!-- <li class=\"nav-item\">\n     <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu2\">طراحی </a>\n   </li>-->\n</ul>\n\n<!-- Tab panes -->\n<div class=\"tab-content\">\n  <div class=\"tab-pane active\" id=\"home\">\n\n    <nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n      <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\"\n              aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n        <span class=\"navbar-toggler-icon\"></span>\n      </button>\n\n      <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n        <!--  <ul class=\"navbar-nav mr-auto\">\n            <li class=\"nav-item active\">\n              <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n            </li>\n            <li class=\"nav-item\">\n              <a class=\"nav-link\" href=\"#\">Link</a>\n            </li>\n            <li class=\"nav-item dropdown\">\n              <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                Dropdown\n              </a>\n              <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\n                <a class=\"dropdown-item\" href=\"#\">Action</a>\n                <a class=\"dropdown-item\" href=\"#\">Another action</a>\n                <div class=\"dropdown-divider\"></div>\n                <a class=\"dropdown-item\" href=\"#\">Something else here</a>\n              </div>\n            </li>\n            <li class=\"nav-item\">\n              <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n            </li>\n          </ul>-->\n        <ul class=\"navbar-nav\">\n          <li><a class=\"btn btn-outline-light\" data-toggle=\"modal\" data-target=\"#settingmodal\"><span class=\"oi\"\n                                                                                                     data-glyph=\"menu\"></span></a>\n          </li>\n          <li><a class=\"btn text-success\" (click)=\"DataComponent.saveQuery()\"><span class=\"oi\"\n                                                                                              data-glyph=\"check\">ذخیره</span></a>\n          </li>\n          <li><a class=\"btn  text-success\"\n                 (click)=\"openModalQueries()\"><span >انتخاب کوئری</span></a>\n          <li><a class=\"btn  text-success\"\n                 (click)=\"openModalTables()\"><span >انتخاب جدول</span></a>\n          </li>\n\n        </ul>\n      </div>\n      <a class=\"navbar-brand\" href=\"#\">منو</a>\n\n    </nav>\n    <app-table-design [panelHeight]=\"panelHeight\"></app-table-design>\n\n\n  </div>\n  <div class=\"tab-pane container-fluid fade\" id=\"menu1\">\n    <app-query-generator></app-query-generator>\n\n\n  </div>\n  <div class=\"tab-pane container fade\" id=\"menu2\">\n    <br>\n    <br>\n    <app-column-setting></app-column-setting>\n\n\n  </div>\n</div>\n\n\n<app-tables #tables *ngIf=\"showTables\" [display]=\"showTables\" ></app-tables>\n<app-queries #queries *ngIf=\"showQueries\" [display]=\"showQueries\" ></app-queries>\n\n<!-- Modal -->\n<div class=\"modal fade\"\n     id=\"settingmodal\" tabindex=\"-1\" role=\"dialog\"\n     aria-labelledby=\"settingmodalLabel\" aria-hidden=\"true\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"settingmodalLabel\">تنظیمات</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"form-inline my-2 my-lg-0\">\n          <div class=\"form-group\">\n            <label>نام کوئری</label>\n            <input type=\"text\" [(ngModel)]=\"DataComponent.queryName\">\n          </div>\n          <div class=\"form-group\">\n            <label>اندازه پنل</label>\n            <input type=\"number\" [(ngModel)]=\"panelHeight\">\n          </div>\n        </div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">بستن</button>\n        <!--\n                <button type=\"button\" class=\"btn btn-primary\"></button>\n        -->\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<ul class=\"nav nav-tabs\">\n  <li class=\"nav-item\">\n    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#home\"\n       (click)=\"activeTab=1\">طراحی</a>\n  </li>\n  <li class=\"nav-item\">\n    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu2\" (click)=\"activeTab=3\">\n      تنظیمات ستون ها</a>\n  </li>\n  <li class=\"nav-item\">\n    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu1\" (click)=\"activeTab=2\">\n      خروجی Query</a>\n  </li>\n\n\n  <!-- <li class=\"nav-item\">\n     <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu2\">طراحی </a>\n   </li>-->\n</ul>\n\n<!-- Tab panes -->\n<div class=\"tab-content\">\n  <div class=\"tab-pane active\" id=\"home\">\n\n    <nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n      <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\"\n              aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n        <span class=\"navbar-toggler-icon\"></span>\n      </button>\n\n      <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n        <!--  <ul class=\"navbar-nav mr-auto\">\n            <li class=\"nav-item active\">\n              <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n            </li>\n            <li class=\"nav-item\">\n              <a class=\"nav-link\" href=\"#\">Link</a>\n            </li>\n            <li class=\"nav-item dropdown\">\n              <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                Dropdown\n              </a>\n              <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\n                <a class=\"dropdown-item\" href=\"#\">Action</a>\n                <a class=\"dropdown-item\" href=\"#\">Another action</a>\n                <div class=\"dropdown-divider\"></div>\n                <a class=\"dropdown-item\" href=\"#\">Something else here</a>\n              </div>\n            </li>\n            <li class=\"nav-item\">\n              <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n            </li>\n          </ul>-->\n        <ul class=\"navbar-nav\">\n          <li><a class=\"btn btn-outline-light\" data-toggle=\"modal\" data-target=\"#settingmodal\"><span class=\"oi\"\n                                                                                                     data-glyph=\"menu\"></span></a>\n          </li>\n          <li><a class=\"btn text-success\" (click)=\"DataComponent.saveQuery()\"><span class=\"oi\"\n                                                                                              data-glyph=\"check\">ذخیره</span></a>\n          </li>\n          <li><a class=\"btn  text-success\"\n                 (click)=\"openModalQueries()\"><span >انتخاب کوئری</span></a>\n          <li><a class=\"btn  text-success\"\n                 (click)=\"openModalTables()\"><span >انتخاب جدول</span></a>\n          </li>\n\n        </ul>\n      </div>\n      <a class=\"navbar-brand\" href=\"#\">منو</a>\n\n    </nav>\n    <app-table-design [panelHeight]=\"panelHeight\"></app-table-design>\n\n\n  </div>\n  <div class=\"tab-pane container-fluid fade\" id=\"menu1\">\n    <app-query-generator></app-query-generator>\n\n\n  </div>\n  <div class=\"tab-pane container fade\" id=\"menu2\">\n    <br>\n    <br>\n    <app-column-setting></app-column-setting>\n\n\n  </div>\n</div>\n\n\n<app-tables #tables *ngIf=\"showTables\" [display]=\"showTables\" ></app-tables>\n<app-queries (selectedEv)=\"querySelect($event)\" #queries *ngIf=\"showQueries\" [display]=\"showQueries\" ></app-queries>\n\n<!-- Modal -->\n<div class=\"modal fade\"\n     id=\"settingmodal\" tabindex=\"-1\" role=\"dialog\"\n     aria-labelledby=\"settingmodalLabel\" aria-hidden=\"true\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"settingmodalLabel\">تنظیمات</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"form-inline my-2 my-lg-0\">\n          <div class=\"form-group\">\n            <label>نام کوئری</label>\n            <input type=\"text\" [(ngModel)]=\"DataComponent.queryName\">\n          </div>\n          <div class=\"form-group\">\n            <label>اندازه پنل</label>\n            <input type=\"number\" [(ngModel)]=\"panelHeight\">\n          </div>\n        </div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">بستن</button>\n        <!--\n                <button type=\"button\" class=\"btn btn-primary\"></button>\n        -->\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -40682,6 +40885,9 @@ var QueryAppComponent = /** @class */ (function () {
         if (this.tables)
             this.tables.display = true;
     };
+    QueryAppComponent.prototype.querySelect = function (ev) {
+        this.DataComponent.loadQuery(ev.Id);
+    };
     QueryAppComponent.prototype.openModalQueries = function () {
         this.showQueries = true;
         if (this.queries)
@@ -40689,7 +40895,6 @@ var QueryAppComponent = /** @class */ (function () {
     };
     QueryAppComponent.prototype.ngOnInit = function () {
         var id = this.activatedRoute.snapshot.params['id'];
-        debugger;
         if (id) {
             //UPDATE
             this.DataComponent.loadQuery(id);
@@ -40872,7 +41077,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<br>\n<div class=\"card\">\n  <div class=\"card-header\">\n    <button (click)=\"generate()\" class=\"btn btn-primary\"> تولید خروجی</button>\n    <b style=\"text-align: left;float: left\">Sql Query</b></div>\n  <div class=\"card-body\"\n       style=\"direction: ltr !important;text-align: left !important;\"\n  >{{SQL}}\n  </div>\n  <div class=\"card-footer\">Footer</div>\n</div>\n"
+module.exports = "<br>\n<div class=\"card\">\n  <div class=\"card-header\">\n    <button (click)=\"generate()\" class=\"btn btn-primary\"> تولید خروجی</button>\n    <b style=\"text-align: left;float: left\">Sql Query</b></div>\n  <div class=\"card-body\"\n       style=\"direction: ltr !important;text-align: left !important;\"\n  >{{ dataComponent.SQL}}\n  </div>\n  <div class=\"card-footer\">Footer</div>\n</div>\n"
 
 /***/ }),
 
@@ -40909,8 +41114,6 @@ var QueryGeneratorComponent = /** @class */ (function () {
     QueryGeneratorComponent.prototype.generate = function () {
         var _this = this;
         this.sqlQueryGeneratorComponent.Generate(this.dataComponent.getPropertiesOnly(), null, this.dataComponent.joinTables, this.dataComponent.mainTable).toPromise().then(function (r) {
-            debugger;
-            _this.SQL = r;
             _this.dataComponent.SQL = r;
         });
     };
@@ -41016,16 +41219,15 @@ var SqlQueryGeneratorComponent = /** @class */ (function () {
             _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"].ShowMsg('', 'اشکال', 'جدول اصلی انتخاب نشده است');
             return;
         }
-        if (!mainTable.TableName) {
+        if (!mainTable.Model.TableName) {
             _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"].ShowMsg('', 'اشکال', 'جدول اصلی نام ندارد');
         }
-        debugger;
         var variables = this.getDefinedQueryVariables(this.dataComponent.addParameterFields);
         var columns = this.GetColumns(properties, navigationProperties);
         var conditions = this.GetConditions(properties, navigationProperties);
         var joins = this.GetJoins(properties, navigationProperties, mainTable);
         columns = columns ? columns : '*';
-        var select = variables + "  \n    \n    select " + columns + " from " + mainTable.TableName + " as\n     " + SqlQueryGeneratorComponent_1.GetAsName(mainTable.Name, SqlQueryGeneratorComponent_1.tableAsNames, mainTable) + " ";
+        var select = variables + "  \n    \n    select " + columns + " from " + mainTable.Model.TableName + " as\n     " + SqlQueryGeneratorComponent_1.GetAsName(mainTable.Model.Name, SqlQueryGeneratorComponent_1.tableAsNames, mainTable) + " ";
         if (joins) {
             select += " " + joins;
         }
@@ -41045,28 +41247,31 @@ var SqlQueryGeneratorComponent = /** @class */ (function () {
     SqlQueryGeneratorComponent.prototype.GetJoins = function (properties, navigationProperties, mainTable) {
         if (!mainTable)
             _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"].ShowMsg('', '', 'mainTable is null');
+        var JoinTables = [];
+        mainTable.LeftJoinTables.forEach(function (l) { return JoinTables.push(l); });
+        mainTable.RightJoinTables.forEach(function (l) { return JoinTables.push(l); });
         var joins = '';
-        for (var i = 0; i < mainTable.JoinTables.length; i++) {
-            var joinTable = mainTable.JoinTables[i];
+        for (var i = 0; i < JoinTables.length; i++) {
+            var joinTable = JoinTables[i];
             // جداول اصلی و پروپرتی ها را مشخص کن که کدام اصلی و فرعی است
-            var firstTableTmp = this.GetMainForJoin(joinTable, mainTable);
+            var firstTableTmp = this.GetMainForJoin(joinTable, mainTable.Model);
             var dependentTable = this.GetDependentTableForJoin(joinTable, firstTableTmp);
             // اگر برابر بود که هیچ در غیر اینصورت عوض کن جای آن ها را
             var firstTable = void 0;
             if (firstTableTmp == mainTable) {
-                firstTable = firstTableTmp;
+                firstTable = firstTableTmp.Model;
             }
             else {
-                firstTable = dependentTable;
+                firstTable = dependentTable.Model;
                 dependentTable = firstTableTmp;
             }
             var modelName = this.dataComponent.findModelName(joinTable.rightProperty);
             var mainProperty = firstTable.Name == modelName ? joinTable.rightProperty : joinTable.leftProperty;
-            var dependentProperty = dependentTable.Name == modelName ? joinTable.rightProperty : joinTable.leftProperty;
+            var dependentProperty = dependentTable.Model.Name == modelName ? joinTable.rightProperty : joinTable.leftProperty;
             var jointype = this.GetJoinType(joinTable);
             var join = void 0;
             // اگر اولی باشد جوین نزن
-            join = jointype + " " + dependentTable.TableName + "\n          as " + SqlQueryGeneratorComponent_1.GetAsName(dependentTable.Name, SqlQueryGeneratorComponent_1.tableAsNames, dependentTable) + " on \n           " + SqlQueryGeneratorComponent_1.GetAsName(firstTable.Name, SqlQueryGeneratorComponent_1.tableAsNames, firstTable) + ".\n           " + mainProperty.NameInTableAsName + "=\n           " + SqlQueryGeneratorComponent_1.GetAsName(dependentTable.Name, SqlQueryGeneratorComponent_1.tableAsNames, dependentTable) + ".\n           " + dependentProperty.NameInTableAsName;
+            join = jointype + " " + dependentTable.Model.TableName + "\n          as " + SqlQueryGeneratorComponent_1.GetAsName(dependentTable.Model.Name, SqlQueryGeneratorComponent_1.tableAsNames, dependentTable) + " on \n           " + SqlQueryGeneratorComponent_1.GetAsName(firstTable.Name, SqlQueryGeneratorComponent_1.tableAsNames, firstTable) + ".\n           " + mainProperty.Property.NameInTableAsName + "=\n           " + SqlQueryGeneratorComponent_1.GetAsName(dependentTable.Model.Name, SqlQueryGeneratorComponent_1.tableAsNames, dependentTable) + ".\n           " + dependentProperty.Property.NameInTableAsName;
             /*     // اگر اولی باشد جوین نزن
                  join = `${jointype} ${dependentTable.TableName}
                      as ${SqlQueryGeneratorComponent.GetAsName(dependentTable.Name, SqlQueryGeneratorComponent.tableAsNames, dependentTable)} on
@@ -41088,10 +41293,10 @@ var SqlQueryGeneratorComponent = /** @class */ (function () {
         return joins;
     };
     SqlQueryGeneratorComponent.prototype.GetMainForJoin = function (table, Ftable) {
-        return table.rightTable.Name == Ftable.Name ? table.leftTable : table.rightTable;
+        return table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
     };
     SqlQueryGeneratorComponent.prototype.GetDependentTableForJoin = function (table, Ftable) {
-        return table.rightTable.Name == Ftable.Name ? table.leftTable : table.rightTable;
+        return table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
     };
     SqlQueryGeneratorComponent.prototype.GetJoinType = function (table) {
         switch (table.joinType) {
@@ -41118,7 +41323,7 @@ var SqlQueryGeneratorComponent = /** @class */ (function () {
         var c = 0;
         var names = '';
         for (var i = 0; i < columns.length; i++) {
-            var name_1 = this.dataComponent.findModel(columns[i]).Model.AsName + ".\n      " + columns[i].NameInTable + "  \n      as  \n       " + columns[i].NameInTableAsName + " ";
+            var name_1 = this.dataComponent.findModel(columns[i]).Model.AsName + ".\n      " + columns[i].Property.NameInTable + "  \n      as  \n       " + columns[i].Property.NameInTableAsName + " ";
             names += ' ' + name_1;
             // آخری نباشد
             if (columns.length - 1 != i) {
@@ -41265,7 +41470,6 @@ var ColumnSettingComponent = /** @class */ (function () {
         this.parameterForm = new AddParameterForm();
     }
     ColumnSettingComponent.prototype.initAddParams = function () {
-        debugger;
         this.addParameterFields = Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_3__["generateDynamicFormFields"])(this.parameterForm);
     };
     ColumnSettingComponent.prototype.delete = function () {
@@ -41277,7 +41481,6 @@ var ColumnSettingComponent = /** @class */ (function () {
     };
     ColumnSettingComponent.prototype.saveParameter = function () {
         var _this = this;
-        debugger;
         Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_3__["mapFormInputValues"])(this.parameterForm, this.addParameterFields);
         //EDIT
         if (this.parameterForm.foredit) {
@@ -41559,7 +41762,7 @@ var ComputeDesignToolsButtonProviderService = /** @class */ (function () {
             /*    var asName = SqlQueryGeneratorComponent.GetAsName(
                   this.DataComponent.selectedProperties[i].NameInTable, SqlQueryGeneratorComponent.outputAsNames, this.DataComponent.selectedProperties[i]);
                */ var asName = this.DataComponent.selectedProperties[i].Property.NameInTableAsName;
-            var tmpName = this.DataComponent.findModel(this.DataComponent.selectedProperties[i].Property).Model.TableName + "." + asName;
+            var tmpName = this.DataComponent.findModel(this.DataComponent.selectedProperties[i]).Model.TableName + "." + asName;
             var o = {
                 name: tmpName,
                 value: tmpName,
@@ -41949,7 +42152,7 @@ module.exports = ".table *{\r\n  font-size: 12px;\r\n}\r\n\r\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n<div class=\"row\" #myBounds [style.height]=\"panelHeight+'px'\">\n  <table  [bounds]=\"myBounds\" [inBounds]=\"true\" #tables ngDraggable class=\"table col-md-1\" style=\"border:2px solid #17a2b8\"\n         (movingOffset)=\"onMoving($event)\"\n         *ngFor=\"let table of DataComponent.models;let tableI=index;\">\n    <thead>\n    <tr >\n      <th scope=\"col\" colspan=\"1\">\n        <input type=\"radio\" name=\"selectMainTable\"  (click)=\"selectMainTable(table.Model)\">\n      </th>\n\n      <th scope=\"col\" colspan=\"3\" style=\"text-align:center;font-weight: bold\">\n\n        {{table.Model.Name}}\n      </th>\n    </tr>\n    <tr>\n      <th scope=\"col\">+</th>\n      <th  style=\"text-align: center\"><input type=\"checkbox\" (click)=\"toggleAllProperties(table.Model)\"></th>\n      <th >نام</th>\n      <th scope=\"col\">-</th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr *ngFor=\"let property of table.Model.Properties;let propertyI=index;\">\n      <th scope=\"row\"><input type=\"radio\" #rightRadio (click)=\"rightJoin(tableI,propertyI,$event.target)\"></th>\n      <td><input type=\"checkbox\" (click)=\"selectColumn(property)\" [checked]=\"property.onOutPut\"></td>\n      <td>{{property.NameInModel}}</td>\n      <td><input type=\"radio\"  (click)=\"leftJoin(tableI,propertyI,$event.target)\"></td>\n    </tr>\n    </tbody>\n  </table>\n\n<!--\n\n\n\n  <table ngDraggable class=\"table col-md-1\" style=\"border:2px solid #17a2b8\"\n         *ngFor=\"let table of joinTables;let tableI=index;\">\n    <thead>\n    <tr>\n      <th scope=\"col\"></th>\n      <th scope=\"col\">relashionShip</th>\n      <th scope=\"col\"></th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr >\n      <th >{{table.leftProperty.NameInModel}}</th>\n      <th ></th>\n      <td>{{table.rightProperty.NameInModel}}</td>\n    </tr>\n    </tbody>\n  </table>\n-->\n\n\n  <svg style=\"overflow: hidden;\n    vertical-align: middle;\n    width: 100%;\n    height: 100%;\n    z-index: -1;\n    position: absolute;\n}\">\n    <ng-template let-line ngFor [ngForOf]=\"DataComponent.joinTables\">\n      <line   [attr.x1]=\"line.leftTable.elementX | HoldValue\" [attr.y1]=\"line.leftTable.elementY | HoldValue\"\n            [attr.x2]=\"line.rightTable.elementX | HoldValue\" [attr.y2]=\"line.rightTable.elementY | HoldValue\"\n            style=\"stroke:rgb(255,0,0);stroke-width:2\"></line>\n    </ng-template>\n  </svg>\n</div>\n"
+module.exports = "\n\n<div class=\"row\" #myBounds [style.height]=\"panelHeight+'px'\">\n  <table  [bounds]=\"myBounds\" [inBounds]=\"true\" #tables ngDraggable class=\"table col-md-1\" style=\"border:2px solid #17a2b8\"\n         (movingOffset)=\"onMoving($event)\" [attr.Id]=\"'pt'+table.uniqId\"\n         *ngFor=\"let table of DataComponent.models;let tableI=index;\">\n    <thead>\n    <tr >\n      <th scope=\"col\" colspan=\"1\">\n        <input type=\"radio\" name=\"selectMainTable\" [attr.Id]=\"'t'+table.uniqId\" [attr.checked]=\"table.IsMainTable ? 'checked' : null \"  (click)=\"selectMainTable(table)\">\n      </th>\n\n      <th scope=\"col\" colspan=\"3\" style=\"text-align:center;font-weight: bold\">\n\n        {{table.Model && table.Model.Name ? table.Model.Name : null}}\n\n      </th>\n    </tr>\n    <tr>\n      <th scope=\"col\">+</th>\n      <th  style=\"text-align: center\"><input type=\"checkbox\" (click)=\"toggleAllProperties(table.Model)\"></th>\n      <th >نام</th>\n      <th scope=\"col\">-</th>\n    </tr>\n    </thead>\n    <tbody>\n\n\n    <ng-template *ngIf=\"table && table.Model && table.Model.Properties\"  [ngForOf]=\"table.Model.Properties\" let-property ngFor let-propertyI=\"index\">\n    <tr  >\n      <th scope=\"row\"><input type=\"radio\" [attr.Id]=\"'r'+property.Id\" #rightRadio (click)=\"rightJoin(tableI,propertyI,$event.target)\"></th>\n      <td><input type=\"checkbox\" (click)=\"selectColumn(property)\" [attr.checked]=\"property.onOutPut? 'checked' : null\"></td>\n      <td>{{property.NameInModel}}</td>\n      <td><input type=\"radio\" [attr.Id]=\"'l'+property.Id\" (click)=\"leftJoin(tableI,propertyI,$event.target)\"></td>\n    </tr>\n    </ng-template>\n    </tbody>\n  </table>\n\n<!--\n\n\n\n  <table ngDraggable class=\"table col-md-1\" style=\"border:2px solid #17a2b8\"\n         *ngFor=\"let table of joinTables;let tableI=index;\">\n    <thead>\n    <tr>\n      <th scope=\"col\"></th>\n      <th scope=\"col\">relashionShip</th>\n      <th scope=\"col\"></th>\n    </tr>\n    </thead>\n    <tbody>\n    <tr >\n      <th >{{table.leftProperty.NameInModel}}</th>\n      <th ></th>\n      <td>{{table.rightProperty.NameInModel}}</td>\n    </tr>\n    </tbody>\n  </table>\n-->\n\n\n  <svg style=\"overflow: hidden;\n    vertical-align: middle;\n    width: 100%;\n    height: 100%;\n    z-index: -1;\n    position: absolute;\n}\">\n    <ng-template let-line ngFor [ngForOf]=\"DataComponent.joinTables\">\n      <line   [attr.x1]=\"line.lelementX | HoldValue\" [attr.y1]=\"line.lelementY | HoldValue\"\n            [attr.x2]=\"line.relementX | HoldValue\" [attr.y2]=\"line.relementY | HoldValue\"\n            style=\"stroke:rgb(255,0,0);stroke-width:2\"></line>\n    </ng-template>\n  </svg>\n</div>\n"
 
 /***/ }),
 
@@ -41969,6 +42172,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _data_data_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../data/data.component */ "./src/app/query-generator/data/data.component.ts");
 /* harmony import */ var _model_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../model/model */ "./src/app/model/model.ts");
+/* harmony import */ var _utility__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utility */ "./src/app/query-generator/utility.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -41984,29 +42198,37 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var TableDesignComponent = /** @class */ (function () {
     function TableDesignComponent(DataComponent) {
         this.DataComponent = DataComponent;
+        this.DataComponent.tableDesign_active = this;
     }
+    TableDesignComponent_1 = TableDesignComponent;
     TableDesignComponent.prototype.ngOnInit = function () {
     };
     TableDesignComponent.prototype.makeJoin = function (left, right) {
         if (left && right) {
             var join = new JoinTable();
-            if (!this.rightJoinTable.JoinTables) {
-                this.rightJoinTable.JoinTables = [];
+            if (!this.rightJoinTable.LeftJoinTables) {
+                this.rightJoinTable.RightJoinTables = [];
+                this.rightJoinTable.LeftJoinTables = [];
             }
-            if (!this.leftJoinTable.JoinTables) {
-                this.leftJoinTable.JoinTables = [];
+            if (!this.leftJoinTable.RightJoinTables) {
+                this.leftJoinTable.RightJoinTables = [];
+                this.leftJoinTable.LeftJoinTables = [];
             }
-            join.rightTable = cloneAll(this.rightJoinTable);
-            join.leftTable = cloneAll(this.leftJoinTable);
-            join.rightProperty = cloneAll(this.rightJoinProperty);
-            join.leftProperty = cloneAll(this.leftJoinProperty);
+            join.rightTable = Object(_utility__WEBPACK_IMPORTED_MODULE_3__["cloneAll"])(this.rightJoinTable);
+            join.rightTableUniqId = this.rightJoinTable.uniqId;
+            join.leftTableUniqId = this.leftJoinTable.uniqId;
+            join.leftTable = Object(_utility__WEBPACK_IMPORTED_MODULE_3__["cloneAll"])(this.leftJoinTable);
+            join.rightProperty = Object(_utility__WEBPACK_IMPORTED_MODULE_3__["cloneAll"])(this.rightJoinProperty);
+            join.leftProperty = Object(_utility__WEBPACK_IMPORTED_MODULE_3__["cloneAll"])(this.leftJoinProperty);
+            join.relement = this.relements.pop();
+            join.lelement = this.lelements.pop();
             var finded = this.DataComponent.joinTables.find(function (j) { return j.leftTable == join.leftTable
                 && j.rightTable == join.rightTable &&
                 j.leftProperty == join.leftProperty &&
                 j.rightProperty == join.rightProperty; });
             if (!finded) {
-                join.leftTable.JoinTables.push(join);
-                join.rightTable.JoinTables.push(join);
+                join.leftTable.LeftJoinTables.push(join);
+                join.rightTable.RightJoinTables.push(join);
                 join.joinType = JoinTableType.Join;
                 this.DataComponent.joinTables.push(join);
                 this.onMoving(null);
@@ -42018,14 +42240,17 @@ var TableDesignComponent = /** @class */ (function () {
         }
     };
     TableDesignComponent.prototype.rightJoin = function (table, property, rightRadio) {
-        console.log($(rightRadio).offset());
+        this.relements = [];
+        this.relements.push(rightRadio);
         this.getTableAndProperty('rightJoinTable', 'rightJoinProperty', table, property, rightRadio);
         this.makeJoin(this.leftJoinProperty, this.rightJoinProperty);
     };
     TableDesignComponent.prototype.getTableAndProperty = function (WhichTable, whichproperty, table, property, lefttRadio) {
-        this[WhichTable] = this.DataComponent.models[table].Model;
-        this[whichproperty] = this.DataComponent.models[table].Model.Properties[property];
-        this[WhichTable].element = lefttRadio;
+        this[WhichTable] = this.DataComponent.models[table];
+        var prop = new _model_model__WEBPACK_IMPORTED_MODULE_2__["PropertyModel"]();
+        prop.Property = this.DataComponent.models[table].Model.Properties[property];
+        this[whichproperty] = prop;
+        //  this[WhichTable][whichElement] = lefttRadio;
         //  let rect:any = lefttRadio.getBoundingClientRect();
         /*    this[whichproperty].X = window.scrollX+parseInt( rect.left.toString())+20;
          this[whichproperty].Y =window.scrollY+ parseInt(rect.top.toString()) -30;;
@@ -42037,20 +42262,27 @@ var TableDesignComponent = /** @class */ (function () {
       *!/*/
     };
     TableDesignComponent.prototype.leftJoin = function (table, property, lefttRadio) {
+        this.lelements = [];
+        this.lelements.push(lefttRadio);
         this.getTableAndProperty('leftJoinTable', 'leftJoinProperty', table, property, lefttRadio);
         this.makeJoin(this.leftJoinProperty, this.rightJoinProperty);
     };
     TableDesignComponent.prototype.selectColumn = function (property) {
-        var index = this.DataComponent.selectedProperties.findIndex(function (s) { return s.Property == property; });
+        var index = this.DataComponent.selectedProperties.findIndex(function (s) { return s.Property.uniqId == property.uniqId; });
         if (index != -1) {
-            this.DataComponent.selectedProperties[index].Property.onOutPut = false;
+            this.DataComponent.selectedProperties[index].onOutPut = false;
+            property.onOutPut = false;
             this.DataComponent.selectedProperties.splice(index, 1);
         }
         else {
-            property.onOutPut = true;
             var propertyModel = new _model_model__WEBPACK_IMPORTED_MODULE_2__["PropertyModel"]();
             propertyModel.Property = property;
             propertyModel.PropertyId = property.Id;
+            propertyModel.onOutPut = true;
+            property.onOutPut = true;
+            // یعنی پروپرتی استفاده شده است
+            property.uniqId = _utility__WEBPACK_IMPORTED_MODULE_3__["Utility"].generateNewIdNumber();
+            TableDesignComponent_1.makeSureUniqIdIsDistinct(this.DataComponent.selectedProperties, 'uniqId', propertyModel);
             this.DataComponent.selectedProperties.push(propertyModel);
         }
     };
@@ -42060,12 +42292,17 @@ var TableDesignComponent = /** @class */ (function () {
         return X;
         //    return $(element).offset().left;
     };
+    TableDesignComponent.prototype.getElementFromDom = function () {
+    };
     TableDesignComponent.prototype.onMoving = function (event) {
         for (var i = 0; i < this.DataComponent.joinTables.length; i++) {
-            this.DataComponent.joinTables[i].leftTable.elementY = this.getPossiionY(this.DataComponent.joinTables[i].leftTable.element);
-            this.DataComponent.joinTables[i].leftTable.elementX = this.getPossiionX(this.DataComponent.joinTables[i].leftTable.element);
-            this.DataComponent.joinTables[i].rightTable.elementY = this.getPossiionY(this.DataComponent.joinTables[i].rightTable.element);
-            this.DataComponent.joinTables[i].rightTable.elementX = this.getPossiionX(this.DataComponent.joinTables[i].rightTable.element);
+            /*  if(!this.DataComponent.joinTables[i].leftTable.element){
+                this.DataComponent.joinTables[i].leftTable.element=this.getElementFromDom(this.DataComponent.joinTables[i].leftTable.element);
+              }*/
+            this.DataComponent.joinTables[i].lelementY = this.getPossiionY(this.DataComponent.joinTables[i].lelement);
+            this.DataComponent.joinTables[i].lelementX = this.getPossiionX(this.DataComponent.joinTables[i].lelement);
+            this.DataComponent.joinTables[i].relementY = this.getPossiionY(this.DataComponent.joinTables[i].relement);
+            this.DataComponent.joinTables[i].relementX = this.getPossiionX(this.DataComponent.joinTables[i].relement);
         }
     };
     TableDesignComponent.prototype.getPossiionY = function (element) {
@@ -42076,6 +42313,9 @@ var TableDesignComponent = /** @class */ (function () {
     };
     TableDesignComponent.prototype.selectMainTable = function (table) {
         this.DataComponent.mainTable = table;
+        this.DataComponent.models.forEach(function (m) { return m.IsMainTable = false; });
+        table.IsMainTable = true;
+        // this.DataComponent.mainTable.isMainTable=true;
     };
     TableDesignComponent.prototype.toggleAllProperties = function (table) {
         console.log(table);
@@ -42083,11 +42323,23 @@ var TableDesignComponent = /** @class */ (function () {
             this.selectColumn(table.Properties[i]);
         }
     };
+    TableDesignComponent.makeSureUniqIdIsDistinct = function (selectedProperties, uniqId, propertyModel) {
+        if (!propertyModel[uniqId]) {
+            propertyModel[uniqId] = _utility__WEBPACK_IMPORTED_MODULE_3__["Utility"].generateNewIdNumber();
+        }
+        var any = selectedProperties.find(function (s) { return s[uniqId] == propertyModel[uniqId]; });
+        if (any) {
+            propertyModel[uniqId] = null;
+            return this.makeSureUniqIdIsDistinct(propertyModel[uniqId], uniqId, propertyModel);
+        }
+        return propertyModel[uniqId];
+    };
+    var TableDesignComponent_1;
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
         __metadata("design:type", Object)
     ], TableDesignComponent.prototype, "panelHeight", void 0);
-    TableDesignComponent = __decorate([
+    TableDesignComponent = TableDesignComponent_1 = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-table-design',
             template: __webpack_require__(/*! ./table-design.component.html */ "./src/app/query-generator/select-columns-and-join/table-design/table-design.component.html"),
@@ -42099,11 +42351,13 @@ var TableDesignComponent = /** @class */ (function () {
     return TableDesignComponent;
 }());
 
-var JoinTable = /** @class */ (function () {
+var JoinTable = /** @class */ (function (_super) {
+    __extends(JoinTable, _super);
     function JoinTable() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     return JoinTable;
-}());
+}(_model_model__WEBPACK_IMPORTED_MODULE_2__["BaseEntity"]));
 
 var JoinTableType;
 (function (JoinTableType) {
@@ -42116,6 +42370,7 @@ var JoinTableType;
     JoinTableType[JoinTableType["OuterRightjoin"] = 6] = "OuterRightjoin";
     JoinTableType[JoinTableType["OuterJoin"] = 7] = "OuterJoin";
 })(JoinTableType || (JoinTableType = {}));
+
 
 /*
  * Raise the value exponentially
@@ -42138,17 +42393,6 @@ var HoldValuePipe = /** @class */ (function () {
     return HoldValuePipe;
 }());
 
-function cloneAll(obj) {
-    /*  let newObj = JSON.parse(JSON.stringify(obj));
-      console.log(obj, newObj);*/
-    var clone = Object.create(Object.getPrototypeOf(obj));
-    var props = Object.getOwnPropertyNames(obj);
-    props.forEach(function (key) {
-        var desc = Object.getOwnPropertyDescriptor(obj, key);
-        Object.defineProperty(clone, key, desc);
-    });
-    return clone;
-}
 
 
 /***/ }),
@@ -42157,19 +42401,20 @@ function cloneAll(obj) {
 /*!********************************************!*\
   !*** ./src/app/query-generator/utility.ts ***!
   \********************************************/
-/*! exports provided: Utility, Globals */
+/*! exports provided: Utility, Globals, cloneAll */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Utility", function() { return Utility; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Globals", function() { return Globals; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cloneAll", function() { return cloneAll; });
 var Utility = /** @class */ (function () {
     function Utility() {
     }
     Utility.generateNewIdNumber = function () {
         var newId = '';
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < 7; i++) {
             var index = randomIntFromInterval(0, this.numbers.length - 1);
             newId += this.numbers[index];
         }
@@ -42201,6 +42446,17 @@ var Globals = /** @class */ (function () {
 
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+function cloneAll(obj) {
+    /*  let newObj = JSON.parse(JSON.stringify(obj));
+      console.log(obj, newObj);*/
+    var clone = Object.create(Object.getPrototypeOf(obj));
+    var props = Object.getOwnPropertyNames(obj);
+    props.forEach(function (key) {
+        var desc = Object.getOwnPropertyDescriptor(obj, key);
+        Object.defineProperty(clone, key, desc);
+    });
+    return clone;
 }
 
 

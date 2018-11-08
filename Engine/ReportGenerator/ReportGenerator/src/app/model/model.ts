@@ -141,20 +141,27 @@ export enum PanelQueryType {
 
 
 export class BaseEntity {
+  @InputField('Id', 'کد', FieldType.Text)
   Id;
 }
 
 
 export class Query extends  BaseEntity{
+  @InputField('type', 'نوع', FieldType.Text)
   type: QueryViewModelType = QueryViewModelType.Select;
   models: QueryModel[];
   selectedProperties: PropertyModel[];
-  mainTable: Model;
+  mainTable: QueryModel;
+/*
   joinTables: JoinTable[];
+*/
   addParameterFields: AddParameterForm[];
   WhereStatement: string;
   SQL: string;
-  queryName: string;
+
+  @InputField('queryName', 'نام', FieldType.Text)
+  queryName: string=null;
+  @InputField('QueryType', 'نوع کوئری', FieldType.Text)
   QueryType: QueryType = QueryType.Join;
 }
 
@@ -165,25 +172,37 @@ export enum QueryViewModelType {
 
 export class QueryModel extends BaseEntity
 {
+  uniqId=Utility.generateNewIdNumber();
 
   ModelId
   QueryId
 
   Model: Model
-  Query :Query
+  Query :Query;
+  RightJoinTables:JoinTable[];
+  LeftJoinTables:JoinTable[];
+  IsMainTable:boolean;
+
+
+
 }
 
 
 export class PropertyModel extends BaseEntity
 {
+  //uniqId=Utility.generateNewIdNumber();
+  QueryId;
+  PropertyId;
 
-  QueryId
-  PropertyId
+  Query: Query;
+  Property :Property;
 
-  Query: Query
-  Property :Property
+  onOutPut;
+
+
 }
 export class Model extends BaseEntity {
+  isMainTable?: boolean;
 
   get AsName(): string {
     return this._AsName ? this._AsName : this.Name;
@@ -192,6 +211,7 @@ export class Model extends BaseEntity {
   set AsName(value: string) {
     this._AsName = value;
   }
+
 
   @InputField('Id', 'کد', FieldType.Text)
   Id=Utility.generateNewIdNumber();
@@ -208,10 +228,7 @@ export class Model extends BaseEntity {
 //public List<Form> Forms ;
 
   NavigationProperties: NavigationProperty[] = [];
-  elementX: number;
-  elementY: number;
-  element: HTMLInputElement;
-  JoinTables: JoinTable[] = [];
+
   private _AsName: string=null;
 // MethodParameters:MethodParameter[] ;
 }
@@ -237,6 +254,7 @@ export class NavigationProperty extends BaseEntity {
 }
 
 export class Property extends BaseEntity {
+  onOutPut: boolean;
   get NameInTableAsName(): string {
     return this._NameInTableAsName ? this._NameInTableAsName : this.NameInTable;
   }
@@ -272,8 +290,8 @@ export class Property extends BaseEntity {
   Y: number;
 
 
+  uniqId;
   /// report generator
-  onOutPut;
   private _NameInTableAsName: string;
 }
 

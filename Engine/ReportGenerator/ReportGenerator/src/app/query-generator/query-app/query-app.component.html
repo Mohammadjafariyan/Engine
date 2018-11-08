@@ -89,7 +89,7 @@
 
 
 <app-tables #tables *ngIf="showTables" [display]="showTables" ></app-tables>
-<app-queries #queries *ngIf="showQueries" [display]="showQueries" ></app-queries>
+<app-queries (selectedEv)="querySelect($event)" #queries *ngIf="showQueries" [display]="showQueries" ></app-queries>
 
 <!-- Modal -->
 <div class="modal fade"

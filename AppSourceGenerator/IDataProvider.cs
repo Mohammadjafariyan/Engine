@@ -241,7 +241,7 @@ namespace AppSourceGenerator
             userQuery.SQL = "select * from dbo.rent";
             userQuery.type = QueryViewModelType.Select;
             userQuery.queryName = "RentQuery";
-            userQuery.mainTable = u;
+         //   userQuery.mainTable = new QueryModel{Model = u};
             userQuery.models.Add(new QueryModel{Model = u,Query = userQuery});
           /*  userQuery.selectedProperties.Add(new QueryProperty{Query = userQuery,Property = u.Properties[0]});
             userQuery.selectedProperties.Add(new QueryProperty{Query = userQuery,Property = u.Properties[1]});
@@ -256,7 +256,7 @@ namespace AppSourceGenerator
             userQuery.SQL = "select * from dbo.user";
             userQuery.type = QueryViewModelType.Select;
             userQuery.queryName = "userQuery";
-            userQuery.mainTable = u;
+           // userQuery.mainTable = new QueryModel{Model = u};
             userQuery.models.Add(new QueryModel{Model = u,Query = userQuery});
           /*  userQuery.selectedProperties.Add(new QueryProperty{Query = userQuery,Property = u.Properties[0]});
             userQuery.selectedProperties.Add(new QueryProperty{Query = userQuery,Property = u.Properties[1]});
@@ -272,7 +272,7 @@ namespace AppSourceGenerator
             bookQuery.SQL = "select * from dbo.book";
             bookQuery.type = QueryViewModelType.Select;
             bookQuery.queryName = "bookQuery";
-            bookQuery.mainTable = b;
+          //  bookQuery.mainTable = new QueryModel{Model = b};
             bookQuery.models.Add(new QueryModel{Model = b,Query = bookQuery});
           /*  bookQuery.selectedProperties.Add(new QueryProperty{Query = bookQuery,Property = b.Properties[0]});
             bookQuery.selectedProperties.Add(new QueryProperty{Query = bookQuery,Property = b.Properties[1]});
