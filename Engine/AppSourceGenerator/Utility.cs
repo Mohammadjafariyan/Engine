@@ -304,7 +304,7 @@ try{
                 baseClassName += baseInterfaces == null ? "" : ":" + baseInterfaces;
             }
 
-            var fields = controller.DefineControllerMethod.Select(m => m.ServiceMethod.DefineService).Distinct();
+            var fields = controller.DefineControllerMethods.Select(m => m.ServiceMethod.DefineService).Distinct();
             var fieldsStr = "";
 
             var constructure = $@"public {controller.Name}(";

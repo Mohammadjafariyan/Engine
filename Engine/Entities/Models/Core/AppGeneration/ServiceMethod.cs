@@ -19,8 +19,9 @@ namespace Engine.Entities.Models.Core.AppGeneration
         /// نام
         /// </summary>
         [Text(Name="نام")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
         
+        /*
         /// <summary>
         /// سرویس زیر سیستم
         /// </summary>
@@ -28,6 +29,7 @@ namespace Engine.Entities.Models.Core.AppGeneration
             Service = GlobalNames.SubSystemServiceServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         public long SubSystemServiceClassId { get; set; }
 
+*/
 
         /// <summary>
         /// کوئری
@@ -40,7 +42,7 @@ namespace Engine.Entities.Models.Core.AppGeneration
         /// <summary>
         /// سرویس
         /// </summary>
-        [DropDown(Name = " سرویس",Service = GlobalNames.QueryServiceName, MethodName = GlobalNames.GetDropDownAsync)]
+        [DropDown(Name = " سرویس",Service = GlobalNames.DefineServiceServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         public long DefineServiceId { get; set; }
 
         

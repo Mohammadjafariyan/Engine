@@ -246,7 +246,7 @@ export class JoinTable extends BaseEntity{
   leftTableUniqId: number;
 
 
-  uniqId;
+  uniqId=Utility.generateNewIdNumber();
 }
 
 export enum JoinTableType {

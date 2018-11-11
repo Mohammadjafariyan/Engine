@@ -38611,6 +38611,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DesignPanelComponent", function() { return DesignPanelComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models */ "./src/app/compute-design/models.ts");
+/* harmony import */ var _query_generator_utility__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../query-generator/utility */ "./src/app/query-generator/utility.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -38620,6 +38621,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 var DesignPanelComponent = /** @class */ (function () {
@@ -38638,11 +38640,12 @@ var DesignPanelComponent = /** @class */ (function () {
     DesignPanelComponent.prototype.ngOnInit = function () {
     };
     DesignPanelComponent.prototype.buttonSelected = function (event) {
-        var copy = event.clone();
+        var copy = Object(_query_generator_utility__WEBPACK_IMPORTED_MODULE_2__["cloneAll"])(event);
         var last = this.computeButtonsInDesign[this.computeButtonsInDesign.length - 1];
         if (last) {
             copy.position.x = last.position.x + 160;
         }
+        copy.order = this.computeButtonsInDesign.length;
         this.fillPossibleValues(copy);
         this.computeButtonsInDesign.push(copy);
     };
@@ -38761,9 +38764,6 @@ var ComputeButton = /** @class */ (function () {
         this.position = { x: 0, y: 0 };
         this.isSelected = false;
     }
-    ComputeButton.prototype.clone = function () {
-        return Object.assign({}, this);
-    };
     return ComputeButton;
 }());
 
@@ -40095,7 +40095,7 @@ var Query = /** @class */ (function (_super) {
     function Query() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.type = QueryViewModelType.Select;
-        _this.queryName = null;
+        _this.Name = null;
         _this.QueryType = QueryType.Join;
         return _this;
     }
@@ -40104,9 +40104,9 @@ var Query = /** @class */ (function (_super) {
         __metadata("design:type", Number)
     ], Query.prototype, "type", void 0);
     __decorate([
-        Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_1__["InputField"])('queryName', 'نام', FieldType.Text),
+        Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_1__["InputField"])('Name', 'نام', FieldType.Text),
         __metadata("design:type", String)
-    ], Query.prototype, "queryName", void 0);
+    ], Query.prototype, "Name", void 0);
     __decorate([
         Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_1__["InputField"])('QueryType', 'نوع کوئری', FieldType.Text),
         __metadata("design:type", Number)
@@ -40136,6 +40136,20 @@ var PropertyModel = /** @class */ (function (_super) {
     function PropertyModel() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Object.defineProperty(PropertyModel.prototype, "NameInTableAsName", {
+        get: function () {
+            var value = this._NameInTableAsName ? this._NameInTableAsName : this.Property.NameInTable;
+            if (value) {
+                value = value[0] == '[' ? value : '[' + value + ']';
+            }
+            return value;
+        },
+        set: function (value) {
+            this._NameInTableAsName = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return PropertyModel;
 }(BaseEntity));
 
@@ -40194,16 +40208,6 @@ var Property = /** @class */ (function (_super) {
         _this.Id = _query_generator_utility__WEBPACK_IMPORTED_MODULE_0__["Utility"].generateNewIdNumber();
         return _this;
     }
-    Object.defineProperty(Property.prototype, "NameInTableAsName", {
-        get: function () {
-            return this._NameInTableAsName ? this._NameInTableAsName : this.NameInTable;
-        },
-        set: function (value) {
-            this._NameInTableAsName = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
     return Property;
 }(BaseEntity));
 
@@ -40307,7 +40311,8 @@ var DataComponent = /** @class */ (function () {
         this.selectedProperties = [];
         this.joinTables = [];
         this.addParameterFields = [];
-        this.queryName = _utility__WEBPACK_IMPORTED_MODULE_3__["Utility"].generateNewId();
+        this.WhereComputeButtons = [];
+        this.Name = _utility__WEBPACK_IMPORTED_MODULE_3__["Utility"].generateNewId();
     }
     DataComponent.prototype.getPropertiesOnly = function () {
         var arr = [];
@@ -40352,35 +40357,71 @@ var DataComponent = /** @class */ (function () {
             m.selectedProperties.push(j);
         }
         //   this.selectMain(m.models,this.mainTable);
-        for (var i = 0; i < m.models.length; i++) {
-            var j = m.models[i];
-            for (var k = 0; k < j.LeftJoinTables.length; k++) {
-                j.LeftJoinTables[k].leftTable = null;
+        var joins = [];
+        var _loop_1 = function (i) {
+            var j = Object(_utility__WEBPACK_IMPORTED_MODULE_3__["cloneAll"])(m.models[i]);
+            var _loop_2 = function (k) {
+                var exists = joins.find(function (join) { return join.uniqId == j.LeftJoinTables[k].uniqId; });
+                if (!exists) {
+                    joins.push(j.LeftJoinTables[k]);
+                }
                 j.LeftJoinTables[k].rightTable = null;
+                j.LeftJoinTables[k].leftTable = null;
                 j.LeftJoinTables[k].rightProperty.QueryId = 0;
                 j.LeftJoinTables[k].rightProperty.Id = 0;
                 j.LeftJoinTables[k].leftProperty.QueryId = 0;
                 j.LeftJoinTables[k].leftProperty.Id = 0;
+            };
+            for (var k = 0; k < j.LeftJoinTables.length; k++) {
+                _loop_2(k);
             }
-            for (var k = 0; k < j.RightJoinTables.length; k++) {
+            j.LeftJoinTables = [];
+            var _loop_3 = function (k) {
+                var exists = joins.find(function (join) { return join.uniqId == j.RightJoinTables[k].uniqId; });
+                if (!exists) {
+                    joins.push(j.RightJoinTables[k]);
+                }
+                j.RightJoinTables[k].rightTable = null;
+                j.RightJoinTables[k].leftTable = null;
                 j.RightJoinTables[k].leftTable = null;
                 j.RightJoinTables[k].rightTable = null;
                 j.RightJoinTables[k].rightProperty.QueryId = 0;
                 j.RightJoinTables[k].rightProperty.Id = 0;
                 j.RightJoinTables[k].leftProperty.QueryId = 0;
                 j.RightJoinTables[k].leftProperty.Id = 0;
+            };
+            for (var k = 0; k < j.RightJoinTables.length; k++) {
+                _loop_3(k);
             }
+            j.RightJoinTables = [];
             m.models[i] = (j);
+        };
+        for (var i = 0; i < m.models.length; i++) {
+            _loop_1(i);
         }
-        //m.joinTables=this.joinTables;
+        m.joinTables = [];
+        for (var i = 0; i < this.joinTables.length; i++) {
+            var j = Object(_utility__WEBPACK_IMPORTED_MODULE_3__["cloneAll"])(this.joinTables[i]);
+            if (j.leftTable) {
+                j.leftTable.RightJoinTables = [];
+                j.leftTable.LeftJoinTables = [];
+            }
+            if (j.rightTable) {
+                j.rightTable.LeftJoinTables = [];
+                j.rightTable.LeftJoinTables = [];
+            }
+            m.joinTables.push(j);
+        }
         m.addParameterFields = this.addParameterFields;
         m.WhereStatement = this.WhereStatement;
+        m.WhereComputeButtons = this.WhereComputeButtons;
         m.SQL = this.SQL;
-        m.queryName = this.queryName;
+        m.Name = this.Name;
         this.currentQuery = m;
         this.DataService.saveQuery(m).toPromise().then(function (res) {
             //this.models = res;
             _this.currentQuery.Id = res.result;
+            _this.loadQuery(_this.currentQuery.Id);
             alert(res.Message);
         });
     };
@@ -40391,11 +40432,12 @@ var DataComponent = /** @class */ (function () {
             _this.currentQuery = res;
             _this.mainTable = res.models.find(function (m) { return m.IsMainTable; });
             _this.models = res.models;
+            _this.WhereComputeButtons = res.WhereComputeButtons;
             // this.selectMain();
             var asyncesHolder = [];
             var modelCounter = 0;
             _this.models = _this.models ? _this.models : [];
-            var _loop_1 = function (i) {
+            var _loop_4 = function (i) {
                 /* if (this.models[i].Id == this.mainTable.Id) {
                    this.models[i].Model.isMainTable = true;
                    document.getElementById('t'+this.mainTable.Id).click();
@@ -40407,7 +40449,7 @@ var DataComponent = /** @class */ (function () {
                     _this.models[i].Model.AsName = _this.models[i].Model.Name;
                     //  this.models[i].Model.JoinTables = [];
                     _this.selectedProperties = _this.selectedProperties ? _this.selectedProperties : [];
-                    var _loop_2 = function (j) {
+                    var _loop_5 = function (j) {
                         var id_1 = _this.selectedProperties[j].Property.Id;
                         var exist = _this.models[i].Model.Properties.find(function (p) { return p.Id == id_1; });
                         if (exist) {
@@ -40417,7 +40459,7 @@ var DataComponent = /** @class */ (function () {
                         }
                     };
                     for (var j = 0; j < _this.selectedProperties.length; j++) {
-                        _loop_2(j);
+                        _loop_5(j);
                     }
                     if (modelCounter == _this.models.length - 1) {
                         setTimeout(function () {
@@ -40426,6 +40468,8 @@ var DataComponent = /** @class */ (function () {
                                 console.log(res.models);
                                 for (var t = 0; t < res.models.length; t++) {
                                     var queryModel = res.models[t];
+                                    _this.setModels(queryModel.LeftJoinTables);
+                                    _this.setModels(queryModel.RightJoinTables);
                                     _this.ClickHelp(queryModel.LeftJoinTables);
                                     _this.ClickHelp(queryModel.RightJoinTables);
                                 }
@@ -40437,14 +40481,14 @@ var DataComponent = /** @class */ (function () {
                 });
             };
             for (var i = 0; i < _this.models.length; i++) {
-                _loop_1(i);
+                _loop_4(i);
             }
             _this.selectedProperties = res.selectedProperties;
             _this.selectedProperties = _this.selectedProperties ? _this.selectedProperties : [];
             _this.addParameterFields = res.addParameterFields;
             _this.WhereStatement = res.WhereStatement;
             _this.SQL = res.SQL;
-            _this.queryName = res.queryName;
+            _this.Name = res.Name;
         });
     };
     DataComponent.prototype.init = function () {
@@ -40498,6 +40542,17 @@ var DataComponent = /** @class */ (function () {
         */
             this.joinTables.push(jt);
             //  this.clickSelect(ll2, rr2);
+        }
+    };
+    DataComponent.prototype.setModels = function (joinTables) {
+        var _this = this;
+        var _loop_6 = function (i) {
+            this_1.joinTables[i].leftTable = this_1.models.find(function (m) { return m.Id == _this.joinTables[i].leftTableId; });
+            this_1.joinTables[i].rightTable = this_1.models.find(function (m) { return m.Id == _this.joinTables[i].rightTableId; });
+        };
+        var this_1 = this;
+        for (var i = 0; i < this.joinTables.length; i++) {
+            _loop_6(i);
         }
     };
     DataComponent = __decorate([
@@ -40838,7 +40893,7 @@ module.exports = ":host >>> *{\r\n  direction: rtl;\r\n  text-align: right;\r\n}
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ul class=\"nav nav-tabs\">\n  <li class=\"nav-item\">\n    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#home\"\n       (click)=\"activeTab=1\">طراحی</a>\n  </li>\n  <li class=\"nav-item\">\n    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu2\" (click)=\"activeTab=3\">\n      تنظیمات ستون ها</a>\n  </li>\n  <li class=\"nav-item\">\n    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu1\" (click)=\"activeTab=2\">\n      خروجی Query</a>\n  </li>\n\n\n  <!-- <li class=\"nav-item\">\n     <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu2\">طراحی </a>\n   </li>-->\n</ul>\n\n<!-- Tab panes -->\n<div class=\"tab-content\">\n  <div class=\"tab-pane active\" id=\"home\">\n\n    <nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n      <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\"\n              aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n        <span class=\"navbar-toggler-icon\"></span>\n      </button>\n\n      <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n        <!--  <ul class=\"navbar-nav mr-auto\">\n            <li class=\"nav-item active\">\n              <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n            </li>\n            <li class=\"nav-item\">\n              <a class=\"nav-link\" href=\"#\">Link</a>\n            </li>\n            <li class=\"nav-item dropdown\">\n              <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                Dropdown\n              </a>\n              <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\n                <a class=\"dropdown-item\" href=\"#\">Action</a>\n                <a class=\"dropdown-item\" href=\"#\">Another action</a>\n                <div class=\"dropdown-divider\"></div>\n                <a class=\"dropdown-item\" href=\"#\">Something else here</a>\n              </div>\n            </li>\n            <li class=\"nav-item\">\n              <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n            </li>\n          </ul>-->\n        <ul class=\"navbar-nav\">\n          <li><a class=\"btn btn-outline-light\" data-toggle=\"modal\" data-target=\"#settingmodal\"><span class=\"oi\"\n                                                                                                     data-glyph=\"menu\"></span></a>\n          </li>\n          <li><a class=\"btn text-success\" (click)=\"DataComponent.saveQuery()\"><span class=\"oi\"\n                                                                                              data-glyph=\"check\">ذخیره</span></a>\n          </li>\n          <li><a class=\"btn  text-success\"\n                 (click)=\"openModalQueries()\"><span >انتخاب کوئری</span></a>\n          <li><a class=\"btn  text-success\"\n                 (click)=\"openModalTables()\"><span >انتخاب جدول</span></a>\n          </li>\n\n        </ul>\n      </div>\n      <a class=\"navbar-brand\" href=\"#\">منو</a>\n\n    </nav>\n    <app-table-design [panelHeight]=\"panelHeight\"></app-table-design>\n\n\n  </div>\n  <div class=\"tab-pane container-fluid fade\" id=\"menu1\">\n    <app-query-generator></app-query-generator>\n\n\n  </div>\n  <div class=\"tab-pane container fade\" id=\"menu2\">\n    <br>\n    <br>\n    <app-column-setting></app-column-setting>\n\n\n  </div>\n</div>\n\n\n<app-tables #tables *ngIf=\"showTables\" [display]=\"showTables\" ></app-tables>\n<app-queries (selectedEv)=\"querySelect($event)\" #queries *ngIf=\"showQueries\" [display]=\"showQueries\" ></app-queries>\n\n<!-- Modal -->\n<div class=\"modal fade\"\n     id=\"settingmodal\" tabindex=\"-1\" role=\"dialog\"\n     aria-labelledby=\"settingmodalLabel\" aria-hidden=\"true\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"settingmodalLabel\">تنظیمات</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"form-inline my-2 my-lg-0\">\n          <div class=\"form-group\">\n            <label>نام کوئری</label>\n            <input type=\"text\" [(ngModel)]=\"DataComponent.queryName\">\n          </div>\n          <div class=\"form-group\">\n            <label>اندازه پنل</label>\n            <input type=\"number\" [(ngModel)]=\"panelHeight\">\n          </div>\n        </div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">بستن</button>\n        <!--\n                <button type=\"button\" class=\"btn btn-primary\"></button>\n        -->\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<ul class=\"nav nav-tabs\">\n  <li class=\"nav-item\">\n    <a class=\"nav-link active\" data-toggle=\"tab\" href=\"#home\"\n       (click)=\"activeTab=1\">طراحی</a>\n  </li>\n  <li class=\"nav-item\">\n    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu2\" (click)=\"activeTab=3\">\n      تنظیمات ستون ها</a>\n  </li>\n  <li class=\"nav-item\">\n    <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu1\" (click)=\"activeTab=2\">\n      خروجی Query</a>\n  </li>\n\n\n  <!-- <li class=\"nav-item\">\n     <a class=\"nav-link\" data-toggle=\"tab\" href=\"#menu2\">طراحی </a>\n   </li>-->\n</ul>\n\n<!-- Tab panes -->\n<div class=\"tab-content\">\n  <div class=\"tab-pane active\" id=\"home\">\n\n    <nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n      <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\"\n              aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n        <span class=\"navbar-toggler-icon\"></span>\n      </button>\n\n      <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n        <!--  <ul class=\"navbar-nav mr-auto\">\n            <li class=\"nav-item active\">\n              <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n            </li>\n            <li class=\"nav-item\">\n              <a class=\"nav-link\" href=\"#\">Link</a>\n            </li>\n            <li class=\"nav-item dropdown\">\n              <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                Dropdown\n              </a>\n              <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\n                <a class=\"dropdown-item\" href=\"#\">Action</a>\n                <a class=\"dropdown-item\" href=\"#\">Another action</a>\n                <div class=\"dropdown-divider\"></div>\n                <a class=\"dropdown-item\" href=\"#\">Something else here</a>\n              </div>\n            </li>\n            <li class=\"nav-item\">\n              <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n            </li>\n          </ul>-->\n        <ul class=\"navbar-nav\">\n          <li><a class=\"btn btn-outline-light\" data-toggle=\"modal\" data-target=\"#settingmodal\"><span class=\"oi\"\n                                                                                                     data-glyph=\"menu\"></span></a>\n          </li>\n          <li><a class=\"btn text-success\" (click)=\"DataComponent.saveQuery()\"><span class=\"oi\"\n                                                                                              data-glyph=\"check\">ذخیره</span></a>\n          </li>\n          <li><a class=\"btn  text-success\"\n                 (click)=\"openModalQueries()\"><span >انتخاب کوئری</span></a>\n          <li><a class=\"btn  text-success\"\n                 (click)=\"openModalTables()\"><span >انتخاب جدول</span></a>\n          </li>\n\n        </ul>\n      </div>\n      <a class=\"navbar-brand\" href=\"#\">منو</a>\n\n    </nav>\n    <app-table-design [panelHeight]=\"panelHeight\"></app-table-design>\n\n\n  </div>\n  <div class=\"tab-pane container-fluid fade\" id=\"menu1\">\n    <app-query-generator></app-query-generator>\n\n\n  </div>\n  <div class=\"tab-pane container fade\" id=\"menu2\">\n    <br>\n    <br>\n    <app-column-setting></app-column-setting>\n\n\n  </div>\n</div>\n\n\n<app-tables #tables *ngIf=\"showTables\" [display]=\"showTables\" ></app-tables>\n<app-queries (selectedEv)=\"querySelect($event)\" #queries *ngIf=\"showQueries\" [display]=\"showQueries\" ></app-queries>\n\n<!-- Modal -->\n<div class=\"modal fade\"\n     id=\"settingmodal\" tabindex=\"-1\" role=\"dialog\"\n     aria-labelledby=\"settingmodalLabel\" aria-hidden=\"true\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"settingmodalLabel\">تنظیمات</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"form-inline my-2 my-lg-0\">\n          <div class=\"form-group\">\n            <label>نام کوئری</label>\n            <input type=\"text\" [(ngModel)]=\"DataComponent.Name\">\n          </div>\n          <div class=\"form-group\">\n            <label>اندازه پنل</label>\n            <input type=\"number\" [(ngModel)]=\"panelHeight\">\n          </div>\n        </div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">بستن</button>\n        <!--\n                <button type=\"button\" class=\"btn btn-primary\"></button>\n        -->\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -41293,10 +41348,10 @@ var SqlQueryGeneratorComponent = /** @class */ (function () {
         return joins;
     };
     SqlQueryGeneratorComponent.prototype.GetMainForJoin = function (table, Ftable) {
-        return table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
+        return table.rightTable && table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
     };
     SqlQueryGeneratorComponent.prototype.GetDependentTableForJoin = function (table, Ftable) {
-        return table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
+        return table.rightTable && table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
     };
     SqlQueryGeneratorComponent.prototype.GetJoinType = function (table) {
         switch (table.joinType) {
@@ -41323,7 +41378,7 @@ var SqlQueryGeneratorComponent = /** @class */ (function () {
         var c = 0;
         var names = '';
         for (var i = 0; i < columns.length; i++) {
-            var name_1 = this.dataComponent.findModel(columns[i]).Model.AsName + ".\n      " + columns[i].Property.NameInTable + "  \n      as  \n       " + columns[i].Property.NameInTableAsName + " ";
+            var name_1 = this.dataComponent.findModel(columns[i]).Model.AsName + ".\n      " + columns[i].Property.NameInTable + "  \n      as  \n       " + columns[i].NameInTableAsName + " ";
             names += ' ' + name_1;
             // آخری نباشد
             if (columns.length - 1 != i) {
@@ -41427,7 +41482,7 @@ module.exports = ":host >>> .form-group{\r\n  margin-top: 4px;\r\n  margin-right
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-condition></app-condition>\n\n<table class=\"table col-md-12\" style=\"border:2px solid #0c5460\">\n  <thead>\n  <tr>\n    <!--  <th scope=\"col\" colspan=\"1\">\n        <button data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\"><span>+</span> پارامتر ورودی\n        </button>\n      </th>-->\n    <th scope=\"col\" colspan=\"5\" style=\"text-align:center;font-weight: bold\">تنظیمات ستون ها</th>\n  </tr>\n  <tr>\n    <th scope=\"col\">در خروجی</th>\n    <th scope=\"col\">نام</th>\n    <th scope=\"col\">نام در جدول</th>\n    <th scope=\"col\">نام در کوئری</th>\n    <th scope=\"col\">نام  جدول</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr *ngFor=\"let property of DataComponent.selectedProperties;let tableI=index;\">\n    <th scope=\"row\"><input type=\"checkbox\" [(ngModel)]=\"property.Property.onOutPut\"></th>\n    <td>{{property.Property.NameInModel}}</td>\n    <td>{{property.Property.NameInTable}}</td>\n    <td>{{property.Property.ModelName}}</td>\n\n    <td><input type=\"text\" [(ngModel)]=\"property.Property.NameInTableAsName\"></td>\n\n  </tr>\n  </tbody>\n</table>\n\n<table class=\"table col-md-12\" style=\"border:2px solid #0c5460\">\n  <thead>\n  <tr>\n    <th scope=\"col\" colspan=\"2\">\n      <button data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\"><span>+</span> پارامتر ورودی\n      </button>\n\n      <button (click)=\"delete()\"\n              class=\"btn btn-danger\"><span>-</span> حذف\n      </button>\n    </th>\n    <th scope=\"col\" colspan=\"5\" style=\"text-align:center;font-weight: bold\">پارامتر های ورودی</th>\n  </tr>\n  <tr>\n    <th scope=\"col\">انتخاب</th>\n    <th scope=\"col\">نام در متد</th>\n    <th scope=\"col\">نام در SQL</th>\n    <th scope=\"col\">نام در کامنت</th>\n    <th scope=\"col\">نوع در مدل</th>\n    <th scope=\"col\">نوع در SQL</th>\n    <th scope=\"col\">عملیات</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr *ngFor=\"let property of DataComponent.addParameterFields;let tableI=index;\">\n    <th scope=\"row\"><input type=\"checkbox\" [(ngModel)]=\"property.isSelected\"></th>\n    <td>{{property.nameInMethod}}</td>\n    <td>{{property.nameInSQL}}</td>\n    <td>{{property.nameInComment}}</td>\n    <td>{{property.typeInModel}}</td>\n    <td>{{property.typeInSQL}}</td>\n    <td>\n      <button data-toggle=\"modal\" data-target=\"#conditionModal\" class=\"btn btn-primary\"><span>+</span> شرط\n      </button>\n      <button (click)=\"edit(property)\" data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\">\n        <span></span> ویرایش\n      </button>\n    </td>\n  </tr>\n  </tbody>\n</table>\n\n\n<div class=\"modal fade\" id=\"exampleModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\n     aria-hidden=\"true\">\n  <div class=\"modal-dialog modal-lg\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"exampleModalLabel\">پارامتر ورودی</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <dynamic-form-save [fields]=\"addParameterFields\" [isInline]=\"true\"></dynamic-form-save>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">بستن</button>\n        <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveParameter()\">ذخیره</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<app-condition></app-condition>\n\n<table class=\"table col-md-12\" style=\"border:2px solid #0c5460\">\n  <thead>\n  <tr>\n    <!--  <th scope=\"col\" colspan=\"1\">\n        <button data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\"><span>+</span> پارامتر ورودی\n        </button>\n      </th>-->\n    <th scope=\"col\" colspan=\"5\" style=\"text-align:center;font-weight: bold\">تنظیمات ستون ها</th>\n  </tr>\n  <tr>\n    <th scope=\"col\">در خروجی</th>\n    <th scope=\"col\">نام</th>\n    <th scope=\"col\">نام در جدول</th>\n    <th scope=\"col\">نام در کوئری</th>\n    <th scope=\"col\">نام  جدول</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr *ngFor=\"let property of DataComponent.selectedProperties;let tableI=index;\">\n    <th scope=\"row\"><input type=\"checkbox\" [(ngModel)]=\"property.Property.onOutPut\"></th>\n    <td>{{property.Property.NameInModel}}</td>\n    <td>{{property.Property.NameInTable}}</td>\n    <td>{{property.Property.ModelName}}</td>\n\n    <td><input type=\"text\" [(ngModel)]=\"property.NameInTableAsName\"></td>\n\n  </tr>\n  </tbody>\n</table>\n\n<table class=\"table col-md-12\" style=\"border:2px solid #0c5460\">\n  <thead>\n  <tr>\n    <th scope=\"col\" colspan=\"2\">\n      <button data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\"><span>+</span> پارامتر ورودی\n      </button>\n\n      <button (click)=\"delete()\"\n              class=\"btn btn-danger\"><span>-</span> حذف\n      </button>\n    </th>\n    <th scope=\"col\" colspan=\"5\" style=\"text-align:center;font-weight: bold\">پارامتر های ورودی</th>\n  </tr>\n  <tr>\n    <th scope=\"col\">انتخاب</th>\n    <th scope=\"col\">نام در متد</th>\n    <th scope=\"col\">نام در SQL</th>\n    <th scope=\"col\">نام در کامنت</th>\n    <th scope=\"col\">نوع در مدل</th>\n    <th scope=\"col\">نوع در SQL</th>\n    <th scope=\"col\">عملیات</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr *ngFor=\"let property of DataComponent.addParameterFields;let tableI=index;\">\n    <th scope=\"row\"><input type=\"checkbox\" [(ngModel)]=\"property.isSelected\"></th>\n    <td>{{property.nameInMethod}}</td>\n    <td>{{property.nameInSQL}}</td>\n    <td>{{property.nameInComment}}</td>\n    <td>{{property.typeInModel}}</td>\n    <td>{{property.typeInSQL}}</td>\n    <td>\n      <button data-toggle=\"modal\" data-target=\"#conditionModal\" class=\"btn btn-primary\"><span>+</span> شرط\n      </button>\n      <button (click)=\"edit(property)\" data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\">\n        <span></span> ویرایش\n      </button>\n    </td>\n  </tr>\n  </tbody>\n</table>\n\n\n<div class=\"modal fade\" id=\"exampleModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\n     aria-hidden=\"true\">\n  <div class=\"modal-dialog modal-lg\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"exampleModalLabel\">پارامتر ورودی</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <dynamic-form-save [fields]=\"addParameterFields\" [isInline]=\"true\"></dynamic-form-save>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">بستن</button>\n        <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveParameter()\">ذخیره</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -41761,7 +41816,7 @@ var ComputeDesignToolsButtonProviderService = /** @class */ (function () {
         for (var i = 0; i < this.DataComponent.selectedProperties.length; i++) {
             /*    var asName = SqlQueryGeneratorComponent.GetAsName(
                   this.DataComponent.selectedProperties[i].NameInTable, SqlQueryGeneratorComponent.outputAsNames, this.DataComponent.selectedProperties[i]);
-               */ var asName = this.DataComponent.selectedProperties[i].Property.NameInTableAsName;
+               */ var asName = this.DataComponent.selectedProperties[i].NameInTableAsName;
             var tmpName = this.DataComponent.findModel(this.DataComponent.selectedProperties[i]).Model.TableName + "." + asName;
             var o = {
                 name: tmpName,
@@ -41803,7 +41858,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\" aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n    <span class=\"navbar-toggler-icon\"></span>\n  </button>\n\n  <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n    <!--  <ul class=\"navbar-nav mr-auto\">\n        <li class=\"nav-item active\">\n          <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" href=\"#\">Link</a>\n        </li>\n        <li class=\"nav-item dropdown\">\n          <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n            Dropdown\n          </a>\n          <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\n            <a class=\"dropdown-item\" href=\"#\">Action</a>\n            <a class=\"dropdown-item\" href=\"#\">Another action</a>\n            <div class=\"dropdown-divider\"></div>\n            <a class=\"dropdown-item\" href=\"#\">Something else here</a>\n          </div>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n        </li>\n      </ul>-->\n    <ul class=\"navbar-nav\">\n      <li><a (click)=\"display=true\"\n             ><span class=\"oi\" data-glyph=\"menu\"></span></a></li>\n\n    </ul>\n  </div>\n  <a class=\"navbar-brand\">منو</a>\n\n</nav>\n\n\n<div class=\"ui-rtl\" dir=\"rtl\">\n<p-dialog header=\"طراحی Where\" [(visible)]=\"display\"\n          [modal]=\"true\" [responsive]=\"true\"  [minWidth]=\"1200\" [minY]=\"700\"\n          [maximizable]=\"true\" [baseZIndex]=\"10000\"\n[draggable]=\"true\" [closeOnEscape]=\"true\" (onHide)=\"export()\"\n>\n  <app-design-panel #appDesignPanel [computeButtonsInDesign]=\"computeButtonsInDesign\" [computeButtonsInTools]=\"computeButtonsInTools\"\n  ></app-design-panel>\n</p-dialog>\n\n</div>\n"
+module.exports = "<nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\" aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n    <span class=\"navbar-toggler-icon\"></span>\n  </button>\n\n  <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n    <!--  <ul class=\"navbar-nav mr-auto\">\n        <li class=\"nav-item active\">\n          <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" href=\"#\">Link</a>\n        </li>\n        <li class=\"nav-item dropdown\">\n          <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n            Dropdown\n          </a>\n          <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\n            <a class=\"dropdown-item\" href=\"#\">Action</a>\n            <a class=\"dropdown-item\" href=\"#\">Another action</a>\n            <div class=\"dropdown-divider\"></div>\n            <a class=\"dropdown-item\" href=\"#\">Something else here</a>\n          </div>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\n        </li>\n      </ul>-->\n    <ul class=\"navbar-nav\">\n      <li><a (click)=\"displayNow()\"\n             ><span class=\"oi\" data-glyph=\"menu\"></span></a></li>\n\n    </ul>\n  </div>\n  <a class=\"navbar-brand\">منو</a>\n\n</nav>\n\n\n<div class=\"ui-rtl\" dir=\"rtl\">\n<p-dialog header=\"طراحی Where\" [(visible)]=\"display\"\n          [modal]=\"true\" [responsive]=\"true\"  [minWidth]=\"1200\" [minY]=\"700\"\n          [maximizable]=\"true\" [baseZIndex]=\"10000\"\n[draggable]=\"true\" [closeOnEscape]=\"true\" (onHide)=\"export()\"\n>\n  <app-design-panel #appDesignPanel [computeButtonsInDesign]=\"computeButtonsInDesign\" [computeButtonsInTools]=\"computeButtonsInTools\"\n  ></app-design-panel>\n</p-dialog>\n\n</div>\n"
 
 /***/ }),
 
@@ -41847,12 +41902,25 @@ var ConditionComponent = /** @class */ (function () {
         this.DataComponent.WhereComputeButtons = this.appDesignPanel.computeButtonsInDesign;
         this.DataComponent.WhereStatement = this.SQLExportservice.export(this.appDesignPanel.computeButtonsInDesign);
     };
+    ConditionComponent.prototype.displayNow = function () {
+        this.display = true;
+        this.ngOnInit();
+    };
     ConditionComponent.prototype.ngOnInit = function () {
         if (!this.computeButtonsInTools) {
             //INIT
             this.computeButtonsInTools =
                 this.ComputeDesignToolsButtonProviderService.getWhereDesignTools();
         }
+        this.DataComponent.WhereComputeButtons = this.DataComponent.WhereComputeButtons.sort(function (a, b) {
+            if (a.order == b.order)
+                return 0;
+            else if (a.order > b.order)
+                return +1;
+            else if (a.order < b.order)
+                return -1;
+        });
+        this.appDesignPanel.computeButtonsInDesign = this.DataComponent.WhereComputeButtons;
     };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])('appDesignPanel'),
@@ -42354,7 +42422,9 @@ var TableDesignComponent = /** @class */ (function () {
 var JoinTable = /** @class */ (function (_super) {
     __extends(JoinTable, _super);
     function JoinTable() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.uniqId = _utility__WEBPACK_IMPORTED_MODULE_3__["Utility"].generateNewIdNumber();
+        return _this;
     }
     return JoinTable;
 }(_model_model__WEBPACK_IMPORTED_MODULE_2__["BaseEntity"]));

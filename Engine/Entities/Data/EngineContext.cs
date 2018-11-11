@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Services.Description;
 using Engine.Entities.Models.Core.AppGeneration;
+using Engine.Entities.Models.Core.QueryBuild;
+using Engine.Entities.Models.UiEngine;
 using Engine.Migrations;
 using ServiceLayer.Systems;
 using WebAppIDEEngine.Models.Core;
@@ -19,6 +21,7 @@ namespace WebAppIDEEngine.Models
         public EngineContext() : base("EngineContext")
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<EngineContext, Configuration>());
+            //  Database.SetInitializer(new DropCreateDatabaseIfModelChanges<EngineContext>());
 
 
             //Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
@@ -31,41 +34,21 @@ namespace WebAppIDEEngine.Models
 
             modelBuilder.Entity<Form>().HasMany(f => f.Actions).WithRequired(f => f.Form).HasForeignKey(f => f.FormId);
 
-
-            //   modelBuilder.Entity<Core.Action>().HasMany(f => f.Parameters).
-            //WithRequired(f => f.Action).HasForeignKey(f => f.ActionId);
-
-
-            //   modelBuilder.Entity<Core.Parameter>().HasMany(f => f.MethodParameters).
-            //WithRequired(f => f.Parameter).HasForeignKey(f => f.ParameterId);
-
-
             modelBuilder.Entity<Panel>().HasMany(f => f.Children).WithOptional(f => f.Parent)
                 .HasForeignKey(f => f.ParentId);
-
 
             #region QueryGenerator 
 
             modelBuilder.Entity<Model>().HasMany(f => f.Forms).WithOptional(f => f.Model).HasForeignKey(f => f.ModelId);
 
-
             modelBuilder.Entity<QueryModel>().HasRequired(f => f.Model).WithMany(f => f.UsedInQueries)
                 .HasForeignKey(f => f.ModelId);
-
 
             modelBuilder.Entity<Model>().HasMany(f => f.NavigationProperties).WithRequired(f => f.Model)
                 .HasForeignKey(f => f.ModelId);
 
-
             modelBuilder.Entity<Model>().HasMany(f => f.Properties).WithRequired(f => f.Model)
                 .HasForeignKey(f => f.ModelId);
-
-
-            //   modelBuilder.Entity<Model>().HasMany(f => f.MethodParameters).
-            //WithRequired(f => f.Model).HasForeignKey(f => f.ModelId);
-
-            //   modelBuilder.Entity<Property>().HasOptional(f => f.NavigationProperty).WithOptionalDependent(f => f.Property);
-
 
             modelBuilder.Entity<Core.Query>().HasMany(f => f.Actions).WithOptional(f => f.Query)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
@@ -73,106 +56,54 @@ namespace WebAppIDEEngine.Models
             modelBuilder.Entity<Core.Query>().HasMany(f => f.addParameterFields).WithRequired(f => f.Query)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
 
-
-            /*
-            modelBuilder.Entity<Core.Query>().HasMany(f => f.joinTables).WithRequired(f => f.Query)
-                .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
-*/
-
-
-            /*modelBuilder.Entity<Core.Query>().HasOptional(f => f.mainTable).WithMany(f => f.MainTableInQueries)
-                .HasForeignKey(f => f.mainTableId)
-                .WillCascadeOnDelete(false);*/
-
-
             modelBuilder.Entity<Core.Query>().HasMany(f => f.models).WithRequired(f => f.Query)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
-
 
             modelBuilder.Entity<Core.Query>().HasMany(f => f.selectedProperties).WithRequired(f => f.Query)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
 
-
             modelBuilder.Entity<Core.Property>().HasMany(f => f.UsedInQueries).WithRequired(f => f.Property)
                 .HasForeignKey(f => f.PropertyId).WillCascadeOnDelete(false);
 
-
-            /*modelBuilder.Entity<Core.QueryModel>().HasMany(f => f.LeftJoinTables).
-               WithRequired(f => f.leftTable).HasForeignKey(f => f.leftTableId).WillCascadeOnDelete(false);
- 
-    
-            modelBuilder.Entity<Core.QueryModel>().HasMany(f => f.RightJoinTables).
-               WithRequired(f => f.rightTable).HasForeignKey(f => f.rightTableId).WillCascadeOnDelete(false);
- 
-    /**/
-
-
-           modelBuilder.Entity<Core.QueryModel>().HasMany(f => f.RightJoinTables).
-              WithOptional(f => f.rightTable).HasForeignKey(f => f.rightTableId).WillCascadeOnDelete(false);
-
-           modelBuilder.Entity<Core.QueryModel>().HasMany(f => f.LeftJoinTables).
-               WithOptional(f => f.leftTable).HasForeignKey(f => f.leftTableId).WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Core.QueryProperty>().HasMany(f => f.JoinRightTables).
-                WithOptional(f => f.rightProperty).HasForeignKey(f => f.rightPropertyId).WillCascadeOnDelete(false);
-           
-            modelBuilder.Entity<Core.QueryProperty>().HasMany(f => f.JoinLeftTables).
-                WithOptional(f => f.leftProperty).HasForeignKey(f => f.leftPropertyId).WillCascadeOnDelete(false);
-/*
-
-           modelBuilder.Entity<Core.QueryProperty>().HasRequired(f => f.Property).
-              WithMany(f => f.UsedInQueries).HasForeignKey(f => f.PropertyId).WillCascadeOnDelete(false);
-*/
-
-
-
-/*
-
-            modelBuilder.Entity<JoinTable>().HasOptional(f => f.rightTable).WithMany(f => f.RightJoinTables)
+            modelBuilder.Entity<Core.QueryModel>().HasMany(f => f.RightJoinTables).WithOptional(f => f.rightTable)
                 .HasForeignKey(f => f.rightTableId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<JoinTable>().HasOptional(f => f.leftTable).WithMany(f => f.LeftJoinTables)
+            modelBuilder.Entity<Core.QueryModel>().HasMany(f => f.LeftJoinTables).WithOptional(f => f.leftTable)
                 .HasForeignKey(f => f.leftTableId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<JoinTable>().HasOptional(f => f.rightProperty).WithMany(f => f.JoinRightTables)
+            modelBuilder.Entity<Core.QueryProperty>().HasMany(f => f.JoinRightTables).WithOptional(f => f.rightProperty)
                 .HasForeignKey(f => f.rightPropertyId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<JoinTable>().HasOptional(f => f.leftProperty).WithMany(f => f.JoinLeftTables)
+            modelBuilder.Entity<Core.QueryProperty>().HasMany(f => f.JoinLeftTables).WithOptional(f => f.leftProperty)
                 .HasForeignKey(f => f.leftPropertyId).WillCascadeOnDelete(false);
-*/
 
             #endregion
 
             modelBuilder.Entity<Property>().HasOptional(f => f.NavigationProperty)
                 .WithOptionalDependent(f => f.Property);
 
-            //            modelBuilder.Entity<Core.Query>().HasMany(f => f.SelectColumns).
-            //         WithRequired(f => f.Query).HasForeignKey(f => f.QueryId);
-
-            //            modelBuilder.Entity<Core.Query>().HasMany(f => f.Sorts).
-            //         WithRequired(f => f.Query).HasForeignKey(f => f.QueryId);
-
-            //            modelBuilder.Entity<Core.Query>().HasMany(f => f.Wheres).
-            //         WithRequired(f => f.Query).HasForeignKey(f => f.QueryId);
-
-
-            //            modelBuilder.Entity<Core.Query>().HasMany(f => f.Parameters).
-            //WithOptional(f => f.Query).HasForeignKey(f => f.QueryId);
-
-
             modelBuilder.Entity<Field>().HasMany(f => f.UpdateOnChange).WithOptional(f => f.UpdateOnChangeParent)
                 .HasForeignKey(f => f.UpdateOnChangeParentId);
 
             modelBuilder.Entity<Field>().HasMany(f => f.HideOnSelect).WithOptional(f => f.HideOnSelectParent)
-                .HasForeignKey(f => f.HideOnSelectParentId);
+                .HasForeignKey(f => f.HideOnSelectParentId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Field>().HasMany(f => f.UpdateOnChange).WithOptional(f => f.UpdateOnChangeParent)
-                .HasForeignKey(f => f.UpdateOnChangeParentId);
-
+                .HasForeignKey(f => f.UpdateOnChangeParentId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Panel>().HasMany(f => f.Fields).WithOptional(f => f.OpenInModalPanel)
-                .HasForeignKey(f => f.OpenInModalPanelId);
+                .HasForeignKey(f => f.OpenInModalPanelId).WillCascadeOnDelete(false);
+/*
 
+            modelBuilder.Entity<ComputeButton>().HasOptional(f => f.position)
+                .WithRequired(f => f.ComputeButton).WillCascadeOnDelete(false);
+*/
+
+            modelBuilder.Entity<ComputeButton>().HasRequired(f => f.Query)
+                .WithMany(f => f.WhereComputeButtons).HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ComputeButton>().HasMany(f => f.possibleValue)
+                .WithRequired(f => f.ComputeButton).HasForeignKey(f => f.ComputeButtonId).WillCascadeOnDelete(false);
 
             #region appGeneration
 
@@ -184,8 +115,8 @@ namespace WebAppIDEEngine.Models
                 .HasForeignKey(f => f.ModelId).WillCascadeOnDelete(false);
 
 
-            modelBuilder.Entity<DefineService>().HasMany(f => f.ServiceMethods).WithOptional(f => f.DefineService)
-                .HasForeignKey(f => f.SubSystemServiceClassId)
+            modelBuilder.Entity<DefineService>().HasMany(f => f.ServiceMethods).WithRequired(f => f.DefineService)
+                .HasForeignKey(f => f.DefineServiceId)
                 .WillCascadeOnDelete(false);
 
 
@@ -200,18 +131,20 @@ namespace WebAppIDEEngine.Models
                 .HasForeignKey(f => f.SubSystemId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<DefineControllerMethod>().HasRequired(f => f.DefineController)
-                .WithMany(f => f.DefineControllerMethod)
+                .WithMany(f => f.DefineControllerMethods)
                 .HasForeignKey(f => f.DefineControllerId).WillCascadeOnDelete(false);
 
 
+            /*
             modelBuilder.Entity<DefineControllerMethod>().HasRequired(f => f.Model)
                 .WithMany(f => f.DefineControllerMethods)
                 .HasForeignKey(f => f.DefineControllerId).WillCascadeOnDelete(false);
+*/
 
 
             modelBuilder.Entity<DefineControllerMethod>().HasRequired(f => f.ServiceMethod)
                 .WithMany(f => f.DefineControllerMethods)
-                .HasForeignKey(f => f.DefineControllerId).WillCascadeOnDelete(false);
+                .HasForeignKey(f => f.ServiceMethodId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<DefineService>().HasRequired(f => f.Model).WithMany(f => f.DefineServices)
                 .HasForeignKey(f => f.ModelId).WillCascadeOnDelete(false);
@@ -223,11 +156,23 @@ namespace WebAppIDEEngine.Models
  */
 
 
-            modelBuilder.Entity<DefineService>().HasMany(f => f.ServiceMethods).WithRequired(f => f.DefineService)
+            /*modelBuilder.Entity<DefineService>().HasMany(f => f.ServiceMethods).WithRequired(f => f.DefineService)
                 .HasForeignKey(f => f.DefineServiceId);
+*/
 
             #endregion
 
+
+            #region UIEngine
+
+            modelBuilder.Entity<TableMethod>().HasRequired(f => f.Table)
+                .WithMany(f => f.TableMethods).HasForeignKey(f => f.TableId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<TableMethod>().HasRequired(f => f.DefineControllerMethod)
+                .WithMany(f => f.TableMethods).HasForeignKey(f => f.DefineControllerMethodId)
+                .WillCascadeOnDelete(false);
+
+            #endregion
 
             base.OnModelCreating(modelBuilder);
         }
@@ -257,12 +202,23 @@ namespace WebAppIDEEngine.Models
 
         #region appGeneration
 
+        public DbSet<ComputeButton> ComputeButtons { get; set; }
+
+        //public DbSet<Position> Positions { get; set; }
         public DbSet<SubSystem> SubSystem { get; set; }
         public DbSet<DefineService> DefineServices { get; set; }
         public DbSet<ServiceMethod> ServiceMethods { get; set; }
 
         public DbSet<DefineController> DefineControllers { get; set; }
         public DbSet<DefineControllerMethod> DefineControllerMethodes { get; set; }
+
+        #endregion
+
+
+        #region UIEngine
+
+        public DbSet<Table> Tables { get; set; }
+        public DbSet<TableMethod> TableMethods { get; set; }
 
         #endregion
 

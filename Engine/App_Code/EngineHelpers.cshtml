@@ -10,140 +10,132 @@
 @helper ShowForm(IModel model, ViewDataDictionary ViewData, HtmlHelper<dynamic> _html, dynamic ViewBag)
 {
     <style>
-        .fgrop {
-            padding: 5px;
-        }
+        .fgrop { padding: 5px; }
     </style>
-if (model == null)
-{
+    if (model == null)
+    {
         <div></div>
-    return;
-}
-
-
-var properties = model.GetType().GetProperties();
-for (int i = 0; i < properties.Length; i++)
-{
-    var property = properties[i];
-    var attributes = property.GetCustomAttributes(true);
-
-    var dropDownAttribute = attributes.Where(a => a is DropDownAttribute).Select(a => a as DropDownAttribute).ToList();
-    var dataTableAttribute = attributes.Where(a => a is DataTableAttribute).Select(a => a as DataTableAttribute).ToList();
-    var treeAttribute = attributes.Where(a => a is TreeAttribute).Select(a => a as TreeAttribute).ToList();
-    var multiSelectAttribute = attributes.Where(a => a is MultiSelectAttribute).Select(a => a as MultiSelectAttribute).ToList();
-    var dateTimeAttribute = attributes.Where(a => a is DateTimeAttribute).Select(a => a as DateTimeAttribute).ToList();
-    var TextAttribute = attributes.Where(a => a is TextAttribute).Select(a => a as TextAttribute).ToList();
-    var CheckboxAttribute = attributes.Where(a => a is CheckboxAttribute).Select(a => a as CheckboxAttribute).ToList();
-    var EnumAttribute = attributes.Where(a => a is EnumAttribute).Select(a => a as EnumAttribute).ToList();
-
-
-    var htmlAttr = new Dictionary<string, object>();
-
-    if (ViewBag.ForEditDisabled == true)
-    {
-
-        htmlAttr.Add("disabled", "disabled");
-        htmlAttr.Add("readonly", "readonly");
+        return;
     }
-    htmlAttr.Add("class", "form-control");
+    @_html.Hidden("Id")
 
-    string title = HtmlUtilities.GetPropertyName(property);
-    if (dropDownAttribute != null)
+
+    var properties = model.GetType().GetProperties();
+    for (int i = 0; i < properties.Length; i++)
     {
-        foreach (var attr in dropDownAttribute)
+        var property = properties[i];
+        var attributes = property.GetCustomAttributes(true);
+
+        var dropDownAttribute = attributes.Where(a => a is DropDownAttribute).Select(a => a as DropDownAttribute).ToList();
+        var dataTableAttribute = attributes.Where(a => a is DataTableAttribute).Select(a => a as DataTableAttribute).ToList();
+        var treeAttribute = attributes.Where(a => a is TreeAttribute).Select(a => a as TreeAttribute).ToList();
+        var multiSelectAttribute = attributes.Where(a => a is MultiSelectAttribute).Select(a => a as MultiSelectAttribute).ToList();
+        var dateTimeAttribute = attributes.Where(a => a is DateTimeAttribute).Select(a => a as DateTimeAttribute).ToList();
+        var TextAttribute = attributes.Where(a => a is TextAttribute).Select(a => a as TextAttribute).ToList();
+        var CheckboxAttribute = attributes.Where(a => a is CheckboxAttribute).Select(a => a as CheckboxAttribute).ToList();
+        var EnumAttribute = attributes.Where(a => a is EnumAttribute).Select(a => a as EnumAttribute).ToList();
+
+
+        var htmlAttr = new Dictionary<string, object>();
+
+        if (ViewBag.ForEditDisabled == true)
         {
+            htmlAttr.Add("disabled", "disabled");
+            htmlAttr.Add("readonly", "readonly");
+        }
+        htmlAttr.Add("class", "form-control");
+
+        string title = HtmlUtilities.GetPropertyName(property);
+        if (dropDownAttribute != null)
+        {
+            foreach (var attr in dropDownAttribute)
+            {
                 <div class="col-md-4 fgrop">
                     @RenderDropDown(attr as DropDownAttribute, property, model, ViewData, _html, title, htmlAttr)
                 </div>
+            }
         }
-    }
-    if (dataTableAttribute != null)
-    {
-        foreach (var attr in dataTableAttribute)
+        if (dataTableAttribute != null)
         {
-                <div class="col-md-4 fgrop" >
+            foreach (var attr in dataTableAttribute)
+            {
+                <div class="col-md-4 fgrop">
                     @RenderDataTable(attr as DataTableAttribute, property, model, ViewData, _html, title)
                 </div>
+            }
         }
-    }
-    if (treeAttribute != null)
-    {
-        foreach (var attr in treeAttribute)
+        if (treeAttribute != null)
         {
-
+            foreach (var attr in treeAttribute)
+            {
                 <div class="col-md-4 fgrop">
                     @RenderTree(attr as TreeAttribute, property, model, ViewData, _html)
                 </div>
-
+            }
         }
-    }
-    if (multiSelectAttribute != null)
-    {
-        foreach (var attr in multiSelectAttribute)
+        if (multiSelectAttribute != null)
         {
+            foreach (var attr in multiSelectAttribute)
+            {
                 <div class="col-md-4 fgrop">
                     @RenderMultiSelect(attr as MultiSelectAttribute, property, model, ViewData, _html)
                 </div>
+            }
         }
-    }
-    if (dateTimeAttribute != null)
-    {
-        foreach (var attr in dateTimeAttribute)
+        if (dateTimeAttribute != null)
         {
-
+            foreach (var attr in dateTimeAttribute)
+            {
                 <div class="col-md-4 fgrop">
                     @RenderDateTime(attr as DateTimeAttribute, property, model, ViewData, _html, title)
                 </div>
+            }
         }
-    }
 
 
-    if (TextAttribute != null)
-    {
-        foreach (var attr in TextAttribute)
+        if (TextAttribute != null)
         {
+            foreach (var attr in TextAttribute)
+            {
                 <div class="col-md-4 fgrop">
                     @RenderText(attr as TextAttribute, property, model, ViewData, _html, model, title, htmlAttr)
                 </div>
+            }
         }
-    }
 
-    if (CheckboxAttribute != null)
-    {
-        foreach (var attr in CheckboxAttribute)
+        if (CheckboxAttribute != null)
         {
+            foreach (var attr in CheckboxAttribute)
+            {
                 <div class="col-md-4 fgrop">
                     @RenderCheckbox(attr as CheckboxAttribute, property, model, ViewData, _html, model, title, htmlAttr)
                 </div>
+            }
         }
-    }
 
-    if (EnumAttribute != null)
-    {
-        foreach (var attr in EnumAttribute)
+        if (EnumAttribute != null)
         {
+            foreach (var attr in EnumAttribute)
+            {
                 <div class="col-md-4 fgrop">
-                    @RenderEnumsDropDown(attr as EnumAttribute, property, 
-                   model, ViewData, _html, title, htmlAttr)
-               
+                    @RenderEnumsDropDown(attr as EnumAttribute, property,
+                        model, ViewData, _html, title, htmlAttr)
+
                 </div>
+            }
         }
     }
-
-}
-
-
 }
 
 @functions{
+
     public class HtmlUtilities
     {
         public static string GetPropertyName(System.Reflection.PropertyInfo p)
         {
-
             return p.GetCustomAttributes(true).Where(c => c is IEngineAttribute)
-                                    .Select(c => c as IEngineAttribute)
-                                    .Select(c => c.Name).FirstOrDefault() ?? p.Name;
+                .Select(c => c as IEngineAttribute)
+                .Select(c => c.Name).FirstOrDefault() ?? p.Name;
         }
     }
 
@@ -154,20 +146,20 @@ for (int i = 0; i < properties.Length; i++)
 @helper RenderCheckbox(CheckboxAttribute attr, System.Reflection.PropertyInfo p, dynamic m
     , ViewDataDictionary ViewData, HtmlHelper<dynamic> _html, object o, string title, Dictionary<string, object> htmlattributes)
 {
-Validate(attr, p, m, ViewData);
+    Validate(attr, p, m, ViewData);
 
-var boolean = p.GetValue(o) as bool?;
-htmlattributes["class"] = "checkbox";
+    var boolean = p.GetValue(o) as bool?;
+    htmlattributes["class"] = "checkbox";
     <div class="form-group">
         <label for="pwd">@title:</label>
         @_html.CheckBox(p.Name, boolean ?? false, htmlattributes)
     </div>
 }
+
 @helper RenderText(TextAttribute attr, System.Reflection.PropertyInfo p, dynamic m
     , ViewDataDictionary ViewData, HtmlHelper<dynamic> _html, object o, string title, Dictionary<string, object> htmlattributes)
 {
-Validate(attr, p, m, ViewData);
-
+    Validate(attr, p, m, ViewData);
 
 
     <div class="form-group">
@@ -178,23 +170,20 @@ Validate(attr, p, m, ViewData);
 
 @helper Validate(BaseAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
 {
-
-if (attr == null)
-{
-    throw new Exception("دروپداون نال است");
-}
-if (m == null)
-{
-    throw new Exception("مدل نال است");
-}
-
-
-if (ViewData[p.Name] == null)
-{
-    throw new Exception("ViewData[p.Name] نال است");
-}
+    if (attr == null)
+    {
+        throw new Exception("دروپداون نال است");
+    }
+    if (m == null)
+    {
+        throw new Exception("مدل نال است");
+    }
 
 
+    if (ViewData[p.Name] == null)
+    {
+        throw new Exception("ViewData[p.Name] نال است");
+    }
 }
 
 
@@ -202,64 +191,96 @@ if (ViewData[p.Name] == null)
 @helper RenderEnumsDropDown(EnumAttribute attr, System.Reflection.PropertyInfo p,
     dynamic m, ViewDataDictionary ViewData, HtmlHelper<dynamic> _html, string title
     , Dictionary<string, object> htmlattributes)
-{ 
-@RenderDropDown(null, p,
- m, ViewData, _html, title
-, htmlattributes);
-    }
+{
+    @RenderDropDown(null, p,
+        m, ViewData, _html, title
+        , htmlattributes)
+    ;
+}
 
 @helper RenderDropDown(DropDownAttribute attr, System.Reflection.PropertyInfo p,
     dynamic m, ViewDataDictionary ViewData, HtmlHelper<dynamic> _html, string title
     , Dictionary<string, object> htmlattributes)
 {
 //Validate(attr, p, m, ViewData);
-List<IDropDownOption> options = null;
-List<System.Web.Mvc.SelectListItem> selectListoptions = null;
+    List<IDropDownOption> options = null;
+    List<System.Web.Mvc.SelectListItem> selectListoptions = null;
 
-if (ViewData[p.Name] is List<IDropDownOption>)
-{
-    options = ViewData[p.Name] as List<IDropDownOption>;
-
-    if (options == null)
+    if (ViewData[p.Name] is List<IDropDownOption>)
     {
-        options = new List<IDropDownOption>();
-        //    throw new Exception("options نال است");
+        options = ViewData[p.Name] as List<IDropDownOption>;
 
+        if (options == null)
+        {
+            options = new List<IDropDownOption>();
+            //    throw new Exception("options نال است");
+        }
     }
-}
-else if (ViewData[p.Name] is List<System.Web.Mvc.SelectListItem>)
-{
-    selectListoptions = ViewData[p.Name] as List<System.Web.Mvc.SelectListItem>;
-
-    if (selectListoptions == null)
+    else if (ViewData[p.Name] is List<System.Web.Mvc.SelectListItem>)
     {
-        options = new List<IDropDownOption>();
-        //    throw new Exception("options نال است");
+        selectListoptions = ViewData[p.Name] as List<System.Web.Mvc.SelectListItem>;
 
+        if (selectListoptions == null)
+        {
+            options = new List<IDropDownOption>();
+            //    throw new Exception("options نال است");
+        }
     }
-}
 
-if (options != null)
-{
+    var valtmp = p.GetValue(m);
+    var val = valtmp != null ? valtmp.ToString() : "";
+
+    if (options != null)
+    {
+        <div class="form-group">
+            <label for="pwd">@title:</label>
+            <select class="form-control" id="@p.Name" name="@p.Name">
+
+                @{
+                    foreach (var option in options)
+                    {
+                        var selected = option.Id == val ? @"selected=""selected""" : null;
+
+                        <option value="@option.Id" @selected>@option.Value</option>
+                    }
+                }
+            </select>
+        </div>
+        @*var selectList=new SelectList(options,"Id","Value",val);
 
         <div class="form-group">
             <label for="pwd">@title:</label>
-            @_html.DropDownList(p.Name, options.Select(o => new
-    System.Web.Mvc.SelectListItem
-       { Text = o.Value, Value = o.Id }).ToList(), htmlattributes)
+            @_html.DropDownList(p.Name, selectList, htmlattributes)
+        </div>*@
+    }
+    else
+    {
+        <div class="form-group">
+            <label for="pwd">@title:</label>
+            <select class="form-control" id="@p.Name" name="@p.Name">
+
+
+                @if (selectListoptions != null)
+                {
+                    foreach (var option in selectListoptions)
+                    {
+                        var selected = option.Value == val ? @"selected=""selected""" : null;
+
+                        <option value="@option.Value" @selected>@option.Text</option>
+                    }
+                }
+
+            </select>
         </div>
-}
-else
-{
+
+        @*// selectListoptions.ForEach(s => s.Selected = s.Value == val);
+        var selectList = new SelectList(selectListoptions, val);
 
         <div class="form-group">
             <label for="pwd">@title:</label>
-            @_html.DropDownList(p.Name, selectListoptions, htmlattributes)
-        </div>
-}
-
-
-
+            @_html.DropDownList(p.Name, selectList, htmlattributes)
+        </div>*@
+    }
 }
 
 
@@ -267,25 +288,17 @@ else
 @helper RenderMultiSelect(MultiSelectAttribute attr,
     System.Reflection.PropertyInfo p, dynamic m
     , ViewDataDictionary ViewData, HtmlHelper<dynamic> _html)
-{
-    <div>multiSelect</div>
-}
+{ <div>multiSelect</div> }
 
 
 @helper RenderDataTable(DataTableAttribute attr, System.Reflection.PropertyInfo p,
     dynamic m, ViewDataDictionary ViewData, HtmlHelper<dynamic> _html, string title)
-{
-    <div>RenderDataTable</div>
-}
+{ <div>RenderDataTable</div> }
 
 @helper RenderTree(TreeAttribute attr, System.Reflection.PropertyInfo p,
     dynamic m, ViewDataDictionary ViewData, HtmlHelper<dynamic> _html)
-{
-    <div>RenderTree</div>
-}
+{ <div>RenderTree</div> }
 
 @helper RenderDateTime(DateTimeAttribute attr, System.Reflection.PropertyInfo p,
     dynamic m, ViewDataDictionary ViewData, HtmlHelper<dynamic> _html, string title)
-{
-    <div>RenderDateTime</div>
-}
+{ <div>RenderDateTime</div> }

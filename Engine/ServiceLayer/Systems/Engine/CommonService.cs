@@ -62,8 +62,7 @@ namespace ServiceLayer.Systems
         {
             var dt=EngineContext.Set<ServiceMethod>();
             return await dt.Select(f =>
-                    new IDropDownOption { Id = f.Id.ToString(), Value = f.Name + $@"(${f.DefineService.Name})" })
-                .ToListAsync();
+                    new IDropDownOption { Id = f.Id.ToString(), Value = f.Name + "("+f.DefineService.Name+")"}).ToListAsync();
         }
     } 
     
@@ -76,7 +75,7 @@ namespace ServiceLayer.Systems
     /// <summary>
     /// کوئری
     /// </summary>
-    public class QueryService : CommonService<SubSystem>
+    public class QueryService : CommonService<Query>
     {
 
       
@@ -84,14 +83,15 @@ namespace ServiceLayer.Systems
     
     
 
-    
+    /*
+
     /// <summary>
     /// سرویس زیر سیسیتم
     /// </summary>
-    public class SubSystemServiceService : CommonService<SubSystem>
+    public class SubSystemServiceService : CommonService<DefineService>
     {
 
-    }
+    }*/
     
     /// <summary>
     ///  زیر سیسیتم

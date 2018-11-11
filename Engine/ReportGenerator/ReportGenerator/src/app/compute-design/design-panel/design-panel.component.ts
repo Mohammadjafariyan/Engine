@@ -7,6 +7,7 @@ import {
   SelectButton,
   SelectButtonType
 } from "../models";
+import {cloneAll} from "../../query-generator/utility";
 
 @Component({
   moduleId: 'DesignPanelComponent',
@@ -38,12 +39,14 @@ export class DesignPanelComponent implements OnInit {
   }
 
   buttonSelected(event: ComputeButton) {
-    const copy = event.clone();
+    const copy:ComputeButton = cloneAll(event);
 
     let last = this.computeButtonsInDesign[this.computeButtonsInDesign.length - 1];
     if (last) {
       copy.position.x = last.position.x + 160;
     }
+
+    copy.order=this.computeButtonsInDesign.length;
 
     this.fillPossibleValues(copy);
     this.computeButtonsInDesign.push(copy);

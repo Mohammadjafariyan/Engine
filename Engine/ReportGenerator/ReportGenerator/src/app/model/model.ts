@@ -2,6 +2,7 @@ import {JoinTable} from "../query-generator/select-columns-and-join/table-design
 import {Utility} from "../query-generator/utility";
 import {AddParameterForm} from "../query-generator/select-columns-and-join/column-setting/column-setting.component";
 import {InputField} from "../form-generator/models";
+import {ComputeButton} from "../compute-design/models";
 
 /// <summary>
 /// نوع پروپرتی مدل های سیستم در جداول دیتابیس
@@ -159,10 +160,13 @@ export class Query extends  BaseEntity{
   WhereStatement: string;
   SQL: string;
 
-  @InputField('queryName', 'نام', FieldType.Text)
-  queryName: string=null;
+  @InputField('Name', 'نام', FieldType.Text)
+  Name: string=null;
+
   @InputField('QueryType', 'نوع کوئری', FieldType.Text)
   QueryType: QueryType = QueryType.Join;
+  joinTables: JoinTable[];
+  WhereComputeButtons: ComputeButton[];
 }
 
 export enum QueryViewModelType {
@@ -198,7 +202,20 @@ export class PropertyModel extends BaseEntity
   Property :Property;
 
   onOutPut;
+/// report generator
+  private _NameInTableAsName: string;
+  get NameInTableAsName(): string {
+    let value=this._NameInTableAsName ? this._NameInTableAsName : this.Property.NameInTable;
+    if(value){
+      value=value[0]=='[' ? value:'['+value+']';
+    }
+    return value;
+  }
 
+  set NameInTableAsName(value: string) {
+
+    this._NameInTableAsName = value;
+  }
 
 }
 export class Model extends BaseEntity {
@@ -255,13 +272,7 @@ export class NavigationProperty extends BaseEntity {
 
 export class Property extends BaseEntity {
   onOutPut: boolean;
-  get NameInTableAsName(): string {
-    return this._NameInTableAsName ? this._NameInTableAsName : this.NameInTable;
-  }
 
-  set NameInTableAsName(value: string) {
-    this._NameInTableAsName = value;
-  }
 
   Id=Utility.generateNewIdNumber()
 
@@ -291,8 +302,7 @@ export class Property extends BaseEntity {
 
 
   uniqId;
-  /// report generator
-  private _NameInTableAsName: string;
+
 }
 
 export class Column {

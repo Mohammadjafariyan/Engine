@@ -150,7 +150,7 @@ export class ComputeDesignToolsButtonProviderService {
     for (let i = 0; i < this.DataComponent.selectedProperties.length; i++) {
   /*    var asName = SqlQueryGeneratorComponent.GetAsName(
         this.DataComponent.selectedProperties[i].NameInTable, SqlQueryGeneratorComponent.outputAsNames, this.DataComponent.selectedProperties[i]);
-     */ var asName = this.DataComponent.selectedProperties[i].Property.NameInTableAsName
+     */ var asName = this.DataComponent.selectedProperties[i].NameInTableAsName
       const tmpName=`${this.DataComponent.findModel(this.DataComponent.selectedProperties[i]).Model.TableName}.${asName}`
       var o = {
         name: tmpName,

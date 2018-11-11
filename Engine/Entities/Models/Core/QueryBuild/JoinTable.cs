@@ -14,9 +14,10 @@ namespace Engine.DomainLayer.Models.Core.QueryBuild
     public class JoinTable:BaseEntity
     {
         
+        public override string Name { get; set; }
         public long uniqId { get; set; }
-        public  WebAppIDEEngine.Models.Core.QueryModel leftTable { get; set; }
-        public  WebAppIDEEngine.Models.Core.QueryModel rightTable { get; set; }
+        public virtual  WebAppIDEEngine.Models.Core.QueryModel leftTable { get; set; }
+        public virtual WebAppIDEEngine.Models.Core.QueryModel rightTable { get; set; }
         public long? rightTableId { get; set; }
         public long? leftTableId { get; set; }
         public long? rightPropertyId { get; set; }

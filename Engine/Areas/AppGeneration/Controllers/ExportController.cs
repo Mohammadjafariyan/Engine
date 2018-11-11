@@ -42,10 +42,19 @@ namespace Engine.Areas.AppGeneration.Controllers
                 if (type == 1)
                 {
                     g.MakeSubsystems(subsystem);
-                    g.MakeControllers(subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault());
-                    g.MakeServices(subsystem.Select(s => s.DefineServices.ToList()).FirstOrDefault());
-                    //g.MakeModels(subsystem.Select(s=>s.DefineControllers.ToList()).FirstOrDefault());
-                    g.MakeApiControllers(subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault());
+                    
+                    var d = subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault();
+                    g.MakeControllers(d);
+                   
+                    var d1 = subsystem.Select(s => s.DefineServices.ToList()).FirstOrDefault();
+                    g.MakeServices(d1);
+                   
+                    var d3 = subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault();
+                    g.MakeApiControllers(d3);
+                    
+                    var d4 = _engineService.EngineContext.Models.ToList();
+                    g.MakeModels(d4);
+
                     ViewBag.successmsg = "با موفقیت ایجاد شد";
                     return View("GetDataTable");
 

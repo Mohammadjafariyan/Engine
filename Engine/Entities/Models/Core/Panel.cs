@@ -13,7 +13,7 @@ namespace WebAppIDEEngine.Models.Core
     public class Panel : BaseEntity
     {
         [Text(Name="نام")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         [Text(Name="اولویت")]
         public int Order { get; set; }

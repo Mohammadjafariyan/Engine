@@ -10,7 +10,7 @@ namespace WebAppIDEEngine.Models.Core
 {
     public class Field : BaseEntity
     {
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public string TName { get; set; }
 
         public FieldType FieldType { get; set; }

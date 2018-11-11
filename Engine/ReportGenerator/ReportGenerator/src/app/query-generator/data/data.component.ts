@@ -26,10 +26,10 @@ export class DataComponent implements OnInit {
   mainTable: QueryModel;
   joinTables: JoinTable[] = [];
   addParameterFields: AddParameterForm[] = [];
-  WhereComputeButtons: ComputeButton[];
+  WhereComputeButtons: ComputeButton[]=[];
   WhereStatement: string;
   SQL: string;
-  queryName: string = Utility.generateNewId();
+  Name: string = Utility.generateNewId();
   currentQuery: Query;
 
   tableDesign_active: TableDesignComponent;
@@ -82,11 +82,18 @@ export class DataComponent implements OnInit {
     }
 
  //   this.selectMain(m.models,this.mainTable);
+    let joins:JoinTable[]=[];
     for (let i = 0; i < m.models.length; i++) {
-      const j: QueryModel =m.models[i];
+      const j: QueryModel =cloneAll(m.models[i]);
+
       for (let k = 0; k < j.LeftJoinTables.length; k++) {
-        j.LeftJoinTables[k].leftTable=null;
+        let exists=joins.find(join=>join.uniqId==j.LeftJoinTables[k].uniqId);
+        if(!exists){
+          joins.push(j.LeftJoinTables[k]);
+        }
+
         j.LeftJoinTables[k].rightTable=null;
+        j.LeftJoinTables[k].leftTable=null;
 
         j.LeftJoinTables[k].rightProperty.QueryId=0;
         j.LeftJoinTables[k].rightProperty.Id=0;
@@ -94,7 +101,15 @@ export class DataComponent implements OnInit {
         j.LeftJoinTables[k].leftProperty.QueryId=0;
         j.LeftJoinTables[k].leftProperty.Id=0;
       }
+      j.LeftJoinTables=[];
       for (let k = 0; k < j.RightJoinTables.length; k++) {
+        let exists=joins.find(join=>join.uniqId==j.RightJoinTables[k].uniqId);
+        if(!exists){
+          joins.push(j.RightJoinTables[k]);
+        }
+        j.RightJoinTables[k].rightTable=null;
+        j.RightJoinTables[k].leftTable=null;
+
         j.RightJoinTables[k].leftTable=null;
         j.RightJoinTables[k].rightTable=null;
 
@@ -104,18 +119,35 @@ export class DataComponent implements OnInit {
         j.RightJoinTables[k].leftProperty.QueryId=0;
         j.RightJoinTables[k].leftProperty.Id=0;
       }
+      j.RightJoinTables=[];
+
       m.models[i]=(j);
     }
-    //m.joinTables=this.joinTables;
+    m.joinTables=[];
+    for (let i = 0; i < this.joinTables.length; i++) {
+      let j:JoinTable=cloneAll(this.joinTables[i]);
+      if(j.leftTable){
+        j.leftTable.RightJoinTables=[];
+        j.leftTable.LeftJoinTables=[];
+      }
+      if(j.rightTable) {
+        j.rightTable.LeftJoinTables=[];
+        j.rightTable.LeftJoinTables=[];
+      }
+
+      m.joinTables.push(j);
+    }
 
     m.addParameterFields = this.addParameterFields;
     m.WhereStatement = this.WhereStatement;
+    m.WhereComputeButtons=this.WhereComputeButtons;
     m.SQL = this.SQL;
-    m.queryName = this.queryName;
+    m.Name = this.Name;
     this.currentQuery = m;
     this.DataService.saveQuery(m).toPromise().then(res => {
       //this.models = res;
       this.currentQuery.Id = res.result;
+      this.loadQuery(this.currentQuery.Id);
       alert(res.Message);
     });
   }
@@ -126,6 +158,7 @@ export class DataComponent implements OnInit {
       this.currentQuery = res;
       this.mainTable = res.models.find(m => m.IsMainTable);
       this.models = res.models;
+      this.WhereComputeButtons=res.WhereComputeButtons;
       // this.selectMain();
 
       const asyncesHolder = [];
@@ -170,6 +203,10 @@ export class DataComponent implements OnInit {
                 console.log(res.models);
                 for (let t = 0; t < res.models.length; t++) {
                   let queryModel: QueryModel = res.models[t];
+
+                  this.setModels(queryModel.LeftJoinTables);
+                  this.setModels(queryModel.RightJoinTables);
+
                   this.ClickHelp(queryModel.LeftJoinTables);
                   this.ClickHelp(queryModel.RightJoinTables);
                 }
@@ -194,7 +231,7 @@ export class DataComponent implements OnInit {
       this.addParameterFields = res.addParameterFields;
       this.WhereStatement = res.WhereStatement;
       this.SQL = res.SQL;
-      this.queryName = res.queryName;
+      this.Name = res.Name;
     });
   }
 
@@ -266,5 +303,12 @@ export class DataComponent implements OnInit {
     //  this.clickSelect(ll2, rr2);
     }
 
+  }
+
+  private setModels(joinTables: JoinTable[]) {
+    for (let i = 0; i < this.joinTables.length; i++) {
+      this.joinTables[i].leftTable=this.models.find(m=>m.Id==this.joinTables[i].leftTableId);
+      this.joinTables[i].rightTable=this.models.find(m=>m.Id==this.joinTables[i].rightTableId);
+    }
   }
 }

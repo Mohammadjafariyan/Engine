@@ -11,6 +11,7 @@ namespace WebAppIDEEngine.Models.Core.QueryBuild
     public class AddParameterForm:BaseEntity
     {
 
+        public override string Name { get; set; }
         public string nameInSQL { get; set; }
 
         public string nameInMethod { get; set; }

@@ -21,8 +21,6 @@ namespace WebAppIDEEngine.Models.ICore
         [Key]
         public long Id { get; set; }
       
-        public string Name { get; set; }
-
-
+        abstract public string Name { get; set; }
     }
 }

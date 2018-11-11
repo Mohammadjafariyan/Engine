@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/Bootstrap-rtl.css" rel="stylesheet" />
+
+
+    <link href="~/Content/DataTables/datatables.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/AutoFill-2.3.0/css/autoFill.bootstrap.min.css" rel="stylesheet" />
+
+    <link href="~/Content/DataTables/ColReorder-1.5.0/css/colReorder.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+
+    <link href="~/Content/DataTables/FixedColumns-3.2.5/css/fixedColumns.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/Buttons-1.5.2/css/buttons.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/FixedHeader-3.1.4/css/fixedHeader.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/KeyTable-2.4.0/css/keyTable.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/Responsive-2.2.2/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/RowGroup-1.0.3/css/rowGroup.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/RowReorder-1.2.4/css/rowReorder.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/Scroller-1.5.0/css/scroller.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/Select-1.2.6/css/select.bootstrap.min.css" rel="stylesheet" />
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("گزارش ساز آشار داشار", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <small>Report & Query Generator</small>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                  </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("(گزارش ساز) Report Generator", "index", "RHome", new { Area = "reportGenerator" }, new { })</li>
+                    <li>@Html.ActionLink("(فرم ساز) App Generator", "Index", "Home", new { Area = "" }, new { })</li>
+                </ul>     @*@Html.Partial("_LoginPartial")*@
+            </div>
+
+
+        </div>
+    </div>
+    <div class="container body-content">
+        <br />
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+
+
+    <script src="~/Content/DataTables/datatables.min.js"></script>
+    <script src="~/Content/DataTables/AutoFill-2.3.0/js/autoFill.bootstrap.min.js"></script>
+    <script src="~/Content/DataTables/Buttons-1.5.2/js/buttons.bootstrap.js"></script>
+    <script src="~/Content/DataTables/ColReorder-1.5.0/js/colReorder.bootstrap.min.js"></script>
+    <script src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Content/DataTables/FixedColumns-3.2.5/js/dataTables.fixedColumns.min.js"></script>
+    <script src="~/Content/DataTables/FixedHeader-3.1.4/js/dataTables.fixedHeader.min.js"></script>
+    <script src="~/Content/DataTables/JSZip-2.5.0/jszip.min.js"></script>
+    <script src="~/Content/DataTables/KeyTable-2.4.0/js/dataTables.keyTable.min.js"></script>
+    <script src="~/Content/DataTables/pdfmake-0.1.36/pdfmake.min.js"></script>
+    <script src="~/Content/DataTables/pdfmake-0.1.36/vfs_fonts.js"></script>
+    <script src="~/Content/DataTables/Responsive-2.2.2/js/dataTables.responsive.min.js"></script>
+    <script src="~/Content/DataTables/RowGroup-1.0.3/js/rowGroup.bootstrap.min.js"></script>
+    <script src="~/Content/DataTables/RowReorder-1.2.4/js/rowReorder.bootstrap.min.js"></script>
+    <script src="~/Content/DataTables/Scroller-1.5.0/js/scroller.bootstrap.min.js"></script>
+    <script src="~/Content/DataTables/Select-1.2.6/js/select.bootstrap.min.js"></script>
+
+
+</body>
+</html>

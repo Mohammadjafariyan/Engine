@@ -25,7 +25,7 @@ namespace WebAppIDEEngine.Models.Core
         [DropDown(Name = "قبلی ", Service = GlobalNames.NavigationPropertiesService, MethodName = GlobalNames.GetDropDownAsync)]
         public long? PrevId { get; set; }
         [Text(Name="نام")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public Model Model { get; set; }
 
         /// <summary>

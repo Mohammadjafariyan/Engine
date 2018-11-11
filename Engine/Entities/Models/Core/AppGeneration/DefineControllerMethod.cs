@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Engine.Entities.Models.UiEngine;
 using Engine.Service.AbstractControllers;
 using WebAppIDEEngine.Models.Core;
 using WebAppIDEEngine.Models.ICore;
@@ -18,7 +19,7 @@ namespace Engine.Entities.Models.Core.AppGeneration
         /// نام
         /// </summary>
         [Text(Name = "نام متد ")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
         /// ترجمه
@@ -26,12 +27,13 @@ namespace Engine.Entities.Models.Core.AppGeneration
         [Text(Name = "ترجمه ")]
         public string Translate { get; set; }
 
-        /// <summary>
+        /*/// <summary>
         /// زیر سیستم
         /// </summary>
         [DropDown(Name = " زیر سیستم",
             Service = GlobalNames.SubSystemServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         public long SubSystemId { get; set; }
+*/
 
 
         /// <summary>
@@ -47,19 +49,20 @@ namespace Engine.Entities.Models.Core.AppGeneration
         public  long ServiceMethodId { get; set; }
 
         
+/*
 
         /// <summary>
         /// مدل اصلی
         /// </summary>
-        [DropDown(Name = " مدل اصلی", Service = GlobalNames.FormService, MethodName = GlobalNames.GetDropDownAsync)]
+        [DropDown(Name = " مدل اصلی", Service = GlobalNames.ModelService, MethodName = GlobalNames.GetDropDownAsync)]
         public long ModelId { get; set; }
 
-        public Model Model { get; set; }
+        public Model Model { get; set; }*/
 
 
 
         public virtual DefineController DefineController { get; set; }
         public virtual ServiceMethod ServiceMethod { get; set; }
-     
+        public ICollection<TableMethod> TableMethods { get; set; }
     }
 }

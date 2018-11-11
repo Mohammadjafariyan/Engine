@@ -32,12 +32,28 @@ export class ConditionComponent implements OnInit {
     this.DataComponent.WhereStatement = this.SQLExportservice.export(this.appDesignPanel.computeButtonsInDesign);
   }
 
+  displayNow() {
+    this.display = true;
+    this.ngOnInit();
+  }
+
   ngOnInit() {
     if (!this.computeButtonsInTools) {
       //INIT
       this.computeButtonsInTools =
         this.ComputeDesignToolsButtonProviderService.getWhereDesignTools();
     }
+
+    this.DataComponent.WhereComputeButtons = this.DataComponent.WhereComputeButtons.sort((a, b) => {
+      if (a.order == b.order)
+        return 0;
+      else if (a.order > b.order)
+        return +1;
+      else if (a.order < b.order)
+        return -1;
+    });
+
+    this.appDesignPanel.computeButtonsInDesign = this.DataComponent.WhereComputeButtons;
   }
 
 }

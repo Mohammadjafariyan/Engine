@@ -66,7 +66,13 @@
     <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.7.0\lib\net45\StructureMap.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\StructureMap.4.7.0\lib\net45\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\structuremap.web.3.1.0.133\lib\net40\StructureMap.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\structuremap.web.3.1.0.133\lib\net40\StructureMap.Web.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -210,6 +216,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppSourceGenerator\IDataProvider.cs" />
+    <Compile Include="AppSourceGenerator\IGenerator.cs" />
+    <Compile Include="AppSourceGenerator\IMVCProjectGeneratorBase.cs" />
+    <Compile Include="AppSourceGenerator\MVCClassMaker.cs" />
+    <Compile Include="AppSourceGenerator\MVCProjectGenerator.cs" />
+    <Compile Include="AppSourceGenerator\MvcProjectGeneratorBase.cs" />
+    <Compile Include="AppSourceGenerator\Utility.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -238,6 +251,9 @@
     <Compile Include="Areas\ReportGenerator\ReportGeneratorAreaRegistration.cs" />
     <Compile Include="Areas\System\Controllers\ModelsController.cs" />
     <Compile Include="Areas\System\SystemAreaRegistration.cs" />
+    <Compile Include="Areas\UIEngine\Controllers\UIEngineController.cs" />
+    <Compile Include="Areas\UIEngine\Controllers\UIEngineDataProvider.cs" />
+    <Compile Include="Areas\UIEngine\UIEngineAreaRegistration.cs" />
     <Compile Include="Code\EngineView.cs" />
     <Compile Include="Code\Injector.cs" />
     <Compile Include="Controllers\AbstractControllers\ApiController.cs" />
@@ -288,12 +304,15 @@
     <Compile Include="Entities\Models\Core\Property.cs" />
     <Compile Include="Entities\Models\Core\Query.cs" />
     <Compile Include="Entities\Models\Core\QueryBuild\AddParameterForm.cs" />
+    <Compile Include="Entities\Models\Core\QueryBuild\ComputeButton.cs" />
     <Compile Include="Entities\Models\Core\QueryBuild\JoinTable.cs" />
     <Compile Include="Entities\Models\Core\QueryBuild\QueryViewModel.cs" />
     <Compile Include="Entities\Models\Core\QueryModel.cs" />
     <Compile Include="Entities\Models\Core\QueryProperty.cs" />
     <Compile Include="Entities\Models\Core\ViewGeneration\RelationshipLinks.cs" />
     <Compile Include="Entities\Models\ICore\IModel.cs" />
+    <Compile Include="Entities\Models\UiEngine\Table.cs" />
+    <Compile Include="Entities\Models\UiEngine\TableMethod.cs" />
     <Compile Include="Entities\Utility\GlobalMessages.cs" />
     <Compile Include="Entities\Utility\MyExtentions.cs" />
     <Compile Include="Global.asax.cs">
@@ -334,6 +353,14 @@
     <Content Include="Areas\AppGeneration\Views\SubSystem\ForEdit.cshtml" />
     <Content Include="Areas\AppGeneration\Views\SubSystem\GetDataTable.cshtml" />
     <Content Include="Areas\ReportGenerator\Controllers\ModelsClassDiagram.puml" />
+    <Content Include="Areas\UIEngine\Views\Shared\Delete.cshtml" />
+    <Content Include="Areas\UIEngine\Views\Shared\ForEdit.cshtml" />
+    <Content Include="Areas\UIEngine\Views\Shared\GetDataTable.cshtml" />
+    <Content Include="Areas\UIEngine\Views\Shared\Search.cshtml" />
+    <Content Include="Areas\UIEngine\Views\Shared\TablePartial.cshtml" />
+    <Content Include="Areas\UIEngine\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\UIEngine\Views\UIEngine\ShowView.cshtml" />
+    <Content Include="Areas\UIEngine\Views\web.config" />
     <Content Include="Content\Bootstrap-rtl.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -3631,6 +3658,7 @@
     <Folder Include="Areas\ReportGenerator\Models\" />
     <Folder Include="Areas\System\Models\" />
     <Folder Include="Areas\System\Views\Shared\" />
+    <Folder Include="Areas\UIEngine\Models" />
     <Folder Include="ReportGenerator\ReportGenerator\.idea\inspectionProfiles\" />
     <Folder Include="ReportGenerator\ReportGenerator\node_modules\.cache\uglifyjs-webpack-plugin\tmp\" />
     <Folder Include="ViewModel\" />

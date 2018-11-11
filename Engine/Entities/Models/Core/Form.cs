@@ -13,7 +13,7 @@ namespace WebAppIDEEngine.Models.Core
     {
 
         [Text(Name="نام")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         [Text(Name="آدرس")]
         public string UrlName { get; set; }

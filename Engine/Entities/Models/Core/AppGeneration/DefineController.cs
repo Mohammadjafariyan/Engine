@@ -16,14 +16,15 @@ namespace Engine.Entities.Models.Core.AppGeneration
     {
         public DefineController()
         {
-            this.DefineControllerMethod = new List<DefineControllerMethod>();
+            this.DefineControllerMethods = new List<DefineControllerMethod>();
         }
 
+        
         /// <summary>
         /// نام
         /// </summary>
         [Text(Name = "نام سرویس ")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
         
 
         /// <summary>
@@ -39,17 +40,17 @@ namespace Engine.Entities.Models.Core.AppGeneration
             Service = GlobalNames.SubSystemServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         public long SubSystemId { get; set; }
 
-        public SubSystem SubSystem { get; set; }
+        public virtual SubSystem SubSystem { get; set; }
 
         /// <summary>
         /// مدل اصلی
         /// </summary>
-        [DropDown(Name = " مدل اصلی", Service = GlobalNames.FormService, MethodName = GlobalNames.GetDropDownAsync)]
+        [DropDown(Name = " مدل اصلی", Service = GlobalNames.ModelService, MethodName = GlobalNames.GetDropDownAsync)]
         public long ModelId { get; set; }
 
-        public Model Model { get; set; }
+        public virtual Model Model { get; set; }
 
-        public virtual ICollection<DefineControllerMethod> DefineControllerMethod { get; set; }
+        public virtual ICollection<DefineControllerMethod> DefineControllerMethods { get; set; }
    
      
     }

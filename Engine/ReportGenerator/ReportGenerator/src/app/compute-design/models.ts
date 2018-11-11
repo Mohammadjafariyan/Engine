@@ -3,9 +3,7 @@ export class ComputeButton {
   position = {x: 0, y: 0};
 value;
   isSelected: boolean=false;
-  clone() {
-    return Object.assign({},this);
-  }
+  order: number;
 }
 /*TYPES */
 export enum BetweenButtonType{

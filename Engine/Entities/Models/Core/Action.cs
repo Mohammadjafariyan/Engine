@@ -19,7 +19,7 @@ namespace WebAppIDEEngine.Models.Core
         public long FormId { get; set; }
         
         [Text(Name="نام")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         [Enum(Name = "نوع نمایش اکشن ها")]
         public ActionType ActionType { get; set; }

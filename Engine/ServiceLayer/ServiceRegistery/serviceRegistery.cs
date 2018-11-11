@@ -22,7 +22,12 @@ namespace Engine.Utitliy
             For<IBaseEngineService>().Add<PanelService>().Named(GlobalNames.PanelService);
             For<IBaseEngineService>().Add<ModelService>().Named(GlobalNames.ModelService);
             For<IBaseEngineService>().Add<NavigationPropertyService>().Named(GlobalNames.NavigationPropertiesService);
-            
+            For<IBaseEngineService>().Add<SubSystemService>().Named(GlobalNames.SubSystemServiceName);
+            //For<IBaseEngineService>().Add<SubSystemServiceService>().Named(GlobalNames.SubSystemServiceServiceName);
+            For<IBaseEngineService>().Add<QueryService>().Named(GlobalNames.QueryServiceName);
+            For<IBaseEngineService>().Add<DefineServiceService>().Named(GlobalNames.DefineServiceServiceName);
+            For<IBaseEngineService>().Add<DefineControllerService>().Named(GlobalNames.DefineControllerServiceName);
+            For<IBaseEngineService>().Add<ServiceMethodService>().Named(GlobalNames.DefineServiceMethodService);
         }
     }
 }

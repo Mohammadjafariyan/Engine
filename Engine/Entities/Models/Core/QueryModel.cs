@@ -9,6 +9,7 @@ namespace WebAppIDEEngine.Models.Core
 {
     public class QueryModel : BaseEntity
     {
+        public override string Name { get; set; }
 
         public QueryModel()
         {
@@ -16,14 +17,15 @@ namespace WebAppIDEEngine.Models.Core
             this.RightJoinTables=new List<JoinTable>();
         }
 
-
+        
+        public string NameInTableAsName { get; set; }
         public long uniqId { get; set; }
         public long QueryId { get; set; }
 
         public  Query Query { get; set; }
         
 
-        public  Model Model { get; set; }
+        public virtual Model Model { get; set; }
         public long ModelId { get; set; }
         public bool IsMainTable { get; set; }
 

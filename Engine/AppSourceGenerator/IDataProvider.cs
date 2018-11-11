@@ -204,9 +204,9 @@ namespace AppSourceGenerator
             Controllers.Add(bookController);
             Controllers.Add(RentController);
             
-            userController.DefineControllerMethod.Add(GetControllerGetAll(userController,userServiceGetAll)); ;
-            bookController.DefineControllerMethod.Add(GetControllerGetAll(bookController,bookServiceGetAll)); ;
-            RentController.DefineControllerMethod.Add(GetControllerGetAll(RentController,rentServiceGetAll)); ;
+            userController.DefineControllerMethods.Add(GetControllerGetAll(userController,userServiceGetAll)); ;
+            bookController.DefineControllerMethods.Add(GetControllerGetAll(bookController,bookServiceGetAll)); ;
+            RentController.DefineControllerMethods.Add(GetControllerGetAll(RentController,rentServiceGetAll)); ;
 
                         /*
             userQuery.models.Add(new QueryModel{Model = b,Query = userQuery});

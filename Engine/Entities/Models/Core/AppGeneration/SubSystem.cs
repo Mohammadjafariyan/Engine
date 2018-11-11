@@ -22,7 +22,7 @@ namespace Engine.Entities.Models.Core.AppGeneration
         /// نام
         /// </summary>
         [Text(Name="نام")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         /// <summary>
         /// ترجمه

@@ -59,6 +59,7 @@ namespace WebAppIDEEngine.Models.Core
         [Checkbox(Name= "FK")]
         public bool FK { get; set; }
 
+        public override string Name { get; set; }
 
         
         

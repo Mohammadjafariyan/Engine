@@ -54,7 +54,18 @@ namespace Engine.Areas.ReportGenerator.Controllers
             DeleteList(indb.models.SelectMany(j => j.RightJoinTables).ToList());
             DeleteList(indb.models.SelectMany(j => j.LeftJoinTables).ToList());
 
+          
+            
+            var possiblevalues= indb.WhereComputeButtons.SelectMany(a => a.possibleValue);
+            DeleteList(possiblevalues.ToList());
+           
+            
+            DeleteList(indb.WhereComputeButtons.ToList());
 
+            var wherebuttons=   indb.WhereComputeButtons.Select(a => a.position);
+            DeleteList(wherebuttons.ToList());
+
+            
             DeleteList(indb.addParameterFields);
             DeleteList(indb.selectedProperties);
 
@@ -64,6 +75,8 @@ namespace Engine.Areas.ReportGenerator.Controllers
             {
                 _context.Entry(queryProperty).State = EntityState.Deleted;
             }
+            
+            
 
             DeleteList(indb.models);
             _context.Entry(indb).State = EntityState.Deleted;
@@ -156,7 +169,7 @@ namespace Engine.Areas.ReportGenerator.Controllers
         }
 
 
-        public Query InsertQurey(Query q,EngineContext _engineContext)
+        public Query InsertQurey(Query q, EngineContext _engineContext)
         {
             var query = _context.Queries.Create();
             _engineContext.Queries.Add(query);
@@ -164,64 +177,12 @@ namespace Engine.Areas.ReportGenerator.Controllers
 
             foreach (var queryModel in q.models)
             {
-                var _queryModel = new QueryModel();
                 query.models.Add(queryModel);
-
-                /*var ljoins=queryModel.LeftJoinTables.ToList();
-                var rjoins=queryModel.RightJoinTables.ToList();
-                
-                ljoins.AddRange(rjoins);
-                
-                foreach (var joinTable in ljoins)
-                {
-                    _queryModel.RightJoinTables.Add(joinTable);
-                    joinTable.leftTable = q.models.First(m => m.uniqId == joinTable.leftTableUniqId);
-                    joinTable.rightTable = q.models.First(m => m.uniqId == joinTable.rightTableUniqId);
-
-                    if (joinTable.rightProperty != null)
-                    {
-                        joinTable.rightProperty.PropertyId = joinTable.rightProperty.Property.Id;
-                        joinTable.rightProperty.Property = null;
-                    }
-
-                    if (joinTable.leftProperty != null)
-                    {
-                        joinTable.leftProperty.PropertyId = joinTable.leftProperty.Property.Id;
-                        joinTable.leftProperty.Property = null;
-                    }
-                }
-
-
-                foreach (var joinTable in queryModel.LeftJoinTables.ToList())
-                {
-                    _queryModel.LeftJoinTables.Add(joinTable);
-                    joinTable.leftTable = q.models.First(m => m.uniqId == joinTable.leftTableUniqId);
-                    joinTable.rightTable = q.models.First(m => m.uniqId == joinTable.rightTableUniqId);
-
-                    if (joinTable.rightProperty != null)
-                    {
-                        joinTable.rightProperty.PropertyId = joinTable.rightProperty.Property.Id;
-                        joinTable.rightProperty.Property = null;
-                    }
-
-                    if (joinTable.leftProperty != null)
-                    {
-                        joinTable.leftProperty.PropertyId = joinTable.leftProperty.Property.Id;
-                        joinTable.leftProperty.Property = null;
-                    }
-                }*/
             }
 
-            var ljoins=q.models.SelectMany(m=>m.LeftJoinTables).ToList();
-            var rjoins=q.models.SelectMany(m=>m.RightJoinTables).ToList();
-            
-            ljoins.AddRange(rjoins);
-
-            var joins=ljoins.DistinctBy(l => l.uniqId).ToList();
-                
-            foreach (var joinTable in joins)
+            q.joinTables = q.joinTables.DistinctBy(j => j.uniqId).ToList();
+            foreach (var joinTable in q.joinTables.ToList())
             {
-                _queryModel.RightJoinTables.Add(joinTable);
                 joinTable.leftTable = q.models.First(m => m.uniqId == joinTable.leftTableUniqId);
                 joinTable.rightTable = q.models.First(m => m.uniqId == joinTable.rightTableUniqId);
 
@@ -236,7 +197,11 @@ namespace Engine.Areas.ReportGenerator.Controllers
                     joinTable.leftProperty.PropertyId = joinTable.leftProperty.Property.Id;
                     joinTable.leftProperty.Property = null;
                 }
+
+
+                _engineContext.Entry(joinTable).State = EntityState.Added;
             }
+
 
             if (!q.models.Any(m => m.IsMainTable))
                 throw new Exception("جدول اصلی داده نشده است");
@@ -251,6 +216,11 @@ namespace Engine.Areas.ReportGenerator.Controllers
             foreach (var querySelectedProperty in q.selectedProperties)
             {
                 query.selectedProperties.Add(querySelectedProperty);
+            }
+        
+            foreach (var button in q.WhereComputeButtons)
+            {
+                query.WhereComputeButtons.Add(button);
             }
 
             return query;
@@ -334,7 +304,7 @@ namespace Engine.Areas.ReportGenerator.Controllers
             {
                 if (query.Id == 0)
                 {
-                    query = InsertQurey(query,_context);
+                    query = InsertQurey(query, _context);
                     _context.SaveChanges();
                 }
                 else
@@ -357,7 +327,7 @@ namespace Engine.Areas.ReportGenerator.Controllers
                     using (var db = new EngineContext())
                     {
                         query.Id = 0;
-                        query = InsertQurey(query,db);
+                        query = InsertQurey(query, db);
                         db.Database.Log = (s) => { Debug.Write(s); };
                         db.SaveChanges();
                     }
@@ -377,6 +347,7 @@ namespace Engine.Areas.ReportGenerator.Controllers
         {
             foreach (var item in list.ToList())
             {
+                if(item!=null)
                 _context.Entry<T>(item).State = EntityState.Deleted;
             }
         }

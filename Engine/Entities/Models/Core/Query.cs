@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Engine.Entities.Models.Core.AppGeneration;
+using Engine.Entities.Models.Core.QueryBuild;
 using WebAppIDEEngine.Models.Core.QueryBuild;
 using WebAppIDEEngine.Models.CoreEnum;
 using WebAppIDEEngine.Models.ICore;
@@ -19,6 +20,7 @@ namespace WebAppIDEEngine.Models.Core
     /// </summary>
     public class Query : BaseEntity
     {
+        public override string Name { get; set; }
         public string LinQ { get; set; }
         public string LinQJoin { get; set; }
         public QueryType QueryType { get; set; }
@@ -37,6 +39,7 @@ namespace WebAppIDEEngine.Models.Core
          //   this.joinTables = new List<JoinTable>();
             this.models = new List<QueryModel>();
             this.selectedProperties = new List<QueryProperty>();
+            WhereComputeButtons=new List<ComputeButton>();
             
         }
         
@@ -56,6 +59,14 @@ namespace WebAppIDEEngine.Models.Core
         /// </summary>
         public virtual ICollection<QueryProperty> selectedProperties { get; set; }
 
+        
+        /// <summary>
+        /// بوتن های محاسباتی کوئری در قسمت فیلتر
+        /// </summary>
+        public virtual ICollection<ComputeButton> WhereComputeButtons { get; set; }
+
+        
+        
         /*/// <summary>
         /// جدول اصلی
         /// </summary>
@@ -66,7 +77,7 @@ namespace WebAppIDEEngine.Models.Core
         /// جدول اصلی
         /// </summary>
         public long? mainTableId { get; set; }*/
-/*
+
 
         [NotMapped]
         /// <summary>
@@ -74,7 +85,7 @@ namespace WebAppIDEEngine.Models.Core
         /// </summary>
         public virtual ICollection<JoinTable> joinTables { get; set; }
 
-*/
+
 
         /// <summary>
         /// پارامتر های تعریف شده

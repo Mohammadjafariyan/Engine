@@ -37,7 +37,7 @@ namespace AppSourceGenerator
                 CreateIsNotExist(Path + areaPath);
 
                 string controllerContent = "";
-                foreach (var controllerMethod in controller.DefineControllerMethod)
+                foreach (var controllerMethod in controller.DefineControllerMethods)
                 {
                     controllerContent += MVCUtility.GetControllerApiMethod(controllerMethod);
                 }
@@ -71,7 +71,7 @@ namespace AppSourceGenerator
                 CreateIsNotExist(Path + areaPath);
 
                 string controllerContent = "";
-                foreach (var controllerMethod in controller.DefineControllerMethod)
+                foreach (var controllerMethod in controller.DefineControllerMethods)
                 {
                     controllerContent += CreateControllerMethod(controllerMethod);
                 }

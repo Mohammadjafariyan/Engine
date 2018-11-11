@@ -31,10 +31,11 @@ namespace Engine.Service.AbstractControllers
         public const string NavigationPropertiesService = "NavigationPropertiesService";
         
         public const string SubSystemServiceName = nameof(SubSystemService);
-        public const string SubSystemServiceServiceName = nameof(SubSystemServiceService);
+     //   public const string SubSystemServiceServiceName = nameof(SubSystemServiceService);
         public const string QueryServiceName = nameof(QueryService);
         public const string DefineControllerServiceName = nameof(DefineControllerService);
         public const string DefineServiceMethodService = nameof(ServiceMethodService);
+        public const string DefineServiceServiceName = nameof(DefineServiceService);
 
 
 

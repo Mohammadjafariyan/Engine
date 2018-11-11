@@ -156,11 +156,11 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
 
 
   private GetMainForJoin(table: JoinTable, Ftable) {
-    return table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
+    return table.rightTable && table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
   }
 
   private GetDependentTableForJoin(table: JoinTable, Ftable) {
-    return table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
+    return table.rightTable && table.rightTable.Model.Name == Ftable.Name ? table.leftTable : table.rightTable;
   }
 
   GetJoinType(table: JoinTable): string {
@@ -197,7 +197,7 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
       let name = `${this.dataComponent.findModel(columns[i]).Model.AsName}.
       ${columns[i].Property.NameInTable}  
       as  
-       ${columns[i].Property.NameInTableAsName} `
+       ${columns[i].NameInTableAsName} `
       names += ' ' + name;
 
       // آخری نباشد

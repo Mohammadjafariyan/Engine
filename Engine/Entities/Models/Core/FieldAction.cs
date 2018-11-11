@@ -14,6 +14,7 @@ namespace WebAppIDEEngine.Models.Core
     /// </summary>
     public class FieldAction : BaseEntity
     {
+        public override string Name { get; set; }
 
 
         public long FieldId { get; set; }

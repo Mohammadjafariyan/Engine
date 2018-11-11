@@ -12,7 +12,7 @@ namespace Engine.DomainLayer.Models.Core.ViewGeneration
         public string Area { get; set; }
         public string Action { get; set; }
         public string Order { get; set; }
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public string Icon { get; set; }
         public bool InModal { get; set; }
         public bool SetFormValues{ get; set; }

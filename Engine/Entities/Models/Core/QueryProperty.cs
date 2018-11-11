@@ -8,9 +8,12 @@ namespace WebAppIDEEngine.Models.Core
 {
     public class QueryProperty:BaseEntity
     {
+        public override string Name { get; set; }
         public long PropertyId { get; set; }
         public long QueryId { get; set; }
         public long uniqId { get; set; }
+        public string NameInTableAsName { get; set; }
+        
         
         
 

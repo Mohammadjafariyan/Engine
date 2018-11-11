@@ -1,0 +1,66 @@
+@using WebAppIDEEngine.Models.Core
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+@using Engine.Areas.App.Controllers
+@using Engine.Service.AbstractControllers
+@using Engine.DomainLayer.Models.Core.ViewGeneration
+@using Engine.Entities.Models.UiEngine
+@model dynamic
+@{ 
+    IDataTable dataTable = ViewData[UIEngineController.DataTable] as IDataTable;
+    Table tableObject = (Table)ViewData[UIEngineController.TableObject];
+}
+
+
+<h3  style="text-align:center">@tableObject.Translate</h3>
+<hr />
+
+
+@EngineDataTables.DataTable(dataTable, ViewData, Html, tableObject.Id.ToString(), ViewContext)
+
+
+
+<script>
+
+    //'ajax': '@Request.Url.AbsoluteUri',
+            $(document).ready(function () {
+
+            var table = $('#@tableObject.Id').DataTable({
+            'select': true,
+            'language': {
+            "sEmptyTable": "هیچ داده ای در جدول وجود ندارد",
+                "sInfo": "نمایش _START_ تا _END_ از _TOTAL_ رکورد",
+                "sInfoEmpty": "نمایش 0 تا 0 از 0 رکورد",
+                "sInfoFiltered": "(فیلتر شده از _MAX_ رکورد)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ",",
+                "sLengthMenu": "نمایش _MENU_ رکورد",
+                "sLoadingRecords": "در حال بارگزاری...",
+                "sProcessing": "در حال پردازش...",
+                "sSearch": "جستجو:",
+                "sZeroRecords": "رکوردی با این مشخصات پیدا نشد",
+                "oPaginate": {
+                "sFirst": "ابتدا",
+                    "sLast": "انتها",
+                    "sNext": "بعدی",
+                    "sPrevious": "قبلی"
+                },
+                "oAria": {
+                "sSortAscending": ": فعال سازی نمایش به صورت صعودی",
+                    "sSortDescending": ": فعال سازی نمایش به صورت نزولی"
+                }
+        }
+    });
+    var selectedRow;
+    window['@tableObject.Id'] = table;
+        $('#@tableObject.Id').on('click', 'tr', function () {
+        
+    });
+            });
+
+
+</script>
