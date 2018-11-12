@@ -1,7 +1,7 @@
 using Engine.Entities.Models.Core.AppGeneration;
 using WebAppIDEEngine.Models.ICore;
 
-namespace Engine.Entities.Models.UiEngine
+namespace Engine.Entities.Models.UiGeneratorModels
 {
     
     /// <summary>

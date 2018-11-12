@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Engine.Attributes;
 using WebAppIDEEngine.Models.ICore;
 
-namespace Engine.Entities.Models.UiEngine
+namespace WebAppIDEEngine.Models.UiGeneratorModels
 {
     
     /// <summary>

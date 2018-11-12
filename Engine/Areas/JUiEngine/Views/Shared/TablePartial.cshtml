@@ -6,13 +6,14 @@
 @using ViewModel.ActionTypes
 @using Domain.Attributes
 @using Engine.Areas.App.Controllers
+@using Engine.Areas.UIGenerator.Controllers
 @using Engine.Service.AbstractControllers
 @using Engine.DomainLayer.Models.Core.ViewGeneration
-@using Engine.Entities.Models.UiEngine
+@using Engine.Entities.Models.UiGeneratorModels
 @model dynamic
 @{ 
-    IDataTable dataTable = ViewData[UIEngineController.DataTable] as IDataTable;
-    Table tableObject = (Table)ViewData[UIEngineController.TableObject];
+    IDataTable dataTable = ViewData[UiHomeController.DataTable] as IDataTable;
+    Table tableObject = (Table)ViewData[UiHomeController.TableObject];
 }
 
 
