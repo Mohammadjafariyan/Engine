@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Engine.Entities.Models.UiEngine;
 using Engine.Service.AbstractControllers;
 using WebAppIDEEngine.Models.Core;
 using WebAppIDEEngine.Models.ICore;
+using WebAppIDEEngine.Models.UiGeneratorModels;
 
 namespace Engine.Entities.Models.Core.AppGeneration
 {
@@ -15,6 +15,11 @@ namespace Engine.Entities.Models.Core.AppGeneration
     /// </summary>
     public class DefineControllerMethod:BaseEntity
     {
+        public DefineControllerMethod()
+        {
+            TableMethods = new List<TableMethod>();
+        }
+
         /// <summary>
         /// نام
         /// </summary>

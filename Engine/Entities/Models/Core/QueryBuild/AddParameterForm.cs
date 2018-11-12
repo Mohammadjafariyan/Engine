@@ -1,4 +1,5 @@
-﻿using WebAppIDEEngine.Models.CoreEnum;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using WebAppIDEEngine.Models.CoreEnum;
 using WebAppIDEEngine.Models.ICore;
 
 namespace WebAppIDEEngine.Models.Core.QueryBuild
@@ -36,6 +37,11 @@ namespace WebAppIDEEngine.Models.Core.QueryBuild
 
         public long QueryId { get; set; }
         public virtual Query Query { get; set; }
+        
+        [NotMapped]
+        public dynamic Value { get; set; }
+
+        public int Order { get; set; }
 
         //public bool foredit;
     }

@@ -153,7 +153,7 @@ namespace Engine.Service.AbstractControllers
         public virtual async Task<Dictionary<string, IQueryable<IDataTable>>> GetDataTableDataAsync
             (Dictionary<string, DataTableAttribute> datatables, IDataTableParameter @params)
         {
-            return await GetDataAsync<IQueryable<IDataTable>, DataTableAttribute>(datatables, @params);
+            return await GetDataAsync<IQueryable<IDataTable> , DataTableAttribute>(datatables, @params);
         }
 
 
@@ -255,7 +255,7 @@ namespace Engine.Service.AbstractControllers
         /// <returns></returns>
         public virtual IDataTable GetDataTable(IDataTableParameter p)
         {
-            IDataTable dataTable = new CommonDataTable()
+            IDataTable dataTable = new ObjectDataTable<T>
             {
                 Records = _entities.AsNoTracking(),
                 Headers = GetPropertyNames<T>()
@@ -280,12 +280,14 @@ namespace Engine.Service.AbstractControllers
             return this.GetDropDown(p);
         }
 
-        public virtual async Task<IDataTable> GetDataTableAsync(IDataTableParameter p)
+        public virtual async Task<ObjectDataTable<T>> GetDataTableAsync(IDataTableParameter p)
         {
-            IDataTable dataTable = new CommonDataTable();
+            ObjectDataTable<T> dataTable = new ObjectDataTable<T>
+            {
+                Records = _entities.AsNoTracking(),
+                Headers = GetPropertyNames<T>()
+            };
 
-            dataTable.Records = _entities.AsNoTracking();
-            dataTable.Headers = GetPropertyNames<T>();
             return await Task.FromResult(dataTable);
 
         }

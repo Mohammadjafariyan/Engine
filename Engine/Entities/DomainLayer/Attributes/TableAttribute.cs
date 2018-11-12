@@ -10,7 +10,7 @@ namespace Engine.Attributes
     public class DataTableAttribute : BaseAttribute, IEngineAttribute
     {
         public delegate IDataTable GetDataTable(IActionParameter ap = null);
-        public delegate IDataTable<T> GetDataTable<T>(IActionParameter ap = null);
+        public delegate IDataTable GetDataTable<T>(IActionParameter ap = null);
         public GetDataTable DataTable;
     }
 }

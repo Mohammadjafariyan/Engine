@@ -22,7 +22,7 @@ namespace Engine.Service.AbstractControllers
 
         Dictionary<string, List<SelectListItem>> GetEnumsAttributes<TEnum>(object model);
 
-        Task<Dictionary<string, IQueryable<IDataTable>>> GetDataTableDataAsync(Dictionary<string, DataTableAttribute> datatables, IDataTableParameter @params);
+        Task<Dictionary<string, IQueryable<IDataTable> >> GetDataTableDataAsync(Dictionary<string, DataTableAttribute> datatables, IDataTableParameter @params);
         Task<Dictionary<string, List<IDropDownOption>>> GetDropdownDataAsync(Dictionary<string, DropDownAttribute> dropdowns, IDropDownParameter @params);
         Dictionary<string, DropDownAttribute> GetModelDropdownAttributes<T>();
         Dictionary<string, MultiSelectAttribute> GetModelMultiSelectAttributes<T>();

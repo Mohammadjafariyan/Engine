@@ -1,22 +1,22 @@
 ﻿using System.Web.Mvc;
 
-namespace Engine.Areas.App
+namespace Engine.Areas.JUiEngine
 {
-    public class UIEngineAreaRegistration : AreaRegistration 
+    public class UiEngineAreaRegistration : AreaRegistration 
     {
         public override string AreaName 
         {
             get 
             {
-                return "UIEngine";
+                return "JUiEngine";
             }
         }
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
             context.MapRoute(
-                "App_default",
-                "UIEngine/{controller}/{action}/{id}",
+                "JUiEngine_default2",
+                "JUiEngine/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional }
             );
         }

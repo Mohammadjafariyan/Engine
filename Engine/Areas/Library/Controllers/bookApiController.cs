@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Web.Http;
 using WebAppIDEEngine.Models;
-using System.Web.Mvc;
 using Engine.Utitliy;
 using ServiceLayer.Systems.Library;
+using ViewModel.ActionTypes;
 
 
 namespace Engine.Areas.Library.Controllers
@@ -16,23 +17,23 @@ namespace Engine.Areas.Library.Controllers
     /// bookController
     /// bookController
     /// </summary>
-    public class bookController : Controller
+    public class bookApiController : ApiController
     {
         private Injector _injector = new Injector();
         private BookService _bookservice;
 
-        public bookController()
+        public bookApiController()
         {
             this._bookservice = _injector.Inject<BookService>();
         }
 
-        [HttpGet]
-        public ActionResult getAll(long id)
+        [HttpPost]
+        public IDataTable getAll(long id)
         {
             try
             {
                 var res = _bookservice.GetAll(5);
-                return Json(res, JsonRequestBehavior.AllowGet);
+                return res;
             }
             catch (Exception e)
             {

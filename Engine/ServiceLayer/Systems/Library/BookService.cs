@@ -4,25 +4,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entities;
 using ViewModel.ActionTypes;
 
 namespace ServiceLayer.Systems.Library
 {
-    public class BookService : IBaseService
+    public class BookService : CommonService<Book>
     {
-        public IDataTable GetDataTable(IActionParameter p = null)
+        public IDataTable GetAll(long @id)
         {
-            throw new NotImplementedException();
-        }
+            var dt = _entities.SqlQuery(@" 
+            select * from books");
+            var res = dt.AsQueryable();
+            var l = res.ToList();
 
-        public List<IDropDownOption> GetDropDown(IActionParameter p = null)
-        {
-            throw new NotImplementedException();
-        }
+            var count=  _entities.Count();
 
-        public ITreeNode GetTree(IActionParameter p = null)
-        {
-            throw new NotImplementedException();
+            return new DynaDataTable
+            {
+                Total = count,
+                Filtered = count,
+                Headers = GetPropertyNames<Book>()
+                ,  RecordsList = l.Cast<dynamic>().ToList()
+            };
         }
     }
 }

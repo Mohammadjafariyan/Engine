@@ -8,6 +8,7 @@ using ViewModel.ActionTypes;
 using WebAppIDEEngine.Models.Core;
 using System.Data.Entity;
 using Engine.Entities.Models.Core.AppGeneration;
+using WebAppIDEEngine.Models.UiGeneratorModels;
 
 namespace ServiceLayer.Systems
 {
@@ -28,6 +29,23 @@ namespace ServiceLayer.Systems
     public class DefineServiceService : CommonService<DefineService>
     {
 
+        
+    }
+    
+    /// <summary>
+    /// اتصال متد ها به جداول
+    /// </summary>
+    public class TableMethodsService : CommonService<TableMethod>
+    {
+        
+    }
+    
+      
+    /// <summary>
+    /// تعریف جداول یو آی
+    /// </summary>
+    public class TablesService : CommonService<EjTable>
+    {
         
     }
     

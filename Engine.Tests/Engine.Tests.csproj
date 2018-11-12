@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Controllers\App\FormsControllerTests.cs" />
     <Compile Include="Controllers\App\QueryControllerTests.cs" />
+    <Compile Include="Controllers\App\UiEngineControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\BaseControllerTest.cs" />
   </ItemGroup>

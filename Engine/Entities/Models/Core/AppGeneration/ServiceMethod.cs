@@ -36,7 +36,7 @@ namespace Engine.Entities.Models.Core.AppGeneration
         /// </summary>
         [DropDown(Name = " کوئری",
             Service = GlobalNames.QueryServiceName, MethodName = GlobalNames.GetDropDownAsync)]
-        public long QueryId { get; set; }
+        public long? QueryId { get; set; }
         
         
         /// <summary>

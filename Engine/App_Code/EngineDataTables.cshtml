@@ -15,30 +15,50 @@
 
 
 @*HtmlHelper<dynamic>*@
-@helper DataTable(IDataTable datatable, ViewDataDictionary ViewData, dynamic _html
-    ,string TableId, ViewContext ViewContext)
-{
 
-if (datatable == null || datatable.Headers == null || datatable.RecordsList == null)
+@helper DataTable(IDataTable datatableTmp, ViewDataDictionary ViewData, System.Web.Mvc.HtmlHelper _html
+    , string TableId, ViewContext ViewContext,bool showToolsButtons=true)
 {
-    throw new Exception("مدلها نال است");
-}
+    dynamic datatable=null;
 
-var headers = datatable.Headers;
-var RecordsList = datatable.RecordsList;
+    if (datatableTmp is BaseDataTable<dynamic>)
+    {
+        datatable = datatableTmp as BaseDataTable<dynamic>;
+    }
+    else if (datatableTmp is IModelDataTable)
+    {
+        datatable = datatableTmp as IModelDataTable;
+    }  
+    else if (datatableTmp is ObjectDataTable<IModel>)
+    {
+        datatable = datatableTmp as ObjectDataTable<IModel>;
+    }  
+    else 
+    {
+        datatable = datatableTmp as dynamic;
+    }
+
+
+    if (!(datatable is IDataTable) || datatable == null || datatable.Headers == null || datatable.RecordsList == null)
+    {
+        throw new Exception("مدلها نال است");
+    }
+
+
+    var headers = datatable.Headers;
+    var RecordsList = datatable.RecordsList;
     var currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
 
 
-object rec = RecordsList.FirstOrDefault() ;
-System.Reflection.PropertyInfo[] props = null;
-if (rec != null)
-{
-    props = rec.GetType().GetProperties().Where(p=>!(p is HiddenColumnAttribute )).ToArray();
-}
+    object rec = RecordsList[0];
+    System.Reflection.PropertyInfo[] props = null;
+    if (rec != null)
+    {
+        props = rec.GetType().GetProperties().Where(p => !(p is HiddenColumnAttribute)).ToArray();
+    }
 
 
-
-    @*<form class="form-control">
+@*<form class="form-control">
             <label></label>
             <input  name="searchTerm"/>
 
@@ -46,36 +66,38 @@ if (rec != null)
 
     <table class="table table-striped" id="@TableId">
         <thead>
-            <tr>
-                @foreach (var th in headers)
-                {
-                    <th>@th.Value</th>
-                }
-                <th>ویرایش</th>
-                <th>حذف</th>
-
-            </tr>
+        <tr>
+            @foreach (var th in headers)
+            {
+                <th>@th.Value</th>
+            }
+        @if (showToolsButtons)
+        {
+            <th>ویرایش</th>
+            <th>حذف</th>
+        }
+        </tr>
         </thead>
         <tbody>
-            @foreach (var record in RecordsList)
-    {
-                    <tr>
-                        @foreach (var header in headers)
-                        {
-                            var property = record.GetType()?.GetProperty(header.Key);
+        @foreach (var record in RecordsList)
+        {
+            <tr>
+                @foreach (var header in headers)
+                {
+                    var property = record.GetType()?.GetProperty(header.Key);
 
-                            if (property.PropertyType == typeof(string)
-                                || property.PropertyType == typeof(int) ||
-                                property.PropertyType == typeof(long) ||
-                                property.PropertyType == typeof(decimal)
-                                )
-                            {
-                                var name = property?.GetValue(record);
-                                <td>@name</td>
-                            }
-                            else if (property.PropertyType.IsGenericType ||
-                                     property.PropertyType.IsInterface)
-                            {
+                    if (property.PropertyType == typeof(string)
+                        || property.PropertyType == typeof(int) ||
+                        property.PropertyType == typeof(long) ||
+                        property.PropertyType == typeof(decimal)
+                        )
+                    {
+                        var name = property?.GetValue(record);
+                        <td>@name</td>
+                    }
+                    else if (property.PropertyType.IsGenericType ||
+                             property.PropertyType.IsInterface)
+                    {
                                 @*var openDataTableAttribute =property.GetCustomAttributes(true)
                                     .FirstOrDefault(g => g is OpenDataTableAttribute) as OpenDataTableAttribute;
                                 if (openDataTableAttribute != null)
@@ -95,18 +117,17 @@ if (rec != null)
                                 }
                                 else
                                 {*@
-                                    <td>@property.Name</td>
-                                
-                            }
-                            else if (property.PropertyType.IsEnum)
-                            {
-                                var enm = @property?.GetValue(record);
-                                <td>@enm</td>
-                            }
-                            else
-                            {
-                                <td>@property.GetValue(record)</td>
-                            }
+                        <td>@property.Name</td>
+                    }
+                    else if (property.PropertyType.IsEnum)
+                    {
+                        var enm = @property?.GetValue(record);
+                        <td>@enm</td>
+                    }
+                    else
+                    {
+                        <td>@property.GetValue(record)</td>
+                    }
                            @*if (property.PropertyType.IsClass)
                             {
                                 <td>@property.Name</td>
@@ -142,57 +163,67 @@ if (rec != null)
                                             dyna)</td>
                                 } 
                             }*@
-                        }
-                        <td>@_html.ActionLink("ویرایش", $"ForEdit", new { id = record.Id })</td>
-                       
-                        
-                        @*
+                }
+                
+                @if (showToolsButtons)
+                {
+                    <td>@_html.ActionLink("ویرایش", $"ForEdit", new {id = record.Id})</td>
+
+
+                @*
                         <form action="delete?id=@record.Id" method="post">
                    
                         </form>*@
-                        
-                        @using(_html.BeginForm("delete",currentController,new {id= record.Id})){
-                          
-                            @_html.AntiForgeryToken()
-                            <td><button type="submit" class="btn btn-danger" >حذف </button></td>
-       
-                        }
 
-                    </tr>
-            }
+                    using (_html.BeginForm("delete", currentController, new {id = record.Id}))
+                    {
+                        @_html.AntiForgeryToken()
+                        <td>
+                            <button type="submit" class="btn btn-danger">حذف </button>
+                        </td>
+                    }
+                }
+               
+
+            </tr>
+        }
 
         </tbody>
+        
+        
+        <tfoot>
+        <tr>
+            @foreach (var th in headers)
+            {
+                <th>@th.Value</th>
+            }
+        </tr>
+        </tfoot>
     </table>
-
-
-   
-
 }
 
 
 @helper Validate(BaseAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
 {
+    if (attr == null)
+    {
+        throw new Exception("دروپداون نال است");
+    }
+    if (m == null)
+    {
+        throw new Exception("مدل نال است");
+    }
 
-if (attr == null)
-{
-    throw new Exception("دروپداون نال است");
+
+    if (ViewData[p.Name] == null)
+    {
+        throw new Exception("ViewData[p.Name] نال است");
+    }
 }
-if (m == null)
-{
-    throw new Exception("مدل نال است");
-}
 
-
-if (ViewData[p.Name] == null)
-{
-    throw new Exception("ViewData[p.Name] نال است");
-}
-
-
-}
 @helper RenderSearch(DropDownAttribute attr, System.Reflection.PropertyInfo p, dynamic m, ViewDataDictionary ViewData)
 {
-Validate(attr, p, m, ViewData);
+    Validate(attr, p, m, ViewData);
 
     <form action="/GetDataTable">
         <div class="form-group">
@@ -202,9 +233,4 @@ Validate(attr, p, m, ViewData);
 
         <button type="submit" class="btn btn-primary" placeHolder="جستجو...">جستجو</button>
     </form>
-
 }
-
-
-
-

@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 using System.Web.Services.Description;
 using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.Core.QueryBuild;
-using Engine.Entities.Models.UiEngine;
 using Engine.Migrations;
+using Entities;
 using ServiceLayer.Systems;
 using WebAppIDEEngine.Models.Core;
 using WebAppIDEEngine.Models.Core.QueryBuild;
+using WebAppIDEEngine.Models.UiGeneratorModels;
 
 namespace WebAppIDEEngine.Models
 {
@@ -120,7 +121,7 @@ namespace WebAppIDEEngine.Models
                 .WillCascadeOnDelete(false);
 
 
-            modelBuilder.Entity<ServiceMethod>().HasRequired(f => f.Query).WithMany(f => f.ServiceMethods)
+            modelBuilder.Entity<ServiceMethod>().HasOptional(f => f.Query).WithMany(f => f.ServiceMethods)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
 
 
@@ -165,13 +166,23 @@ namespace WebAppIDEEngine.Models
 
             #region UIEngine
 
-            modelBuilder.Entity<TableMethod>().HasRequired(f => f.Table)
+            modelBuilder.Entity<TableMethod>().HasRequired(f => f.EjTable)
                 .WithMany(f => f.TableMethods).HasForeignKey(f => f.TableId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<TableMethod>().HasRequired(f => f.DefineControllerMethod)
                 .WithMany(f => f.TableMethods).HasForeignKey(f => f.DefineControllerMethodId)
                 .WillCascadeOnDelete(false);
 
+            #endregion
+            
+            #region temporary
+
+            modelBuilder.Entity<Rent>().HasRequired(f => f.Book)
+                .WithMany(f => f.Rents).HasForeignKey(f => f.BookId).WillCascadeOnDelete(false);
+          
+            modelBuilder.Entity<Rent>().HasRequired(f => f.Student)
+                .WithMany(f => f.Rents).HasForeignKey(f => f.StudentId).WillCascadeOnDelete(false);
+          
             #endregion
 
             base.OnModelCreating(modelBuilder);
@@ -217,11 +228,20 @@ namespace WebAppIDEEngine.Models
 
         #region UIEngine
 
-        public DbSet<Table> Tables { get; set; }
+        public DbSet<EjTable> Tables { get; set; }
         public DbSet<TableMethod> TableMethods { get; set; }
 
         #endregion
 
+
+        #region temporary
+
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Rent> Rents { get; set; }
+        public DbSet<Student> Students { get; set; }
+
+
+        #endregion
 
         //  public DbSet<WebAppIDEEngine.Models.Core.Parameter> Parameters { get; set; }
         //public DbSet<WebAppIDEEngine.Models.Core.QueryBuild.Result> Results { get; set; }

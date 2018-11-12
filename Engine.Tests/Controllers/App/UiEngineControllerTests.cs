@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using AppSourceGenerator;
-using Engine.Areas.ReportGenerator.Controllers;
+using Engine.Areas.UIGenerator.Controllers;
+using Engine.Entities.Models.Core.AppGeneration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebAppIDEEngine.Models;
 using WebAppIDEEngine.Models.Core;
@@ -13,9 +16,9 @@ namespace Engine.Tests.Controllers.App
     /// Summary description for FormsControllerTests
     /// </summary>
     [TestClass]
-    public class QueryControllerTests
+    public class UiEngineControllerTests
     {
-        public QueryControllerTests()
+        public UiEngineControllerTests()
         {
             //
             // TODO: Add constructor logic here
@@ -39,27 +42,67 @@ namespace Engine.Tests.Controllers.App
                 testContextInstance = value;
             }
         }
+        /*
         [TestMethod]
         public  void SaveQueryTests()
         {
             // Arrange
-            QueryController controller = new QueryController();
-
+            UiHomeController controller = new UiHomeController();
             
             FakeDataProvider fakeDataProvider=new FakeDataProvider();
             fakeDataProvider.MakeFakeObjects();
+            var quyer=fakeDataProvider.Queries.First();
 
-            var q=fakeDataProvider.Queries[0];
-        var result=   controller.SaveQuery(q);
+
+            using (var db=new EngineContext())
+            {
+                db.Queries.Add(quyer);
+                
+                var smethod=new ServiceMethod();
+                smethod.Name = "GetDataTableAsync";
+            
+                var s=new DefineService();
+                s.ServiceMethods.Add(smethod);
+            
+                var controllerMethod = new DefineControllerMethod();
+                controllerMethod.ServiceMethod = smethod;
+            
+                var c = new DefineController();
+                c.DefineControllerMethods.Add(controllerMethod);
+
+                db.DefineControllers.Add(c);
+
+                var tableMethods=new List<TableMethod>();
+                tableMethods.Add(new TableMethod{DefineControllerMethod = controllerMethod});
+
+                db.Tables.Add(new Table {Name = "Table1", TableMethods = tableMethods});
+                
+                db.SaveChanges();
+                    
+                var result=   controller.ShowView("Table1");
+                
+                Assert.IsNotNull(result);
+
+                db.Entry(quyer).State = EntityState.Deleted;
+                db.Entry(smethod).State = EntityState.Deleted;
+                db.Entry(controllerMethod).State = EntityState.Deleted;
+                db.Entry(c).State = EntityState.Deleted;
+                db.Entry(tableMethods.First()).State = EntityState.Deleted;
+                db.Entry(db.Tables.First()).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
+            
+            
+           
             // Act
             //var forEdit = await controller.ForEdit(null);
             //  System.Web.Mvc.ViewResult result = controller.Index() as System.Web.Mvc.ViewResult;
 
             // Assert
-              Assert.IsNotNull(result);
 
 
         }
+*/
         [TestMethod]
         public async System.Threading.Tasks.Task GetDataTable()
         {

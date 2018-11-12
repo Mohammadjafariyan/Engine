@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using ServiceLayer.Systems.Library;
 using WebAppIDEEngine.Models.Core;
 using WebAppIDEEngine.Models.ICore;
 
@@ -28,6 +29,21 @@ namespace Engine.Utitliy
             For<IBaseEngineService>().Add<DefineServiceService>().Named(GlobalNames.DefineServiceServiceName);
             For<IBaseEngineService>().Add<DefineControllerService>().Named(GlobalNames.DefineControllerServiceName);
             For<IBaseEngineService>().Add<ServiceMethodService>().Named(GlobalNames.DefineServiceMethodService);
+            For<IBaseEngineService>().Add<TableMethodsService>().Named(GlobalNames.TableMethodServicesName);
+            For<IBaseEngineService>().Add<TablesService>().Named(GlobalNames.TablesServiceName);
+            For<IBaseEngineService>().Add<DefineControllerMethodService>().Named(GlobalNames.DefineControllerMethodServiceName);
+
+
+
+            #region temporary
+            For<IBaseEngineService>().Add<BookService>().Named("BookService");
+            For<IBaseEngineService>().Add<RentService>().Named("RentService");
+            For<IBaseEngineService>().Add<StudentService>().Named("StudentService");
+
+            
+
+                #endregion
+            
         }
     }
 }

@@ -68,7 +68,7 @@ namespace WebAppIDEEngine.Areas.App.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 
-        public async Task<ActionResult> Save(T model)
+        public virtual async Task<ActionResult> Save(T model)
         {
             if (ModelState.IsValid)
             {
@@ -140,7 +140,7 @@ namespace WebAppIDEEngine.Areas.App.Controllers
             Dictionary<string, List<SelectListItem>> enums = _engineService.GetEnumsAttributes<T>(r);
 
             Dictionary<string, List<IDropDownOption>> dropdownData = await _engineService.GetDropdownDataAsync(dropdowns, dropdownparam);
-            Dictionary<string, IQueryable<IDataTable>> dataTableData = await _engineService.GetDataTableDataAsync(datatables, _IDataTableParameter);
+            Dictionary<string, IQueryable<IDataTable> > dataTableData = await _engineService.GetDataTableDataAsync(datatables, _IDataTableParameter);
             Dictionary<string, ITreeNode> treeData = await _engineService.GetTreeDataAsync(trees, _ITreeParameter);
             Dictionary<string, List<IDropDownOption>> multiSelectData = await _engineService.GetMultiSelectDataAsync(multiselects, _IMultiSelectParameter);
 

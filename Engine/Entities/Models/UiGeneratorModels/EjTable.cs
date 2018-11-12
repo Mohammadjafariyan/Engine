@@ -8,8 +8,13 @@ namespace WebAppIDEEngine.Models.UiGeneratorModels
     /// <summary>
     /// جدول
     /// </summary>
-    public class Table:BaseEntity
+    public class EjTable:BaseEntity
     {
+        public EjTable()
+        {
+            TableMethods = new List<TableMethod>();
+        }
+
         [Text(Name="نام")]
         public override string Name { get; set; }
         

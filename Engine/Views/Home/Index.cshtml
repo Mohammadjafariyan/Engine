@@ -5,23 +5,33 @@
 
 <div class="btn-group-vertical">
     <h3> جداول</h3>
-    @Html.ActionLink("مدل ها", "GetDataTable", "Models", new { Area = "App" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("پروپرتی ها", "GetDataTable", "Properties", new { Area = "App" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("روابط ها", "GetDataTable", "NavigationProperties", new { Area = "App" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("مدل ها", "GetDataTable", "Models", new {Area = "App"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("پروپرتی ها", "GetDataTable", "Properties", new {Area = "App"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("روابط ها", "GetDataTable", "NavigationProperties", new {Area = "App"}, new {@class = "btn btn-primary"})
 </div>
 <br/>
 <div class="btn-group-vertical">
-    @Html.ActionLink("فرمها", "GetDataTable", "Forms", new { Area = "App" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("اکشن ها", "GetDataTable", "Actions", new { Area = "App" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("پنل ها", "GetDataTable", "Panels", new { Area = "App" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("فرمها", "GetDataTable", "Forms", new {Area = "App"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("اکشن ها", "GetDataTable", "Actions", new {Area = "App"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("پنل ها", "GetDataTable", "Panels", new {Area = "App"}, new {@class = "btn btn-primary"})
 </div>
 
 <h3> اپلیکیشن ساز (App Generator)</h3>
 <div class="btn-group-vertical">
-    @Html.ActionLink("مدیریت زیر سیستم ها", "GetDataTable", "SubSystem", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("مدیریت کنترولر ها", "GetDataTable", "DefineController", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("مدیریت متد کنترولر ها", "GetDataTable", "DefineControllerMethod", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("مدیریت  سرویس ها", "GetDataTable", "DefineService", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("مدیریت متد سرویس ها", "GetDataTable", "DefineServiceMethod", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("تولید خروجی", "GetDataTable", "Export", new { Area = "AppGeneration" }, new { @class = "btn btn-info" })
+    @Html.ActionLink("مدیریت زیر سیستم ها", "GetDataTable", "SubSystem", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("مدیریت کنترولر ها", "GetDataTable", "DefineController", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("مدیریت متد کنترولر ها", "GetDataTable", "DefineControllerMethod", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("مدیریت  سرویس ها", "GetDataTable", "DefineService", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("مدیریت متد سرویس ها", "GetDataTable", "DefineServiceMethod", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("تولید خروجی", "GetDataTable", "Export", new {Area = "AppGeneration"}, new {@class = "btn btn-info"})
 </div>
+
+
+<h3> اپلیکیشن ساز (App Generator) - قسمت UI</h3>
+<div class="btn-group-vertical">
+    @Html.ActionLink("جداول", "GetDataTable", "EjTables", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("اتصال متد ها به جداول", "GetDataTable", "TableMethods", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+
+</div>
+
+@Html.ActionLink("test", "getAll", "book", new {Area = "Library"}, new {@class = "btn btn-primary"})

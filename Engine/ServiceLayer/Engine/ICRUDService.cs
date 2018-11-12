@@ -18,7 +18,7 @@ namespace ServiceLayer.Engine
 
 
 
-        Task<IDataTable> GetDataTableAsync(IDataTableParameter p);
+        Task<ObjectDataTable<T>> GetDataTableAsync(IDataTableParameter p);
         Task<ITreeNode> GetTreeAsync(ITreeParameter p);
         Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p);
         Task<List<IDropDownOption>> GetMultiSelectAsync(IMultiSelectParameter p);

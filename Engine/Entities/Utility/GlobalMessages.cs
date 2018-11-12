@@ -36,6 +36,9 @@ namespace Engine.Service.AbstractControllers
         public const string DefineControllerServiceName = nameof(DefineControllerService);
         public const string DefineServiceMethodService = nameof(ServiceMethodService);
         public const string DefineServiceServiceName = nameof(DefineServiceService);
+        public const string TablesServiceName = nameof(TablesService);
+        public const string TableMethodServicesName = nameof(TableMethodsService);
+        public const string DefineControllerMethodServiceName = nameof(DefineControllerMethodService);
 
 
 

@@ -1,42 +1,44 @@
-using ServiceLayer.Library;
-
-
 using Engine.Areas.ReportGenerator.Controllers;
 using System.Linq;
-using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using WebAppIDEEngine.Models;
 using System.Web.Mvc;
-
-
+using Engine.Utitliy;
+using ServiceLayer.Systems.Library;
 
 
 namespace Engine.Areas.Library.Controllers
 {
-/// <summary>
+    /// <summary>
     /// bookController
     /// bookController
     /// </summary>
-    public class bookController :Controller
-    {  private bookService _bookservice{get;set;} 
+    ///
+    public class bookController : Controller
+    {
+        private Injector _injector = new Injector();
+        private BookService _bookservice;
 
-public bookController(bookService _bookservice){ 
-this._bookservice=_bookservice; 
- }
+        public bookController()
+        {
+            this._bookservice = _injector.Inject<BookService>();
+        }
 
- 
-[HttpGet]
-public ActionResult getAll() {
-try{
-var res=_bookservice.getAll();
-          return Json(res,JsonRequestBehavior.AllowGet);
-
-}
+        [HttpPost]
+        public ActionResult getAll(long id)
+        {
+            try
+            {
+                var res = _bookservice.GetAll(5);
+                return Json(res, JsonRequestBehavior.AllowGet);
+            }
             catch (Exception e)
             {
                 throw e;
-        }}}
-} 
+            }
+        }
+    }
+}

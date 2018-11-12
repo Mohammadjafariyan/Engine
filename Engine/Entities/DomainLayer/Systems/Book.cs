@@ -21,11 +21,13 @@ namespace Entities
     }
     
 
-    public class Rent
+    public class Rent : BaseEntity
     {
-        [Key]
-        public long Id { get; set; }
-
+        public Rent()
+        {
+            Date=DateTime.Now;
+        }
+        
         [DateTime]
         public DateTime Date { get; set; }
         public long BookId { get; set; }
@@ -36,15 +38,15 @@ namespace Entities
         [DataTable()]
         public Student Student { get; set; }
         public long StudentId { get; set; }
+        public override string Name { get; set; }
     }
 
-    public class Student
+    public class Student : BaseEntity
     {
-        [Key]
-        public long Id { get; set; }
-        public string Name { get; set; }
         public string LName { get; set; }
         [DataTable]
         public ICollection<Rent> Rents { get; set; }
+
+        public override string Name { get; set; }
     }
 }
