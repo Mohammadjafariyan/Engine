@@ -23,71 +23,137 @@
 <hr/>
 
 
-@EngineDataTables.DataTable(dataTable, ViewData, Html, ejTableObject.Id.ToString(), ViewContext, false)
+@EngineDataTables.DataTable(dataTable, ViewData, Html, "table_"+ejTableObject.Id, ViewContext, false)
 
 <script>
+    var table;
+    function MakeDataTable(id, columns, data) {
+        if (data) {
+            table = $(id).DataTable({
+                data: data,
+                columns: columns,
+                initComplete: function() {
 
-    //'ajax': 'Request.Url.AbsoluteUri',
-    $(document).ready(function() {
-       /* $('#ejTableObject.Id tfoot th').each( function () {
-            var title = $(this).text();
-            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-        } );*/
+                    this.api().columns().every(function() {
+                        var column = this;
+                        var select = $('<select><option value=""></option></select>')
+                            .appendTo($(column.footer()).empty())
+                            .on('change',
+                                function() {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                        $(this).val()
+                                    );
 
-        var table = $('#@Html.Raw(ejTableObject.Id)').DataTable({
-            initComplete: function () {
-                this.api().columns().every(function () {
-                    var column = this;
-                    var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
+                                    column
+                                        .search(val ? '^' + val + '$' : '', true, false)
+                                        .draw();
+                                });
 
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
+                        column.data().unique().sort().each(function(d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
                         });
-
-                    column.data().unique().sort().each(function (d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>')
                     });
-                });
-            },
-            rowId:'Id',
-            select: true,
-            language: {
-                "sEmptyTable": "هیچ داده ای در جدول وجود ندارد",
-                "sInfo": "نمایش _START_ تا _END_ از _TOTAL_ رکورد",
-                "sInfoEmpty": "نمایش 0 تا 0 از 0 رکورد",
-                "sInfoFiltered": "(فیلتر شده از _MAX_ رکورد)",
-                "sInfoPostFix": "",
-                "sInfoThousands": ",",
-                "sLengthMenu": "نمایش _MENU_ رکورد",
-                "sLoadingRecords": "در حال بارگزاری...",
-                "sProcessing": "در حال پردازش...",
-                "sSearch": "جستجو:",
-                "sZeroRecords": "رکوردی با این مشخصات پیدا نشد",
-                "oPaginate": {
-                    "sFirst": "ابتدا",
-                    "sLast": "انتها",
-                    "sNext": "بعدی",
-                    "sPrevious": "قبلی"
                 },
-                "oAria": {
-                    "sSortAscending": ": فعال سازی نمایش به صورت صعودی",
-                    "sSortDescending": ": فعال سازی نمایش به صورت نزولی"
+                rowId: 'Id',
+                select: true,
+                language: {
+                    "sEmptyTable": "هیچ داده ای در جدول وجود ندارد",
+                    "sInfo": "نمایش _START_ تا _END_ از _TOTAL_ رکورد",
+                    "sInfoEmpty": "نمایش 0 تا 0 از 0 رکورد",
+                    "sInfoFiltered": "(فیلتر شده از _MAX_ رکورد)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ",",
+                    "sLengthMenu": "نمایش _MENU_ رکورد",
+                    "sLoadingRecords": "در حال بارگزاری...",
+                    "sProcessing": "در حال پردازش...",
+                    "sSearch": "جستجو:",
+                    "sZeroRecords": "رکوردی با این مشخصات پیدا نشد",
+                    "oPaginate": {
+                        "sFirst": "ابتدا",
+                        "sLast": "انتها",
+                        "sNext": "بعدی",
+                        "sPrevious": "قبلی"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": فعال سازی نمایش به صورت صعودی",
+                        "sSortDescending": ": فعال سازی نمایش به صورت نزولی"
+                    }
                 }
-            }
-            
-        });
+
+            });
+        } else {
+            table = $(id).DataTable({
+                initComplete: function () {
+
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select><option value=""></option></select>')
+                            .appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                },
+                rowId: 'Id',
+                select: true,
+                language: {
+                    "sEmptyTable": "هیچ داده ای در جدول وجود ندارد",
+                    "sInfo": "نمایش _START_ تا _END_ از _TOTAL_ رکورد",
+                    "sInfoEmpty": "نمایش 0 تا 0 از 0 رکورد",
+                    "sInfoFiltered": "(فیلتر شده از _MAX_ رکورد)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ",",
+                    "sLengthMenu": "نمایش _MENU_ رکورد",
+                    "sLoadingRecords": "در حال بارگزاری...",
+                    "sProcessing": "در حال پردازش...",
+                    "sSearch": "جستجو:",
+                    "sZeroRecords": "رکوردی با این مشخصات پیدا نشد",
+                    "oPaginate": {
+                        "sFirst": "ابتدا",
+                        "sLast": "انتها",
+                        "sNext": "بعدی",
+                        "sPrevious": "قبلی"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": فعال سازی نمایش به صورت صعودی",
+                        "sSortDescending": ": فعال سازی نمایش به صورت نزولی"
+                    }
+                }
+
+            });
+        }
+        
+        var selectedRow;
+        window['@ejTableObject.Id'] = table;
+        $('#table_@ejTableObject.Id').on('click',
+            'tr',
+            function() {
+            });
+    }
+    //'ajax': 'Request.Url.AbsoluteUri',
+    $(document).ready(function () {
+        /* $('#ejTableObject.Id tfoot th').each( function () {
+             var title = $(this).text();
+             $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+         } );*/
+
+        MakeDataTable('#table_@Html.Raw(ejTableObject.Id)');
 
 
 /*
         table.columns().every( function () {
             var that = this;
- 
+
             $( 'input', this.footer() ).on( 'keyup change', function () {
                 if ( that.search() !== this.value ) {
                     that
@@ -98,13 +164,6 @@
         } );*/
 
 
-
-        var selectedRow;
-        window['@ejTableObject.Id'] = table;
-        $('#@ejTableObject.Id').on('click',
-            'tr',
-            function() {
-            });
     });
 
 </script>

@@ -104,7 +104,8 @@ namespace WebAppIDEEngine.Models.CoreEnum
     /// </summary>
     public enum InputType
     {
-        Text, Money, Number, FromDate, ToDate, FromTime, ToTime
+        Text, Money, Number, FromDate, ToDate, FromTime, ToTime,
+        Checkbox
     }
 
     /// <summary>

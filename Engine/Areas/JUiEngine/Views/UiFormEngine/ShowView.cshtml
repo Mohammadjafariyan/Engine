@@ -1,0 +1,85 @@
+﻿@using Engine.Areas.JUiEngine.Controllers
+@using Engine.Entities.Models.UiGeneratorModels
+@model Engine.Entities.Models.UiGeneratorModels.UiForm
+@{
+    ViewBag.Title = "ShowView";
+    var withlayout = ViewData[UiFormEngineController.WithLayout] as bool?;
+    // Layout = "../Shared/_Layout.cshtml";
+    if (withlayout == false)
+    {
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+@{
+    ViewData[UiFormEngineController.ItemsPartialFormId] = Model.Id.ToString();
+
+    var PostSubsystemUrl = ViewData[UiFormEngineController.PostSubsystemUrl] as string;
+    var PostActionUrl = ViewData[UiFormEngineController.PostActionUrl] as string;
+    var PostControllerUrl = ViewData[UiFormEngineController.PostControllerUrl] as string;
+
+    var isAjax = ViewData[UiFormEngineController.IsAjax] as bool?;
+    var BackUrl = ViewData[UiFormEngineController.BackUrl] as bool?;
+
+    var updateIdafterpost = ViewData[UiFormEngineController.UpdateIdafterpost] as string;
+    // var isInline = ViewData["class"] as string ?? "form-inline";
+    var submitName = ViewData[UiFormEngineController.SubmitName + Model.Id] as string;
+    var OnCompleteFunction = ViewData[UiFormEngineController.OnCompleteFunction + Model.Id] as string;
+    submitName = submitName ?? "جستجو";
+}
+@Html.Partial("~/Areas/JUiEngine/Views/Shared/ItemsPartial.cshtml")
+
+@if (isAjax == true)
+{
+    //action = "/@PostSubsystemUrl/@PostControllerUrl/@PostActionUrl"
+    <form
+        class="" id="form_@Model.Id" method="post">
+        @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
+        <br>
+        <button type="submit" class="btn btn-primary">جستجو </button>
+        <button type="reset" class="btn btn-primary">ریست</button>
+    </form>
+   @* using (Ajax.BeginForm(PostActionUrl, PostControllerUrl, new {area = PostSubsystemUrl}, new AjaxOptions {HttpMethod = "post",OnComplete = OnCompleteFunction, OnFailure = "alert('خطا در سیستم');console.log(e);"},new {@class=""}))
+    {
+        @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
+        <br/>
+        <button type="submit" class="btn btn-primary">@submitName    </button>
+        <button type="reset" class="btn btn-primary">ریست</button>
+    }*@
+
+    
+    <script>
+
+        $(document).ready(function() {
+            $('#form_@Model.Id').on('submit',
+                function(e) {
+                    // stop default form submission
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: "/@PostSubsystemUrl/@PostControllerUrl/@PostActionUrl",
+                        type: 'POST',
+                        data: $('#form_@Model.Id').serialize(),
+                        success: function(e) {
+                            @Html.Raw(OnCompleteFunction);
+                        }
+                    });
+                });
+        });
+
+    </script>
+}
+else
+{
+    using (Html.BeginForm(PostActionUrl, PostControllerUrl, new {BackUrl = BackUrl, area = PostSubsystemUrl}, FormMethod.Post, new {@class = ""}))
+    {
+        @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
+        <br/>
+        <button type="submit" class="btn btn-primary">@submitName</button>
+        <button type="reset" class="btn btn-primary">ریست</button>
+    }
+}
+

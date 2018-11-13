@@ -1,0 +1,76 @@
+﻿@using WebAppIDEEngine.Models.Core
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+@using System.Web.Mvc.Html;
+
+@using Engine.Areas.App.Controllers
+@using Engine.Areas.JUiEngine.Controllers
+@using Engine.Service.AbstractControllers
+@using Engine.DomainLayer.Models.Core.ViewGeneration
+@using Engine.Entities.Models.UiGeneratorModels
+@using WebAppIDEEngine.Models.CoreEnum
+@using WebAppIDEEngine.Models.UiGeneratorModels
+@using InputType = WebAppIDEEngine.Models.CoreEnum.InputType
+@model dynamic
+@{
+    var UiFormInputs = (List<UiFormInput>) ViewData[UiFormEngineController.DynamicFormUiFormInputs];
+    var form_groupClass = ViewData["form-group"] as string ?? "col-md-3";
+}
+<style>
+    .form-group {
+        float: right;
+    }
+</style>
+
+@if (UiFormInputs != null)
+{
+
+    @Html.Hidden("BackUrl",Request.Url.AbsoluteUri)
+    foreach (var UiFormInput in UiFormInputs)
+    {
+        UiFormInput.Name = UiFormInput.Translate ??  UiFormInput.UiInput.Translate  ?? UiFormInput.Name ?? UiFormInput.UiInput.Name;
+        UiFormInput.Description = UiFormInput.Description ?? UiFormInput.UiInput.Description;
+
+        <div class="form-group @form_groupClass">
+            <label>@UiFormInput.Name</label>
+            @{
+
+                if (UiFormInput.UiInput.FieldType == FieldType.Text)
+                {
+                    string type = null;
+                    if (UiFormInput.UiInput.InputType == InputType.Text)
+                    {
+                        type = @"""text""";
+                    }
+                    if (UiFormInput.UiInput.InputType == InputType.Number)
+                    {
+                        type = @"""number""";
+                    }
+
+                    if (UiFormInput.UiInput.InputType == InputType.Checkbox)
+                    {
+                        type = @"""checkbox""";
+                    }
+
+                    <input id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" @type name="@UiFormInput.UiInput.Name"/>
+                }
+                if (UiFormInput.UiInput.FieldType == FieldType.DropDown)
+                {
+                    <select id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" name="@UiFormInput.UiInput.Name">
+                        <option></option>
+                    </select>
+                }
+                if (UiFormInput.UiInput.FieldType == FieldType.TextArea)
+                {
+                    <textarea id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" rows="5" cols="10" name="@UiFormInput.UiInput.Name">  </textarea>
+                }
+            }
+
+            <small id="help_@UiFormInput.Id" class="form-text text-muted">@UiFormInput.Description</small>
+        </div>
+    }
+}

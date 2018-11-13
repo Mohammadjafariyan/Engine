@@ -1,9 +1,67 @@
+﻿@using Engine.Areas.JUiEngine.Controllers
+@using Engine.Entities.Models.UiGeneratorModels
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.UiGeneratorModels
 @model dynamic
 
 @{
-   // Layout = "../Shared/_Layout.cshtml";
+    ViewData[UiFormEngineController.WithLayout] = false;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    ViewData[UiFormEngineController.ItemsPartialFormId] = Model.Id.ToString();
+    ViewData[UiFormEngineController.UpdateIdafterpost] = "Rootdt_" + Model.Id.ToString();
+    var uiForm = ViewData[UiHomeController.Form] as UiForm;
+}
 
-@Html.Partial("TablePartial")
+@if (uiForm != null)
+{
+    ViewData[UiFormEngineController.IsAjax] = true;
+    ViewData[UiFormEngineController.SubmitName + uiForm.Id] = "جستجو";
+    ViewData[UiFormEngineController.OnCompleteFunction + uiForm.Id] = "onSearchAjaxComplete(e,'" + Model.Id.ToString() + "')";
+    <div class="panel panel-default">
+        <div class="panel-heading">فیلتر اطلاعات</div>
+        <div class="panel-body">
+            <div class="row" style="direction: rtl">
+                @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowView.cshtml", uiForm)
+
+            </div>
+        </div>
+    </div>
+}
+<div class="panel panel-default">
+    <div class="panel-heading">اطلاعات</div>
+    <div class="panel-body">
+
+        <div id="Rootdt_@Model.Id.ToString()">
+            @Html.Partial("TablePartial")
+        </div>
+    </div>
+</div>
+
+
+<script>
+    @{
+        EjTable ejTableObject = (EjTable) ViewData[UiHomeController.TableObject];
+        IDataTable dataTable = (IDataTable) ViewData[UiHomeController.DataTable];
+    }
+    var headers = [ @{
+                        foreach (var header in dataTable.Headers)
+                        {
+                            <text>
+                                { data: '@Html.Raw(header.Key)', "orderable": true },
+                            </text>
+                        }
+                    }];
+
+    function onSearchAjaxComplete(response, tableId) {
+       // $('#table_@Html.Raw(ejTableObject.Id)').empty();
+        table.destroy();
+        console.log(response, tableId);
+
+        MakeDataTable('#table_@Html.Raw(ejTableObject.Id)', headers, response.RecordsList);
+
+
+    }
+</script>

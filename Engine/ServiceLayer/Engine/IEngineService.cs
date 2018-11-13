@@ -18,6 +18,8 @@ namespace Engine.Service.AbstractControllers
 
     public interface IBaseEngineService
     {
+    //    IDataTable Search<T>(NameValueCollection nameValues) where T : IModel, new();
+
         EngineContext EngineContext { get; set; }
 
         Dictionary<string, List<SelectListItem>> GetEnumsAttributes<TEnum>(object model);

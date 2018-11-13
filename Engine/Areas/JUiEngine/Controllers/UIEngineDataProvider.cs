@@ -21,7 +21,7 @@ namespace Engine.Areas.JUiEngine.Controllers
         {
             using (var db = new EngineContext())
             {
-                var table = db.Tables.Include("TableMethods")
+                var table = db.Tables.Include("TableMethods").Include("UiTableForms").Include("UiFormItems")
                     .FirstOrDefault(t => t.Name.ToLower().TrimEnd() == tableName);
                 if (table == null)
                     throw new UiEngineException("جدول یافت نشد");

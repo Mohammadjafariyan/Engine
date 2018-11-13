@@ -8,6 +8,7 @@ using ViewModel.ActionTypes;
 using WebAppIDEEngine.Models.Core;
 using System.Data.Entity;
 using Engine.Entities.Models.Core.AppGeneration;
+using Engine.Entities.Models.UiGeneratorModels;
 using WebAppIDEEngine.Models.UiGeneratorModels;
 
 namespace ServiceLayer.Systems
@@ -31,7 +32,15 @@ namespace ServiceLayer.Systems
 
         
     }
+
     
+    /// <summary>
+    /// اتصال ورودی  ها به فرم
+    /// </summary>
+    public class UiFormInputService : CommonService<UiFormInput>
+    {
+
+    }
     /// <summary>
     /// اتصال متد ها به جداول
     /// </summary>
@@ -55,21 +64,54 @@ namespace ServiceLayer.Systems
     /// </summary>
     public class DefineControllerMethodService : CommonService<DefineControllerMethod>
     {
+        public override async Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p)
+        {
+            var dt = EngineContext.Set<DefineControllerMethod>();
+            return await dt.Select(f =>
+                new IDropDownOption { Id = f.Id.ToString(), Value = f.DefineController.Name  + "(" + f.Name + ")" }).ToListAsync();
+        }
 
-        
     } 
     /// <summary>
     /// سرویس تعریف کنترولر
     /// </summary>
     public class DefineControllerService : CommonService<DefineController>
     {
+    }
 
-        
-    } 
+    /// <summary>
+    /// سرویس Input ها
+    /// </summary>
+    public class UiInputService : CommonService<UiInput>
+    {
+    }
+
+
+    /// <summary>
+    /// اتصال فرم به متد 
+    /// </summary>
+    public class UiFormControllerMethodService : CommonService<UiFormControllerMethod>
+    {
+    }
+
+    /// <summary>
+    /// اتصال آیتم به فرم 
+    /// </summary>
+    public class UiFormItemService : CommonService<UiFormItem>
+    {
+    }
     
-   
+
+    /// <summary>
+    /// سرویس فرم ها
+    /// </summary>
+    public class UiFormService : CommonService<UiForm>
+    {
+    }
+
     
-    
+
+
     /// <summary>
     /// سرویس تعریف متد سرویس
     /// </summary>
@@ -82,14 +124,36 @@ namespace ServiceLayer.Systems
             return await dt.Select(f =>
                     new IDropDownOption { Id = f.Id.ToString(), Value = f.Name + "("+f.DefineService.Name+")"}).ToListAsync();
         }
-    } 
+    }
+
     
+    /// <summary>
+    /// سرویس اتصال فرم ها ی جدول
+    /// </summary>
+    public class UiTableFormService : CommonService<UiTableForm>
+    {
+
+    }
     public class FormService : CommonService<Form>
     {
 
-       
-    } 
-    
+    }
+
+
+    /// <summary>
+    /// سرویس ایتم های جدول
+    /// </summary>
+    public class UiTableItemService : CommonService<UiTableItem>
+    {
+
+
+    }
+
+
+
+
+
+
     /// <summary>
     /// کوئری
     /// </summary>
@@ -122,9 +186,21 @@ namespace ServiceLayer.Systems
     {
         
     }
+    /// <summary>
+    /// سرویس آیتم های سیستم
+    /// </summary>
+    public class UiItemsService : CommonService<UiItem>
+    {
+    }
+    
     public class PropertyService : CommonService<WebAppIDEEngine.Models.Core.Property>
     {
-        
+        public override async Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p)
+        {
+            var dt = EngineContext.Set<Property>();
+            return await dt.Select(f =>
+                new IDropDownOption { Id = f.Id.ToString(), Value = f.Model.Name  + "(" + f.NameInModel + ")" }).ToListAsync();
+        }
     }
 
     public class NavigationPropertyService : CommonService<WebAppIDEEngine.Models.Core.NavigationProperty>

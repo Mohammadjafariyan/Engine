@@ -17,9 +17,9 @@
 @*HtmlHelper<dynamic>*@
 
 @helper DataTable(IDataTable datatableTmp, ViewDataDictionary ViewData, System.Web.Mvc.HtmlHelper _html
-    , string TableId, ViewContext ViewContext,bool showToolsButtons=true)
+    , string TableId, ViewContext ViewContext, bool showToolsButtons = true)
 {
-    dynamic datatable=null;
+    dynamic datatable = null;
 
     if (datatableTmp is BaseDataTable<dynamic>)
     {
@@ -28,12 +28,12 @@
     else if (datatableTmp is IModelDataTable)
     {
         datatable = datatableTmp as IModelDataTable;
-    }  
+    }
     else if (datatableTmp is ObjectDataTable<IModel>)
     {
         datatable = datatableTmp as ObjectDataTable<IModel>;
-    }  
-    else 
+    }
+    else
     {
         datatable = datatableTmp as dynamic;
     }
@@ -50,7 +50,11 @@
     var currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
 
 
-    object rec = RecordsList[0];
+    object rec = null;
+    if (RecordsList.Count > 0)
+    {
+        rec = RecordsList[0];
+    }
     System.Reflection.PropertyInfo[] props = null;
     if (rec != null)
     {
@@ -71,11 +75,11 @@
             {
                 <th>@th.Value</th>
             }
-        @if (showToolsButtons)
-        {
-            <th>ویرایش</th>
-            <th>حذف</th>
-        }
+            @if (showToolsButtons)
+            {
+                <th>ویرایش</th>
+                <th>حذف</th>
+            }
         </tr>
         </thead>
         <tbody>
@@ -164,7 +168,7 @@
                                 } 
                             }*@
                 }
-                
+
                 @if (showToolsButtons)
                 {
                     <td>@_html.ActionLink("ویرایش", $"ForEdit", new {id = record.Id})</td>
@@ -183,14 +187,14 @@
                         </td>
                     }
                 }
-               
+
 
             </tr>
         }
 
         </tbody>
-        
-        
+
+
         <tfoot>
         <tr>
             @foreach (var th in headers)

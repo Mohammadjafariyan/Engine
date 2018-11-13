@@ -39,10 +39,17 @@ namespace Engine.Service.AbstractControllers
         public const string TablesServiceName = nameof(TablesService);
         public const string TableMethodServicesName = nameof(TableMethodsService);
         public const string DefineControllerMethodServiceName = nameof(DefineControllerMethodService);
-
-
+        public const string UiInputServiceName = nameof(UiInputService);
+        public const string UiFormServiceName = nameof(UiFormService);
+        public const string PropertyServiceName = nameof(PropertyService);
+        public const string UiItemsServiceName = nameof(UiItemsService);
+        public const string UiFormInputServiceName = nameof(UiFormInputService);
+        public const string UiFormItemServiceName = nameof(UiFormItemService);
+        public const string UiTableItemServiceName = nameof(UiTableItemService);
+        public const string UiTableFormServiceName = nameof(UiTableFormService);
 
         
+
         public const string EnumType = "EnumType";
 
         public const string RelationshipLink = "relationshipLink";
@@ -50,6 +57,7 @@ namespace Engine.Service.AbstractControllers
 
         public const string FormsController = nameof(Areas.App.Controllers.FormsController);
         public const string PropertiesController = nameof(Areas.App.Controllers.PropertiesController);
+        public const string UiFormControllerMethodController = nameof(Areas.AppGeneration.Controllers.UiFormMethodController);
 
         public const string AppArea = "AppArea";
     }

@@ -10,21 +10,42 @@ using Engine.Utitliy;
 using System.Reflection;
 using System.Web.Mvc;
 using System.ComponentModel;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
+using System.Text.RegularExpressions;
 using WebAppIDEEngine.Models.ICore;
 using Engine.Attributes;
 using ViewModel.ActionTypes;
 using Domain.Attributes;
+using WebAppIDEEngine.Models;
 
 namespace Engine.Service.AbstractControllers
 {
-    public  abstract class BaseEngineService<T> : IEngineService<T> where T : class, IModel
+    public abstract class BaseEngineService<T> : IEngineService<T> where T : class, IModel
     {
         // protected Injector _injector;
-        public  WebAppIDEEngine.Models.EngineContext EngineContext { get; set; }
+      /*  public IDataTable Search<T1>(NameValueCollection nameValues) where T1 : class, IModel
+        {
+            var entities = EngineContext.Set<T1>();
+
+            var tableName=Extentions.GetTableName<T1>(EngineContext);
+
+            entities.toL
+
+            var sql = $@"select * from {tableName} where ";
+            foreach (string name in nameValues)
+            {
+                sql+= name + " " +nameValues[name];
+            }
+
+        }*/
+
+
+        public WebAppIDEEngine.Models.EngineContext EngineContext { get; set; }
         protected System.Data.Entity.DbSet<T> _entities;
         public virtual Injector Injector { get; set; }
 
-        public  BaseEngineService()
+        public BaseEngineService()
         {
             EngineContext = new WebAppIDEEngine.Models.EngineContext();
             this._entities = EngineContext.Set<T>();
@@ -75,10 +96,10 @@ namespace Engine.Service.AbstractControllers
         public virtual Dictionary<string, Result> GetAttribute<B, Result>() where Result : BaseAttribute
         {
             var names = typeof(B).GetProperties()
-                       .SelectMany(property => property.GetCustomAttributes(true)
-                       .Where(c => c is Result)
-                       .Select(c => new { attr = c as Result, Name = property.Name }))
-                       .ToList().ToDictionary(o => o.Name, o => o.attr);
+                .SelectMany(property => property.GetCustomAttributes(true)
+                    .Where(c => c is Result)
+                    .Select(c => new {attr = c as Result, Name = property.Name}))
+                .ToList().ToDictionary(o => o.Name, o => o.attr);
 
             return names;
         }
@@ -116,6 +137,7 @@ namespace Engine.Service.AbstractControllers
                 }
                 else
                     obj = dataTableAttribute[i];
+
                 viewdata[v[i]] = obj;
             }
         }
@@ -144,7 +166,6 @@ namespace Engine.Service.AbstractControllers
         }
 
 
-
         /// <summary>
         /// دیتای های مربوط به DataTable را بر میگرداند
         /// </summary>
@@ -153,9 +174,8 @@ namespace Engine.Service.AbstractControllers
         public virtual async Task<Dictionary<string, IQueryable<IDataTable>>> GetDataTableDataAsync
             (Dictionary<string, DataTableAttribute> datatables, IDataTableParameter @params)
         {
-            return await GetDataAsync<IQueryable<IDataTable> , DataTableAttribute>(datatables, @params);
+            return await GetDataAsync<IQueryable<IDataTable>, DataTableAttribute>(datatables, @params);
         }
-
 
 
         /// <summary>
@@ -187,9 +207,9 @@ namespace Engine.Service.AbstractControllers
                 Task<dynamic> result = InovokeAsync(service, dd.Value.MethodName, @params);
                 dic.Add(dd.Key, await result);
             }
+
             return dic;
         }
-
 
 
         /// <summary>
@@ -197,10 +217,12 @@ namespace Engine.Service.AbstractControllers
         /// </summary>
         /// <typeparam name="B"></typeparam>
         /// <returns></returns>
-        public virtual async Task<Dictionary<string, List<IDropDownOption>>> GetDropdownDataAsync(Dictionary<string, DropDownAttribute> dropdowns, IDropDownParameter @params)
+        public virtual async Task<Dictionary<string, List<IDropDownOption>>> GetDropdownDataAsync(
+            Dictionary<string, DropDownAttribute> dropdowns, IDropDownParameter @params)
         {
             return await GetDataAsync<List<IDropDownOption>, DropDownAttribute>(dropdowns, @params);
         }
+
         public virtual dynamic Inovoke(dynamic obj, string methodName, params object[] @params)
         {
             Type thisType = obj.GetType();
@@ -210,11 +232,8 @@ namespace Engine.Service.AbstractControllers
                 throw new EngineServiceException(GlobalMessages.MethodNameInReflectionIsNull);
 
 
-
-
             return theMethod.Invoke(obj, @params);
         }
-
 
 
         /// <summary>
@@ -234,18 +253,16 @@ namespace Engine.Service.AbstractControllers
         }
 
 
-        public  static  Dictionary<string,string> GetPropertyNames<M>()
+        public static Dictionary<string, string> GetPropertyNames<M>()
         {
             var names = typeof(M).GetProperties()
                 .ToDictionary(key => key.Name, property =>
                     property.GetCustomAttributes().Where(c => c is IEngineAttribute && !(c is HiddenColumnAttribute))
                         .Select(c => c as IEngineAttribute)
                         .Select(c => c.Name).FirstOrDefault() ?? property.Name);
-          
+
             return names;
         }
-
-
 
 
         /// <summary>
@@ -266,13 +283,11 @@ namespace Engine.Service.AbstractControllers
         public virtual ITreeNode GetTree(ITreeParameter p)
         {
             return null;
-
         }
 
         public virtual List<IDropDownOption> GetDropDown(IDropDownParameter p)
         {
             return null;
-
         }
 
         public virtual List<IDropDownOption> GetMultiSelect(IDropDownParameter p)
@@ -289,7 +304,6 @@ namespace Engine.Service.AbstractControllers
             };
 
             return await Task.FromResult(dataTable);
-
         }
 
         public virtual async Task<ITreeNode> GetTreeAsync(ITreeParameter p)
@@ -300,13 +314,11 @@ namespace Engine.Service.AbstractControllers
         public virtual async Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p)
         {
             return await Task.FromResult<List<IDropDownOption>>(new List<IDropDownOption>());
-
         }
 
         public virtual async Task<List<IDropDownOption>> GetMultiSelectAsync(IMultiSelectParameter p)
         {
             return await Task.FromResult<List<IDropDownOption>>(null);
-
         }
 
         public virtual void Insert(T p)
@@ -320,14 +332,14 @@ namespace Engine.Service.AbstractControllers
         }
 
 
-
         public virtual T Delete(long id)
         {
-            var entity=_entities.Find(id);
+            var entity = _entities.Find(id);
             if (entity == null)
             {
                 throw new BaseEngineException("رکورد یافت نشد");
             }
+
             EngineContext.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
             return entity;
         }
@@ -342,7 +354,6 @@ namespace Engine.Service.AbstractControllers
             return _entities.Find(id);
         }
 
-       
 
         public virtual Dictionary<string, SelectList> GetEnumsAttributesDep<TEnum>(object model)
         {
@@ -352,21 +363,23 @@ namespace Engine.Service.AbstractControllers
             {
                 dic.Add(enm.Key, enm.Value.Value as SelectList);
             }
+
             return dic;
         }
+
         public virtual Dictionary<string, List<SelectListItem>> GetEnumsAttributes<TEnum>(object model)
         {
             Dictionary<string, List<SelectListItem>> dic = new Dictionary<string, List<SelectListItem>>();
             var enums = typeof(TEnum).GetProperties().Where(property => property.PropertyType.IsEnum)
-                       .ToList();
+                .ToList();
             foreach (var enm in enums)
             {
                 var values = (Enum.GetValues(enm.PropertyType) as Array)?.OfType<object>().ToArray();
                 var Names = (Enum.GetNames(enm.PropertyType) as Array).OfType<object>().ToArray();
                 var prop = enm
-                        .GetCustomAttributes(typeof(DescriptionAttribute), true)
-                        .Select(c => c as DescriptionAttribute)
-                        .Select(c => c.Description).FirstOrDefault() ?? enm.Name;
+                               .GetCustomAttributes(typeof(DescriptionAttribute), true)
+                               .Select(c => c as DescriptionAttribute)
+                               .Select(c => c.Description).FirstOrDefault() ?? enm.Name;
                 var prevalue = model != null ? enm.GetValue(model) : null;
                 //var everyEnumWithValuesAndPreValue = enm.PropertyType.GetType().GetProperties()
                 //            .Select(property => 
@@ -391,14 +404,12 @@ namespace Engine.Service.AbstractControllers
                     selectlist.Selected = prevalue as string == selectlist.Value;
                     options.Add(selectlist);
                 }
-                
+
                 dic.Add(prop, options);
             }
+
             return dic;
         }
-
-
-
     }
 
     [Serializable]
@@ -406,20 +417,20 @@ namespace Engine.Service.AbstractControllers
     {
         private object injectedServiceIsNull;
 
-        public  EngineServiceException()
+        public EngineServiceException()
         {
         }
 
-        public  EngineServiceException(object injectedServiceIsNull)
+        public EngineServiceException(object injectedServiceIsNull)
         {
             this.injectedServiceIsNull = injectedServiceIsNull;
         }
 
-        public  EngineServiceException(string message) : base(message)
+        public EngineServiceException(string message) : base(message)
         {
         }
 
-        public  EngineServiceException(string message, Exception innerException) : base(message, innerException)
+        public EngineServiceException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
@@ -431,15 +442,15 @@ namespace Engine.Service.AbstractControllers
     [Serializable]
     internal class BaseEngineException : Exception
     {
-        public  BaseEngineException()
+        public BaseEngineException()
         {
         }
 
-        public  BaseEngineException(string message) : base(message)
+        public BaseEngineException(string message) : base(message)
         {
         }
 
-        public  BaseEngineException(string message, Exception innerException) : base(message, innerException)
+        public BaseEngineException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
@@ -447,5 +458,24 @@ namespace Engine.Service.AbstractControllers
         {
         }
     }
+}
 
+public static class Extentions
+{
+    public static string GetTableName<T>(this EngineContext context) where T : class
+    {
+        ObjectContext objectContext = ((IObjectContextAdapter) context).ObjectContext;
+
+        return objectContext.GetTableName<T>();
+    }
+
+    public static string GetTableName<T>(this ObjectContext context) where T : class
+    {
+        string sql = context.CreateObjectSet<T>().ToTraceString();
+        Regex regex = new Regex("FROM (?<table>.*) AS");
+        Match match = regex.Match(sql);
+
+        string table = match.Groups["table"].Value;
+        return table;
+    }
 }

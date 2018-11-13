@@ -1,0 +1,14 @@
+﻿@using WebAppIDEEngine.Models.Core
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+
+@model IDataTable
+@{
+    ViewBag.Title = "آیتم های فرم";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("~/Areas/App/Views/Shared/GetDataTable.cshtml")

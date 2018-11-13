@@ -30,7 +30,17 @@
 <h3> اپلیکیشن ساز (App Generator) - قسمت UI</h3>
 <div class="btn-group-vertical">
     @Html.ActionLink("جداول", "GetDataTable", "EjTables", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("اتصال متد ها به جداول", "GetDataTable", "TableMethods", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("اتصال متد ها به جداول", "GetDataTable", "TableMethods", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    <hr />
+    @Html.ActionLink("تعریف فرم ها", "GetDataTable", "UiForm", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("تعریف ورودی ها", "GetDataTable", "UiInput", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("اتصال ورودی ها به فرم ها", "GetDataTable", "UiFormInput", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("اتصال فرم ها به جداول", "GetDataTable", "UiTableForms", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("اتصال متد به فرم", "GetDataTable", "UiFormMethod", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    <hr />
+    @Html.ActionLink("تعریف آیتم ها", "GetDataTable", "UiItems", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("اتصال آیتم به جداول", "GetDataTable", "UiFormItems", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("اتصال آیتم به فرم ها", "GetDataTable", "UiTableItems", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
 
 </div>
 

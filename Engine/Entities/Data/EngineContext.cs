@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Services.Description;
 using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.Core.QueryBuild;
+using Engine.Entities.Models.UiGeneratorModels;
 using Engine.Migrations;
 using Entities;
 using ServiceLayer.Systems;
@@ -161,6 +162,53 @@ namespace WebAppIDEEngine.Models
                 .HasForeignKey(f => f.DefineServiceId);
 */
 
+
+            modelBuilder.Entity<TableMethod>().HasRequired(f => f.EjTable)
+                .WithMany(f => f.TableMethods)
+                .HasForeignKey(f => f.TableId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<TableMethod>().HasRequired(f => f.DefineControllerMethod)
+                .WithMany(f => f.TableMethods)
+                .HasForeignKey(f => f.DefineControllerMethodId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<UiFormControllerMethod>().HasRequired(f => f.DefineControllerMethod)
+                .WithMany(f => f.UiFormControllerMethods)
+                .HasForeignKey(f => f.DefineControllerMethodId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UiFormControllerMethod>().HasRequired(f => f.UiForm)
+                .WithMany(f => f.UiFormControllerMethods)
+                .HasForeignKey(f => f.UiFormId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UiFormInput>().HasRequired(f => f.UiForm)
+                .WithMany(f => f.UiFormInputs)
+                .HasForeignKey(f => f.UiFormId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UiFormInput>().HasRequired(f => f.UiInput)
+                .WithMany(f => f.UiFormInputs)
+                .HasForeignKey(f => f.UiInputId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UiFormItem>().HasRequired(f => f.UiItem)
+                .WithMany(f => f.UiFormItems)
+                .HasForeignKey(f => f.UiItemId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UiFormItem>().HasRequired(f => f.UiForm)
+                .WithMany(f => f.UiFormItems)
+                .HasForeignKey(f => f.UiFormId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UiTableItem>().HasRequired(f => f.UiItem)
+                .WithMany(f => f.UiTableItems)
+                .HasForeignKey(f => f.UiItemId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<UiTableForm>().HasRequired(f => f.UiForm)
+                .WithMany(f => f.UiTableForms)
+                .HasForeignKey(f => f.UiFormId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UiTableForm>().HasRequired(f => f.EjTable)
+                .WithMany(f => f.UiTableForms)
+                .HasForeignKey(f => f.EjTableId).WillCascadeOnDelete(false);
+
             #endregion
 
 
@@ -174,15 +222,15 @@ namespace WebAppIDEEngine.Models
                 .WillCascadeOnDelete(false);
 
             #endregion
-            
+
             #region temporary
 
             modelBuilder.Entity<Rent>().HasRequired(f => f.Book)
                 .WithMany(f => f.Rents).HasForeignKey(f => f.BookId).WillCascadeOnDelete(false);
-          
+
             modelBuilder.Entity<Rent>().HasRequired(f => f.Student)
                 .WithMany(f => f.Rents).HasForeignKey(f => f.StudentId).WillCascadeOnDelete(false);
-          
+
             #endregion
 
             base.OnModelCreating(modelBuilder);
@@ -223,6 +271,16 @@ namespace WebAppIDEEngine.Models
         public DbSet<DefineController> DefineControllers { get; set; }
         public DbSet<DefineControllerMethod> DefineControllerMethodes { get; set; }
 
+
+        public DbSet<UiForm> UiForms { get; set; }
+        public DbSet<UiFormControllerMethod> UiFormControllerMethods { get; set; }
+        public DbSet<UiFormInput> UiFormInputs { get; set; }
+        public DbSet<UiFormItem> UiFormItems { get; set; }
+        public DbSet<UiInput> UiInputs { get; set; }
+        public DbSet<UiTableItem> UiTableItems { get; set; }
+        public DbSet<UiItem> UiItems { get; set; }
+        public DbSet<UiTableForm> UiTableForms { get; set; }
+
         #endregion
 
 
@@ -239,7 +297,6 @@ namespace WebAppIDEEngine.Models
         public DbSet<Book> Books { get; set; }
         public DbSet<Rent> Rents { get; set; }
         public DbSet<Student> Students { get; set; }
-
 
         #endregion
 

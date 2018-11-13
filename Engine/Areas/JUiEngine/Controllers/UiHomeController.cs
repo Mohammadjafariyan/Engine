@@ -8,11 +8,13 @@ namespace Engine.Areas.JUiEngine.Controllers
 {
     public class UiHomeController : Controller
     {
+        private UiFormDataProvider _uiFormprovider = new UiFormDataProvider();
         private UiEngineDataProvider _provider = new UiEngineDataProvider();
         public static readonly string DataTable = "DataTable";
         public static readonly string TableObject = "TableObject";
         public static readonly string ActionURL = "ActionURL";
         public static readonly string ApiActionURL = "ApiActionURL";
+        public static readonly string Form = "Form";
 
         // GET
         public ActionResult ShowView(string tableName)
@@ -28,6 +30,10 @@ namespace Engine.Areas.JUiEngine.Controllers
 
                 var table = _provider.GetTable(tableName);
 
+                var searchForm = table.UiTableForms.FirstOrDefault();
+                if (searchForm != null)
+                    _uiFormprovider.GetForm(searchForm.Name, ViewData);
+
                 var methodId = table.TableMethods.Select(t => t.DefineControllerMethodId).First();
 
                 string SubSystemName = "";
@@ -39,12 +45,18 @@ namespace Engine.Areas.JUiEngine.Controllers
                     out SubSystemName, out ControllerName, out ControllerMethod
                     , out ServiceMethodName);
 
-                ControllerName=ControllerName.Replace("Controller", "");
-                
-                ViewData[ApiActionURL] =Request.ApplicationPath+ $@"{SubSystemName}/api/{ControllerName}/{ControllerMethod}"+Request.Url.Query;
-                ViewData[ActionURL] =Request.ApplicationPath+ $@"{SubSystemName}/{ControllerName}/{ControllerMethod}"+Request.Url.Query;
+                ControllerName = ControllerName.Replace("Controller", "");
+
+                ViewData[ApiActionURL] = Request.ApplicationPath +
+                                         $@"{SubSystemName}/api/{ControllerName}/{ControllerMethod}" +
+                                         Request.Url.Query;
+                ViewData[ActionURL] = Request.ApplicationPath +
+                                      $@"{SubSystemName}/{ControllerName}/{ControllerMethod}" + Request.Url.Query;
                 ViewData[TableObject] = table;
                 ViewData[DataTable] = debatable;
+
+
+                return View(table);
             }
             catch (UiEngineException e)
             {

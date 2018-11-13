@@ -14,16 +14,36 @@ using WebAppIDEEngine.Models.ICore;
 using System.Collections.Specialized;
 using Engine.ServiceLayer.Systems.Engine;
 using Engine.Service.AbstractControllers;
+using WebGrease.Css.Extensions;
 
 namespace WebAppIDEEngine.Areas.App.Controllers
 {
-    public abstract class AppController<T, Parameter> : BaseEngineController<T, Parameter> where Parameter : IActionParameter where T : IModel,new()
+    public abstract class AppController<T, Parameter> : BaseEngineController<T, Parameter>
+        where Parameter : IActionParameter where T : IModel, new()
     {
-
         public RelationshipLinkService relationshipLinkService = new RelationshipLinkService();
+
         public AppController()
         {
             _injector = new Engine.Utitliy.Injector();
+        }
+
+
+        public virtual void Search(T searchModel)
+        {
+            if (searchModel == null)
+                throw new Exception("searchmodel is null");
+            var nameValues = new NameValueCollection();
+            searchModel.GetType().GetProperties().ForEach(p =>
+            {
+                var o = p.GetValue(p);
+                if (o != null)
+                {
+                    nameValues.Add(p.Name, o.ToString());
+                }
+            });
+
+           // _engineService.Search<T>(nameValues);
         }
 
 
@@ -43,7 +63,6 @@ namespace WebAppIDEEngine.Areas.App.Controllers
             return View(res);
         }
 
-    
 
         // GET: App/Models/Details/5
         public async Task<ActionResult> Details(long? id)
@@ -53,7 +72,7 @@ namespace WebAppIDEEngine.Areas.App.Controllers
                 return HttpNotFound();
             }
 
-            var model =  _engineService.GetById(id.Value);
+            var model = _engineService.GetById(id.Value);
             await this.RenderFormAsync(model);
             if (model == null)
             {
@@ -80,9 +99,11 @@ namespace WebAppIDEEngine.Areas.App.Controllers
                 {
                     _engineService.Update(model);
                 }
+
                 await _engineService.EngineContext.SaveChangesAsync();
                 return RedirectToAction("GetDataTable");
             }
+
             return View(model);
         }
 
@@ -96,15 +117,15 @@ namespace WebAppIDEEngine.Areas.App.Controllers
                 return View(m);
             }
 
-            var model =  _engineService.GetForEdit(id.Value);
+            var model = _engineService.GetForEdit(id.Value);
             await this.RenderFormAsync(model);
             if (model == null)
             {
                 return HttpNotFound();
             }
+
             return View(model);
         }
-
 
 
         // GET: App/Models/Delete/5
@@ -114,7 +135,7 @@ namespace WebAppIDEEngine.Areas.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(long id)
         {
-            var model =  _engineService.Delete(id);
+            var model = _engineService.Delete(id);
             await _engineService.EngineContext.SaveChangesAsync();
             return RedirectToAction("GetDataTable");
         }
@@ -139,20 +160,19 @@ namespace WebAppIDEEngine.Areas.App.Controllers
             Dictionary<string, MultiSelectAttribute> multiselects = _engineService.GetModelMultiSelectAttributes<T>();
             Dictionary<string, List<SelectListItem>> enums = _engineService.GetEnumsAttributes<T>(r);
 
-            Dictionary<string, List<IDropDownOption>> dropdownData = await _engineService.GetDropdownDataAsync(dropdowns, dropdownparam);
-            Dictionary<string, IQueryable<IDataTable> > dataTableData = await _engineService.GetDataTableDataAsync(datatables, _IDataTableParameter);
+            Dictionary<string, List<IDropDownOption>> dropdownData =
+                await _engineService.GetDropdownDataAsync(dropdowns, dropdownparam);
+            Dictionary<string, IQueryable<IDataTable>> dataTableData =
+                await _engineService.GetDataTableDataAsync(datatables, _IDataTableParameter);
             Dictionary<string, ITreeNode> treeData = await _engineService.GetTreeDataAsync(trees, _ITreeParameter);
-            Dictionary<string, List<IDropDownOption>> multiSelectData = await _engineService.GetMultiSelectDataAsync(multiselects, _IMultiSelectParameter);
+            Dictionary<string, List<IDropDownOption>> multiSelectData =
+                await _engineService.GetMultiSelectDataAsync(multiselects, _IMultiSelectParameter);
 
             _engineService.SetData(dropdownData.Keys.ToArray(), dropdownData.Values.ToArray(), ViewData);
             _engineService.SetData(dataTableData.Keys.ToArray(), datatables.Values.ToArray(), ViewData);
             _engineService.SetData(treeData.Keys.ToArray(), treeData.Values.ToArray(), ViewData);
             _engineService.SetData(multiSelectData.Keys.ToArray(), multiSelectData.Values.ToArray(), ViewData);
             _engineService.SetData(enums.Keys.ToArray(), enums.Values.ToArray(), ViewData);
-
-
-          
-
         }
 
         protected virtual IDataTableParameter GetDataTableParams(NameValueCollection parameters)
@@ -175,5 +195,4 @@ namespace WebAppIDEEngine.Areas.App.Controllers
             return null;
         }
     }
-
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Engine.Entities.Models.UiGeneratorModels;
 using Engine.Service.AbstractControllers;
 using WebAppIDEEngine.Models.Core;
 using WebAppIDEEngine.Models.ICore;
@@ -18,6 +19,7 @@ namespace Engine.Entities.Models.Core.AppGeneration
         public DefineControllerMethod()
         {
             TableMethods = new List<TableMethod>();
+            UiFormControllerMethods = new List<UiFormControllerMethod>();
         }
 
         /// <summary>
@@ -53,16 +55,17 @@ namespace Engine.Entities.Models.Core.AppGeneration
         [DropDown(Name = " متد سرویس",Service = GlobalNames.DefineServiceMethodService, MethodName = GlobalNames.GetDropDownAsync)]
         public  long ServiceMethodId { get; set; }
 
-        
+        public virtual ICollection<UiFormControllerMethod> UiFormControllerMethods { get; set; }
+
 /*
 
-        /// <summary>
-        /// مدل اصلی
-        /// </summary>
-        [DropDown(Name = " مدل اصلی", Service = GlobalNames.ModelService, MethodName = GlobalNames.GetDropDownAsync)]
-        public long ModelId { get; set; }
+                /// <summary>
+                /// مدل اصلی
+                /// </summary>
+                [DropDown(Name = " مدل اصلی", Service = GlobalNames.ModelService, MethodName = GlobalNames.GetDropDownAsync)]
+                public long ModelId { get; set; }
 
-        public Model Model { get; set; }*/
+                public Model Model { get; set; }*/
 
 
 
