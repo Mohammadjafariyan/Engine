@@ -13,6 +13,8 @@ namespace Engine.Entities.Models.UiGeneratorModels
     {
         [Text(Name = "نام")]
         public override string Name { get; set; }
+        [Text(Name = "ترجمه")]
+        public  string Translate { get; set; }
 
         [DropDown(Name = "متد کنترولر ", Service = GlobalNames.DefineControllerMethodServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         public long DefineControllerMethodId { get; set; }
@@ -21,5 +23,13 @@ namespace Engine.Entities.Models.UiGeneratorModels
         public long UiFormId { get; set; }
         public virtual UiForm UiForm { get; set; }
         public virtual DefineControllerMethod DefineControllerMethod { get; set; }
+
+        [Enum(Name = "نوع")]
+        public UiFormControllerMethodType Type { get; set; }
+    }
+
+    public enum UiFormControllerMethodType
+    {
+        Save,Search
     }
 }

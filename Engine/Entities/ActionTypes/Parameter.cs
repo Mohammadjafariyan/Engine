@@ -44,7 +44,7 @@ namespace ViewModel.ActionTypes
 
     public interface IModelPostParameter<T> : IActionParameter
     {
-        #region Save
+        #region GoToSave
         T Model { get; set; }
         long? Id { get; set; }
         #endregion
@@ -52,7 +52,7 @@ namespace ViewModel.ActionTypes
 
     public class ModelPostParameter<T> : IModelPostParameter<T>
     {
-        #region Save
+        #region GoToSave
         public T Model { get; set; }
         public long? Id { get; set; }
         #endregion

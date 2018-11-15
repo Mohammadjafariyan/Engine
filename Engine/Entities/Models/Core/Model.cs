@@ -15,8 +15,12 @@ namespace WebAppIDEEngine.Models.Core
 {
     public class Model : BaseEntity
     {
-        [Text(Name="نام")]
+        [Text(Name = "نام")]
         public override string Name { get; set; }
+
+        [Text(Name = "ترجمه")]
+        public  string Translate { get; set; }
+
         [Text(Name = "نام جدول")]
         public string TableName { get; set; }
 

@@ -235,6 +235,7 @@
     <Compile Include="Areas\AppGeneration\Controllers\DefineControllerMethodController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\DefineServiceController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\DefineServiceMethodController.cs" />
+    <Compile Include="Areas\AppGeneration\Controllers\AutoGenerationController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\ExportController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\SubSystemController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\TableMethodsController.cs" />
@@ -3654,6 +3655,9 @@
     <Content Include="Areas\AppGeneration\Views\UiTableForms\Delete.cshtml" />
     <Content Include="Areas\AppGeneration\Views\UiTableForms\ForEdit.cshtml" />
     <Content Include="Areas\AppGeneration\Views\UiTableForms\GetDataTable.cshtml" />
+    <Content Include="Areas\JUiEngine\Views\UiFormEngine\ShowForm.cshtml" />
+    <Content Include="Areas\AppGeneration\Views\AutoGeneration\GetDataTable.cshtml" />
+    <Content Include="Areas\AppGeneration\Views\AutoGeneration\Create.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

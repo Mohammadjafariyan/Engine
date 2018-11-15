@@ -3,21 +3,21 @@
 
 namespace Engine.Areas.AppGeneration
 {
-        public class LibraryAreaRegistration : AreaRegistration 
+        public class libraryAreaRegistration : AreaRegistration 
     {
         public override string AreaName 
         {
             get 
             {
-                return "Library ";
+                return "library ";
             }
         }
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
             context.MapRoute(
-              "  Library_default ",
-            "    Library/{controller}/{action}/{id} ",
+              "  library_default ",
+            "    library/{controller}/{action}/{id} ",
                 new { action =" Index ", id = UrlParameter.Optional }
             );
         }

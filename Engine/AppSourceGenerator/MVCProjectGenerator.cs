@@ -27,8 +27,8 @@ namespace AppSourceGenerator
                 CreateRegistrationClass(subSystem.Name, Path + "\\Areas\\" + subSystem.Name);
             }
         }
-        
-        
+
+
         public void MakeApiControllers(List<DefineController> controllers)
         {
             foreach (var controller in controllers)
@@ -48,19 +48,41 @@ namespace AppSourceGenerator
                     controller.Name = controller.Name.Substring(0,
                         start);
                 }
-                controller.Name +="ApiController";
+
+                controller.Name += "ApiController";
 
                 CreateClass(controller.Name, Path + areaPath + "\\", ".cs"
                     , MVCUtility.GetControllerContent(controller: controller, translate: controller.Name,
                         serviceName: controller.Name,
-                        baseClassName:"ApiController",
+                        baseClassName: "ApiController",
                         baseInterfaces: null,
                         serviceContent: controllerContent,
                         description: controller.Name,
                         genericModel: null,
                         subSystemName: controller.SubSystem.Name,
-                        isMVC:false));
+                        isMVC: false));
             }
+        }
+
+        public void RegisterServices(List<DefineService> services,string serviceBase)
+        {
+            string serviceContent = "";
+            string serviceGlobalNames = "";
+            foreach (var service in services)
+            {
+                var serviceAreaPath = "\\Registery\\" + service.SubSystem.Name;
+                CreateIsNotExist(Path + serviceAreaPath);
+
+                serviceContent += MVCUtility.GetRegisterService(service, serviceBase);
+                serviceGlobalNames+= MVCUtility.GetGlobalName(service, serviceBase);
+            }
+
+            CreateClass("ServiceRegistery", Path + "Registery" + "\\", ".cs"
+                , MVCUtility.GetRegieryContent(baseClassName: "Registry",
+                    serviceContent: serviceContent));
+
+            CreateClass("ServiceGlobalNames", Path + "Global" + "\\", ".cs"
+                , MVCUtility.GetGlobalNamesContent(serviceGlobalNames: serviceGlobalNames));
         }
 
         public void MakeControllers(List<DefineController> controllers)
@@ -76,11 +98,11 @@ namespace AppSourceGenerator
                     controllerContent += CreateControllerMethod(controllerMethod);
                 }
 
-                
-                controller.Name +="Controller";
+
+                controller.Name += "Controller";
                 CreateClass(controller.Name, Path + areaPath + "\\", ".cs"
                     , MVCUtility.GetControllerContent(controller: controller, translate: controller.Name,
-                        serviceName:controller.Name ,
+                        serviceName: controller.Name,
                         baseClassName: "Controller",
                         baseInterfaces: null,
                         serviceContent: controllerContent,

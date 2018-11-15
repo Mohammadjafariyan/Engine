@@ -48,6 +48,10 @@ namespace Engine.Entities.Models.Core.AppGeneration
         [DropDown(Name = " مدل اصلی", Service = GlobalNames.ModelService, MethodName = GlobalNames.GetDropDownAsync)]
         public long ModelId { get; set; }
 
+
+        [Checkbox(Name = "آیا از نوع فریمورک سیستمی است")]
+        public bool IsSystemFramework { get; set; }
+
         public virtual Model Model { get; set; }
 
         public virtual ICollection<DefineControllerMethod> DefineControllerMethods { get; set; }

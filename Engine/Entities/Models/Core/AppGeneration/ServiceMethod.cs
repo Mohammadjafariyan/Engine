@@ -70,5 +70,8 @@ namespace Engine.Entities.Models.Core.AppGeneration
         public virtual Query Query { get; set; }
         
         public virtual ICollection<DefineControllerMethod> DefineControllerMethods { get; set; }
+
+        [Enum(Name="ترجمه")]
+        public MethodType MethodType { get; set; }
     }
 }

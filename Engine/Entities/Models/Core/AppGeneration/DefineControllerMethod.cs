@@ -53,7 +53,7 @@ namespace Engine.Entities.Models.Core.AppGeneration
         /// متد سرویس
         /// </summary>
         [DropDown(Name = " متد سرویس",Service = GlobalNames.DefineServiceMethodService, MethodName = GlobalNames.GetDropDownAsync)]
-        public  long ServiceMethodId { get; set; }
+        public  long? ServiceMethodId { get; set; }
 
         public virtual ICollection<UiFormControllerMethod> UiFormControllerMethods { get; set; }
 
@@ -72,5 +72,15 @@ namespace Engine.Entities.Models.Core.AppGeneration
         public virtual DefineController DefineController { get; set; }
         public virtual ServiceMethod ServiceMethod { get; set; }
         public ICollection<TableMethod> TableMethods { get; set; }
+
+        [Enum(Name = "نوع ثابت سیستم")]
+        public MethodType MethodType { get; set; }
+    }
+
+
+    public enum MethodType
+    {
+        Save,Delete,GetForEdit, GetDataTable,Details, GetDropDown, GetDataTableDataAsync,
+        GetTreeDataAsync, GetMultiSelectDataAsync
     }
 }

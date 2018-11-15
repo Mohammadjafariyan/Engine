@@ -1,0 +1,157 @@
+﻿@using WebAppIDEEngine.Models.Core
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+
+@model dynamic /*<Engine.Entities.Models.Core.AppGeneration.SubSystem>*/
+@{
+    ViewBag.Title = "کنترولر ها";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    IQueryable<dynamic> records = null;
+    if (Model != null)
+    {
+        records = Model.Records;
+    }
+}
+
+
+@if (ViewBag.alertmsg != null)
+{
+    <div class="alert alert-danger alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>خطا!</strong> @ViewBag.alertmsg
+    </div>
+}
+
+@if (ViewBag.successmsg != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>توجه!</strong> @ViewBag.alertmsg
+    </div>
+}
+
+
+<div class="row">
+@using (Html.BeginForm("Export", "Export", FormMethod.Post, htmlAttributes: new
+{
+    area = "appGeneration", @class = "form-inline"  ,
+    onsubmit="return submitValidate()" 
+}))
+{
+    <div class="form-group ">
+        <label for="sel1">مسیر:</label>
+        @*<input name="filepathSelector" type="file" id="filepathSelector" onchange="getfolder(event)" webkitdirectory mozdirectory msdirectory odirectory directory />*@
+        <input name="filepath" id="filepath" type="text" />
+    </div>
+    <div class="form-group ">
+        <label for="sel1">نوع:</label>
+        <select class="form-control" name="type">
+            <option value="1">حذف و ایجاد</option>
+            <option value="2">آپدیت</option>
+        </select>
+    </div>
+    <div class="form-group ">
+        <input name="subsystemId" id="subsystemId" type="hidden"/>
+        <button  type="submit" class="btn btn-primary">ایجاد خروجی</button>
+        @*<button  type="button" onclick="submitValidate()" class="btn btn-primary">validate</button>*@
+    </div>
+    <hr />
+    <div id="msgs">
+        
+    </div>
+}
+<script type="text/javascript">
+    function getfolder(e) {
+        debugger;
+        var files = e.target.files;
+        var path = files[0].webkitRelativePath;
+        var Folder = path.split("/");
+
+        Folder.pop();
+        var last=Folder.join('//');
+        
+        $('#filepath').val(last);
+        $("#msgs").html("<div class='alert alert-success' id='pathshower'>"+last+"</div>");
+    }
+    
+    
+    function submitValidate(el, event) {
+        var subsystemId=$('#subsystemId').val();
+        var filepath=$('#filepath').val();
+        if (!filepath || !subsystemId) {
+            alert('پارامتر ها خالی است');
+            return false;
+        }
+        $("#msgs").html("<div class='alert alert-success'>بدون خطا</div>");
+
+    }
+
+
+    function subsystemChoose(el, id) {
+        if (!id) {
+            alert('id is null');
+        }
+
+        $('#subsystemId').val(id);
+    }
+</script>
+</div>
+<hr></hr>
+<table class="table">
+    <tr>
+        <th>
+            نام زیر سیستم
+        </th>
+        <th>
+            ترجمه
+        </th>
+        <th>
+            نصب شده
+        </th>
+        <th>
+            آخرین آپدیت
+        </th>
+        <th >
+            تولید خروجی
+        </th>
+    </tr>
+
+
+    @{
+        System.Diagnostics.Debug.Assert(records != null, nameof(records) + " != null");
+    }
+    @if (records != null)
+    {
+        foreach (var item in records)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Translate
+                </td>
+                <td>
+                    @item.IsInstalled
+                </td>
+
+                <td>
+                    @item.lastUpdate
+                </td>
+                <td >
+                    <input type="radio" name="subsystemChoose"
+                           onchange="subsystemChoose(this, '@item.Id')">
+                </td>
+            </tr>
+        }
+    }
+   
+
+</table>

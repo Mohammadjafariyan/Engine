@@ -13,7 +13,7 @@ namespace WebAppIDEEngine.Models.UiGeneratorModels
     {
         public EjTable()
         {
-            UiFormItems = new List<UiFormItem>();
+            UiTableItems = new List<UiTableItem>();
             TableMethods = new List<TableMethod>();
             UiTableForms = new List<UiTableForm>();
         }
@@ -29,7 +29,7 @@ namespace WebAppIDEEngine.Models.UiGeneratorModels
 
 
 
-        public virtual ICollection<UiFormItem> UiFormItems { get; set; }
+        public virtual ICollection<UiTableItem> UiTableItems { get; set; }
 
     }
 }

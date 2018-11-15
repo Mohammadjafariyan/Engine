@@ -26,6 +26,7 @@ namespace TestProjectAppGeneratorSource
             g.MakeSubsystems(fakeDataProvider.SubSystems);
             g.MakeControllers(fakeDataProvider.Controllers);
             g.MakeServices(fakeDataProvider.Services);
+            g.RegisterServices(fakeDataProvider.Services, "IBaseEngineService");
             g.MakeModels(fakeDataProvider.Models);
             g.MakeApiControllers(fakeDataProvider.Controllers);
 

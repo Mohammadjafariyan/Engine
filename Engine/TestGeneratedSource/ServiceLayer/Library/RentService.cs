@@ -7,10 +7,10 @@ using ServiceLayer.Systems;
 namespace ServiceLayer.library
 {
 /// <summary>
-    /// BookService
-    /// BookService
+    /// RentService
+    /// RentService
     /// </summary>
-    public class BookService :CommonService<Book>
+    public class RentService :CommonService<Rent>
     { public IQueryable<> GetAll(long @Id) {var dt=EngineContext.Database.SqlQuery<>(" DECLARE @Id bigintFalse;
 
   DECLARE   @Id bigint;    

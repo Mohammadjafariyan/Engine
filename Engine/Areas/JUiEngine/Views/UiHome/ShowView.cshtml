@@ -13,7 +13,13 @@
     ViewData[UiFormEngineController.ItemsPartialFormId] = Model.Id.ToString();
     ViewData[UiFormEngineController.UpdateIdafterpost] = "Rootdt_" + Model.Id.ToString();
     var uiForm = ViewData[UiHomeController.Form] as UiForm;
+    var uiTableItems = ViewData[UiHomeController.UiTableItems] as List<UiTableItem>;
+
+    var PostSubsystemUrl = ViewData[UiFormEngineController.PostSubsystemUrl] as string;
+    var PostActionUrl = ViewData[UiFormEngineController.PostActionUrl] as string;
+    var PostControllerUrl = ViewData[UiFormEngineController.PostControllerUrl] as string;
 }
+
 
 @if (uiForm != null)
 {
@@ -24,14 +30,51 @@
         <div class="panel-heading">فیلتر اطلاعات</div>
         <div class="panel-body">
             <div class="row" style="direction: rtl">
-                @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowView.cshtml", uiForm)
-
+                @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowForm.cshtml", uiForm)
             </div>
         </div>
     </div>
 }
 <div class="panel panel-default">
-    <div class="panel-heading">اطلاعات</div>
+    <div class="panel-heading">
+        
+        
+        
+        @if (uiTableItems != null && uiTableItems.Count > 0)
+        {
+            <div class="btn-group-vertical">
+
+                @foreach (var item in uiTableItems)
+                {
+                    var icon = item.UiItem.Icon;
+                    var name = item.UiItem.Name;
+                    var url = "";
+                    if (item.UiItem.UiItemType == UiItemType.GoToSave)
+                    {
+                        url = $@"/{PostSubsystemUrl}/{PostControllerUrl}/ForEdit";
+                        url = $@"openSaveLink('{url}')";
+                    }
+                    if (item.UiItem.UiItemType == UiItemType.Form)
+                    {
+                        url = $@"/JUiEngine/UiFormEngine/showView?formName={item.UiItem.FormName}";
+                        url = $@"openFormLink('{url}')";
+                    }
+                    if (item.UiItem.UiItemType == UiItemType.Delete)
+                    {
+                        url = $@"/{PostSubsystemUrl}/{PostControllerUrl}/Delete";
+                        url = $@"Delete('{url}')";
+                    }
+
+                    <button onclick="@url" class="btn btn-primary">
+                        <span class="@icon"></span> @name</button>
+                }
+
+
+            </div>
+        }
+        <span style="float: left"> اطلاعات</span>
+
+    </div>
     <div class="panel-body">
 
         <div id="Rootdt_@Model.Id.ToString()">
@@ -56,12 +99,37 @@
                     }];
 
     function onSearchAjaxComplete(response, tableId) {
-       // $('#table_@Html.Raw(ejTableObject.Id)').empty();
+        // $('#table_@Html.Raw(ejTableObject.Id)').empty();
         table.destroy();
         console.log(response, tableId);
 
         MakeDataTable('#table_@Html.Raw(ejTableObject.Id)', headers, response.RecordsList);
 
+
+    }
+
+    function Delete() {
+        AddIdAndSend(url);
+    }
+
+
+    function AddIdAndSend(url) {
+        var row = table.rows({ selected: true }).data()[0];
+        
+        if (!row[0]) {
+            alert('هیچ رکوردی انتخاب نشده است');
+            return;
+        }
+        url += "?id=" + row[0];
+        window.open(url, "_self");
+    }
+
+    function openFormLink(url) {
+        AddIdAndSend(url);
+    }
+
+    function openSaveLink(url) {
+        AddIdAndSend(url);
 
     }
 </script>

@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Engine.Entities.Models.UiGeneratorModels;
 using ViewModel.ActionTypes;
 using WebAppIDEEngine.Models;
 
@@ -15,6 +16,7 @@ namespace Engine.Areas.JUiEngine.Controllers
         public static readonly string ActionURL = "ActionURL";
         public static readonly string ApiActionURL = "ApiActionURL";
         public static readonly string Form = "Form";
+        public static readonly string UiTableItems = "uiTableItems";
 
         // GET
         public ActionResult ShowView(string tableName)
@@ -32,7 +34,8 @@ namespace Engine.Areas.JUiEngine.Controllers
 
                 var searchForm = table.UiTableForms.FirstOrDefault();
                 if (searchForm != null)
-                    _uiFormprovider.GetForm(searchForm.Name, ViewData);
+                    _uiFormprovider.GetForm(searchForm.Name, ViewData, isTableForm: true,
+                        postType: UiFormControllerMethodType.Search);
 
                 var methodId = table.TableMethods.Select(t => t.DefineControllerMethodId).First();
 
@@ -54,7 +57,7 @@ namespace Engine.Areas.JUiEngine.Controllers
                                       $@"{SubSystemName}/{ControllerName}/{ControllerMethod}" + Request.Url.Query;
                 ViewData[TableObject] = table;
                 ViewData[DataTable] = debatable;
-
+                ViewData[UiTableItems] = table.UiTableItems;
 
                 return View(table);
             }

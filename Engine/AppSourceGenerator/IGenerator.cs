@@ -12,6 +12,7 @@ namespace AppSourceGenerator
         void MakeServices(List<DefineService> services);
         void MakeModels(List<Model> models);
         void MakeApiControllers(List<DefineController> controllers);
+        void RegisterServices(List<DefineService> services,string serviceInterface);
     }
     
     

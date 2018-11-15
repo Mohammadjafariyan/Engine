@@ -19,10 +19,10 @@
 <h3> اپلیکیشن ساز (App Generator)</h3>
 <div class="btn-group-vertical">
     @Html.ActionLink("مدیریت زیر سیستم ها", "GetDataTable", "SubSystem", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+     @Html.ActionLink("مدیریت  سرویس ها", "GetDataTable", "DefineService", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("مدیریت متد سرویس ها", "GetDataTable", "DefineServiceMethod", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
     @Html.ActionLink("مدیریت کنترولر ها", "GetDataTable", "DefineController", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
     @Html.ActionLink("مدیریت متد کنترولر ها", "GetDataTable", "DefineControllerMethod", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("مدیریت  سرویس ها", "GetDataTable", "DefineService", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("مدیریت متد سرویس ها", "GetDataTable", "DefineServiceMethod", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
     @Html.ActionLink("تولید خروجی", "GetDataTable", "Export", new {Area = "AppGeneration"}, new {@class = "btn btn-info"})
 </div>
 
@@ -39,8 +39,8 @@
     @Html.ActionLink("اتصال متد به فرم", "GetDataTable", "UiFormMethod", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
     <hr />
     @Html.ActionLink("تعریف آیتم ها", "GetDataTable", "UiItems", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("اتصال آیتم به جداول", "GetDataTable", "UiFormItems", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("اتصال آیتم به فرم ها", "GetDataTable", "UiTableItems", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
+    @Html.ActionLink("اتصال آیتم به جداول", "GetDataTable", "UiTableItems", new { Area = "AppGeneration" }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("اتصال آیتم به فرم ها", "GetDataTable", "UiFormItems", new {Area = "AppGeneration"}, new {@class = "btn btn-primary"})
 
 </div>
 

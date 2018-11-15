@@ -10,7 +10,7 @@
 @using System.Web.Mvc.Html;
 @using System.Web.Routing
 @using Engine.Service.AbstractControllers
-
+@using System.Linq
 
 
 
@@ -19,47 +19,54 @@
 @helper DataTable(IDataTable datatableTmp, ViewDataDictionary ViewData, System.Web.Mvc.HtmlHelper _html
     , string TableId, ViewContext ViewContext, bool showToolsButtons = true)
 {
-    dynamic datatable = null;
+dynamic datatable = null;
 
-    if (datatableTmp is BaseDataTable<dynamic>)
+if (datatableTmp is BaseDataTable<dynamic>)
+{
+    datatable = datatableTmp as BaseDataTable<dynamic>;
+}
+else if (datatableTmp is IModelDataTable)
+{
+    datatable = datatableTmp as IModelDataTable;
+}
+else if (datatableTmp is ObjectDataTable<IModel>)
+{
+    datatable = datatableTmp as ObjectDataTable<IModel>;
+}
+else
+{
+    datatable = datatableTmp as dynamic;
+}/*
+if ((datatable is IDataTable))
+{
+    if(datatable.Records!=null && datatable.RecordsList == null)
     {
-        datatable = datatableTmp as BaseDataTable<dynamic>;
+        datatable.RecordsList= datatable.Records.ToList();
     }
-    else if (datatableTmp is IModelDataTable)
-    {
-        datatable = datatableTmp as IModelDataTable;
-    }
-    else if (datatableTmp is ObjectDataTable<IModel>)
-    {
-        datatable = datatableTmp as ObjectDataTable<IModel>;
-    }
-    else
-    {
-        datatable = datatableTmp as dynamic;
-    }
-
-
-    if (!(datatable is IDataTable) || datatable == null || datatable.Headers == null || datatable.RecordsList == null)
-    {
-        throw new Exception("مدلها نال است");
-    }
-
-
-    var headers = datatable.Headers;
-    var RecordsList = datatable.RecordsList;
-    var currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+}*/
 
 
-    object rec = null;
-    if (RecordsList.Count > 0)
-    {
-        rec = RecordsList[0];
-    }
-    System.Reflection.PropertyInfo[] props = null;
-    if (rec != null)
-    {
-        props = rec.GetType().GetProperties().Where(p => !(p is HiddenColumnAttribute)).ToArray();
-    }
+if (!(datatable is IDataTable) || datatable == null || datatable.Headers == null || datatable.RecordsList == null)
+{
+    throw new Exception("مدلها نال است");
+}
+
+
+var headers = datatable.Headers;
+var RecordsList = datatable.RecordsList;
+var currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+
+
+object rec = null;
+if (RecordsList.Count > 0)
+{
+    rec = RecordsList[0];
+}
+System.Reflection.PropertyInfo[] props = null;
+if (rec != null)
+{
+    props = rec.GetType().GetProperties().Where(p => !(p is HiddenColumnAttribute)).ToArray();
+}
 
 
 @*<form class="form-control">

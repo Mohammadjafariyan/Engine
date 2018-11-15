@@ -144,7 +144,7 @@ namespace WebAppIDEEngine.Models
 */
 
 
-            modelBuilder.Entity<DefineControllerMethod>().HasRequired(f => f.ServiceMethod)
+            modelBuilder.Entity<DefineControllerMethod>().HasOptional(f => f.ServiceMethod)
                 .WithMany(f => f.DefineControllerMethods)
                 .HasForeignKey(f => f.ServiceMethodId).WillCascadeOnDelete(false);
 
@@ -199,6 +199,11 @@ namespace WebAppIDEEngine.Models
             modelBuilder.Entity<UiTableItem>().HasRequired(f => f.UiItem)
                 .WithMany(f => f.UiTableItems)
                 .HasForeignKey(f => f.UiItemId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<UiTableItem>().HasRequired(f => f.EjTable)
+                .WithMany(f => f.UiTableItems)
+                .HasForeignKey(f => f.EjTableId).WillCascadeOnDelete(false);
 
 
             modelBuilder.Entity<UiTableForm>().HasRequired(f => f.UiForm)

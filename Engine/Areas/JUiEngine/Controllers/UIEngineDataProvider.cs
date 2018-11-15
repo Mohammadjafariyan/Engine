@@ -21,7 +21,9 @@ namespace Engine.Areas.JUiEngine.Controllers
         {
             using (var db = new EngineContext())
             {
-                var table = db.Tables.Include("TableMethods").Include("UiTableForms").Include("UiFormItems")
+                var table = db.Tables.Include("TableMethods")
+                    .Include("UiTableForms")
+                    .Include("UiTableItems").Include("UiTableItems.UiItem")
                     .FirstOrDefault(t => t.Name.ToLower().TrimEnd() == tableName);
                 if (table == null)
                     throw new UiEngineException("جدول یافت نشد");
@@ -43,6 +45,7 @@ namespace Engine.Areas.JUiEngine.Controllers
                 method = db.DefineControllerMethodes.Find(methodId);
                 if (method == null)
                     throw new UiEngineException("جدول یافت نشد");
+
                 serviceName = method.ServiceMethod.DefineService.Name;
                 queryAddParameterFields =
                     method.ServiceMethod.Query.addParameterFields.ToList();

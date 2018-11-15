@@ -113,7 +113,9 @@ namespace ServiceLayer." + subSystemName + @"
             var itemType = GetDetermineReturnItemType(serviceMethodServiceReturnMethodType, serviceMethodQuery);
 
             var s1 = $@"public {returnType} {serviceMethodName}({inputParameters}) " + "{" +
-                     $@"var dt={context}.Database.SqlQuery<{itemType}>("" {SqlinputParameters+"\n"}  {serviceMethodQuery.SQL}"");";
+                     $@"var dt={context}.Database.SqlQuery<{itemType}>("" {SqlinputParameters + "\n"}  {
+                             serviceMethodQuery.SQL
+                         }"");";
             switch (serviceMethodServiceItemReturnType)
             {
                 case ServiceItemReturnType.List:
@@ -159,8 +161,7 @@ namespace ServiceLayer." + subSystemName + @"
             {
                 var addParameterField = serviceMethodQuery.addParameterFields.ElementAt(i);
                 var type = addParameterField.typeInSQL.ToString();
-                paramerters += $@"DECLARE {addParameterField.nameInSQL} {type}{addParameterField.range};"+"\n";
-
+                paramerters += $@"DECLARE {addParameterField.nameInSQL} {type}{addParameterField.range};" + "\n";
             }
 
             return paramerters;
@@ -197,7 +198,8 @@ namespace ServiceLayer." + subSystemName + @"
                     returnType = "dynamic";
                     break;
                 case ServiceReturnMethodType.Model:
-                    returnType = serviceMethodQuery.models.Where(m=>m.IsMainTable).Select(m=>m.Name).FirstOrDefault();
+                    returnType = serviceMethodQuery.models.Where(m => m.IsMainTable).Select(m => m.Name)
+                        .FirstOrDefault();
                     break;
                 case ServiceReturnMethodType.INT:
                     returnType = "int";
@@ -274,7 +276,9 @@ public ActionResult {controllerMethod.Name}({inputParameters}) " + "{";
 try{
 ";
             s1 +=
-                $@"var res=_{controllerMethod.ServiceMethod.DefineService.Name.ToLower()}.{controllerMethod.ServiceMethod.Name}();";
+                $@"var res=_{controllerMethod.ServiceMethod.DefineService.Name.ToLower()}.{
+                        controllerMethod.ServiceMethod.Name
+                    }();";
 
             s1 += @"
           return Json(res,JsonRequestBehavior.AllowGet);
@@ -459,7 +463,9 @@ try{
 
 ";
             s1 +=
-                $@"var res=_{controllerMethod.ServiceMethod.DefineService.Name.ToLower()}.{controllerMethod.ServiceMethod.Name}();";
+                $@"var res=_{controllerMethod.ServiceMethod.DefineService.Name.ToLower()}.{
+                        controllerMethod.ServiceMethod.Name
+                    }();";
 
             s1 += @"
       return res;
@@ -470,6 +476,57 @@ try{
         }";
             s1 += "}}";
             return s1;
+        }
+
+        public static string GetRegisterService(DefineService service, string Interface)
+        {
+            return $@"For<{Interface}>().Add<{service.Name}>().Named(ServiceGlobalNames.{service.Name}Name);" + "\n";
+        }
+
+        public static string GetRegieryContent(string baseClassName, string serviceContent)
+        {
+            return $@"using Engine.Service.AbstractControllers;
+using ServiceLayer.Base;
+using ServiceLayer.Systems;
+using StructureMap;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using ServiceLayer.Systems.Library;
+{string.Join(";", ServiceUsigs)};
+using GlobalNames;
+
+namespace Engine.Utitliy
+{{
+    public class ServiceRegistry : {baseClassName}
+    {{
+        public ServiceRegistry()
+        {{
+            {serviceContent}
+        }}
+    }}
+}}";
+        }
+
+        public static string GetGlobalName(DefineService service, string serviceBase)
+        {
+            return $@"public const string {service.Name}Name = ""{service.Name}"";";
+        }
+
+        public static string GetGlobalNamesContent(string serviceGlobalNames)
+        {
+            return $@"using System;
+                using ServiceLayer.Systems;
+
+                namespace GlobalNames
+                {{
+                        public class ServiceGlobalNames
+                        {{   
+                              {serviceGlobalNames}
+                        }}
+
+                }}";
         }
     }
 }
