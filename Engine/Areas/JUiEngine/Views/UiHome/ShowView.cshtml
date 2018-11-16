@@ -72,13 +72,13 @@
 
             </div>
         }
-        <span style="float: left"> اطلاعات</span>
+        <span > اطلاعات</span>
 
     </div>
     <div class="panel-body">
 
         <div id="Rootdt_@Model.Id.ToString()">
-            @Html.Partial("TablePartial")
+            @Html.Partial("~/Areas/JUiEngine/Views/Shared/TablePartial.cshtml")
         </div>
     </div>
 </div>
@@ -116,11 +116,9 @@
     function AddIdAndSend(url) {
         var row = table.rows({ selected: true }).data()[0];
         
-        if (!row[0]) {
-            alert('هیچ رکوردی انتخاب نشده است');
-            return;
+        if (row && row[0]) {
+            url += "?id=" + row[0];
         }
-        url += "?id=" + row[0];
         window.open(url, "_self");
     }
 

@@ -141,7 +141,18 @@ namespace ServiceLayer." + subSystemName + @"
                     break;
             }
 
-            s1 += "return res; \n }";
+            s1 += $@" 
+            var count = res.Count();
+
+            return new DynaDataTable
+            {{
+                Total = count,
+                Filtered = count,
+                Headers = GetPropertyNames<Book>(),
+                RecordsList = l.Cast<dynamic>().ToList()
+            }};
+";
+            s1 += "\n }";
 
 
             string viewModel = "";
@@ -311,7 +322,10 @@ try{
             var fields = controller.DefineControllerMethods.Select(m => m.ServiceMethod.DefineService).Distinct();
             var fieldsStr = "";
 
-            var constructure = $@"public {controller.Name}(";
+            var constructure = $@"public {controller.Name}(
+      DefaultSaveName = ""{controller.Name}Save"";
+            DefaultDataTableName = ""{controller.Name}DataTable"";
+            ";
 
             var defineServices = fields as DefineService[] ?? fields.ToArray();
 

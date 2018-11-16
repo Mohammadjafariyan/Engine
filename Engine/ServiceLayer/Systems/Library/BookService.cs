@@ -18,6 +18,8 @@ namespace ServiceLayer.Systems.Library
             var res = dt.AsQueryable();
             var l = res.ToList();
 
+            
+
             var count=  _entities.Count();
 
             return new DynaDataTable

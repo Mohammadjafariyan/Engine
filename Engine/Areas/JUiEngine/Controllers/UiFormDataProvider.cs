@@ -7,7 +7,13 @@ using WebAppIDEEngine.Models;
 
 namespace Engine.Areas.JUiEngine.Controllers
 {
-    public class UiFormDataProvider
+    public interface IUiFormDataProvider
+    {
+        UiForm GetForm(string formName, ViewDataDictionary ViewData, bool isTableForm,
+            UiFormControllerMethodType postType);
+    }
+
+    public class UiFormDataProvider : IUiFormDataProvider
     {
         public UiForm GetForm(string formName, ViewDataDictionary ViewData, bool isTableForm,
             UiFormControllerMethodType postType)
@@ -18,12 +24,12 @@ namespace Engine.Areas.JUiEngine.Controllers
                 UiForm form = null;
                 if (isTableForm)
                 {
-                    form = db.UiTableForms.Where(u => u.Name == formName).
+                    form = db.UiTableForms.Where(u => u.Name.ToLower().TrimEnd() == formName).
                         Select(u => u.UiForm).FirstOrDefault();
                 }
                 else
                 {
-                    form=db.UiForms.Where(u => u.Name == formName).FirstOrDefault();
+                    form=db.UiForms.Where(u => u.Name.ToLower().TrimEnd() == formName).FirstOrDefault();
                 }
                 if (form == null)
                     throw new Exception("فرم یافت نشد");

@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 using Engine.Entities.Models.Core.AppGeneration;
+using Engine.Entities.Models.UiGeneratorModels;
 using Engine.Service.AbstractControllers;
 using Engine.Utitliy;
 using ViewModel.ActionTypes;
@@ -13,21 +16,81 @@ using WebAppIDEEngine.Models.UiGeneratorModels;
 
 namespace Engine.Areas.JUiEngine.Controllers
 {
-    public class UiEngineDataProvider
+    public interface IUiEngineDataProvider
+    {
+        EjTable GetTable(string tableName,
+            ViewDataDictionary ViewData, HttpRequestBase Request, string SubSystemName, string ControllerName,
+            string ControllerMethod,
+            string ServiceMethodName, IDataTable debatable = null);
+    }
+
+    public class UiEngineDataProvider : IUiEngineDataProvider
     {
         private Injector _injector = new Injector();
+        private UiFormDataProvider _uiFormprovider = new UiFormDataProvider();
 
-        public EjTable GetTable(string tableName)
+        public EjTable GetTable(string tableName,
+            ViewDataDictionary ViewData, HttpRequestBase Request, string SubSystemName, string ControllerName,
+            string ControllerMethod,
+            string ServiceMethodName, IDataTable debatable = null)
         {
-            using (var db = new EngineContext())
+            try
             {
-                var table = db.Tables.Include("TableMethods")
-                    .Include("UiTableForms")
-                    .Include("UiTableItems").Include("UiTableItems.UiItem")
-                    .FirstOrDefault(t => t.Name.ToLower().TrimEnd() == tableName);
-                if (table == null)
-                    throw new UiEngineException("جدول یافت نشد");
-                return table;
+                if (string.IsNullOrEmpty(tableName))
+                {
+                    throw new Exception("tableName is null");
+                }
+
+                tableName = tableName.ToLower().TrimEnd();
+
+
+                using (var db = new EngineContext())
+                {
+                    var table = db.Tables.Include("TableMethods")
+                        .Include("UiTableForms")
+                        .Include("UiTableItems").Include("UiTableItems.UiItem")
+                        .FirstOrDefault(t => t.Name.ToLower().TrimEnd() == tableName);
+                    if (table == null)
+                        throw new UiEngineException("جدول یافت نشد");
+
+
+                    var searchForm = table.UiTableForms.FirstOrDefault();
+                    if (searchForm != null)
+                        _uiFormprovider.GetForm(searchForm.Name, ViewData, isTableForm: true,
+                            postType: UiFormControllerMethodType.Search);
+
+
+
+                    if (debatable == null)
+                    {
+                        var methodId = table.TableMethods.Select(t => t.DefineControllerMethodId).First();
+
+                        debatable = CallServiceMethod(methodId, Request.Form, Request.Params,
+                            out SubSystemName, out ControllerName, out ControllerMethod
+                            , out ServiceMethodName);
+                    }
+
+
+                    ControllerName = ControllerName.Replace("Controller", "");
+
+                    ViewData[UiHomeController.ApiActionURL] = Request.ApplicationPath +
+                                                              $@"{SubSystemName}/api/{ControllerName}/{
+                                                                      ControllerMethod
+                                                                  }" +
+                                                              Request.Url.Query;
+                    ViewData[UiHomeController.ActionURL] = Request.ApplicationPath +
+                                                           $@"{SubSystemName}/{ControllerName}/{ControllerMethod}" +
+                                                           Request.Url.Query;
+                    ViewData[UiHomeController.TableObject] = table;
+                    ViewData[UiHomeController.DataTable] = debatable;
+                    ViewData[UiHomeController.UiTableItems] = table.UiTableItems;
+
+                    return table;
+                }
+            }
+            catch (UiEngineException e)
+            {
+                throw e;
             }
         }
 
@@ -68,9 +131,9 @@ namespace Engine.Areas.JUiEngine.Controllers
                 var val = formInput ?? queryParam;
                 int n;
 
-                var parsedVal = DetermineTypeAndGetValue(val,field);
+                var parsedVal = DetermineTypeAndGetValue(val, field);
 
-                field.Value =parsedVal;
+                field.Value = parsedVal;
             }
 
 
@@ -94,7 +157,7 @@ namespace Engine.Areas.JUiEngine.Controllers
             var isparsed = false;
             if (string.IsNullOrEmpty(val))
                 return val;
-            
+
             switch (field.typeInModel)
             {
                 case PropertyType.Boolean:
@@ -143,7 +206,7 @@ namespace Engine.Areas.JUiEngine.Controllers
                     o = d9;
                     break;
                 case PropertyType.String:
-                    o=val;
+                    o = val;
                     break;
                 case PropertyType.ByteArray:
                     throw new NotImplementedException();
@@ -153,22 +216,23 @@ namespace Engine.Areas.JUiEngine.Controllers
                     isparsed = TimeSpan.TryParse(val, out d10);
                     o = d10;
                     break;
-                
+
                 case PropertyType.DateTime:
                     DateTime d11;
                     isparsed = DateTime.TryParse(val, out d11);
                     o = d11;
                     break;
-                
+
                 case PropertyType.Long:
                     long d12;
                     isparsed = long.TryParse(val, out d12);
                     o = d12;
                     break;
             }
+
             if (!isparsed)
             {
-                throw new Exception("isparesed is false "+field.nameInMethod);
+                throw new Exception("isparesed is false " + field.nameInMethod);
             }
 
             return o;
@@ -184,12 +248,13 @@ namespace Engine.Areas.JUiEngine.Controllers
             if (methodInfo == null)
                 throw new Exception("method is not found ");
 
-            var res= methodInfo.Invoke(service, prameters);
+            var res = methodInfo.Invoke(service, prameters);
             if (!(res is IDataTable))
             {
                 throw new Exception("خروجی متد باید از نوع IDataTable باشد");
             }
-            return res ;
+
+            return res;
         }
     }
 

@@ -273,6 +273,7 @@
     <Compile Include="Code\EngineView.cs" />
     <Compile Include="Code\Injector.cs" />
     <Compile Include="Controllers\AbstractControllers\ApiController.cs" />
+    <Compile Include="Controllers\AbstractControllers\EBaseAppController.cs" />
     <Compile Include="Controllers\AbstractControllers\BaseEngineController.cs" />
     <Compile Include="Controllers\AbstractControllers\AppController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -3658,6 +3659,10 @@
     <Content Include="Areas\JUiEngine\Views\UiFormEngine\ShowForm.cshtml" />
     <Content Include="Areas\AppGeneration\Views\AutoGeneration\GetDataTable.cshtml" />
     <Content Include="Areas\AppGeneration\Views\AutoGeneration\Create.cshtml" />
+    <Content Include="Areas\Library\Views\Book\Delete.cshtml" />
+    <Content Include="Areas\Library\Views\Book\ForEdit.cshtml" />
+    <Content Include="Areas\Library\Views\Book\GetDataTable.cshtml" />
+    <Content Include="Areas\Library\Views\web.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -3714,7 +3719,6 @@
     <Folder Include="Areas\App\Models\" />
     <Folder Include="Areas\JUiEngine\Models\" />
     <Folder Include="Areas\Library\Models\" />
-    <Folder Include="Areas\Library\Views\" />
     <Folder Include="Areas\ReportGenerator\Models\" />
     <Folder Include="Areas\System\Models\" />
     <Folder Include="Areas\System\Views\Shared\" />

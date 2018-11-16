@@ -1,0 +1,12 @@
+﻿@using WebAppIDEEngine.Models.Core
+@model dynamic
+
+@{
+    ViewBag.Title = "اتصال متد ها به جداول";
+    ViewBag.SaveAction = ViewBag.SaveAction ?? "Save";
+    ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
+    ViewBag.ForEditDisabled = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("~/Areas/App/Views/Shared/Delete.cshtml")

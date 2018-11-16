@@ -20,7 +20,7 @@ using WebGrease.Css.Extensions;
 
 namespace WebAppIDEEngine.Areas.App.Controllers
 {
-    public abstract class AppController<T, Parameter> : BaseEngineController<T, Parameter>
+    public abstract class EBaseAppController<T, Parameter> : BaseEngineController<T, Parameter>
         where Parameter : IActionParameter where T : IModel, new()
     {
         public RelationshipLinkService relationshipLinkService = new RelationshipLinkService();
@@ -28,7 +28,11 @@ namespace WebAppIDEEngine.Areas.App.Controllers
         protected IUiEngineDataProvider _uiEngineDataProvider = new UiEngineDataProvider();
         protected IUiFormDataProvider _uiFormDataProvider = new UiFormDataProvider();
 
-        public AppController()
+        public string DefaultDataTableName = "";
+        public string DefaultSaveName = "";
+
+
+        public EBaseAppController()
         {
             _injector = new Engine.Utitliy.Injector();
         }
@@ -72,22 +76,23 @@ namespace WebAppIDEEngine.Areas.App.Controllers
         }
 
 
-        public virtual void SetToolsbarLinks(IModel r)
-        {
-            var modelTypeName = r.GetType().Name;
-            ViewData[GlobalNames.RelationshipLink] = relationshipLinkService.RelationshipLinks
-                .Where(rel => rel.Form == modelTypeName).ToList();
-        }
+        
 
         // GET: App/Models
         public async Task<ActionResult> GetDataTable(IDataTableParameter p)
         {
             var res = await _engineService.GetDataTableAsync(p);
             res.RecordsList = await res.Records.ToListAsync();
-            this.SetToolsbarLinks(new T());
+
+            string actionName = ControllerContext.RouteData.Values["action"].ToString();
+            string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+            string areaName = (string)HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+
+            SetDynamicTableViewData(DefaultDataTableName, areaName,controllerName,actionName, res);
             return View(res);
         }
 
+      
 
         // GET: App/Models/Details/5
         public async Task<ActionResult> Details(long? id)
@@ -126,11 +131,17 @@ namespace WebAppIDEEngine.Areas.App.Controllers
                 }
 
                 await _engineService.EngineContext.SaveChangesAsync();
+
+                string actionName = ControllerContext.RouteData.Values["action"].ToString();
+
+                SetDynamicFormViewData( DefaultSaveName);
+
                 return RedirectToAction("GetDataTable");
             }
 
             return View(model);
         }
+
 
         // GET: App/Models/Edit/5
         public async Task<ActionResult> ForEdit(long? id)
@@ -138,12 +149,12 @@ namespace WebAppIDEEngine.Areas.App.Controllers
             if (id == null)
             {
                 var m = _injector.Inject<T>();
-                await this.RenderFormAsync(m);
+                SetDynamicFormViewData(this.DefaultSaveName);
                 return View(m);
             }
 
             var model = _engineService.GetForEdit(id.Value);
-            await this.RenderFormAsync(model);
+            SetDynamicFormViewData(this.DefaultSaveName);
             if (model == null)
             {
                 return HttpNotFound();

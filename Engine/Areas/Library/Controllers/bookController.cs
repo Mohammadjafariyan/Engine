@@ -7,7 +7,10 @@ using System.Net;
 using WebAppIDEEngine.Models;
 using System.Web.Mvc;
 using Engine.Utitliy;
+using Entities;
 using ServiceLayer.Systems.Library;
+using ViewModel.Parameters;
+using WebAppIDEEngine.Areas.App.Controllers;
 
 
 namespace Engine.Areas.Library.Controllers
@@ -17,7 +20,7 @@ namespace Engine.Areas.Library.Controllers
     /// bookController
     /// </summary>
     ///
-    public class bookController : Controller
+    public class bookController : EBaseAppController<Book,CommonParameter>
     {
         private Injector _injector = new Injector();
         private BookService _bookservice;
@@ -25,6 +28,9 @@ namespace Engine.Areas.Library.Controllers
         public bookController()
         {
             this._bookservice = _injector.Inject<BookService>();
+            this._engineService = _injector.Inject<BookService>();
+            DefaultSaveName = "BookSave";
+            DefaultDataTableName = "BookDataTable";
         }
 
         [HttpPost]
