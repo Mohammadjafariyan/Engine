@@ -18,6 +18,11 @@ namespace Models
         /// <summary>
         /// Rent
         /// </summary>
-        public class Rent :BaseEntity{public Int64 {get;set;}
+        public class Rent :BaseEntity{public long UserId{get;set;}
+public long BookId{get;set;}
+public bool IsBack{get;set;}
+public DateTime BackDate{get;set;}
+public long Penalty{get;set;}
+public bool IsPayed{get;set;}
 } 
  }

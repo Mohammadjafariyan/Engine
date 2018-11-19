@@ -20,7 +20,9 @@ namespace WebAppIDEEngine.Models.ICore
     {
         [Key]
         public long Id { get; set; }
-      
-        abstract public string Name { get; set; }
+
+        virtual public string Name { get; set; }
     }
+
+
 }

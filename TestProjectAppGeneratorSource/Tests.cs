@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection.Emit;
 using AppSourceGenerator;
+using Engine.Areas.AppGeneration.Controllers;
 using Engine.Entities.Models.Core.AppGeneration;
 using WebAppIDEEngine.Models.Core;
 using Xunit;
@@ -47,11 +48,14 @@ namespace TestProjectAppGeneratorSource
         [Fact]
         public void Test1()
         {
-            IGenerator g = new MvcProjectGenerator();
-            
-            
-            
-            
+            string path = "D:\\workplace\\git\\Engine\\Engine\\TestGeneratedSource";
+
+            ExportController ex=new ExportController();
+            var d=ex.Export(path, 1, 1);
+
+
+
+
             Assert.True(true);
         }
     }

@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+﻿import {Component, OnInit} from '@angular/core';
 import {DataComponent} from "../../data/data.component";
 import {SettingDFormInputsService} from "./setting-dform-inputs.service";
 import {Field, generateDynamicFormFields, InputField, mapFormInputValues} from "../../../form-generator/models";
-import {FieldType, Property} from "../../../model/model";
-import {Globals, Utility} from "../../utility";
+import { FieldType, Property, PropertyModel} from "../../../model/model";
+import {Globals, Utility, cloneAll} from "../../utility";
 
 @Component({
   moduleId: 'ColumnSettingComponent',
@@ -17,18 +17,27 @@ export class ColumnSettingComponent implements OnInit {
   parameterForm = new AddParameterForm();
 
   constructor(public DataComponent: DataComponent,
-              public SettingDFormInputsService: SettingDFormInputsService) {
+    public SettingDFormInputsService: SettingDFormInputsService) {
+  }
+
+
+  AsNameChanged(p: PropertyModel) {
+    if (p.NameInTableAsName) {
+      p.NameInTableAsName = '[' + p.NameInTableAsName + ']';
+    }
   }
 
 
   initAddParams() {
 
     this.addParameterFields = generateDynamicFormFields(this.parameterForm);
+    this.addParameterFields.find(a => a.name === "uniqId").value = this.parameterForm.uniqId;
+
   }
 
-  delete(){
-    this.DataComponent.addParameterFields=
-      this.DataComponent.addParameterFields.filter(a=>!a.isSelected);
+  delete() {
+    this.DataComponent.addParameterFields =
+      this.DataComponent.addParameterFields.filter(a => !a.isSelected);
   }
 
   ngOnInit() {
@@ -37,31 +46,32 @@ export class ColumnSettingComponent implements OnInit {
 
   saveParameter() {
 
-
     mapFormInputValues(this.parameterForm, this.addParameterFields);
 
-    //EDIT
-    if (this.parameterForm.foredit) {
-      var index = this.DataComponent.addParameterFields.findIndex(f => f.uniqId == this.parameterForm.uniqId);
-      if (index == -1) {
-        console.error('index is nul');
-      } else {
-        this.DataComponent.addParameterFields[index] = this.parameterForm;
-      }
+
+    var index = this.DataComponent.addParameterFields.findIndex(f => f.uniqId == this.parameterForm.uniqId);
+    if (index == -1) {
+      this.DataComponent.addParameterFields.push(cloneAll(this.parameterForm));
     } else {
-      this.DataComponent.addParameterFields.push(this.parameterForm);
+      this.DataComponent.addParameterFields[index] = cloneAll(this.parameterForm);
     }
+
+    this.parameterForm = new AddParameterForm();
+    this.addParameterFields = generateDynamicFormFields(this.parameterForm);
+    this.addParameterFields.find(a => a.name === "uniqId").value = this.parameterForm.uniqId;
 
   }
 
+
   edit(property: AddParameterForm) {
-    property.foredit = true;
+    this.parameterForm = property;
     this.addParameterFields = generateDynamicFormFields(property);
   }
 }
 
 
 export class AddParameterForm {
+  defaultValue;
 
   constructor() {
     this.uniqId = Utility.generateNewId();
@@ -79,8 +89,7 @@ export class AddParameterForm {
   @InputField('typeInModel', 'نوع پارامتر ', FieldType.DropDown, SettingDFormInputsService.getTypesInCode())
   typeInModel = null;
 
-  @InputField('typeInSQL', 'نوع در SQL', FieldType.DropDown
-    , SettingDFormInputsService.getTypesInSQL())
+  @InputField('typeInSQL', 'نوع در SQL', FieldType.DropDown, SettingDFormInputsService.getTypesInSQL())
   typeInSQL = null;
 /*
   @InputField('range', 'رنج', FieldType.Text)

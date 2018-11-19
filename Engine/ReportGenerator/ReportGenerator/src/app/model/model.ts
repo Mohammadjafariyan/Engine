@@ -1,4 +1,4 @@
-import {JoinTable} from "../query-generator/select-columns-and-join/table-design/table-design.component";
+﻿import {JoinTable} from "../query-generator/select-columns-and-join/table-design/table-design.component";
 import {Utility} from "../query-generator/utility";
 import {AddParameterForm} from "../query-generator/select-columns-and-join/column-setting/column-setting.component";
 import {InputField} from "../form-generator/models";
@@ -195,6 +195,21 @@ export class QueryModel extends BaseEntity
 export class PropertyModel extends BaseEntity
 {
   //uniqId=Utility.generateNewIdNumber();
+
+  constructor(property:Property) {
+    super();
+    this.Property = property;
+    this.setPropertyName();
+  }
+
+  /// must be called after setting property
+  setPropertyName() {
+    let value = this.NameInTableAsName ? this.NameInTableAsName : this.Property.NameInTable;
+    if (value) {
+      this.NameInTableAsName = value[0] === '[' ? value : '[' + value + ']';
+    }
+  }
+
   QueryId;
   PropertyId;
 
@@ -202,20 +217,7 @@ export class PropertyModel extends BaseEntity
   Property :Property;
 
   onOutPut;
-/// report generator
-  private _NameInTableAsName: string;
-  get NameInTableAsName(): string {
-    let value=this._NameInTableAsName ? this._NameInTableAsName : this.Property.NameInTable;
-    if(value){
-      value=value[0]=='[' ? value:'['+value+']';
-    }
-    return value;
-  }
-
-  set NameInTableAsName(value: string) {
-
-    this._NameInTableAsName = value;
-  }
+  NameInTableAsName;
 
 }
 export class Model extends BaseEntity {

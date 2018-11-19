@@ -42,13 +42,13 @@ namespace WebAppIDEEngine.Models.Core
             WhereComputeButtons=new List<ComputeButton>();
             
         }
-        
-        
+
+
         /// <summary>   
         /// نوع کوئری
         /// </summary>
         public QueryViewModelType type { get; set; }
-
+        
         /// <summary>
         /// جداول استفاده شده
         /// </summary>

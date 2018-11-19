@@ -18,6 +18,8 @@ namespace Models
         /// <summary>
         /// User
         /// </summary>
-        public class User :BaseEntity{public Int64 {get;set;}
+        public class User :BaseEntity{public string Tel{get;set;}
+public string LastName{get;set;}
+public string NationalCode{get;set;}
 } 
  }

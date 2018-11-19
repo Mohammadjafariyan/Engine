@@ -1,4 +1,5 @@
-﻿@using WebAppIDEEngine.Models.Core
+﻿@using System.Collections.Specialized
+@using WebAppIDEEngine.Models.Core
 @using ViewModel.ActionTypes
 @using WebAppIDEEngine.Models.ICore
 @using Engine.Attributes
@@ -11,6 +12,7 @@
 @using Engine.Areas.JUiEngine.Controllers
 @using Engine.Service.AbstractControllers
 @using Engine.DomainLayer.Models.Core.ViewGeneration
+@using Engine.Entities.Models.Core.AppGeneration
 @using Engine.Entities.Models.UiGeneratorModels
 @using WebAppIDEEngine.Models.CoreEnum
 @using WebAppIDEEngine.Models.UiGeneratorModels
@@ -19,29 +21,46 @@
 @{
     var UiFormInputs = (List<UiFormInput>) ViewData[UiFormEngineController.DynamicFormUiFormInputs];
     var form_groupClass = ViewData["form-group"] as string ?? "col-md-3";
+    
+    
+    var modelNameValue=ViewData[UiFormEngineController.ModelNameValue] as NameValueCollection;
+    var model=ViewData[UiFormEngineController.Model] as dynamic; 
 }
 <style>
-    .form-group {
-        float: right;
-    }
+    .form-group { float: right; }
 </style>
 
 @if (UiFormInputs != null)
 {
-
-    @Html.Hidden("BackUrl",Request.Url.AbsoluteUri)
+    @Html.Hidden("BackUrl", Request.Url.AbsoluteUri)
     foreach (var UiFormInput in UiFormInputs)
     {
-        UiFormInput.Name = UiFormInput.Translate ??  UiFormInput.UiInput.Translate  ?? UiFormInput.Name ?? UiFormInput.UiInput.Name;
+        UiFormInput.Name = UiFormInput.Translate ?? UiFormInput.UiInput.Translate ?? UiFormInput.Name ?? UiFormInput.UiInput.Name;
         UiFormInput.Description = UiFormInput.Description ?? UiFormInput.UiInput.Description;
 
+        string val = null;
+        if (modelNameValue?[UiFormInput.UiInput.Name] != null)
+        {
+            val = modelNameValue[UiFormInput.UiInput.Name].ToString();
+        }
         <div class="form-group @form_groupClass">
             <label>@UiFormInput.Name</label>
             @{
 
+                string scripts = "";
                 if (UiFormInput.UiInput.FieldType == FieldType.Text)
                 {
+                    
                     string type = null;
+                    string max = "";
+                    string min = "";
+                    string regex = "";
+                    string size = "";
+
+                    max = UiFormInput.UiInput.Max.HasValue ? $@"max=""{UiFormInput.UiInput.Max.ToString()}""" : "";
+                    min = UiFormInput.UiInput.Min.HasValue ? $@"min=""{UiFormInput.UiInput.Min.ToString()}""" : "";
+                    regex = !string.IsNullOrEmpty(UiFormInput.UiInput.Regex) ? $@"regex="" {UiFormInput.UiInput.Regex} """ : "";
+                    size = UiFormInput.UiInput.Size.HasValue ? $@"size="" {UiFormInput.UiInput.Size.ToString()}""" : "";
                     if (UiFormInput.UiInput.InputType == InputType.Text)
                     {
                         type = @"""text""";
@@ -56,21 +75,73 @@
                         type = @"""checkbox""";
                     }
 
-                    <input id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" @type name="@UiFormInput.UiInput.Name"/>
+
+                    <input value="@val" @max @min @regex @size id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" @type name="@UiFormInput.UiInput.Name"/>
                 }
                 if (UiFormInput.UiInput.FieldType == FieldType.DropDown)
                 {
-                    <select id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" name="@UiFormInput.UiInput.Name">
+                    <select value="@val"  id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" name="@UiFormInput.UiInput.Name">
                         <option></option>
                     </select>
                 }
                 if (UiFormInput.UiInput.FieldType == FieldType.TextArea)
                 {
-                    <textarea id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" rows="5" cols="10" name="@UiFormInput.UiInput.Name">  </textarea>
+                    <textarea value="@val" id="@UiFormInput.Id" class="form-control" placeholder="@UiFormInput.Name" rows="5" cols="10" name="@UiFormInput.UiInput.Name">  </textarea>
                 }
             }
 
             <small id="help_@UiFormInput.Id" class="form-text text-muted">@UiFormInput.Description</small>
         </div>
+
+        var inputMethod = UiFormInput.UiInput.UiInputMethods.FirstOrDefault();
+        if (inputMethod != null)
+        {
+            var subSystemName = inputMethod.DefineControllerMethod.DefineController.SubSystem.Name;
+            var controllerName = inputMethod.DefineControllerMethod.DefineController.Name;
+            var methodName = inputMethod.DefineControllerMethod.Name;
+            var url = $@"/{subSystemName}/{controllerName}/{methodName}{Request.Url.Query}";
+
+            <script>
+
+                $.ajax({
+                    url: "@url",
+                    success: function(result) {
+                        @if (inputMethod.DefineControllerMethod.MethodType == MethodType.GetDropDown)
+                        {
+                            <text>
+                                parseDropDownAndSetValue(result, '@Html.Raw(inputMethod.UiInput.Name)','@val');
+                            </text>
+                        }
+                    }
+                });
+
+
+            </script>
+        }
     }
 }
+
+<script>
+    function parseDropDownAndSetValue(result, id,value) {
+        console.log(result);
+        debugger;
+        var tmp = { Id: "", Value: "" };
+        var options = [tmp];
+
+        var optionStr = "";
+        if (!value) {
+            optionStr = "<option selected='selected'>انتخاب کنید</option>";
+        }
+        var selected = "";
+        for (var i = 0; i < options.length; i++) {
+             selected = "";
+            if (value && value===options[i].Id) {
+                selected = "'selected'";
+            }
+            
+            optionStr+="<option id='"+options[i].Id+"' " + selected+">"+options[i].Value+"</option>";
+        }
+
+        $(id).Html(optionStr);
+    }
+</script>

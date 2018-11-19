@@ -1,4 +1,4 @@
-<app-condition></app-condition>
+﻿<app-condition></app-condition>
 
 <table class="table col-md-12" style="border:2px solid #0c5460">
   <thead>
@@ -24,7 +24,7 @@
     <td>{{property.Property.NameInTable}}</td>
     <td>{{property.Property.ModelName}}</td>
 
-    <td><input type="text" [(ngModel)]="property.NameInTableAsName"></td>
+    <td><input type="text" [(ngModel)]="property.NameInTableAsName" (change)="AsNameChanged(property)"></td>
 
   </tr>
   </tbody>

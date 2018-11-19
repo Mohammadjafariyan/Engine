@@ -18,8 +18,7 @@ namespace Models
         /// <summary>
         /// Book
         /// </summary>
-        public class Book :BaseEntity{public Int64 {get;set;}
-public string {get;set;}
-public string {get;set;}
+        public class Book :BaseEntity{public string Author{get;set;}
+public DateTime BookPrintDate{get;set;}
 } 
  }

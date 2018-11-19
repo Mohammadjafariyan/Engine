@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+﻿import {Component, OnInit} from '@angular/core';
 import {IQueryGenerator} from "../iquery-generator";
 import {Model, NavigationProperty, Property, PropertyModel, QueryModel} from "../../../model/model";
 import {Observable, of} from "rxjs";
@@ -25,7 +25,7 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
     if (!addParameterField) {
       console.error('addParameterField is null');
     }
-    return `DECLARE   ${addParameterField.nameInSQL} ${addParameterField.typeInSQL};  `
+    return `DECLARE   @${addParameterField.nameInSQL} ${addParameterField.typeInSQL} ;`
   }
 
   getDefinedQueryVariables(addParameterFields: AddParameterForm[]) {
@@ -60,7 +60,8 @@ export class SqlQueryGeneratorComponent implements OnInit, IQueryGenerator {
 
     columns = columns ? columns : '*';
 
-    let select = `${variables}  
+  //  let select = `${variables}  
+    let select = `
     
     select ${columns} from ${mainTable.Model.TableName} as
      ${SqlQueryGeneratorComponent.GetAsName(mainTable.Model.Name, SqlQueryGeneratorComponent.tableAsNames, mainTable)} `;

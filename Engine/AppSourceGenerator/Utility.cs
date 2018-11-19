@@ -1,5 +1,8 @@
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using AppSourceGenerator;
 using Engine.Entities.Models.Core.AppGeneration;
 using WebAppIDEEngine.Models.Core;
@@ -84,6 +87,9 @@ namespace Engine.Areas.AppGeneration
 using " + ModelsNamespace + ";\n" + @"
 " + string.Join("\n", ServiceUsigs) + @"
 using ServiceLayer.Systems;
+using System.Collections.Generic;
+using ViewModel.ActionTypes;
+using System.Data.SqlClient;
 namespace ServiceLayer." + subSystemName + @"
 {
 /// <summary>
@@ -91,7 +97,7 @@ namespace ServiceLayer." + subSystemName + @"
     /// " + description + @"
     /// </summary>
     public class " + serviceName + " " + baseClassName + @"
-    { " + serviceContent + @"}";
+    { " + serviceContent + "} \n }";
 
             return content;
         }
@@ -99,7 +105,7 @@ namespace ServiceLayer." + subSystemName + @"
         public static string GetServiceMethod(string serviceMethodName,
             ServiceItemReturnType serviceMethodServiceItemReturnType
             , ServiceReturnMethodType serviceMethodServiceReturnMethodType
-            , Query serviceMethodQuery, string context = "EngineContext")
+            , Query serviceMethodQuery, ServiceMethod serviceMethod, string context = "EngineContext")
         {
             string returnType = "";
             string inputParameters = "";
@@ -112,10 +118,29 @@ namespace ServiceLayer." + subSystemName + @"
 
             var itemType = GetDetermineReturnItemType(serviceMethodServiceReturnMethodType, serviceMethodQuery);
 
+            if (serviceMethod.MethodType == MethodType.GetDataTable)
+            {
+                returnType = " IDataTable ";
+            }
+
+            List<string> parameters = new List<string>();
+            foreach (var parameterField in serviceMethodQuery.addParameterFields)
+            {
+                parameters.Add($@" new SqlParameter(""{parameterField.nameInSQL}"", {parameterField.nameInMethod})");
+            }
+
+            string sqlQueryParamsInStr = "";
+            if (parameters.Count > 0)
+            {
+                sqlQueryParamsInStr = ",";
+                sqlQueryParamsInStr+=string.Join(",", parameters);
+            }
+
+
             var s1 = $@"public {returnType} {serviceMethodName}({inputParameters}) " + "{" +
-                     $@"var dt={context}.Database.SqlQuery<{itemType}>("" {SqlinputParameters + "\n"}  {
+                     $@"var dt={context}.Database.SqlQuery<{itemType}>( @""  {SqlinputParameters + "\n"}  {
                              serviceMethodQuery.SQL
-                         }"");";
+                         }"" {sqlQueryParamsInStr});";
             switch (serviceMethodServiceItemReturnType)
             {
                 case ServiceItemReturnType.List:
@@ -141,14 +166,33 @@ namespace ServiceLayer." + subSystemName + @"
                     break;
             }
 
+            var headersType = "";
+            if (serviceMethodServiceReturnMethodType == ServiceReturnMethodType.ViewModel)
+            {
+                headersType = $@"GetPropertyNames<{returnType}>()";
+            }
+            else
+            {
+                var names = serviceMethodQuery.selectedProperties
+                    .Select(s => $@"{{""{s.Property.NameInModel} "",""{s.NameInTableAsName} "" }}").ToArray();
+                var joined = string.Join(@",", names);
+
+                s1 += $@"Dictionary<string,string> headers=new Dictionary<string,string>{{
+               {joined}
+                }}; ";
+
+                headersType = $@"headers";
+            }
+
             s1 += $@" 
             var count = res.Count();
+            var l = res.ToList();
 
             return new DynaDataTable
             {{
                 Total = count,
                 Filtered = count,
-                Headers = GetPropertyNames<Book>(),
+                Headers = {headersType},
                 RecordsList = l.Cast<dynamic>().ToList()
             }};
 ";
@@ -159,9 +203,9 @@ namespace ServiceLayer." + subSystemName + @"
             if (serviceMethodServiceReturnMethodType == ServiceReturnMethodType.ViewModel)
             {
                 viewModel = CreateViewModelClass(returnType, serviceMethodQuery.selectedProperties);
+                s1 += viewModel + "}";
             }
 
-            s1 += viewModel + "}";
             return s1;
         }
 
@@ -188,6 +232,11 @@ namespace ServiceLayer." + subSystemName + @"
                 var isnullable = addParameterField.nullable ? "?" : "";
                 var type = DetermineType(addParameterField.typeInModel);
 
+                if (addParameterField.nullable)
+                {
+                    type += "?";
+                }
+
                 paramerters += $@"{type}{isnullable} {addParameterField.nameInMethod}";
 
                 if (i != serviceMethodQuery.addParameterFields.Count - 1)
@@ -209,7 +258,7 @@ namespace ServiceLayer." + subSystemName + @"
                     returnType = "dynamic";
                     break;
                 case ServiceReturnMethodType.Model:
-                    returnType = serviceMethodQuery.models.Where(m => m.IsMainTable).Select(m => m.Name)
+                    returnType = serviceMethodQuery.models.Where(m => m.IsMainTable).Select(m => m.Model.Name)
                         .FirstOrDefault();
                     break;
                 case ServiceReturnMethodType.INT:
@@ -266,7 +315,7 @@ namespace ServiceLayer." + subSystemName + @"
             foreach (var queryProperty in properties)
             {
                 props +=
-                    $@"public {queryProperty.Property.PropertyType.ToString()}  {queryProperty.Property.ModelName}" +
+                    $@"public {queryProperty.Property.PropertyType.ToString()}  {queryProperty.Property.NameInModel}" +
                     "{get;set;}";
             }
 
@@ -291,21 +340,28 @@ try{
                         controllerMethod.ServiceMethod.Name
                     }();";
 
-            s1 += @"
-          return Json(res,JsonRequestBehavior.AllowGet);
+            s1 += $@"
+            //res.RecordsList =  res.Records.ToList();
 
-}
+            string actionName = ControllerContext.RouteData.Values[""action""].ToString();
+            string controllerName = ControllerContext.RouteData.Values[""controller""].ToString();
+            string areaName = (string)HttpContext.Request.RequestContext.RouteData.DataTokens[""area""];
+
+            SetDynamicTableViewData(DefaultDataTableName, areaName, controllerName, actionName, res);
+            return View(res);
+
+        }}
             catch (Exception e)
-            {
+            {{
                 throw e;
-        }";
-            s1 += "}}";
+        }}";
+            s1 += "}";
             return s1;
         }
 
         public static string GetControllerContent(DefineController controller, string translate, string serviceName,
             string baseClassName, object baseInterfaces, string serviceContent, string description, object genericModel,
-            string subSystemName, bool isMVC = true)
+            string subSystemName, bool isNormalController, bool isMVC = true)
         {
             baseClassName = baseClassName != null ? ":" + baseClassName : "";
             baseClassName = baseClassName + (genericModel != null ? "<" + genericModel + ">" : "");
@@ -322,10 +378,8 @@ try{
             var fields = controller.DefineControllerMethods.Select(m => m.ServiceMethod.DefineService).Distinct();
             var fieldsStr = "";
 
-            var constructure = $@"public {controller.Name}(
-      DefaultSaveName = ""{controller.Name}Save"";
-            DefaultDataTableName = ""{controller.Name}DataTable"";
-            ";
+            var constructure = $@"public {controller.Name}(";
+
 
             var defineServices = fields as DefineService[] ?? fields.ToArray();
 
@@ -337,9 +391,18 @@ try{
             constructure += string.Join(",",
                                 defineServices.Select(f => f.Name + " " + "_" + f.Name.ToLower().Trim()).ToArray()) +
                             "){ \n";
-            constructure += string.Join(",",
+
+            if (isNormalController)
+            {
+                constructure += $@"
+      DefaultSaveName = ""{controller.Name}Save"";
+            DefaultDataTableName = ""{controller.Name}DataTable"";";
+            }
+
+            constructure += string.Join(";",
                                 defineServices.Select(f =>
                                     "this._" + f.Name.ToLower() + "=_" + f.Name.ToLower() + "; \n ").ToArray()) + "}\n";
+
             var serviceUsings = string.Join(",",
                 defineServices.Select(f => "using ServiceLayer." + f.SubSystem.Name + ";").Distinct().ToArray());
 
@@ -354,7 +417,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Engine.Attributes;
+using Engine.Controllers.AbstractControllers;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using ViewModel.ActionTypes;
+using ViewModel.Parameters;
 using WebAppIDEEngine.Models;
+using WebAppIDEEngine.Models.ICore;
+using System.Collections.Specialized;
+using Engine.Areas.JUiEngine.Controllers;
+using Engine.Entities.Models.UiGeneratorModels;
+using Engine.ServiceLayer.Systems.Engine;
+using Engine.Service.AbstractControllers;
+using WebGrease.Css.Extensions;
+using WebAppIDEEngine.Models;
+using WebAppIDEEngine.Areas.App.Controllers;
 " + mvcOrapi + @"
 
 
@@ -373,7 +456,7 @@ namespace " + ControllersNamespace + @".Areas." + subSystemName + @".Controllers
             content += constructure + "\n";
             content += serviceContent + "\n";
 
-            content += @"} " + "\n";
+            content += "} \n } " + "\n";
 
             return content;
         }
@@ -407,20 +490,35 @@ namespace " + ControllersNamespace + @".Areas." + subSystemName + @".Controllers
                 case PropertyType.String:
                     type = "string";
                     break;
+                case PropertyType.ByteArray:
+                    type = "byte[]";
+                    break;
                 default:
                     type = PropertyType.ToString();
                     break;
             }
 
+
             return type;
         }
+
 
         public static string GetProperty(Property property)
         {
             var type = "";
             type = DetermineType(property.PropertyType);
 
-            var prop = "public" + " " + type + " " + property.Name +
+            if (property.Nullable)
+            {
+                type += "?";
+            }
+
+            if (property.NameInModel == "Id" || property.NameInModel == "Name")
+            {
+                return "";
+            }
+
+            var prop = "public" + " " + type + " " + property.NameInModel +
                        "{get;set;}" + "\n";
             return prop;
         }
@@ -508,7 +606,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ServiceLayer.Systems.Library;
-{string.Join(";", ServiceUsigs)};
+{string.Join("", ServiceUsigs)}
 using GlobalNames;
 
 namespace Engine.Utitliy
@@ -541,6 +639,105 @@ namespace Engine.Utitliy
                         }}
 
                 }}";
+        }
+
+        public static string GetWebConfigContent()
+        {
+
+            return File.ReadAllText(ExampleFilesRootDirectory+"/Areas/Library/Views/web.config", Encoding.UTF8);
+          /*  var dep = $@"<?xml version=""1.0""?>
+<configuration>
+  <configSections>
+    <sectionGroup name=""system.web.webPages.razor"" type=""System.Web.WebPages.Razor.Configuration.RazorWebSectionGroup, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"">
+      <section name=""host"" type=""System.Web.WebPages.Razor.Configuration.HostSection, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"" requirePermission=""false"" />
+      <section name=""pages"" type=""System.Web.WebPages.Razor.Configuration.RazorPagesSection, System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"" requirePermission=""false"" />
+    </sectionGroup>
+  </configSections>
+
+  <system.web.webPages.razor>
+    <host factoryType=""System.Web.Mvc.MvcWebRazorHostFactory, System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"" />
+    <pages pageBaseType=""System.Web.Mvc.WebViewPage"">
+      <namespaces>
+        <add namespace=""System.Web.Mvc"" />
+        <add namespace=""System.Web.Mvc.Ajax"" />
+        <add namespace=""System.Web.Mvc.Html"" />
+        <add namespace=""System.Web.Routing"" />
+        <add namespace=""System.Web.Optimization"" />
+        <add namespace=""Engine"" />
+      </namespaces>
+    </pages>
+  </system.web.webPages.razor>
+
+  <appSettings>
+    <add key=""webpages:Enabled"" value=""false"" />
+  </appSettings>
+
+  <system.webServer>
+    <handlers>
+      <remove name=""BlockViewHandler""/>
+      <add name=""BlockViewHandler"" path=""*"" verb=""*"" preCondition=""integratedMode"" type=""System.Web.HttpNotFoundHandler"" />
+    </handlers>
+  </system.webServer>
+</configuration>"" ";
+            ;*/
+        }
+
+        public static string ExampleFilesRootDirectory = "D:\\workplace\\git\\Engine\\Engine\\";
+
+        public static string GetDataTableView(string title)
+        {
+            return File.ReadAllText(ExampleFilesRootDirectory + "/Areas/Library/Views/Book/GetDataTable.cshtml", Encoding.UTF8);
+/*
+            var dep =  $@"@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+@using Engine.Areas.JUiEngine.Controllers
+
+@model IDataTable
+@{{
+                ViewBag.Title = ""{title}"";
+            Layout = ""~/Views/Shared/_Layout.cshtml"";
+            var datatable = ViewData[UiHomeController.TableObject];
+        }}
+
+
+
+@Html.Partial(""~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml"", datatable)
+";*/
+        }
+
+        public static string GetForEditView(string title)
+        {
+            return File.ReadAllText(ExampleFilesRootDirectory + "/Areas/Library/Views/Book/ForEdit.cshtml", Encoding.UTF8);
+
+            /* var dep= $@"
+ @using System.Web.Mvc.Html
+ @using Engine.Areas.JUiEngine.Controllers
+ @using Engine.Entities.Models.UiGeneratorModels
+ @using WebAppIDEEngine.Models.Core
+ @model dynamic
+
+ @{{
+
+                 ViewBag.Title = ""{title} "";
+             ViewBag.SaveAction = ViewBag.SaveAction ?? ""Save"";
+             ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values[""controller""].ToString();
+             Layout = ""~/Views/Shared/_Layout.cshtml"";
+             ViewData[""inline""] = true;
+             var form=ViewData[UiHomeController.Form] as UiForm;
+                 }}
+
+ @Html.Partial(""~/Areas/JUiEngine/Views/UiFormEngine/ShowView.cshtml"", form)
+ ";*/
+        }
+
+        public static string GetDeleteView()
+        {
+            return File.ReadAllText(ExampleFilesRootDirectory + "/Areas/Library/Views/Book/Delete.cshtml", Encoding.UTF8);
         }
     }
 }

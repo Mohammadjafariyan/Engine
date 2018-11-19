@@ -245,6 +245,7 @@
     <Compile Include="Areas\AppGeneration\Controllers\UiFormItemsController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\UiFormMethodController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\UiInputController.cs" />
+    <Compile Include="Areas\AppGeneration\Controllers\UiInputMethodController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\UiItemsController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\UiTableFormsController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\UiTableItemsController.cs" />
@@ -335,6 +336,7 @@
     <Compile Include="Entities\Models\UiGeneratorModels\UiFormInput.cs" />
     <Compile Include="Entities\Models\UiGeneratorModels\UiFormItem.cs" />
     <Compile Include="Entities\Models\UiGeneratorModels\UiInput.cs" />
+    <Compile Include="Entities\Models\UiGeneratorModels\UiInputMethod.cs" />
     <Compile Include="Entities\Models\UiGeneratorModels\UiItem.cs" />
     <Compile Include="Entities\Models\UiGeneratorModels\UiTableForm.cs" />
     <Compile Include="Entities\Models\UiGeneratorModels\UiTableItem.cs" />
@@ -363,6 +365,13 @@
     <Compile Include="ServiceLayer\Systems\Library\RentService.cs" />
     <Compile Include="ServiceLayer\Systems\Library\StudentService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="TestGeneratedSource\Model\Book.cs" />
+    <Compile Include="TestGeneratedSource\Model\Image.cs" />
+    <Compile Include="TestGeneratedSource\Model\Rent.cs" />
+    <Compile Include="TestGeneratedSource\Model\User.cs" />
+    <Compile Include="TestGeneratedSource\ServiceLayer\HomeLibrary\BookService.cs" />
+    <Compile Include="TestGeneratedSource\ServiceLayer\HomeLibrary\RentService.cs" />
+    <Compile Include="TestGeneratedSource\ServiceLayer\HomeLibrary\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\AppGeneration\Views\DefineControllerMethod\GetDataTable.cshtml" />
@@ -383,6 +392,9 @@
     <Content Include="Areas\AppGeneration\Views\EjTables\Delete.cshtml" />
     <Content Include="Areas\AppGeneration\Views\EjTables\ForEdit.cshtml" />
     <Content Include="Areas\AppGeneration\Views\EjTables\GetDataTable.cshtml" />
+    <Content Include="Areas\AppGeneration\Views\UiInputMethod\Delete.cshtml" />
+    <Content Include="Areas\AppGeneration\Views\UiInputMethod\ForEdit.cshtml" />
+    <Content Include="Areas\AppGeneration\Views\UiInputMethod\GetDataTable.cshtml" />
     <Content Include="Areas\ReportGenerator\Controllers\ModelsClassDiagram.puml" />
     <Content Include="Areas\JUiEngine\Views\Shared\TablePartial.cshtml" />
     <Content Include="Areas\JUiEngine\Views\Shared\_Layout.cshtml" />
@@ -3724,6 +3736,8 @@
     <Folder Include="Areas\System\Views\Shared\" />
     <Folder Include="ReportGenerator\ReportGenerator\.idea\inspectionProfiles\" />
     <Folder Include="ReportGenerator\ReportGenerator\node_modules\.cache\uglifyjs-webpack-plugin\tmp\" />
+    <Folder Include="TestGeneratedSource\Areas\" />
+    <Folder Include="TestGeneratedSource\Registery\HomeLibrary\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Views\BaseCRUD\" />
     <Folder Include="Views\BaseEngine\" />

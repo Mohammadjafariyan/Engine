@@ -25,6 +25,8 @@ namespace Engine.Areas.JUiEngine.Controllers
         public static readonly string SubmitName = "SubmitName";
         public static readonly string OnCompleteFunction = "OnCompleteFunction";
         public static readonly string UiFormItems = "UiFormItems";
+        public static readonly string ModelNameValue = "ModelNameValue";
+        public static readonly string Model = "Model";
         private UiFormDataProvider _provider = new UiFormDataProvider();
 
 

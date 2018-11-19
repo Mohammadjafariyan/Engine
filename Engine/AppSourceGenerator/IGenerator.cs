@@ -13,6 +13,7 @@ namespace AppSourceGenerator
         void MakeModels(List<Model> models);
         void MakeApiControllers(List<DefineController> controllers);
         void RegisterServices(List<DefineService> services,string serviceInterface);
+        void MakeViews(List<DefineController> d3);
     }
     
     

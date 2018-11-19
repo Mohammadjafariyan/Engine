@@ -20,7 +20,12 @@ namespace Engine.Entities.Models.Core.AppGeneration
         {
             TableMethods = new List<TableMethod>();
             UiFormControllerMethods = new List<UiFormControllerMethod>();
+            UiInputMethods = new List<UiInputMethod>();
         }
+        
+        
+        public virtual ICollection<UiInputMethod> UiInputMethods { get; set; }
+
 
         /// <summary>
         /// نام

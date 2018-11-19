@@ -40133,23 +40133,20 @@ var QueryModel = /** @class */ (function (_super) {
 
 var PropertyModel = /** @class */ (function (_super) {
     __extends(PropertyModel, _super);
-    function PropertyModel() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    //uniqId=Utility.generateNewIdNumber();
+    function PropertyModel(property) {
+        var _this = _super.call(this) || this;
+        _this.Property = property;
+        _this.setPropertyName();
+        return _this;
     }
-    Object.defineProperty(PropertyModel.prototype, "NameInTableAsName", {
-        get: function () {
-            var value = this._NameInTableAsName ? this._NameInTableAsName : this.Property.NameInTable;
-            if (value) {
-                value = value[0] == '[' ? value : '[' + value + ']';
-            }
-            return value;
-        },
-        set: function (value) {
-            this._NameInTableAsName = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    /// must be called after setting property
+    PropertyModel.prototype.setPropertyName = function () {
+        var value = this.NameInTableAsName ? this.NameInTableAsName : this.Property.NameInTable;
+        if (value) {
+            this.NameInTableAsName = value[0] === '[' ? value : '[' + value + ']';
+        }
+    };
     return PropertyModel;
 }(BaseEntity));
 
@@ -41256,7 +41253,7 @@ var SqlQueryGeneratorComponent = /** @class */ (function () {
         if (!addParameterField) {
             console.error('addParameterField is null');
         }
-        return "DECLARE   " + addParameterField.nameInSQL + " " + addParameterField.typeInSQL + ";  ";
+        return "DECLARE   @" + addParameterField.nameInSQL + " " + addParameterField.typeInSQL + " ;";
     };
     SqlQueryGeneratorComponent.prototype.getDefinedQueryVariables = function (addParameterFields) {
         if (!addParameterFields) {
@@ -41282,7 +41279,8 @@ var SqlQueryGeneratorComponent = /** @class */ (function () {
         var conditions = this.GetConditions(properties, navigationProperties);
         var joins = this.GetJoins(properties, navigationProperties, mainTable);
         columns = columns ? columns : '*';
-        var select = variables + "  \n    \n    select " + columns + " from " + mainTable.Model.TableName + " as\n     " + SqlQueryGeneratorComponent_1.GetAsName(mainTable.Model.Name, SqlQueryGeneratorComponent_1.tableAsNames, mainTable) + " ";
+        //  let select = `${variables}  
+        var select = "\n    \n    select " + columns + " from " + mainTable.Model.TableName + " as\n     " + SqlQueryGeneratorComponent_1.GetAsName(mainTable.Model.Name, SqlQueryGeneratorComponent_1.tableAsNames, mainTable) + " ";
         if (joins) {
             select += " " + joins;
         }
@@ -41482,7 +41480,7 @@ module.exports = ":host >>> .form-group{\r\n  margin-top: 4px;\r\n  margin-right
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-condition></app-condition>\n\n<table class=\"table col-md-12\" style=\"border:2px solid #0c5460\">\n  <thead>\n  <tr>\n    <!--  <th scope=\"col\" colspan=\"1\">\n        <button data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\"><span>+</span> پارامتر ورودی\n        </button>\n      </th>-->\n    <th scope=\"col\" colspan=\"5\" style=\"text-align:center;font-weight: bold\">تنظیمات ستون ها</th>\n  </tr>\n  <tr>\n    <th scope=\"col\">در خروجی</th>\n    <th scope=\"col\">نام</th>\n    <th scope=\"col\">نام در جدول</th>\n    <th scope=\"col\">نام در کوئری</th>\n    <th scope=\"col\">نام  جدول</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr *ngFor=\"let property of DataComponent.selectedProperties;let tableI=index;\">\n    <th scope=\"row\"><input type=\"checkbox\" [(ngModel)]=\"property.Property.onOutPut\"></th>\n    <td>{{property.Property.NameInModel}}</td>\n    <td>{{property.Property.NameInTable}}</td>\n    <td>{{property.Property.ModelName}}</td>\n\n    <td><input type=\"text\" [(ngModel)]=\"property.NameInTableAsName\"></td>\n\n  </tr>\n  </tbody>\n</table>\n\n<table class=\"table col-md-12\" style=\"border:2px solid #0c5460\">\n  <thead>\n  <tr>\n    <th scope=\"col\" colspan=\"2\">\n      <button data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\"><span>+</span> پارامتر ورودی\n      </button>\n\n      <button (click)=\"delete()\"\n              class=\"btn btn-danger\"><span>-</span> حذف\n      </button>\n    </th>\n    <th scope=\"col\" colspan=\"5\" style=\"text-align:center;font-weight: bold\">پارامتر های ورودی</th>\n  </tr>\n  <tr>\n    <th scope=\"col\">انتخاب</th>\n    <th scope=\"col\">نام در متد</th>\n    <th scope=\"col\">نام در SQL</th>\n    <th scope=\"col\">نام در کامنت</th>\n    <th scope=\"col\">نوع در مدل</th>\n    <th scope=\"col\">نوع در SQL</th>\n    <th scope=\"col\">عملیات</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr *ngFor=\"let property of DataComponent.addParameterFields;let tableI=index;\">\n    <th scope=\"row\"><input type=\"checkbox\" [(ngModel)]=\"property.isSelected\"></th>\n    <td>{{property.nameInMethod}}</td>\n    <td>{{property.nameInSQL}}</td>\n    <td>{{property.nameInComment}}</td>\n    <td>{{property.typeInModel}}</td>\n    <td>{{property.typeInSQL}}</td>\n    <td>\n      <button data-toggle=\"modal\" data-target=\"#conditionModal\" class=\"btn btn-primary\"><span>+</span> شرط\n      </button>\n      <button (click)=\"edit(property)\" data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\">\n        <span></span> ویرایش\n      </button>\n    </td>\n  </tr>\n  </tbody>\n</table>\n\n\n<div class=\"modal fade\" id=\"exampleModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\n     aria-hidden=\"true\">\n  <div class=\"modal-dialog modal-lg\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"exampleModalLabel\">پارامتر ورودی</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <dynamic-form-save [fields]=\"addParameterFields\" [isInline]=\"true\"></dynamic-form-save>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">بستن</button>\n        <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveParameter()\">ذخیره</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<app-condition></app-condition>\n\n<table class=\"table col-md-12\" style=\"border:2px solid #0c5460\">\n  <thead>\n  <tr>\n    <!--  <th scope=\"col\" colspan=\"1\">\n        <button data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\"><span>+</span> پارامتر ورودی\n        </button>\n      </th>-->\n    <th scope=\"col\" colspan=\"5\" style=\"text-align:center;font-weight: bold\">تنظیمات ستون ها</th>\n  </tr>\n  <tr>\n    <th scope=\"col\">در خروجی</th>\n    <th scope=\"col\">نام</th>\n    <th scope=\"col\">نام در جدول</th>\n    <th scope=\"col\">نام در کوئری</th>\n    <th scope=\"col\">نام  جدول</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr *ngFor=\"let property of DataComponent.selectedProperties;let tableI=index;\">\n    <th scope=\"row\"><input type=\"checkbox\" [(ngModel)]=\"property.Property.onOutPut\"></th>\n    <td>{{property.Property.NameInModel}}</td>\n    <td>{{property.Property.NameInTable}}</td>\n    <td>{{property.Property.ModelName}}</td>\n\n    <td><input type=\"text\" [(ngModel)]=\"property.NameInTableAsName\" (change)=\"AsNameChanged(property)\"></td>\n\n  </tr>\n  </tbody>\n</table>\n\n<table class=\"table col-md-12\" style=\"border:2px solid #0c5460\">\n  <thead>\n  <tr>\n    <th scope=\"col\" colspan=\"2\">\n      <button data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\"><span>+</span> پارامتر ورودی\n      </button>\n\n      <button (click)=\"delete()\"\n              class=\"btn btn-danger\"><span>-</span> حذف\n      </button>\n    </th>\n    <th scope=\"col\" colspan=\"5\" style=\"text-align:center;font-weight: bold\">پارامتر های ورودی</th>\n  </tr>\n  <tr>\n    <th scope=\"col\">انتخاب</th>\n    <th scope=\"col\">نام در متد</th>\n    <th scope=\"col\">نام در SQL</th>\n    <th scope=\"col\">نام در کامنت</th>\n    <th scope=\"col\">نوع در مدل</th>\n    <th scope=\"col\">نوع در SQL</th>\n    <th scope=\"col\">عملیات</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr *ngFor=\"let property of DataComponent.addParameterFields;let tableI=index;\">\n    <th scope=\"row\"><input type=\"checkbox\" [(ngModel)]=\"property.isSelected\"></th>\n    <td>{{property.nameInMethod}}</td>\n    <td>{{property.nameInSQL}}</td>\n    <td>{{property.nameInComment}}</td>\n    <td>{{property.typeInModel}}</td>\n    <td>{{property.typeInSQL}}</td>\n    <td>\n      <button data-toggle=\"modal\" data-target=\"#conditionModal\" class=\"btn btn-primary\"><span>+</span> شرط\n      </button>\n      <button (click)=\"edit(property)\" data-toggle=\"modal\" data-target=\"#exampleModal\" class=\"btn btn-primary\">\n        <span></span> ویرایش\n      </button>\n    </td>\n  </tr>\n  </tbody>\n</table>\n\n\n<div class=\"modal fade\" id=\"exampleModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\"\n     aria-hidden=\"true\">\n  <div class=\"modal-dialog modal-lg\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <h5 class=\"modal-title\" id=\"exampleModalLabel\">پارامتر ورودی</h5>\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n      <div class=\"modal-body\">\n        <dynamic-form-save [fields]=\"addParameterFields\" [isInline]=\"true\"></dynamic-form-save>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">بستن</button>\n        <button type=\"button\" class=\"btn btn-primary\" (click)=\"saveParameter()\">ذخیره</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -41524,8 +41522,14 @@ var ColumnSettingComponent = /** @class */ (function () {
         this.SettingDFormInputsService = SettingDFormInputsService;
         this.parameterForm = new AddParameterForm();
     }
+    ColumnSettingComponent.prototype.AsNameChanged = function (p) {
+        if (p.NameInTableAsName) {
+            p.NameInTableAsName = '[' + p.NameInTableAsName + ']';
+        }
+    };
     ColumnSettingComponent.prototype.initAddParams = function () {
         this.addParameterFields = Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_3__["generateDynamicFormFields"])(this.parameterForm);
+        this.addParameterFields.find(function (a) { return a.name === "uniqId"; }).value = this.parameterForm.uniqId;
     };
     ColumnSettingComponent.prototype.delete = function () {
         this.DataComponent.addParameterFields =
@@ -41537,22 +41541,19 @@ var ColumnSettingComponent = /** @class */ (function () {
     ColumnSettingComponent.prototype.saveParameter = function () {
         var _this = this;
         Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_3__["mapFormInputValues"])(this.parameterForm, this.addParameterFields);
-        //EDIT
-        if (this.parameterForm.foredit) {
-            var index = this.DataComponent.addParameterFields.findIndex(function (f) { return f.uniqId == _this.parameterForm.uniqId; });
-            if (index == -1) {
-                console.error('index is nul');
-            }
-            else {
-                this.DataComponent.addParameterFields[index] = this.parameterForm;
-            }
+        var index = this.DataComponent.addParameterFields.findIndex(function (f) { return f.uniqId == _this.parameterForm.uniqId; });
+        if (index == -1) {
+            this.DataComponent.addParameterFields.push(Object(_utility__WEBPACK_IMPORTED_MODULE_5__["cloneAll"])(this.parameterForm));
         }
         else {
-            this.DataComponent.addParameterFields.push(this.parameterForm);
+            this.DataComponent.addParameterFields[index] = Object(_utility__WEBPACK_IMPORTED_MODULE_5__["cloneAll"])(this.parameterForm);
         }
+        this.parameterForm = new AddParameterForm();
+        this.addParameterFields = Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_3__["generateDynamicFormFields"])(this.parameterForm);
+        this.addParameterFields.find(function (a) { return a.name === "uniqId"; }).value = this.parameterForm.uniqId;
     };
     ColumnSettingComponent.prototype.edit = function (property) {
-        property.foredit = true;
+        this.parameterForm = property;
         this.addParameterFields = Object(_form_generator_models__WEBPACK_IMPORTED_MODULE_3__["generateDynamicFormFields"])(property);
     };
     ColumnSettingComponent = __decorate([
@@ -41716,7 +41717,7 @@ var ComputeDesignToolsButtonProviderService = /** @class */ (function () {
         for (var i = 0; i < this.DataComponent.addParameterFields.length; i++) {
             var o = {
                 name: this.DataComponent.addParameterFields[i].nameInSQL,
-                value: this.DataComponent.addParameterFields[i].nameInSQL,
+                value: '@' + this.DataComponent.addParameterFields[i].nameInSQL,
                 obj: this.DataComponent.addParameterFields[i]
             };
             arr.push(o);
@@ -42315,8 +42316,8 @@ var TableDesignComponent = /** @class */ (function () {
     };
     TableDesignComponent.prototype.getTableAndProperty = function (WhichTable, whichproperty, table, property, lefttRadio) {
         this[WhichTable] = this.DataComponent.models[table];
-        var prop = new _model_model__WEBPACK_IMPORTED_MODULE_2__["PropertyModel"]();
-        prop.Property = this.DataComponent.models[table].Model.Properties[property];
+        var prop = new _model_model__WEBPACK_IMPORTED_MODULE_2__["PropertyModel"](this.DataComponent.models[table].Model.Properties[property]);
+        // prop.Property = 
         this[whichproperty] = prop;
         //  this[WhichTable][whichElement] = lefttRadio;
         //  let rect:any = lefttRadio.getBoundingClientRect();
@@ -42343,8 +42344,8 @@ var TableDesignComponent = /** @class */ (function () {
             this.DataComponent.selectedProperties.splice(index, 1);
         }
         else {
-            var propertyModel = new _model_model__WEBPACK_IMPORTED_MODULE_2__["PropertyModel"]();
-            propertyModel.Property = property;
+            var propertyModel = new _model_model__WEBPACK_IMPORTED_MODULE_2__["PropertyModel"](property);
+            // propertyModel.Property = property;
             propertyModel.PropertyId = property.Id;
             propertyModel.onOutPut = true;
             property.onOutPut = true;

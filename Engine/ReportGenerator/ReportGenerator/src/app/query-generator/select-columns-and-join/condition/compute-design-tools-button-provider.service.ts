@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+﻿import {Injectable} from '@angular/core';
 import {
   BetweenButton,
   BetweenButtonType,
@@ -28,7 +28,7 @@ export class ComputeDesignToolsButtonProviderService {
 
       var o = {
         name: this.DataComponent.addParameterFields[i].nameInSQL,
-        value: this.DataComponent.addParameterFields[i].nameInSQL,
+        value: '@' +this.DataComponent.addParameterFields[i].nameInSQL,
         obj: this.DataComponent.addParameterFields[i]
       }
       arr.push(o);

@@ -60,6 +60,15 @@ namespace ServiceLayer.Systems
     
     
     /// <summary>
+    /// سرویس متد ورودی
+    /// </summary>
+    public class UiInputMethodService : CommonService<UiInputMethod>
+    {
+        
+    }
+    
+    
+    /// <summary>
     /// سرویس متد سرویس زیر سیستم
     /// </summary>
     public class DefineControllerMethodService : CommonService<DefineControllerMethod>

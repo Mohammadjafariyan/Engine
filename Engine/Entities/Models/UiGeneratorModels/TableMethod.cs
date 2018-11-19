@@ -19,7 +19,7 @@ namespace WebAppIDEEngine.Models.UiGeneratorModels
         [DropDown(Name = "جدول", Service = GlobalNames.TablesServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         public long TableId { get; set; }
 
-        public DefineControllerMethod DefineControllerMethod { get; set; }
-        public EjTable EjTable { get; set; }
+        public virtual DefineControllerMethod DefineControllerMethod { get; set; }
+        public virtual EjTable EjTable { get; set; }
     }
 }

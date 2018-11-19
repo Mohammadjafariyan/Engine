@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using AppSourceGenerator;
@@ -30,6 +31,8 @@ namespace Engine.Areas.AppGeneration.Controllers
                 return View("GetDataTable");
             }
 
+            var dd =Directory.GetCurrentDirectory();
+
             try
             {
 
@@ -51,12 +54,17 @@ namespace Engine.Areas.AppGeneration.Controllers
                    
                     var d3 = subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault();
                     g.MakeApiControllers(d3);
-                    
+
+                    g.MakeViews(d3);
+
                     var d4 = _engineService.EngineContext.Models.ToList();
                     g.MakeModels(d4);
 
+
+                    g.RegisterServices(d1, "IBaseEngineService");
+
                     ViewBag.successmsg = "با موفقیت ایجاد شد";
-                    return View("GetDataTable");
+                    return View("GetDataTable",null);
 
                 }
                 else if (type == 2)

@@ -17,57 +17,61 @@ namespace Engine.Areas.ReportGenerator.Controllers
 {
     public class QueryController : ApiController
     {
-        public EngineContext _context = new EngineContext();
-
-        public void DeleteByIdHelper(long id)
+        public void DeleteByIdHelper(long id, bool deleteQuery, EngineContext _context)
         {
             var indb = _context.Queries.Where(q => q.Id == id).FirstOrDefault();
             if (indb == null)
                 throw new Exception("پیدا نشد");
 
 
-            if (indb.Actions.Count > 0)
-                throw new Exception("این مورد در اکشن ها استفاده شده است");
+            if (deleteQuery)
+            {
+                if (indb.Actions.Count > 0)
+                    throw new Exception("این مورد در اکشن ها استفاده شده است");
 
-            if (indb.ServiceMethods.Count > 0)
-                throw new Exception("این مورد در متد سرویس ها اسفتاده شده است");
+                if (indb.ServiceMethods.Count > 0)
+                    throw new Exception("این مورد در متد سرویس ها اسفتاده شده است");
+            }
+
 
             // right props of right joins
             DeleteList(indb.models.SelectMany(j =>
-                j.RightJoinTables.Where(r => r.rightProperty != null).Select(r => r.rightProperty)).ToList());
+                j.RightJoinTables.Where(r => r.rightProperty != null).Select(r => r.rightProperty)).ToList(), _context);
 
             // left props of right joins
             DeleteList(indb.models
                 .SelectMany(j => j.RightJoinTables.Where(r => r.leftProperty != null).Select(r => r.leftProperty))
-                .ToList());
+                .ToList(), _context);
 
             // left props of left joins
             DeleteList(indb.models
                 .SelectMany(j => j.LeftJoinTables.Where(r => r.leftProperty != null).Select(r => r.leftProperty))
-                .ToList());
+                .ToList(), _context);
 
             // right props of left joins
             DeleteList(indb.models.SelectMany(j =>
-                j.LeftJoinTables.Where(r => r.rightProperty != null).Select(r => r.rightProperty)).ToList());
+                j.LeftJoinTables.Where(r => r.rightProperty != null)
+                    .Select(r => r.rightProperty)).ToList(), _context);
 
             // join tables
-            DeleteList(indb.models.SelectMany(j => j.RightJoinTables).ToList());
-            DeleteList(indb.models.SelectMany(j => j.LeftJoinTables).ToList());
+            DeleteList(indb.models.SelectMany(j => j.RightJoinTables)
+                .ToList(), _context);
+            DeleteList(indb.models.SelectMany(j => j.LeftJoinTables)
+                .ToList(), _context);
 
-          
-            
-            var possiblevalues= indb.WhereComputeButtons.SelectMany(a => a.possibleValue);
-            DeleteList(possiblevalues.ToList());
-           
-            
-            DeleteList(indb.WhereComputeButtons.ToList());
 
-            var wherebuttons=   indb.WhereComputeButtons.Select(a => a.position);
-            DeleteList(wherebuttons.ToList());
+            var possiblevalues = indb.WhereComputeButtons.SelectMany(a => a.possibleValue);
+            DeleteList(possiblevalues.ToList(), _context);
 
-            
-            DeleteList(indb.addParameterFields);
-            DeleteList(indb.selectedProperties);
+
+            DeleteList(indb.WhereComputeButtons.ToList(), _context);
+
+            var wherebuttons = indb.WhereComputeButtons.Select(a => a.position);
+            DeleteList(wherebuttons.ToList(), _context);
+
+
+            DeleteList(indb.addParameterFields, _context);
+            DeleteList(indb.selectedProperties, _context);
 
 
             var queryProperties = _context.QueryProperties.Where(p => p.QueryId == indb.Id);
@@ -75,11 +79,12 @@ namespace Engine.Areas.ReportGenerator.Controllers
             {
                 _context.Entry(queryProperty).State = EntityState.Deleted;
             }
-            
-            
 
-            DeleteList(indb.models);
-            _context.Entry(indb).State = EntityState.Deleted;
+
+            DeleteList(indb.models, _context);
+
+            if (deleteQuery)
+                _context.Entry(indb).State = EntityState.Deleted;
 
 
             _context.SaveChanges();
@@ -89,18 +94,25 @@ namespace Engine.Areas.ReportGenerator.Controllers
         [Route("~/api/Query/DeleteById")]
         public CustomResult DeleteById(long id)
         {
-            using (var tr = _context.Database.BeginTransaction())
+            using (var db = new EngineContext())
             {
-                try
+                using (var tr = db.Database.BeginTransaction())
                 {
-                    DeleteByIdHelper(id);
-                    tr.Commit();
-                    return new CustomResult {Message = "با موفقیت انجام شد ", Status = CustomResultType.success};
-                }
-                catch (Exception e)
-                {
-                    tr.Rollback();
-                    return new CustomResult {Message = e.Message + "خطا در عملیات ", Status = CustomResultType.fail};
+                    try
+                    {
+                        DeleteByIdHelper(id, true, db);
+                        tr.Commit();
+                        return new CustomResult {Message = "با موفقیت انجام شد ", Status = CustomResultType.success};
+                    }
+                    catch (Exception e)
+                    {
+                        tr.Rollback();
+                        return new CustomResult
+                        {
+                            Message = e.Message + "خطا در عملیات ",
+                            Status = CustomResultType.fail
+                        };
+                    }
                 }
             }
         }
@@ -109,58 +121,70 @@ namespace Engine.Areas.ReportGenerator.Controllers
         [Route("~/api/Query/GetAll")]
         public CustomResult GetAll(int? lastIndex, int? count)
         {
-            // خخالی بود تمامی را برگردان
-            if (lastIndex == null || count == null)
-                return new CustomResult
+            using (var _context = new EngineContext())
+            {
+                // خخالی بود تمامی را برگردان
+                if (lastIndex == null || count == null)
+                    return new CustomResult
+                    {
+                        result = _context.Queries.Select(q => new
+                            {
+                                Id = q.Id,
+                                Name = q.Name,
+                                queryName = q.queryName,
+                                QueryType = q.QueryType,
+                                type = q.type
+                            })
+                            .ToList(),
+                        Status = CustomResultType.success
+                    };
+
+                // مواظب خطا ها باش
+                count = count == 0 ? 10 : count;
+                var dt = _context.Queries.Select(q => new
+                    {Id = q.Id, Name = q.Name, queryName = q.queryName, QueryType = q.QueryType, type = q.type});
+                if (lastIndex == 0)
                 {
-                    result = _context.Queries.Select(q => new
-                            {Id = q.Id, Name = q.Name, queryName = q.queryName, QueryType = q.QueryType, type = q.type})
-                        .ToList(),
-                    Status = CustomResultType.success
-                };
+                    dt = dt.Take(count.Value);
+                }
+                else
+                {
+                    dt = dt.Skip(lastIndex.Value).Take(count.Value);
+                }
 
-            // مواظب خطا ها باش
-            count = count == 0 ? 10 : count;
-            var dt = _context.Queries.Select(q => new
-                {Id = q.Id, Name = q.Name, queryName = q.queryName, QueryType = q.QueryType, type = q.type});
-            if (lastIndex == 0)
-            {
-                dt = dt.Take(count.Value);
+                // با paging برگردان
+                return new CustomResult {result = dt, Status = CustomResultType.success};
             }
-            else
-            {
-                dt = dt.Skip(lastIndex.Value).Take(count.Value);
-            }
-
-            // با paging برگردان
-            return new CustomResult {result = dt, Status = CustomResultType.success};
         }
 
         [HttpGet]
         [Route("~/api/Query/LoadQuery")]
         public CustomResult LoadQuery(long id)
         {
-            try
+            using (var _context = new EngineContext())
             {
-                var finded = _context.Queries.Find(id);
-                if (finded == null)
-                    throw new Exception("کوئری یافت نشد");
+                try
+                {
+                    var finded = _context.Queries.Find(id);
+                    if (finded == null)
+                        throw new Exception("کوئری یافت نشد");
 
 
-                finded.selectedProperties = finded.selectedProperties.Where(s => s.onOutPut).ToList();
-                var json = Newtonsoft.Json.JsonConvert.SerializeObject
-                    (finded, new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
-                finded = JsonConvert.DeserializeObject<Query>(json);
-                return new CustomResult {result = finded, Status = CustomResultType.success};
-            }
-            catch (Exception e)
-            {
-                return new CustomResult {Message = e.Message + " خطا در عملیات ", Status = CustomResultType.fail};
+                    finded.selectedProperties = finded.selectedProperties.Where(s => s.onOutPut).ToList();
+                    var json = Newtonsoft.Json.JsonConvert.SerializeObject
+                        (finded, new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
+                    finded = JsonConvert.DeserializeObject<Query>(json);
+                    return new CustomResult {result = finded, Status = CustomResultType.success};
+                }
+                catch (Exception e)
+                {
+                    return new CustomResult {Message = e.Message + " خطا در عملیات ", Status = CustomResultType.fail};
+                }
             }
         }
 
 
-        public void SetState<T>(List<T> ts, EntityState state) where T : class
+        public void SetState<T>(List<T> ts, EntityState state, EngineContext _context) where T : class
         {
             foreach (var lp in ts)
             {
@@ -169,11 +193,20 @@ namespace Engine.Areas.ReportGenerator.Controllers
         }
 
 
-        public Query InsertQurey(Query q, EngineContext _engineContext)
+        public Query InsertQurey(Query q, EngineContext _engineContext, bool isupdate, Query exitsQuery)
         {
-            var query = _context.Queries.Create();
-            _engineContext.Queries.Add(query);
-            _engineContext.Entry(query).CurrentValues.SetValues(q);
+            Query query;
+
+            if (!isupdate)
+            {
+                query = _engineContext.Queries.Create();
+                _engineContext.Queries.Add(query);
+                _engineContext.Entry(query).CurrentValues.SetValues(q);
+            }
+            else
+            {
+                query = exitsQuery;
+            }
 
             foreach (var queryModel in q.models)
             {
@@ -217,7 +250,7 @@ namespace Engine.Areas.ReportGenerator.Controllers
             {
                 query.selectedProperties.Add(querySelectedProperty);
             }
-        
+
             foreach (var button in q.WhereComputeButtons)
             {
                 query.WhereComputeButtons.Add(button);
@@ -226,76 +259,76 @@ namespace Engine.Areas.ReportGenerator.Controllers
             return query;
         }
 
-        private void InsertQureyBackup(Query q)
-        {
-            var query = _context.Queries.Create();
-            _context.Queries.Add(query);
-            _context.Entry(query).CurrentValues.SetValues(q);
-
-            foreach (var queryModel in q.models)
-            {
-                var _queryModel = new QueryModel();
-                query.models.Add(queryModel);
-
-                foreach (var joinTable in queryModel.RightJoinTables.ToList())
-                {
-                    _queryModel.RightJoinTables.Add(joinTable);
-                    joinTable.leftTable = q.models.First(m => m.uniqId == joinTable.leftTableUniqId);
-                    joinTable.rightTable = q.models.First(m => m.uniqId == joinTable.rightTableUniqId);
-
-
-                    if (joinTable.rightProperty != null)
-                    {
-                        joinTable.rightProperty.PropertyId = joinTable.rightProperty.Property.Id;
-                        joinTable.rightProperty.Property = null;
-                    }
-
-                    if (joinTable.leftProperty != null)
-                    {
-                        joinTable.leftProperty.PropertyId = joinTable.leftProperty.Property.Id;
-                        joinTable.leftProperty.Property = null;
-                    }
-                }
-
-
-                foreach (var joinTable in queryModel.LeftJoinTables.ToList())
-                {
-                    _queryModel.LeftJoinTables.Add(joinTable);
-                    joinTable.leftTable = q.models.First(m => m.uniqId == joinTable.leftTableUniqId);
-                    joinTable.rightTable = q.models.First(m => m.uniqId == joinTable.rightTableUniqId);
-
-                    if (joinTable.rightProperty != null)
-                    {
-                        joinTable.rightProperty.PropertyId = joinTable.rightProperty.Property.Id;
-                        joinTable.rightProperty.Property = null;
-                    }
-
-                    if (joinTable.leftProperty != null)
-                    {
-                        joinTable.leftProperty.PropertyId = joinTable.leftProperty.Property.Id;
-                        joinTable.leftProperty.Property = null;
-                    }
-                }
-            }
-
-            if (!q.models.Any(m => m.IsMainTable))
-                throw new Exception("جدول اصلی داده نشده است");
-
-            if (q.models.Count(m => m.IsMainTable) > 1)
-                throw new Exception("جدول اصلی بیش از یک است");
-            foreach (var addParameterField in q.addParameterFields)
-            {
-                query.addParameterFields.Add(addParameterField);
-            }
-
-            foreach (var querySelectedProperty in q.selectedProperties)
-            {
-                query.selectedProperties.Add(querySelectedProperty);
-            }
-
-            // return query;
-        }
-
+        /* private void InsertQureyBackup(Query q)
+         {
+             var query = _context.Queries.Create();
+             _context.Queries.Add(query);
+             _context.Entry(query).CurrentValues.SetValues(q);
+ 
+             foreach (var queryModel in q.models)
+             {
+                 var _queryModel = new QueryModel();
+                 query.models.Add(queryModel);
+ 
+                 foreach (var joinTable in queryModel.RightJoinTables.ToList())
+                 {
+                     _queryModel.RightJoinTables.Add(joinTable);
+                     joinTable.leftTable = q.models.First(m => m.uniqId == joinTable.leftTableUniqId);
+                     joinTable.rightTable = q.models.First(m => m.uniqId == joinTable.rightTableUniqId);
+ 
+ 
+                     if (joinTable.rightProperty != null)
+                     {
+                         joinTable.rightProperty.PropertyId = joinTable.rightProperty.Property.Id;
+                         joinTable.rightProperty.Property = null;
+                     }
+ 
+                     if (joinTable.leftProperty != null)
+                     {
+                         joinTable.leftProperty.PropertyId = joinTable.leftProperty.Property.Id;
+                         joinTable.leftProperty.Property = null;
+                     }
+                 }
+ 
+ 
+                 foreach (var joinTable in queryModel.LeftJoinTables.ToList())
+                 {
+                     _queryModel.LeftJoinTables.Add(joinTable);
+                     joinTable.leftTable = q.models.First(m => m.uniqId == joinTable.leftTableUniqId);
+                     joinTable.rightTable = q.models.First(m => m.uniqId == joinTable.rightTableUniqId);
+ 
+                     if (joinTable.rightProperty != null)
+                     {
+                         joinTable.rightProperty.PropertyId = joinTable.rightProperty.Property.Id;
+                         joinTable.rightProperty.Property = null;
+                     }
+ 
+                     if (joinTable.leftProperty != null)
+                     {
+                         joinTable.leftProperty.PropertyId = joinTable.leftProperty.Property.Id;
+                         joinTable.leftProperty.Property = null;
+                     }
+                 }
+             }
+ 
+             if (!q.models.Any(m => m.IsMainTable))
+                 throw new Exception("جدول اصلی داده نشده است");
+ 
+             if (q.models.Count(m => m.IsMainTable) > 1)
+                 throw new Exception("جدول اصلی بیش از یک است");
+             foreach (var addParameterField in q.addParameterFields)
+             {
+                 query.addParameterFields.Add(addParameterField);
+             }
+ 
+             foreach (var querySelectedProperty in q.selectedProperties)
+             {
+                 query.selectedProperties.Add(querySelectedProperty);
+             }
+ 
+             // return query;
+         }
+ */
         [HttpPost]
         [Route("~/api/Query/SaveQuery")]
         public CustomResult SaveQuery(Query query)
@@ -304,31 +337,31 @@ namespace Engine.Areas.ReportGenerator.Controllers
             {
                 if (query.Id == 0)
                 {
-                    query = InsertQurey(query, _context);
-                    _context.SaveChanges();
+                    using (var _context = new EngineContext())
+                    {
+                        query = InsertQurey(query, _context, false, null);
+                        _context.SaveChanges();
+                    }
                 }
                 else
                 {
-                    var indb = _context.Queries.Where(q => q.Id == query.Id).FirstOrDefault();
-                    if (indb == null)
-                        throw new Exception("پیدا نشد");
-
-
-                    if (indb.Actions.Count > 0)
-                        throw new Exception("این مورد در اکشن ها استفاده شده است");
-
-                    if (indb.ServiceMethods.Count > 0)
-                        throw new Exception("این مورد در متد سرویس ها اسفتاده شده است");
-
-
-                    DeleteByIdHelper(query.Id);
-                    _context.SaveChanges();
-
                     using (var db = new EngineContext())
                     {
+                        var indb = db.Queries.Where(q => q.Id == query.Id).FirstOrDefault();
+                        if (indb == null)
+                            throw new Exception("پیدا نشد");
+
+
+                        DeleteByIdHelper(query.Id, false, db);
+                        db.SaveChanges();
+
+                        db.Entry(indb).CurrentValues.SetValues(query);
+
+
                         query.Id = 0;
-                        query = InsertQurey(query, db);
+                        query = InsertQurey(query, db, true, indb);
                         db.Database.Log = (s) => { Debug.Write(s); };
+                        db.Entry(indb).State = EntityState.Modified;
                         db.SaveChanges();
                     }
                 }
@@ -343,12 +376,12 @@ namespace Engine.Areas.ReportGenerator.Controllers
         }
 
 
-        public void DeleteList<T>(ICollection<T> list) where T : class
+        public void DeleteList<T>(ICollection<T> list, EngineContext _context ) where T : class
         {
             foreach (var item in list.ToList())
             {
-                if(item!=null)
-                _context.Entry<T>(item).State = EntityState.Deleted;
+                if (item != null)
+                    _context.Entry<T>(item).State = EntityState.Deleted;
             }
         }
     }

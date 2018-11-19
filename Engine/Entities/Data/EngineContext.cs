@@ -214,6 +214,16 @@ namespace WebAppIDEEngine.Models
                 .WithMany(f => f.UiTableForms)
                 .HasForeignKey(f => f.EjTableId).WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<UiInputMethod>().HasRequired(f => f.UiInput)
+                .WithMany(f => f.UiInputMethods)
+                .HasForeignKey(f => f.UiInputId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<UiInputMethod>().HasRequired(f => f.DefineControllerMethod)
+                .WithMany(f => f.UiInputMethods)
+                .HasForeignKey(f => f.DefineControllerMethodId).WillCascadeOnDelete(false);
+
+            
             #endregion
 
 

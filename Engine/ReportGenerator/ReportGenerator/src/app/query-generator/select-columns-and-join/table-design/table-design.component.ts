@@ -102,8 +102,8 @@ export class TableDesignComponent implements OnInit {
     this[WhichTable] = this.DataComponent.models[table];
 
 
-    const prop = new PropertyModel();
-    prop.Property = this.DataComponent.models[table].Model.Properties[property]
+    const prop = new PropertyModel(this.DataComponent.models[table].Model.Properties[property]);
+   // prop.Property = 
     this[whichproperty] = prop;
 
 
@@ -141,8 +141,8 @@ export class TableDesignComponent implements OnInit {
       this.DataComponent.selectedProperties.splice(index, 1);
     }
     else {
-      var propertyModel = new PropertyModel();
-      propertyModel.Property = property;
+      var propertyModel = new PropertyModel(property);
+     // propertyModel.Property = property;
       propertyModel.PropertyId = property.Id;
       propertyModel.onOutPut = true;
       property.onOutPut = true;

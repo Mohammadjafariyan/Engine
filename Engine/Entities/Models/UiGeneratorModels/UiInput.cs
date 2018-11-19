@@ -15,6 +15,7 @@ namespace Engine.Entities.Models.UiGeneratorModels
         public UiInput()
         {
             UiFormInputs = new List<UiFormInput>();
+            UiInputMethods = new List<UiInputMethod>();
         }
 
 
@@ -22,7 +23,10 @@ namespace Engine.Entities.Models.UiGeneratorModels
         public string Description { get; set; }
 
         public virtual ICollection<UiFormInput> UiFormInputs { get; set; }
+        public virtual ICollection<UiInputMethod> UiInputMethods { get; set; }
 
+        
+        
         [Text(Name="نام")]
         public override string Name { get; set; }
 

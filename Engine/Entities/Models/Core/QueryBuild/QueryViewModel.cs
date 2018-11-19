@@ -6,12 +6,10 @@ namespace WebAppIDEEngine.Models.Core.QueryBuild
 {
 
 
-
-
-
+    
     public enum QueryViewModelType
     {
-        Insert, Update, Delete, Select
+        Insert, Update, Delete, Select, DataTable
     }
 
 }

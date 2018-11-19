@@ -47,6 +47,7 @@ namespace Engine.Service.AbstractControllers
         public const string UiFormItemServiceName = nameof(UiFormItemService);
         public const string UiTableItemServiceName = nameof(UiTableItemService);
         public const string UiTableFormServiceName = nameof(UiTableFormService);
+        public const string UiInputMethodServiceName = nameof(UiInputMethodService);
 
         
 
