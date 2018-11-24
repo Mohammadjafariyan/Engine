@@ -31,8 +31,26 @@ namespace Engine.Entities.Models.UiGeneratorModels
         public virtual UiForm UiForm { get; set; }
         public virtual UiInput UiInput { get; set; }
 
-        [DropDown(Name = "نام پروپرتی ", Service = GlobalNames.PropertyServiceName, MethodName = GlobalNames.GetDropDownAsync)]
+        [DropDown(Name = "نام پروپرتی (غیر ثبتی)", Service = GlobalNames.PropertyServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         [NotMapped]
-        public long PropertyId { get; set; }
+        public long? PropertyId { get; set; }
+        
+        
+        
+        [Text(Name = "آپدیت مقادیر در تغییر این ورودی جدا با کاما (,)")]
+        public string OnChangeUpdate { get; set; }
+        
+        
+        
+        
+        [Text(Name = "script تغییر")]
+        public string ChangeScript { get; set; }
+
+        
+        [Text(Name = "Css کلاس های  ")]
+        public string Css { get; set; }
+
+
+
     }
 }

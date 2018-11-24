@@ -38,7 +38,7 @@ namespace AppSourceGenerator
         {
             return @"
  using System.Web.Mvc;
-
+ using System.Web.Http;
 namespace Engine.Areas.AppGeneration
 {
         public class " + areaName + @"AreaRegistration : AreaRegistration 
@@ -56,6 +56,12 @@ namespace Engine.Areas.AppGeneration
             context.MapRoute(
               ""  " + areaName + @"_default "",
             ""    " + areaName + @"/{controller}/{action}/{id} "",
+                new { action ="" " + "Index" + @" "", id = UrlParameter.Optional }
+            );
+
+ context.Routes.MapHttpRoute(
+              ""  " + areaName + @"api_default "",
+            ""    " + areaName + @"/api/{controller}/{action}/{id} "",
                 new { action ="" " + "Index" + @" "", id = UrlParameter.Optional }
             );
         }

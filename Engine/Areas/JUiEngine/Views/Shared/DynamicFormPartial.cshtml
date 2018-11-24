@@ -18,13 +18,19 @@
 @using WebAppIDEEngine.Models.UiGeneratorModels
 @using InputType = WebAppIDEEngine.Models.CoreEnum.InputType
 @model dynamic
+
+
+
+
 @{
     var uiFormInputs = (List<UiFormInput>) ViewData[UiFormEngineController.DynamicFormUiFormInputs];
     var formGroupClass = ViewData["form-group"] as string ?? "col-md-3";
-    
-    
-    var modelNameValue=ViewData[UiFormEngineController.ModelNameValue] as NameValueCollection;
-    var model=ViewData[UiFormEngineController.Model] as dynamic; 
+
+    Layout = null;
+    var modelNameValue = ViewData[UiFormEngineController.ModelNameValue] as NameValueCollection;
+    var model = ViewData[UiFormEngineController.Model] as dynamic;
+
+    List<string> inputAjaxFuncNames = new List<string>();
 }
 <style>
     .form-group { float: right; }
@@ -35,32 +41,46 @@
     @Html.Hidden("BackUrl", Request?.Url?.AbsoluteUri)
     if (modelNameValue?["Id"] != null)
     {
-        @Html.Hidden("Id",modelNameValue["Id"] )
+        @Html.Hidden("Id", modelNameValue["Id"])
     }
     foreach (var uiFormInput in uiFormInputs)
     {
         uiFormInput.Name = uiFormInput.Translate ?? uiFormInput.UiInput.Translate ?? uiFormInput.Name ?? uiFormInput.UiInput.Name;
         uiFormInput.Description = uiFormInput.Description ?? uiFormInput.UiInput.Description;
 
+        string onchange = "";
+        string onChangeUpdate = "";
+
+
+        if (!string.IsNullOrEmpty(uiFormInput.OnChangeUpdate))
+        {
+            onChangeUpdate = $@"UpdateOnChange('{uiFormInput.OnChangeUpdate}')";
+            onchange += onChangeUpdate + ";";
+        }
+
+        if (!string.IsNullOrEmpty(uiFormInput.ChangeScript))
+        {
+            onchange += uiFormInput.ChangeScript + ";";
+        }
+
+
         string val = null;
         if (modelNameValue?[uiFormInput.UiInput.Name] != null)
         {
             val = modelNameValue[uiFormInput.UiInput.Name].ToString();
         }
-        <div class="form-group @formGroupClass">
+        <div class="form-group @formGroupClass @uiFormInput.Css">
             <label>@uiFormInput.Name</label>
             @{
 
                 string scripts = "";
                 if (uiFormInput.UiInput.FieldType == FieldType.Text)
                 {
-                    
                     string type = null;
                     string max = "";
                     string min = "";
                     string regex = "";
                     string size = "";
-
                     max = uiFormInput.UiInput.Max.HasValue ? $@"max=""{uiFormInput.UiInput.Max.ToString()}""" : "";
                     min = uiFormInput.UiInput.Min.HasValue ? $@"min=""{uiFormInput.UiInput.Min.ToString()}""" : "";
                     regex = !string.IsNullOrEmpty(uiFormInput.UiInput.Regex) ? $@"regex="" {uiFormInput.UiInput.Regex} """ : "";
@@ -80,17 +100,17 @@
                     }
 
 
-                    <input value="@val" @max @min @regex @size id="@uiFormInput.Id" class="form-control" placeholder="@uiFormInput.Name" @type name="@uiFormInput.UiInput.Name"/>
+                    <input onchange="@onchange" value="@val" @max @min @regex @size id="@uiFormInput.UiInput.Name" class="form-control" placeholder="@uiFormInput.Name" @type name="@uiFormInput.UiInput.Name"/>
                 }
                 if (uiFormInput.UiInput.FieldType == FieldType.DropDown)
                 {
-                    <select value="@val"  id="@uiFormInput.Id" class="form-control" placeholder="@uiFormInput.Name" name="@uiFormInput.UiInput.Name">
+                    <select onchange="@onchange" value="@val" id="@uiFormInput.UiInput.Name" class="form-control" placeholder="@uiFormInput.Name" name="@uiFormInput.UiInput.Name">
                         <option></option>
                     </select>
                 }
                 if (uiFormInput.UiInput.FieldType == FieldType.TextArea)
                 {
-                    <textarea value="@val" id="@uiFormInput.Id" class="form-control" placeholder="@uiFormInput.Name" rows="5" cols="10" name="@uiFormInput.UiInput.Name">  </textarea>
+                    <textarea onchange="@onchange" value="@val" id="@uiFormInput.UiInput.Name" class="form-control" placeholder="@uiFormInput.Name" rows="5" cols="10" name="@uiFormInput.UiInput.Name">  </textarea>
                 }
             }
 
@@ -103,21 +123,38 @@
             var subSystemName = inputMethod.DefineControllerMethod.DefineController.SubSystem.Name;
             var controllerName = inputMethod.DefineControllerMethod.DefineController.Name;
             var methodName = inputMethod.DefineControllerMethod.Name;
+
+
+            var ajaxFunctionName = uiFormInput.UiInput.Name + "_Ajax";
+
+            inputAjaxFuncNames.Add(ajaxFunctionName);
+
+            controllerName = controllerName.Replace("ApiController", "");
+            controllerName = controllerName.Replace("Controller", "");
+
             var url = $@"/{subSystemName}/{controllerName}/{methodName}{Request.Url.Query}";
 
             <script>
 
-                $.ajax({
-                    url: "@url",
-                    success: function(result) {
-                        @if (inputMethod.DefineControllerMethod.MethodType == MethodType.GetDropDown)
-                        {
-                            <text>
-                                parseDropDownAndSetValue(result, '@Html.Raw(inputMethod.UiInput.Name)','@val');
-                            </text>
-                        }
+                var @ajaxFunctionName = function(params) {
+                    if (!params) {
+                        params = "";
                     }
-                });
+
+                    $.ajax({
+                        url: "@url" + params,
+                        success: function(result) {
+                            @if (inputMethod.DefineControllerMethod.MethodType == MethodType.GetDropDown)
+                            {
+                                <text>
+                                    parseDropDownAndSetValue(result,
+                                        '#@Html.Raw(inputMethod.UiInput.Name)',
+                                        '@val');
+                                </text>
+                            }
+                        }
+                    });
+                }
 
 
             </script>
@@ -126,26 +163,68 @@
 }
 
 <script>
-    function parseDropDownAndSetValue(result, id,value) {
+    function parseDropDownAndSetValue(result, id, value) {
         console.log(result);
-        debugger;
-        var tmp = { Id: "", Value: "" };
-        var options = [tmp];
 
         var optionStr = "";
-        if (!value) {
-            optionStr = "<option selected='selected'>انتخاب کنید</option>";
-        }
+        optionStr = "<option >انتخاب کنید</option>";
         var selected = "";
-        for (var i = 0; i < options.length; i++) {
-             selected = "";
-            if (value && value===options[i].Id) {
+        for (var i = 0; i < result.length; i++) {
+            selected = "";
+            if (value && value === result[i].Id) {
                 selected = "'selected'";
             }
-            
-            optionStr+="<option id='"+options[i].Id+"' " + selected+">"+options[i].Value+"</option>";
+
+            optionStr += "<option id='" + result[i].Id + "' " + selected + ">" + result[i].Value + "</option>";
         }
 
-        $(id).Html(optionStr);
+        $(id).html(optionStr);
     }
+
+
+    function UpdateOnChange(toUpdateElements) {
+        if (!toUpdateElements) {
+            return;
+        }
+
+        var hasQuestionSign = false;
+
+        @if (!string.IsNullOrEmpty(Request.Url.Query))
+        {
+            <text>
+                hasQuestionSign = true;
+            </text>
+        }
+        
+        
+        var arr = toUpdateElements.split(',');
+        var url;
+        for (var i = 0; i < arr.length; i++) {
+
+            @{
+                var fermi = ViewData[UiFormEngineController.FormId] as string;
+
+                <text>
+                    if (hasQuestionSign) {
+                        url = '?' + $('#@fermi').serialize();
+                    } else {
+                        url = '&' + $('#@fermi').serialize();
+                    }
+                </text>
+            }
+            
+           
+            var funcTion = arr[i] + "_Ajax" + "('" + url + "');";
+
+            eval(funcTion);
+        }
+
+    }
+    @{
+        foreach (var funcName in inputAjaxFuncNames)
+        {
+            @Html.Raw($@"{funcName}();")
+        }
+    }
+    
 </script>

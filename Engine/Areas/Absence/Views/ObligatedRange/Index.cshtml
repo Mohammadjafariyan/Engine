@@ -1,0 +1,28 @@
+﻿@*@{
+}
+   @section SPAViews {
+    @Html.Partial("_Home")
+}
+
+
+@section scripts{
+    
+    Scripts.Render("~/bundles/knockout")
+    Scripts.Render("~/bundles/app")
+    }*@
+@model Engine.Absence.Models.ObligatedRange
+@{ 
+    
+    Layout = "~/Areas/ReportGenerator/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("~/Areas/Absence/Views/ObligatedRange/_Home.cshtml")
+
+
+<script>
+
+    var modelId = "@Model?.Id";
+    $(document).ready(function() {
+        window.location.href += "Absence/Index" + modelId;
+    });
+
+</script>

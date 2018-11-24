@@ -11,6 +11,15 @@ const routes: Routes = [
         loadChildren: './query-generator/query-generator.module#QueryGeneratorModule'
       }
     ]
+  },
+  {
+    path: '',
+    children: [
+      {
+        path: 'absence',
+        loadChildren: './absence/absence.module#AbsenceModule'
+      }
+    ]
   }
 ]
 

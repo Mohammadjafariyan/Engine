@@ -21,21 +21,6 @@
     var PostControllerUrl = ViewData[UiFormEngineController.PostControllerUrl] as string;
 }
 
-@{
-
-    if (Model != null)
-    {
-        NameValueCollection modelNameValue = new NameValueCollection();
-        foreach (var pi in Model.GetType().GetProperties())
-        {
-            modelNameValue.Add(pi.Name, pi.GetValue(Model, null).ToString());
-        }
-
-        ViewData[UiFormEngineController.ModelNameValue] = modelNameValue;
-        ViewData[UiFormEngineController.Model] = Model;
-    }
- }
-
 
 @if (uiForm != null)
 {
@@ -118,6 +103,9 @@
         // $('#table_@Html.Raw(ejTableObject.Id)').empty();
         table.destroy();
         console.log(response, tableId);
+        if (!response.RecordsList) {
+            alert('لیست دیتا خالی است');
+        }
 
         MakeDataTable('#table_@Html.Raw(ejTableObject.Id)', headers, response.RecordsList);
 

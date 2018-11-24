@@ -24,21 +24,21 @@ namespace Engine.Service.AbstractControllers
     public abstract class BaseEngineService<T> : IEngineService<T> where T : class, IModel
     {
         // protected Injector _injector;
-      /*  public IDataTable Search<T1>(NameValueCollection nameValues) where T1 : class, IModel
-        {
-            var entities = EngineContext.Set<T1>();
-
-            var tableName=Extentions.GetTableName<T1>(EngineContext);
-
-            entities.toL
-
-            var sql = $@"select * from {tableName} where ";
-            foreach (string name in nameValues)
-            {
-                sql+= name + " " +nameValues[name];
-            }
-
-        }*/
+        /*  public IDataTable Search<T1>(NameValueCollection nameValues) where T1 : class, IModel
+          {
+              var entities = EngineContext.Set<T1>();
+  
+              var tableName=Extentions.GetTableName<T1>(EngineContext);
+  
+              entities.toL
+  
+              var sql = $@"select * from {tableName} where ";
+              foreach (string name in nameValues)
+              {
+                  sql+= name + " " +nameValues[name];
+              }
+  
+          }*/
 
 
         public WebAppIDEEngine.Models.EngineContext EngineContext { get; set; }
@@ -287,7 +287,8 @@ namespace Engine.Service.AbstractControllers
 
         public virtual List<IDropDownOption> GetDropDown(IDropDownParameter p)
         {
-            return null;
+            return _entities.Select(d =>
+                new IDropDownOption {Id = d.Id.ToString(), Value = d.Name}).ToList();
         }
 
         public virtual List<IDropDownOption> GetMultiSelect(IDropDownParameter p)

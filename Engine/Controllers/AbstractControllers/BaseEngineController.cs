@@ -20,9 +20,11 @@ namespace Engine.Controllers.AbstractControllers
         protected Utitliy.Injector _injector;
 
 
-        protected virtual Task<IDropDownOption> GetDropDown(Parameter p)
+        
+        [HttpGet]
+        public virtual ActionResult GetDropDown(IDropDownParameter p)
         {
-            throw new NotImplementedException();
+            return Json(_engineService.GetDropDown(p),JsonRequestBehavior.AllowGet);
         }
 
         protected virtual Task<IDataTable> GetDataTableDataAsync(Parameter p)

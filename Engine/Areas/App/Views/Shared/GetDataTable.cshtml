@@ -89,6 +89,10 @@
 
             var table = $('.table').DataTable({
             'select': true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
             'language': {
             "sEmptyTable": "هیچ داده ای در جدول وجود ندارد",
                 "sInfo": "نمایش _START_ تا _END_ از _TOTAL_ رکورد",

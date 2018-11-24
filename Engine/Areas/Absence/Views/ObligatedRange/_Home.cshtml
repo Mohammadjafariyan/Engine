@@ -1,0 +1,112 @@
+﻿
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>ReportGenerator</title>
+    @*<base href="/">*@
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="~/ReportGeneratorOutput/assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="~/ReportGeneratorOutput/assets/iconic/open-iconic.css">
+    <link rel="stylesheet" type="text/css" href="~/ReportGeneratorOutput/assets/primeicons/primeicons.css" />
+    <link rel="stylesheet" type="text/css" href="~/ReportGeneratorOutput/assets/primeng/resources/themes/bootstrap/theme.css" />
+    <link rel="stylesheet" type="text/css" href="~/ReportGeneratorOutput/assets/primeng/resources/primeng.min.css" />
+    @*<script src="~/ReportGeneratorOutput/assets/cycle.js"></script>*@
+    
+     <script src="~/ReportGeneratorOutput/assets/pace.js"></script>
+
+  <style>
+    .pace {
+      -webkit-pointer-events: none;
+      pointer-events: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    .pace-inactive {
+      display: none;
+    }
+
+    .pace .pace-progress {
+      background: #29d;
+      position: fixed;
+      z-index: 2000;
+      top: 0;
+      right: 100%;
+      width: 100%;
+      height: 2px;
+    }
+
+    .pace .pace-progress-inner {
+      display: block;
+      position: absolute;
+      right: 0px;
+      width: 100px;
+      height: 100%;
+      box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+      opacity: 1.0;
+      -webkit-transform: rotate(3deg) translate(0px, -4px);
+      -moz-transform: rotate(3deg) translate(0px, -4px);
+      -ms-transform: rotate(3deg) translate(0px, -4px);
+      -o-transform: rotate(3deg) translate(0px, -4px);
+      transform: rotate(3deg) translate(0px, -4px);
+    }
+
+    .pace .pace-activity {
+      display: block;
+      position: fixed;
+      z-index: 2000;
+      top: 15px;
+      right: 15px;
+      width: 14px;
+      height: 14px;
+      border: solid 2px transparent;
+      border-top-color: #29d;
+      border-left-color: #29d;
+      border-radius: 10px;
+      -webkit-animation: pace-spinner 400ms linear infinite;
+      -moz-animation: pace-spinner 400ms linear infinite;
+      -ms-animation: pace-spinner 400ms linear infinite;
+      -o-animation: pace-spinner 400ms linear infinite;
+      animation: pace-spinner 400ms linear infinite;
+    }
+
+  </style>
+</head>
+<body>
+<div class="pace"></div>
+<app-root></app-root>
+
+
+<script>
+    @{
+        <text>
+            window['rootUrl'] = '@Request.ApplicationPath'
+        </text>
+    }
+            Pace.options = {
+              ajax: true
+            };
+</script>
+<script src="~/ReportGeneratorOutput/assets/jquery/jquery.js"></script>
+<script src="~/ReportGeneratorOutput/assets/jquery/proper.js"></script>
+<script src="~/ReportGeneratorOutput/assets/bootstrap/bootstrap.min.js"></script>
+
+@*<a href="~/ReportGeneratorOutput/vendor.js.map">~/ReportGeneratorOutput/vendor.js.map</a>
+        <a href="~/ReportGeneratorOutput/main.js.map">~/ReportGeneratorOutput/main.js.map</a>
+        <a href="~/ReportGeneratorOutput/polyfills.js.map">~/ReportGeneratorOutput/polyfills.js.map</a>
+        <a href="~/ReportGeneratorOutput/query-generator-query-generator-module.js.map">~/ReportGeneratorOutput/query-generator-query-generator-module.js.map</a>
+        <a href="~/ReportGeneratorOutput/runtime.js.map">~/ReportGeneratorOutput/runtime.js.map</a>
+        <a href="~/ReportGeneratorOutput/styles.js.map">~/ReportGeneratorOutput/styles.js.map</a>*@
+<script src="~/ReportGeneratorOutput/main.js"></script>
+<script src="~/ReportGeneratorOutput/polyfills.js"></script>
+<script src="~/ReportGeneratorOutput/query-generator-query-generator-module.js"></script>
+<script src="~/ReportGeneratorOutput/runtime.js"></script>
+<script src="~/ReportGeneratorOutput/styles.js"></script>
+<script src="~/ReportGeneratorOutput/vendor.js"></script>
+
+</body>
+</html>

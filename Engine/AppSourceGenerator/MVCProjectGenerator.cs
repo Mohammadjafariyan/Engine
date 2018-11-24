@@ -115,7 +115,7 @@ namespace AppSourceGenerator
                 CreateClass(controller.Name, Path + areaPath + "\\", ".cs"
                     , MVCUtility.GetControllerContent(controller: controller, translate: controller.Name,
                         serviceName: controller.Name,
-                        baseClassName: "ApiController",
+                        baseClassName: $@"BaseApiController<{controller.Model.Name},CommonParameter>",
                         baseInterfaces: null,
                         serviceContent: controllerContent,
                         description: controller.Name,

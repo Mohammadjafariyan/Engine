@@ -15,7 +15,7 @@ namespace Engine.Entities.Models.UiGeneratorModels
     /// </summary>
     public class UiInputMethod : BaseEntity
     {
-        [Text(Name = "نام آیتم در فرم")]
+        [Text(Name = "نام (استفاده نشده)")]
         public override string Name { get; set; }
 
         [DropDown(Name = "متد ", Service = GlobalNames.DefineControllerMethodServiceName, MethodName = GlobalNames.GetDropDownAsync)]

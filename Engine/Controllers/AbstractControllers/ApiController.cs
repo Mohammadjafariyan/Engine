@@ -16,9 +16,11 @@ namespace Engine.Controllers.AbstractControllers
         protected Service.AbstractControllers.IEngineService<T> _engineService;
 
 
-        protected virtual Task<IDropDownOption> GetDropDown(Parameter p)
+       
+        [HttpGet]
+        public virtual List<IDropDownOption> GetDropDown(IDropDownParameter p)
         {
-            throw new NotImplementedException();
+            return _engineService.GetDropDown(p);
         }
 
         protected virtual Task<IDataTable> GetDataTableDataAsync(Parameter p)
@@ -38,13 +40,16 @@ namespace Engine.Controllers.AbstractControllers
 
 
         // GET: App/Models
-        protected async Task<IDataTable> GetDataTable(IDataTableParameter p)
+        [HttpPost]
+        public async Task<IDataTable> GetDataTable(IDataTableParameter p)
         {
-            return await _engineService.GetDataTableAsync(p);
+            var res = await _engineService.GetDataTableAsync(p);
+            res.RecordsList =  res.Records.ToList();
+            return res;
         }
 
         // GET: App/Models/Details/5
-        protected  void Details(long? id)
+        public  void Details(long? id)
         {
              throw new NotImplementedException();
         }
@@ -54,13 +59,13 @@ namespace Engine.Controllers.AbstractControllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 
-        protected  Task Save()
+        public  Task Save()
         {
             throw new NotImplementedException();
         }
 
         // GET: App/Models/Edit/5
-        protected  Task ForEdit(long? id)
+        public  Task ForEdit(long? id)
         {
             throw new NotImplementedException();
 
@@ -72,7 +77,7 @@ namespace Engine.Controllers.AbstractControllers
 
         // POST: App/Models/Delete/5
         [HttpPost, ActionName("Delete")]
-        protected  Task Delete(long id)
+        public  Task Delete(long id)
         {
             throw new NotImplementedException();
 

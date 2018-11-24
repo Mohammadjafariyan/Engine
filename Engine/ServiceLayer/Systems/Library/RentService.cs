@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models;
+using Entities;
 using ViewModel.ActionTypes;
 using Book = Entities.Book;
 using Rent = Entities.Rent;
@@ -53,7 +53,7 @@ namespace ServiceLayer.Systems.Library
 
         public IDataTable GetAllDataTable()
         {
-            var dt = EngineContext.Database.SqlQuery<User>(@"  
+            var dt = EngineContext.Database.SqlQuery<Student>(@"  
     
     
     select  User.

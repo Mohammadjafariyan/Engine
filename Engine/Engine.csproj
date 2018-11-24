@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.core.2.4.1\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.4.1\build\xunit.core.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -129,6 +130,14 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="TypeLite, Version=1.8.2.0, Culture=neutral, PublicKeyToken=8cd4b9c9ac23d744">
+      <HintPath>..\packages\TypeLite.1.8.4\lib\net4\TypeLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TypeLite.Net4, Version=1.8.2.0, Culture=neutral, PublicKeyToken=8cd4b9c9ac23d744">
+      <HintPath>..\packages\TypeLite.1.8.4\lib\net4\TypeLite.Net4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.0.5\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -139,6 +148,22 @@
     <Reference Include="Antlr3.Runtime">
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
+      <HintPath>..\packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.4.1.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
+      <HintPath>..\packages\xunit.assert.2.4.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
+      <HintPath>..\packages\xunit.extensibility.core.2.4.1\lib\net452\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.4.1.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
+      <HintPath>..\packages\xunit.extensibility.execution.2.4.1\lib\net452\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -216,6 +241,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbsenceTests\DeviceTests\Tests.cs" />
+    <Compile Include="Absence\Device\BiometricDataProvider.cs" />
+    <Compile Include="Absence\Device\CommonBiometricRepository.cs" />
+    <Compile Include="Absence\Device\IBiometricRepository.cs" />
+    <Compile Include="Absence\Models\AbsenceBase.cs" />
+    <Compile Include="Absence\Models\BiometricData.cs" />
+    <Compile Include="Absence\Models\Machine.cs" />
+    <Compile Include="Absence\Models\ObligatedRange.cs" />
+    <Compile Include="Absence\Models\ObligatedRangeDayTimes.cs" />
+    <Compile Include="Absence\Models\ObligatedRangeWeeks.cs" />
+    <Compile Include="Absence\Models\Personnel.cs" />
+    <Compile Include="Absence\Models\PersonnelMachine.cs" />
+    <Compile Include="Absence\Models\WorkGroup.cs" />
+    <Compile Include="Absence\Models\WorkGroupObligatedRange.cs" />
     <Compile Include="AppSourceGenerator\IDataProvider.cs" />
     <Compile Include="AppSourceGenerator\IGenerator.cs" />
     <Compile Include="AppSourceGenerator\IMVCProjectGeneratorBase.cs" />
@@ -230,6 +269,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Absence\AbsenceAreaRegistration.cs" />
+    <Compile Include="Areas\Absence\Controllers\ObligatedRangeController.cs" />
     <Compile Include="Areas\AppGeneration\AppGenerationAreaRegistration.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\DefineControllerController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\DefineControllerMethodController.cs" />
@@ -365,15 +406,11 @@
     <Compile Include="ServiceLayer\Systems\Library\RentService.cs" />
     <Compile Include="ServiceLayer\Systems\Library\StudentService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="TestGeneratedSource\Model\Book.cs" />
-    <Compile Include="TestGeneratedSource\Model\Image.cs" />
-    <Compile Include="TestGeneratedSource\Model\Rent.cs" />
-    <Compile Include="TestGeneratedSource\Model\User.cs" />
-    <Compile Include="TestGeneratedSource\ServiceLayer\HomeLibrary\BookService.cs" />
-    <Compile Include="TestGeneratedSource\ServiceLayer\HomeLibrary\RentService.cs" />
-    <Compile Include="TestGeneratedSource\ServiceLayer\HomeLibrary\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Absence\Views\ObligatedRange\Index.cshtml" />
+    <Content Include="Areas\Absence\Views\ObligatedRange\_Home.cshtml" />
+    <Content Include="Areas\Absence\Views\web.config" />
     <Content Include="Areas\AppGeneration\Views\DefineControllerMethod\GetDataTable.cshtml" />
     <Content Include="Areas\AppGeneration\Views\DefineController\GetDataTable.cshtml" />
     <Content Include="Areas\AppGeneration\Views\DefineServiceMethod\Delete.cshtml" />
@@ -395,6 +432,7 @@
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\Delete.cshtml" />
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\ForEdit.cshtml" />
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\GetDataTable.cshtml" />
+    <Content Include="Areas\JUiEngine\Views\Shared\Backup of update on change.html" />
     <Content Include="Areas\ReportGenerator\Controllers\ModelsClassDiagram.puml" />
     <Content Include="Areas\JUiEngine\Views\Shared\TablePartial.cshtml" />
     <Content Include="Areas\JUiEngine\Views\Shared\_Layout.cshtml" />
@@ -3423,6 +3461,9 @@
     <Content Include="ReportGenerator\ReportGenerator\package-lock.json" />
     <Content Include="ReportGenerator\ReportGenerator\package.json" />
     <Content Include="ReportGenerator\ReportGenerator\README.md" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence.module.spec.ts" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence.module.ts" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\abscence-routing.module.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\app-routing.module.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\app.component.css" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\app.component.html" />
@@ -3686,6 +3727,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\TypeLite.tt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -3723,9 +3765,13 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Book\GetDataTable.cshtml" />
+    <None Include="Scripts\Manager.ttinclude" />
+    <None Include="Scripts\TypeLite.Net4.tt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Absence\Models" />
+    <Folder Include="Areas\Absence\Views\Shared" />
     <Folder Include="Areas\AppGeneration\Models\" />
     <Folder Include="Areas\AppGeneration\Views\Shared\" />
     <Folder Include="Areas\App\Models\" />
@@ -3736,8 +3782,6 @@
     <Folder Include="Areas\System\Views\Shared\" />
     <Folder Include="ReportGenerator\ReportGenerator\.idea\inspectionProfiles\" />
     <Folder Include="ReportGenerator\ReportGenerator\node_modules\.cache\uglifyjs-webpack-plugin\tmp\" />
-    <Folder Include="TestGeneratedSource\Areas\" />
-    <Folder Include="TestGeneratedSource\Registery\HomeLibrary\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Views\BaseCRUD\" />
     <Folder Include="Views\BaseEngine\" />
@@ -3757,6 +3801,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -3792,7 +3839,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\xunit.core.2.4.1\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.1\build\xunit.core.props'))" />
+    <Error Condition="!Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.1\build\xunit.core.targets'))" />
   </Target>
+  <Import Project="..\packages\xunit.core.2.4.1\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.1\build\xunit.core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

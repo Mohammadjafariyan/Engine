@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using Engine.Controllers.AbstractControllers;
 using WebAppIDEEngine.Models;
 using Engine.Utitliy;
+using Entities;
 using ServiceLayer.Systems.Library;
 using ViewModel.ActionTypes;
+using ViewModel.Parameters;
 
 
 namespace Engine.Areas.Library.Controllers
@@ -17,7 +20,7 @@ namespace Engine.Areas.Library.Controllers
     /// bookController
     /// bookController
     /// </summary>
-    public class bookApiController : ApiController
+    public class bookApiController : BaseApiController<Book,CommonParameter>
     {
         private Injector _injector = new Injector();
         private BookService _bookservice;
@@ -25,9 +28,10 @@ namespace Engine.Areas.Library.Controllers
         public bookApiController()
         {
             this._bookservice = _injector.Inject<BookService>();
+            this._engineService = _injector.Inject<BookService>();
         }
 
-        [HttpPost]
+        [HttpGet]
         public IDataTable getAll(long id)
         {
             try

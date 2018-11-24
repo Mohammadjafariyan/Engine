@@ -27,6 +27,8 @@ namespace Engine.Areas.JUiEngine.Controllers
         public static readonly string UiFormItems = "UiFormItems";
         public static readonly string ModelNameValue = "ModelNameValue";
         public static readonly string Model = "Model";
+        public static readonly string NoLayoutForShowView = "NoLayoutForShowView";
+        public static readonly string FormId = "FormId";
         private UiFormDataProvider _provider = new UiFormDataProvider();
 
 

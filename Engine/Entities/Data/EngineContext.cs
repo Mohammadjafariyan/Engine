@@ -6,6 +6,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Services.Description;
+using Engine.Absence.Device;
+using Engine.Absence.Models;
 using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.Core.QueryBuild;
 using Engine.Entities.Models.UiGeneratorModels;
@@ -247,6 +249,34 @@ namespace WebAppIDEEngine.Models
                 .WithMany(f => f.Rents).HasForeignKey(f => f.StudentId).WillCascadeOnDelete(false);
 
             #endregion
+            
+            
+            #region Absence
+
+            
+            modelBuilder.Entity<PersonnelMachine>().HasRequired(f => f.Personnel)
+                .WithMany(f => f.PersonnelMachines).HasForeignKey(f => f.PersonnelId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<PersonnelMachine>().HasRequired(f => f.Machine)
+                .WithMany(f => f.PersonnelMachines).HasForeignKey(f => f.MachineId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ObligatedRange>().HasMany(f => f.ObligatedRangeWeeks)
+                .WithRequired(f => f.ObligatedRange).HasForeignKey(f => f.ObligatedRangeId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ObligatedRangeWeeks>().HasMany(f => f.ObligatedRangeDayTimes)
+                .WithRequired(f => f.ObligatedRangeWeek).HasForeignKey(f => f.ObligatedRangeWeekId).WillCascadeOnDelete(false);
+            
+            modelBuilder.Entity<WorkGroup>().HasMany(f => f.Personnels)
+                .WithRequired(f => f.WorkGroup).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<WorkGroupObligatedRange>().HasRequired(f => f.WorkGroup)
+                .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<WorkGroupObligatedRange>().HasRequired(f => f.ObligatedRange)
+                .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
+
+
+            #endregion
 
             base.OnModelCreating(modelBuilder);
         }
@@ -260,6 +290,16 @@ namespace WebAppIDEEngine.Models
         public DbSet<WebAppIDEEngine.Models.Core.Action> Actions { get; set; }
         //  public DbSet<WebAppIDEEngine.Models.Core.QueryBuild.Column> Columns { get; set; }
 
+        #region Absence
+        public DbSet<Machine> Machines { get; set; }
+        public DbSet<ObligatedRange> ObligatedRanges { get; set; }
+        public DbSet<ObligatedRangeWeeks> ObligatedRangeWeekss { get; set; }
+        public DbSet<ObligatedRangeDayTimes> ObligatedRangeDayTimes { get; set; }
+        public DbSet<Personnel> Personnels { get; set; }
+        public DbSet<PersonnelMachine> PersonnelMachines { get; set; }
+        public DbSet<WorkGroup> WorkGroups { get; set; }
+        public DbSet<WorkGroupObligatedRange> WorkGroupObligatedRanges { get; set; }
+        #endregion
 
         #region ReportGenerator
 
@@ -312,6 +352,7 @@ namespace WebAppIDEEngine.Models
         public DbSet<Book> Books { get; set; }
         public DbSet<Rent> Rents { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<BiometricData> BiometricDatas { get; set; }
 
         #endregion
 

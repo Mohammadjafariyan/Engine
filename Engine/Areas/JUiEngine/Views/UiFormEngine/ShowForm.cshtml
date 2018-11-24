@@ -30,6 +30,8 @@
     var OnCompleteFunction = ViewData[UiFormEngineController.OnCompleteFunction + Model.Id] as string;
     submitName = submitName ?? "جستجو";
 
+    var formId = $@"form_{Model.Id}";
+    ViewData[UiFormEngineController.FormId] = formId;
 
 }
 @Html.Partial("~/Areas/JUiEngine/Views/Shared/ItemsPartial.cshtml")
@@ -39,9 +41,10 @@
 
 @if (isAjax == true)
 {
-    //action = "/@PostSubsystemUrl/@PostControllerUrl/@PostActionUrl"
-    <form
-        class="" id="form_@Model.Id" method="post">
+    PostControllerUrl=PostControllerUrl + "api";
+    var action = $@"/{PostSubsystemUrl}/{PostControllerUrl}/{PostActionUrl}"+Request.Url.Query;
+    <form action="@action"
+        class="" id="@formId" method="post">
         @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
         <br>
         <button id="search_@Model.Id" type="submit" class="btn btn-primary">جستجو </button>
@@ -65,8 +68,8 @@
                     e.preventDefault();
 
                     $.ajax({
-                        url: "/@PostSubsystemUrl/@PostControllerUrl/@PostActionUrl",
-                        type: 'POST',
+                        url: "/@PostSubsystemUrl/api/@PostControllerUrl/@PostActionUrl/5",
+                          type: 'POST',
                         data: $('#form_@Model.Id').serialize(),
                         success: function(e) {
                             @Html.Raw(OnCompleteFunction);
@@ -79,7 +82,7 @@
 }
 else
 {
-    using (Html.BeginForm(PostActionUrl, PostControllerUrl, new {BackUrl = BackUrl, area = PostSubsystemUrl}, FormMethod.Post, new {@class = ""}))
+    using (Html.BeginForm(PostActionUrl, PostControllerUrl, new {BackUrl = BackUrl, area = PostSubsystemUrl}, FormMethod.Post, new {@class = "",@Id=formId}))
     {
         @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
         <br/>

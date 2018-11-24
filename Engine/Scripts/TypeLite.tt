@@ -1,0 +1,7 @@
+﻿﻿<#@ template debug="false" hostspecific="True" language="C#" #>
+<#@ assembly name="D:\\workplace\\git\\Engine\\Engine\\bin\\TypeLite.dll" #>
+<#@ assembly name="D:\\workplace\\git\\Engine\\Engine\\bin\\TypeLite.Net4.dll" #>
+<#@ assembly name="D:\\workplace\\git\\Engine\\Engine\\bin\\Engine.dll" #>
+<#@ import namespace="TypeLite" #> 
+<#@output extension=".d.ts"#>
+<#= TypeScript.Definitions().ForLoadedAssemblies() #>

@@ -60,9 +60,9 @@ namespace Engine.Entities.Models.UiGeneratorModels
         public FieldType FieldType { get; set; }
 
 
-        [DropDown(Name = "نام پروپرتی ", Service = GlobalNames.PropertyServiceName, MethodName = GlobalNames.GetDropDownAsync)]
+        [DropDown(Name = "نام پروپرتی استفاده نشده", Service = GlobalNames.PropertyServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         [NotMapped]
-        public long PropertyId { get; set; }
+        public long? PropertyId { get; set; }
 
 
     }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {DataComponent} from "./query-generator/data/data.component";
+import {CustomResultType} from "./database/tables.service";
 
 @Component({
   moduleId:'AppComponent',
@@ -10,7 +11,7 @@ import {DataComponent} from "./query-generator/data/data.component";
 export class AppComponent {
   title = 'ReportGenerator';
 
-  static ShowMsg(s: string, err: string, errmsg: string) {
+  static ShowMsg(s: string, err: CustomResultType, errmsg: string) {
     alert(errmsg);
   }
 }

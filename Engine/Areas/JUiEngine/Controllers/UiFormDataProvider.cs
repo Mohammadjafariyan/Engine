@@ -34,7 +34,7 @@ namespace Engine.Areas.JUiEngine.Controllers
                 if (form == null)
                     throw new Exception("فرم یافت نشد");
 
-                ViewData[UiFormEngineController.DynamicFormUiFormInputs] = db.UiFormInputs.Include(d=>d.UiInput).Where(d=>d.UiFormId==form.Id).ToList();
+                ViewData[UiFormEngineController.DynamicFormUiFormInputs] = db.UiFormInputs.Include(d=>d.UiInput).Include(d=>d.UiInput.UiInputMethods).Include(d=>d.UiInput.UiInputMethods.Select(m=>m.DefineControllerMethod)).Where(d=>d.UiFormId==form.Id).ToList();
 
                 var method = form.UiFormControllerMethods.Where(d=>d.Type==postType).Select(u => u.DefineControllerMethod).FirstOrDefault();
                 if (method == null)

@@ -1,9 +1,19 @@
 ﻿
+@using System.Collections.Specialized
 @using Engine.Areas.JUiEngine.Controllers
 @model Engine.Entities.Models.UiGeneratorModels.UiForm
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    if (ViewData[UiFormEngineController.NoLayoutForShowView] as bool?==true)
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 
     ViewData[UiFormEngineController.IsAjax] = false;
     ViewData[UiFormEngineController.BackUrl]=Request.Url.AbsolutePath;
@@ -12,13 +22,17 @@
     // var isInline = ViewData["class"] as string ?? "form-inline";
     ViewData[UiFormEngineController.SubmitName + Model.Id]="ثبت";
     ViewData[UiFormEngineController.WithLayout] = false;
+    
+    
+
 
 }
+
 <div class="row">
     <div class="panel panel-default">
         <div class="panel-heading">@Model.Translate</div>
         <div class="panel-body">
-            <div class="row" style="direction: rtl">
+            <div class="row" styleOnCompleteFunction="direction: rtl">
                 @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowForm.cshtml")
             </div>
         </div>
