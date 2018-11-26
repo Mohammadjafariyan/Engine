@@ -780,6 +780,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="ReportGeneratorOutput\absence-absence-module.js" />
+    <Content Include="ReportGeneratorOutput\absence-absence-module.js.map" />
     <Content Include="ReportGeneratorOutput\assets\bootstrap\bootstrap.min.css" />
     <Content Include="ReportGeneratorOutput\assets\bootstrap\bootstrap.min.js" />
     <Content Include="ReportGeneratorOutput\assets\fonts\open-iconic.svg" />
@@ -792,6 +794,8 @@
     <Content Include="ReportGeneratorOutput\assets\primeng\resources\primeng.css" />
     <Content Include="ReportGeneratorOutput\assets\primeng\resources\primeng.min.css" />
     <Content Include="ReportGeneratorOutput\assets\primeng\resources\themes\bootstrap\theme.css" />
+    <Content Include="ReportGeneratorOutput\default~absence-absence-module~query-generator-query-generator-module.js" />
+    <Content Include="ReportGeneratorOutput\default~absence-absence-module~query-generator-query-generator-module.js.map" />
     <Content Include="ReportGeneratorOutput\favicon.ico" />
     <Content Include="ReportGeneratorOutput\index.html" />
     <Content Include="ReportGeneratorOutput\main.js" />
@@ -3461,6 +3465,12 @@
     <Content Include="ReportGenerator\ReportGenerator\package-lock.json" />
     <Content Include="ReportGenerator\ReportGenerator\package.json" />
     <Content Include="ReportGenerator\ReportGenerator\README.md" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence-index\absence-index.component.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence-index\absence-index.component.html" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence-index\absence-index.component.spec.ts" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence-index\absence-index.component.ts" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence-index\absence.DataProviderService.ts" />
+    <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence-index\absence.models.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence.module.spec.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\absence\absence.module.ts" />
     <Content Include="ReportGenerator\ReportGenerator\src\app\absence\abscence-routing.module.ts" />

@@ -11,7 +11,12 @@ import {CustomResultType} from "./database/tables.service";
 export class AppComponent {
   title = 'ReportGenerator';
 
-  static ShowMsg(s: string, err: CustomResultType, errmsg: string) {
+  static ShowMsg(s: string, err: string, errmsg: string) {
+    alert(errmsg);
+  }
+
+
+  static ShowMsgByType(s: string, err: CustomResultType, errmsg: string) {
     alert(errmsg);
   }
 }

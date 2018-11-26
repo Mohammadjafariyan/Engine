@@ -22,7 +22,11 @@
 
     var modelId = "@Model?.Id";
     $(document).ready(function() {
-        window.location.href += "Absence/Index" + modelId;
+        
+        if (window.location.href.indexOf("Absence/Index") ==-1) {
+            
+        }
+       // window.location.href += "Absence/Index" + modelId;
     });
 
 </script>

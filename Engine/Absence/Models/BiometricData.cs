@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Engine.Absence.Models;
 using TypeLite;
 
@@ -7,6 +8,7 @@ namespace Engine.Absence.Models
     [TsClass]
     public class BiometricData
     {
+        [Key]
         public long Id { get; set; }
         public long UserId { get; set; }
         public long MachineId { get; set; }

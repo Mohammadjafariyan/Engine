@@ -8,8 +8,14 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./absence/absence.module": [
+		"./src/app/absence/absence.module.ts",
+		"default~absence-absence-module~query-generator-query-generator-module",
+		"absence-absence-module"
+	],
 	"./query-generator/query-generator.module": [
 		"./src/app/query-generator/query-generator.module.ts",
+		"default~absence-absence-module~query-generator-query-generator-module",
 		"query-generator-query-generator-module"
 	]
 };
@@ -22,7 +28,7 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return __webpack_require__.e(ids[1]).then(function() {
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
 		return __webpack_require__(id);
 	});
@@ -58,13 +64,12 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var routes = [
     { path: '', redirectTo: 'design', pathMatch: 'full' },
     {
-        path: '',
-        children: [
-            {
-                path: 'design',
-                loadChildren: './query-generator/query-generator.module#QueryGeneratorModule'
-            }
-        ]
+        path: 'design',
+        loadChildren: './query-generator/query-generator.module#QueryGeneratorModule'
+    },
+    {
+        path: 'absence',
+        loadChildren: './absence/absence.module#AbsenceModule'
     }
 ];
 var AppRoutingModule = /** @class */ (function () {
@@ -130,6 +135,9 @@ var AppComponent = /** @class */ (function () {
     AppComponent.ShowMsg = function (s, err, errmsg) {
         alert(errmsg);
     };
+    AppComponent.ShowMsgByType = function (s, err, errmsg) {
+        alert(errmsg);
+    };
     AppComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             moduleId: 'AppComponent',
@@ -185,7 +193,7 @@ var AppModule = /** @class */ (function () {
                 _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_3__["BrowserAnimationsModule"],
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_1__["AppRoutingModule"],
                 _angular_common__WEBPACK_IMPORTED_MODULE_4__["CommonModule"],
-                _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClientModule"],
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClientModule"]
             ],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"]]

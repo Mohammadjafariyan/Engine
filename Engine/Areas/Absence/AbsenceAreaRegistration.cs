@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Mvc;
 
-namespace Engine.Areas.App
+namespace Engine.Areas.Absence
 {
     public class AbsenceAreaRegistration : AreaRegistration 
     {

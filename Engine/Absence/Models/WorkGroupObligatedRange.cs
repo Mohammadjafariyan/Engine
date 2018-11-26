@@ -1,9 +1,10 @@
 using TypeLite;
+using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Absence.Models
 {
     [TsClass]
-    public class WorkGroupObligatedRange
+    public class WorkGroupObligatedRange: AbsenceBase
     {
 
         public   long ObligatedRangeId { get; set; }

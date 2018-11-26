@@ -31,7 +31,7 @@ export class AbsenceDataProviderService {
     weeks.push(this.getDay( "پنجشنبه",DayOfWeek.Thursday));
     weeks.push(this.getDay( "جمعه",DayOfWeek.Friday));
 
-    return weeks;
+    return weeks.reverse();
   }
 
   GetById(id: any):Observable<CustomResult> {
@@ -55,7 +55,7 @@ export class AbsenceDataProviderService {
 
 
   get getAreaAndPath() {
-    return 'absence/api';
+    return 'absence/ObligatedRange';
   }
 
 

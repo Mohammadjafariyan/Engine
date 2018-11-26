@@ -1,11 +1,13 @@
 using System;
 using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 using Engine.Absence.Models;
 using Engine.Areas.ReportGenerator.Controllers;
+using Newtonsoft.Json;
 using WebAppIDEEngine.Models;
 
-namespace Engine.Areas.App.Controllers
+namespace Engine.Areas.Absence.Controllers
 {
     public class ObligatedRangeController : Controller
     {
@@ -23,6 +25,7 @@ namespace Engine.Areas.App.Controllers
         {
             try
             {
+                var  json="";
                 using (var db = new EngineContext())
                 {
                     var obl = db.ObligatedRanges.Find(Id);
@@ -31,12 +34,19 @@ namespace Engine.Areas.App.Controllers
                         throw new Exception("یافت نشد");
                     }
 
-                    return Json(new CustomResult {result = obl, Status = CustomResultType.fail});
+                     json=JsonConvert.SerializeObject(obl,new JsonSerializerSettings
+                     {
+                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                     }) ;
                 }
+
+                var obj = JsonConvert.DeserializeObject<ObligatedRange>(json);
+
+                return Json(new CustomResult {result = obj, Status = CustomResultType.success},JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
-                return Json(new CustomResult {Message = e.Message, Status = CustomResultType.fail});
+                return Json(new CustomResult {Message = e.Message, Status = CustomResultType.fail},JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -54,38 +64,51 @@ namespace Engine.Areas.App.Controllers
                     }
                     else
                     {
+                        var record=db.ObligatedRanges.Find(obligatedRange.Id);
+                        db.Entry(record).CurrentValues.SetValues(obligatedRange);
+                        
+                        
+                        
                         foreach (var weekDay in obligatedRange.ObligatedRangeWeeks)
                         {
-                            db.Entry(weekDay).State = EntityState.Modified;
 
+                            var recordWeekDay=record.ObligatedRangeWeeks.First(w => w.Id == weekDay.Id);
+
+                            db.Entry(recordWeekDay).CurrentValues.SetValues(weekDay);
+                            
                             foreach (var time in weekDay.ObligatedRangeDayTimes)
                             {
                                 if (time.Id == 0)
                                 {
-                                    db.Entry(weekDay).State = EntityState.Added;
+                                    recordWeekDay.ObligatedRangeDayTimes.Add(time);
                                 }
                                 else if (time.IsRemoved)
                                 {
-                                    db.Entry(weekDay).State = EntityState.Deleted;
+                                    var existTime=recordWeekDay.ObligatedRangeDayTimes.First(t => t.Id == time.Id);
+                                    db.Entry(existTime).State = EntityState.Deleted;
                                 }
                                 else
                                 {
-                                    db.Entry(weekDay).State = EntityState.Modified;
+                                    var existTime=recordWeekDay.ObligatedRangeDayTimes.First(t => t.Id == time.Id);
+                                    db.Entry(existTime).CurrentValues.SetValues(time);
+                                    db.Entry(existTime).State = EntityState.Modified;
                                 }
-                            }
+                            }                      
+                            db.Entry(recordWeekDay).State = EntityState.Modified;
+
                         }
 
-                        db.Entry(obligatedRange).State = EntityState.Modified;
+                        db.Entry(record).State = EntityState.Modified;
                     }
 
                     db.SaveChanges();
                 }
 
-                return Json(new CustomResult {Message = "با موفقیت ثبت شد", Status = CustomResultType.success});
+                return Json(new CustomResult {result =obligatedRange.Id, Message = "با موفقیت ثبت شد", Status = CustomResultType.success},JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
-                return Json(new CustomResult {Message = e.Message, Status = CustomResultType.fail});
+                return Json(new CustomResult {result =obligatedRange.Id,Message = e.Message, Status = CustomResultType.fail},JsonRequestBehavior.AllowGet);
             }
         }
     }
