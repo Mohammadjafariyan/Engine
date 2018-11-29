@@ -100,7 +100,10 @@ namespace AppSourceGenerator
                 string controllerContent = "";
                 foreach (var controllerMethod in controller.DefineControllerMethods)
                 {
-                    controllerContent += MVCUtility.GetControllerApiMethod(controllerMethod);
+                    if (!controllerMethod.InParent)
+                    {
+                        controllerContent += MVCUtility.GetControllerApiMethod(controllerMethod);
+                    }
                 }
 
                 if (controller.Name.ToLower().Contains("controller"))
@@ -156,7 +159,10 @@ namespace AppSourceGenerator
                 string controllerContent = "";
                 foreach (var controllerMethod in controller.DefineControllerMethods)
                 {
-                    controllerContent += CreateControllerMethod(controllerMethod);
+                    if (!controllerMethod.InParent)
+                    {
+                        controllerContent += CreateControllerMethod(controllerMethod);
+                    }
                 }
 
 

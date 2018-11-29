@@ -271,6 +271,24 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Absence\AbsenceAreaRegistration.cs" />
     <Compile Include="Areas\Absence\Controllers\ObligatedRangeController.cs" />
+    <Compile Include="Areas\Absence\Controllers\ObligatedRangesApiController.cs" />
+    <Compile Include="Areas\Absence\Controllers\ObligatedRangesController.cs" />
+    <Compile Include="Areas\Absence\Controllers\PersonnelApiController.cs" />
+    <Compile Include="Areas\Absence\Controllers\PersonnelController.cs" />
+    <Compile Include="Areas\Absence\Controllers\PersonnelTaradodInfoController.cs" />
+    <Compile Include="Areas\Absence\Controllers\WorkGroupApiController.cs" />
+    <Compile Include="Areas\Absence\Controllers\WorkGroupController.cs" />
+    <Compile Include="Areas\Absence\Controllers\WorkGroupObligatedRangeApiController.cs" />
+    <Compile Include="Areas\Absence\Controllers\WorkGroupObligatedRangeController.cs" />
+    <Compile Include="Areas\Absence\ControllerTests\PersonnelTaradodInfoControllerTest.cs" />
+    <Compile Include="Areas\Absence\ControllerTests\PersonnelTaradodInfoServiceTests.cs" />
+    <Compile Include="Areas\Absence\Models\BiometryCalculatedDetail.cs" />
+    <Compile Include="Areas\Absence\Service\IntervalHelperDepricated.cs" />
+    <Compile Include="Areas\Absence\Service\IntervalHelper.cs" />
+    <Compile Include="Areas\Absence\Service\PersonnelTaradodInfoService.cs" />
+    <Compile Include="Areas\Absence\UiConstructs\PersonnelConstructs.cs" />
+    <Compile Include="Areas\Absence\UiConstructs\WorkGroupConstructs.cs" />
+    <Compile Include="Areas\Absence\UiConstructs\WorkGroupObligatedRangeConstruct.cs" />
     <Compile Include="Areas\AppGeneration\AppGenerationAreaRegistration.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\DefineControllerController.cs" />
     <Compile Include="Areas\AppGeneration\Controllers\DefineControllerMethodController.cs" />
@@ -315,9 +333,14 @@
     <Compile Include="Code\EngineView.cs" />
     <Compile Include="Code\Injector.cs" />
     <Compile Include="Controllers\AbstractControllers\ApiController.cs" />
+    <Compile Include="Controllers\AbstractControllers\BaseFormConstructProvider.cs" />
+    <Compile Include="Controllers\AbstractControllers\BaseTableConstructProvider.cs" />
     <Compile Include="Controllers\AbstractControllers\EBaseAppController.cs" />
     <Compile Include="Controllers\AbstractControllers\BaseEngineController.cs" />
     <Compile Include="Controllers\AbstractControllers\AppController.cs" />
+    <Compile Include="Controllers\AbstractControllers\IFormConstructProvider.cs" />
+    <Compile Include="Controllers\AbstractControllers\ITableConstructProvider.cs" />
+    <Compile Include="Controllers\AbstractControllers\Utility.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -391,6 +414,10 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceLayer\Absence\ObligatedRangeService.cs" />
+    <Compile Include="ServiceLayer\Absence\Personnel.cs" />
+    <Compile Include="ServiceLayer\Absence\WorkGroupObligatedRangService.cs" />
+    <Compile Include="ServiceLayer\Absence\WorkGroupService.cs" />
     <Compile Include="ServiceLayer\Base\IBaseService.cs" />
     <Compile Include="ServiceLayer\Engine\BaseEngineService.cs" />
     <Compile Include="ServiceLayer\Systems\Engine\RelationshipLinkService.cs" />
@@ -408,9 +435,24 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Absence\Views\ObligatedRanges\Delete.cshtml" />
+    <Content Include="Areas\Absence\Views\ObligatedRanges\ForEdit.cshtml" />
+    <Content Include="Areas\Absence\Views\ObligatedRanges\GetDataTable.cshtml" />
     <Content Include="Areas\Absence\Views\ObligatedRange\Index.cshtml" />
     <Content Include="Areas\Absence\Views\ObligatedRange\_Home.cshtml" />
+    <Content Include="Areas\Absence\Views\PersonnelTaradodInfo\Index.cshtml" />
+    <Content Include="Areas\Absence\Views\PersonnelTaradodInfo\TaradodDetailList.cshtml" />
+    <Content Include="Areas\Absence\Views\Personnel\Delete.cshtml" />
+    <Content Include="Areas\Absence\Views\Personnel\ForEdit.cshtml" />
+    <Content Include="Areas\Absence\Views\Personnel\GetDataTable.cshtml" />
+    <Content Include="Areas\Absence\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Absence\Views\web.config" />
+    <Content Include="Areas\Absence\Views\WorkGroupObligatedRange\Delete.cshtml" />
+    <Content Include="Areas\Absence\Views\WorkGroupObligatedRange\ForEdit.cshtml" />
+    <Content Include="Areas\Absence\Views\WorkGroupObligatedRange\GetDataTable.cshtml" />
+    <Content Include="Areas\Absence\Views\WorkGroup\Delete.cshtml" />
+    <Content Include="Areas\Absence\Views\WorkGroup\ForEdit.cshtml" />
+    <Content Include="Areas\Absence\Views\WorkGroup\GetDataTable.cshtml" />
     <Content Include="Areas\AppGeneration\Views\DefineControllerMethod\GetDataTable.cshtml" />
     <Content Include="Areas\AppGeneration\Views\DefineController\GetDataTable.cshtml" />
     <Content Include="Areas\AppGeneration\Views\DefineServiceMethod\Delete.cshtml" />
@@ -776,6 +818,11 @@
     <Content Include="Content\DataTables\Select-1.2.6\js\select.jqueryui.min.js" />
     <Content Include="Content\DataTables\Select-1.2.6\js\select.semanticui.js" />
     <Content Include="Content\DataTables\Select-1.2.6\js\select.semanticui.min.js" />
+    <Content Include="Content\Datepicker\jalaali.js" />
+    <Content Include="Content\Datepicker\jquery.Bootstrap-PersianDateTimePicker.css" />
+    <Content Include="Content\Datepicker\jquery.Bootstrap-PersianDateTimePicker.js" />
+    <Content Include="Content\Datepicker\jquery.md.bootstrap.datetimepicker.style.css" />
+    <Content Include="Content\PersonnelTaradodListStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -3780,8 +3827,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Absence\Models" />
-    <Folder Include="Areas\Absence\Views\Shared" />
     <Folder Include="Areas\AppGeneration\Models\" />
     <Folder Include="Areas\AppGeneration\Views\Shared\" />
     <Folder Include="Areas\App\Models\" />

@@ -255,7 +255,9 @@ namespace Engine.Service.AbstractControllers
 
         public static Dictionary<string, string> GetPropertyNames<M>()
         {
-            var names = typeof(M).GetProperties()
+            var names = typeof(M).GetProperties().Where(p=>
+                    !p.PropertyType.IsArray && !p.PropertyType.IsGenericType &&
+                    !p.PropertyType.IsInterface )
                 .ToDictionary(key => key.Name, property =>
                     property.GetCustomAttributes().Where(c => c is IEngineAttribute && !(c is HiddenColumnAttribute))
                         .Select(c => c as IEngineAttribute)
@@ -300,7 +302,7 @@ namespace Engine.Service.AbstractControllers
         {
             ObjectDataTable<T> dataTable = new ObjectDataTable<T>
             {
-                Records = _entities.AsNoTracking(),
+                Records = _entities.AsQueryable(),
                 Headers = GetPropertyNames<T>()
             };
 

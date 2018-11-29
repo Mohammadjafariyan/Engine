@@ -12,6 +12,8 @@ namespace Engine.Areas.Absence.Controllers
     public class ObligatedRangeController : Controller
     {
         public static readonly string Error = "Error";
+        
+        
 
         // GET
         public ActionResult Index(long? Id)

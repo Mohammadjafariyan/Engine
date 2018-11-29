@@ -1,5 +1,7 @@
 ﻿@using Engine.Areas.JUiEngine.Controllers
 @using Engine.Entities.Models.UiGeneratorModels
+@using Engine.Service.AbstractControllers
+@using WebAppIDEEngine.Areas.App.Controllers
 @model Engine.Entities.Models.UiGeneratorModels.UiForm
 @{
     ViewBag.Title = "ShowView";
@@ -32,19 +34,49 @@
 
     var formId = $@"form_{Model.Id}";
     ViewData[UiFormEngineController.FormId] = formId;
-
 }
 @Html.Partial("~/Areas/JUiEngine/Views/Shared/ItemsPartial.cshtml")
+
+
+@if (ViewData[GlobalNames.AllErrors] != null)
+{
+    var errors = ViewData[GlobalNames.AllErrors] as IEnumerable<ModelError>;
+    if (errors != null)
+     {
+         
+         <div class="alert alert-warning">
+             <strong>خطا ها!</strong> 
+             
+             @foreach (var modelError in errors)
+             {
+                 <p>@modelError.ErrorMessage</p>
+             }
+
+         </div>
+         @*<div class="card bg-danger text-white">
+             <div class="card-header">خطا ها</div>
+             <div class="card-body">
+
+                 @foreach (var modelError in errors)
+                 {
+                     <p>@modelError.ErrorMessage</p>
+                 }
+
+             </div>
+
+         </div>*@
+     }
+}
 
 
 
 
 @if (isAjax == true)
 {
-    PostControllerUrl=PostControllerUrl + "api";
-    var action = $@"/{PostSubsystemUrl}/{PostControllerUrl}/{PostActionUrl}"+Request.Url.Query;
+    PostControllerUrl = PostControllerUrl + "api";
+    var action = $@"/{PostSubsystemUrl}/{PostControllerUrl}/{PostActionUrl}" + Request.Url.Query;
     <form action="@action"
-        class="" id="@formId" method="post">
+          class="" id="@formId" method="post">
         @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
         <br>
         <button id="search_@Model.Id" type="submit" class="btn btn-primary">جستجو </button>
@@ -58,7 +90,7 @@
         <button type="reset" class="btn btn-primary">ریست</button>
     }*@
 
-    
+
     <script>
 
         $(document).ready(function() {
@@ -69,7 +101,7 @@
 
                     $.ajax({
                         url: "/@PostSubsystemUrl/api/@PostControllerUrl/@PostActionUrl/5",
-                          type: 'POST',
+                        type: 'POST',
                         data: $('#form_@Model.Id').serialize(),
                         success: function(e) {
                             @Html.Raw(OnCompleteFunction);
@@ -82,7 +114,7 @@
 }
 else
 {
-    using (Html.BeginForm(PostActionUrl, PostControllerUrl, new {BackUrl = BackUrl, area = PostSubsystemUrl}, FormMethod.Post, new {@class = "",@Id=formId}))
+    using (Html.BeginForm(PostActionUrl, PostControllerUrl, new {BackUrl = BackUrl, area = PostSubsystemUrl}, FormMethod.Post, new {@class = "", @Id = formId}))
     {
         @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
         <br/>
@@ -90,4 +122,3 @@ else
         <button type="reset" class="btn btn-primary">ریست</button>
     }
 }
-

@@ -11,7 +11,7 @@ namespace Engine.Absence.Models
             Personnels = new List<Personnel>();
             WorkGroupObligatedRanges = new List<WorkGroupObligatedRange>();
         }
-        public string Name { get; set; }
+        public override string Name { get; set; }
         public virtual ICollection<Personnel> Personnels { get; set; }
         public virtual ICollection<WorkGroupObligatedRange> WorkGroupObligatedRanges { get; set; }
     }

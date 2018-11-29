@@ -1,0 +1,19 @@
+@using System.Collections.Specialized
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+@using Engine.Areas.JUiEngine.Controllers
+
+@model IDataTable
+@{
+    ViewBag.Title = "جدول کتاب ها";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var datatable= ViewData[UiHomeController.TableObject];
+}
+
+
+@Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)

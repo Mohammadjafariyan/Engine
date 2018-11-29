@@ -11,7 +11,7 @@ namespace Engine.Absence.Models
         {
             PersonnelMachines = new List<PersonnelMachine>();
         }
-        public string Name { get; set; }
+        public override  string Name { get; set; }
         public string LastName { get; set; }
         public string Code { get; set; }
         

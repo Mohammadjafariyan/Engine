@@ -22,6 +22,7 @@ namespace Engine.Service.AbstractControllers
         public const string GetDataTableAsync = "GetDataTableAsync";
         public const string GetDataTable = "GetDataTable";
         
+        public static readonly string AllErrors = "AllErrors";
 
 
         public const string ActionService = "ActionService";

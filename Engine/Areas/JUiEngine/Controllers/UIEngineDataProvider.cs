@@ -22,13 +22,37 @@ namespace Engine.Areas.JUiEngine.Controllers
             ViewDataDictionary ViewData, HttpRequestBase Request, string SubSystemName, string ControllerName,
             string ControllerMethod,
             string ServiceMethodName, IDataTable debatable = null);
+
+        void GetTable(EjTable table,
+            ViewDataDictionary viewData, HttpRequestBase request, string subSystemName, string controllerName,
+            string controllerMethod, IDataTable debatable = null);
     }
 
     public class UiEngineDataProvider : IUiEngineDataProvider
     {
         private Injector _injector = new Injector();
         private UiFormDataProvider _uiFormprovider = new UiFormDataProvider();
+        
+        public void GetTable(EjTable table,
+            ViewDataDictionary viewData, HttpRequestBase request, string subSystemName, string controllerName,
+            string controllerMethod, IDataTable debatable = null)
+        {
 
+                    viewData[UiHomeController.ApiActionURL] = request.ApplicationPath +
+                                                              $@"{subSystemName}/api/{controllerName}/{
+                                                                      controllerMethod
+                                                                  }" +
+                                                              request.Url.Query;
+                    viewData[UiHomeController.ActionURL] = request.ApplicationPath +
+                                                           $@"{subSystemName}/{controllerName}/{controllerMethod}" +
+                                                           request.Url.Query;
+                    viewData[UiHomeController.TableObject] = table;
+                    viewData[UiHomeController.DataTable] = debatable;
+                    viewData[UiHomeController.UiTableItems] = table.UiTableItems;
+
+        }
+        
+        
         public EjTable GetTable(string tableName,
             ViewDataDictionary ViewData, HttpRequestBase Request, string SubSystemName, string ControllerName,
             string ControllerMethod,

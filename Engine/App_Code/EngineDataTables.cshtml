@@ -52,7 +52,7 @@ if ((datatable is IDataTable))
     }
 
 
-    var headers = datatable.Headers;
+    Dictionary<string,string> headers = datatable.Headers;
     var RecordsList = datatable.RecordsList;
     var currentController = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
 
@@ -78,9 +78,13 @@ if ((datatable is IDataTable))
     <table class="table table-striped" id="@TableId">
         <thead>
         <tr>
+            <th>کد</th>
             @foreach (var th in headers)
             {
-                <th>@th.Value</th>
+                if (th.Key != "Id")
+                {
+                    <th>@th.Value</th>
+                }
             }
             @if (showToolsButtons)
             {
@@ -93,8 +97,14 @@ if ((datatable is IDataTable))
         @foreach (var record in RecordsList)
         {
             <tr>
-                @foreach (var header in headers)
+                <td>@record.Id</td>
+                @foreach(var header in headers)
                 {
+                    if (header.Key == "Id")
+                    {
+                        continue;
+                    }
+
                     var property = record.GetType()?.GetProperty(header.Key);
 
                     if (property.PropertyType == typeof(string)
@@ -128,7 +138,7 @@ if ((datatable is IDataTable))
                                 }
                                 else
                                 {*@
-                        <td><button type="button" class="btn btn-info">@property.Name</button></td>
+                        @*<td><button type="button" class="btn btn-info">@property.Name</button></td>*@
                     }
                     else if (property.PropertyType.IsEnum)
                     {

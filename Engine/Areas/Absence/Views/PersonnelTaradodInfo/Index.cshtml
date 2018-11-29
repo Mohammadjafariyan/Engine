@@ -1,0 +1,250 @@
+﻿@using System.Globalization
+@using Engine.Absence.Models
+@using Engine.Areas.Absence.Controllers
+@using Engine.Areas.Absence.Models
+@model dynamic
+
+@{
+    ViewBag.Title = "جزئیات تردد پرسنل";
+    Layout = "../Shared/_Layout.cshtml";
+
+    List<Personnel> personnels = (List<Personnel>) ViewData[PersonnelTaradodInfoController.Personnel];
+
+
+    var fromdate = ViewData["fromdate"] as DateTime?;
+    var todate = ViewData["dateto"] as DateTime?;
+
+
+    PersianCalendar persianCalendar = new PersianCalendar();
+    var fromdateStr = fromdate.HasValue ? $@"{persianCalendar.GetYear(fromdate.Value)}/{persianCalendar.GetMonth(fromdate.Value)}/{persianCalendar.GetDayOfMonth(fromdate.Value)}" : "";
+    var todateStr = todate.HasValue ? $@"{persianCalendar.GetYear(todate.Value)}/{persianCalendar.GetMonth(todate.Value)}/{persianCalendar.GetDayOfMonth(todate.Value)}" : "";
+}
+
+@if (ViewData["error"] != null)
+{
+    var error = ViewData["error"] as string;
+    <div class="alert alert-danger">
+        <strong>خطا!</strong> @error
+    </div>
+}
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">فرم جستجو</div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Detail", "PersonnelTaradodInfo", new {area = "Absence"}, FormMethod.Post, new {@class = "form"}))
+            {
+                <div class="row">
+                    <div class="form-group col-md-4 ">
+                        <label for="pwd">پرسنل</label>
+                        <select name="personnelId" class="form-control" id="pwd">
+                            @foreach (var option in personnels)
+                            {
+                                string selected = "";
+                                if (ViewData["personnelId"] != null && (long) ViewData["personnelId"] == option.Id)
+                                {
+                                    selected = "selected='selected'";
+                                }
+                                <option @selected value="@option.Id">@option.Name @option.LastName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="email">تاریخ تا</label>
+                        <input type="text" onchange="dateToChanged(this)" value="@todateStr" name="fa_dateto" class="form-control" id="fa_dateto">
+                        <input type="hidden" hidden="hidden" value="@todate" name="dateto" class="form-control" id="dateto">
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="email">تاریخ از</label>
+                        <input type="text" onchange="fromdateChanged(this)" value="@fromdateStr" name="fa_fromdate" class="form-control" id="fa_fromdate">
+                        <input type="hidden" hidden="hidden" value="@fromdate" name="fromdate" class="form-control" id="fromdate">
+                    </div>
+
+                </div>
+
+    @*<div class="checkbox">
+        <label><input type="checkbox"> Remember me</label>
+    </div>*@
+                <br/>
+                <button type="submit" class="btn btn-primary">جستجو</button>
+                <button type="reset" class="btn btn-primary">ریست</button>
+            }
+
+         
+        </div>
+    </div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" style="text-align: center">
+        <b >پنل نتایج</b>
+       
+    </div>
+    <div class="panel-body">
+        <button  class="btn btn-info" type="button" 
+                 onclick="myPrint('#dataDetail')" >پرینت</button>
+        <hr>
+        @if (ViewData[PersonnelTaradodInfoController.total] != null)
+        {
+            <link href="~/Content/PersonnelTaradodListStyle.css" rel="stylesheet">
+            @Html.Partial("TaradodDetailList")
+        }
+
+    </div>
+</div>
+<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+
+@section scripts {
+
+
+    <script>
+       
+        /*function print() {
+
+
+            /*var fromdate=$("#fromdate").val();
+            var dateto=$("#dateto").val();
+            var personnelId=$("#personnelId").val();
+            
+            if (!fromdate || !dateto || !personnelId) {
+                alert('لطفا تمامی فیلد ها را بدرستی انتخاب کنید');
+                return;
+            }
+            
+            var data= {
+                fromdate:fromdate,
+                dateto:dateto,
+                personnelId:personnelId
+            }
+            
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                type: 'POST',
+                data:data,
+                success: function(callback) {
+
+                    if (callback.Status == 0) {
+                        table.row(table.rows({ selected: true })[0]).remove().draw();
+                        alert('با موفقیت حذف شد');
+                    } else {
+                        alert(callback.Message);
+                    }
+
+                },
+                error: function(status) {
+                    console.log(status);
+                }
+            });#1#
+        }*/
+
+        function dateToChanged(el) {
+            fromTo('#fa_dateto', "#dateto");
+        }
+
+        function fromTo(one, two) {
+            debugger;
+            var tmpDate = $(one).MdPersianDateTimePicker('getDate');
+            var parsedDate = Date.parse(tmpDate);
+
+            console.log('parsedDate', parsedDate);
+            var date = new Date(parsedDate);
+
+            console.log('date', date);
+            //  var garegorianDate = toGregorian(date.getFullYear(),date.getMonth(),date.getDate());
+
+            console.log('garegorianDate', date.toJSON());
+
+            $(two).val(date.toJSON());
+        }
+
+        function fromdateChanged(el) {
+            fromTo('#fa_fromdate', "#fromdate");
+        }
+
+        $(document).ready(function() {
+
+            $('#fa_fromdate').MdPersianDateTimePicker({
+                Placement: 'left',
+                Trigger: 'click',
+                EnableTimePicker: false,
+                TargetSelector: '#fa_fromdate',
+                ToDate: false,
+                FromDate: true,
+                DisableBeforeToday: false,
+                Disabled: false,
+                Format: 'yyyy/MM/dd',
+                IsGregorian: false,
+                EnglishNumber: false,
+                InLine: false,
+                GroupId: "mygroup"
+
+            });
+            $('#fa_dateto').MdPersianDateTimePicker({
+                Placement: 'left',
+                Trigger: 'click',
+                EnableTimePicker: false,
+                TargetSelector: '#fa_dateto',
+                ToDate: true,
+                FromDate: false,
+                DisableBeforeToday: false,
+                Disabled: false,
+                Format: 'yyyy/MM/dd',
+                IsGregorian: false,
+                EnglishNumber: false,
+                InLine: false,
+                GroupId: "mygroup"
+            });
+        });
+
+        var path = "http://@Request.Url.Authority";
+        
+        window.onafterprint=function() {
+            $('#body').show();
+            $('#printHelper').empty();
+        }
+        
+        function myPrint(divId) {
+
+           
+            $('#body').hide();
+            $('#printHelper').empty();
+            $('#printHelper').append($(divId).html());
+            window.focus();
+            window.print();
+
+            /*var printDivCSS = new String(
+                ' <link href="' +
+                path +
+                '/Content/Datepicker/jquery.Bootstrap-PersianDateTimePicker.css" rel="stylesheet" /><link href="' +
+                path +
+                '/Content/Bootstrap-rtl.css" rel="stylesheet"><link href="' +
+                path +
+                '/Content/DataTables/datatables.min.css" rel="stylesheet"><style>td {text-align: center;white-space: nowrap;}</style><'+'script src="' +
+                path +
+                '/Scripts/jquery-3.3.1.js"></'+'script><'+'script src="' +
+                path +
+                '/Scripts/bootstrap.js"></'+'script><'+'script '+'>alert("s");</'+'script>');
+
+            var div = document.getElementById(divId);
+            if (!div) {
+                alert('هیچ دیتایی برای چاپ نیست');
+                return;
+            }
+            window.frames["print_frame"].document.body.innerHTML =
+                printDivCSS + document.getElementById(divId).innerHTML;
+            window.frames["print_frame"].window.focus();
+            //window.frames["print_frame"].window.print();*/
+        }
+
+    </script>
+
+}
+
+
+<script>
+    
+    
+</script>

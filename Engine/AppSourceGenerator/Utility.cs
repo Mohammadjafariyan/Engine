@@ -39,7 +39,7 @@ namespace AppSourceGenerator
             return @"
  using System.Web.Mvc;
  using System.Web.Http;
-namespace Engine.Areas.AppGeneration
+namespace Engine.Areas."+areaName+@"
 {
         public class " + areaName + @"AreaRegistration : AreaRegistration 
     {
@@ -47,21 +47,21 @@ namespace Engine.Areas.AppGeneration
         {
             get 
             {
-                return """ + areaName + @" "";
+                return """ + areaName + @""";
             }
         }
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
             context.MapRoute(
-              ""  " + areaName + @"_default "",
-            ""    " + areaName + @"/{controller}/{action}/{id} "",
+              """ + areaName + @"_default "",
+            """ + areaName + @"/{controller}/{action}/{id}"",
                 new { action ="" " + "Index" + @" "", id = UrlParameter.Optional }
             );
 
  context.Routes.MapHttpRoute(
-              ""  " + areaName + @"api_default "",
-            ""    " + areaName + @"/api/{controller}/{action}/{id} "",
+              """ + areaName + @"api_default"",
+            """ + areaName + @"/api/{controller}/{action}/{id}"",
                 new { action ="" " + "Index" + @" "", id = UrlParameter.Optional }
             );
         }
@@ -381,7 +381,7 @@ try{
                 baseClassName += baseInterfaces == null ? "" : ":" + baseInterfaces;
             }
 
-            var fields = controller.DefineControllerMethods.Select(m => m.ServiceMethod.DefineService).Distinct();
+            var fields = controller.DefineControllerMethods.Where(m=>!m.InParent).Select(m => m?.ServiceMethod?.DefineService).Distinct();
             var fieldsStr = "";
 
             var constructure = $@"public {controller.Name}(";

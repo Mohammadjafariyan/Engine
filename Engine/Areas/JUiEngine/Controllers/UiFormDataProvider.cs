@@ -11,6 +11,9 @@ namespace Engine.Areas.JUiEngine.Controllers
     {
         UiForm GetForm(string formName, ViewDataDictionary ViewData, bool isTableForm,
             UiFormControllerMethodType postType);
+        
+        void GetForm(UiForm form, string postSubsystemUrl, string postControllerUrl,
+            string postActionUrl, ViewDataDictionary viewData);
     }
 
     public class UiFormDataProvider : IUiFormDataProvider
@@ -49,5 +52,17 @@ namespace Engine.Areas.JUiEngine.Controllers
                 return form;
             }
         }
+        
+        public void GetForm(UiForm form,string postSubsystemUrl,string postControllerUrl,
+            string postActionUrl, ViewDataDictionary viewData)
+        {
+            viewData[UiFormEngineController.DynamicFormUiFormInputs] = form.UiFormInputs;
+            viewData[UiFormEngineController.PostSubsystemUrl] =postSubsystemUrl;
+            viewData[UiFormEngineController.PostControllerUrl] = postControllerUrl;
+            viewData[UiFormEngineController.PostActionUrl] = postActionUrl;
+            viewData[UiHomeController.Form] = form;
+        }
+        
+       
     }
 }

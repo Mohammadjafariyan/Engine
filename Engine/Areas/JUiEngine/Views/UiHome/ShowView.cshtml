@@ -10,6 +10,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    div.dataTables_wrapper {
+        direction: rtl;
+    }
+ 
+    
+</style>
+
+
 @{
     ViewData[UiFormEngineController.ItemsPartialFormId] = Model.Id.ToString();
     ViewData[UiFormEngineController.UpdateIdafterpost] = "Rootdt_" + Model.Id.ToString();
@@ -38,12 +47,12 @@
 }
 <div class="panel panel-default">
     <div class="panel-heading">
-        
-        
-        
+
+
+
         @if (uiTableItems != null && uiTableItems.Count > 0)
         {
-            <div class="btn-group-vertical">
+            <div class="btn-group">
 
                 @foreach (var item in uiTableItems)
                 {
@@ -62,7 +71,7 @@
                     }
                     if (item.UiItem.UiItemType == UiItemType.Delete)
                     {
-                        url = $@"/{PostSubsystemUrl}/{PostControllerUrl}/Delete";
+                        url = $@"/{PostSubsystemUrl}/Api/{PostControllerUrl}Api/Delete";
                         url = $@"Delete('{url}')";
                     }
 
@@ -112,14 +121,40 @@
 
     }
 
-    function Delete() {
-        AddIdAndSend(url);
+    function Delete(url) {
+
+        var row = table.rows({ selected: true }).data()[0];
+
+        if (row && row[0]) {
+            url += "/" + row[0];
+        } else {
+            alert('هیچ رکوردی انتخاب نشده است');
+        }
+
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            type: 'POST',
+            success: function(callback) {
+
+                if (callback.Status == 0) {
+                    table.row(table.rows({ selected: true })[0]).remove().draw();
+                    alert('با موفقیت حذف شد');
+                } else {
+                    alert(callback.Message);
+                }
+
+            },
+            error: function(status) {
+                console.log(status);
+            }
+        });
     }
 
 
     function AddIdAndSend(url) {
         var row = table.rows({ selected: true }).data()[0];
-        
+
         if (row && row[0]) {
             url += "?id=" + row[0];
         }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Engine.Areas.ReportGenerator.Controllers;
 using ViewModel.ActionTypes;
 using ViewModel.Parameters;
 using WebAppIDEEngine.Models.ICore;
@@ -77,10 +78,27 @@ namespace Engine.Controllers.AbstractControllers
 
         // POST: App/Models/Delete/5
         [HttpPost, ActionName("Delete")]
-        public  Task Delete(long id)
+        public  CustomResult Delete(long id)
         {
-            throw new NotImplementedException();
 
+            var record=_engineService.GetById(id);
+            if (record == null)
+            {
+                return new CustomResult
+                {
+                    Status = CustomResultType.fail,
+                    Message = "رکورد موجود نیست"
+                };
+            }
+            
+            var model = _engineService.Delete(id);
+             _engineService.EngineContext.SaveChangesAsync();
+            
+            return new CustomResult
+            {
+                Status = CustomResultType.success,
+                Message = "با موفقیت حذف شد"
+            };
         }
 
 

@@ -273,8 +273,9 @@ namespace WebAppIDEEngine.Models
                 .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<WorkGroupObligatedRange>().HasRequired(f => f.ObligatedRange)
-                .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
+                .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.ObligatedRangeId).WillCascadeOnDelete(false);
 
+            
 
             #endregion
 

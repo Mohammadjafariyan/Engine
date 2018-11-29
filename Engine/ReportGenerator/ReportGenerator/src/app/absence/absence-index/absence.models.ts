@@ -55,15 +55,24 @@ export namespace System {
     ObligatedRangeWeekId: number;
     Start: Date;
     IsRemoved:boolean;
+    RangeType:RangeType;
   }
 
-  export class ObligatedRangeWeeks extends AbsenceBase {
+
+export enum RangeType
+{
+  Normal,Overtime,NightWork,HolidayWork,ShiftWork,Interrupion
+}
+
+
+export class ObligatedRangeWeeks extends AbsenceBase {
     DayOfWeek: System.DayOfWeek;
     DayOfWeekFaName: string;
     ObligatedRange: ObligatedRange;
     ObligatedRangeDayTimes: ObligatedRangeDayTimes[];
     ObligatedRangeId: number;
     IsSelected:boolean;
+    WeekNumber;
   }
 
   export class Personnel extends AbsenceBase {

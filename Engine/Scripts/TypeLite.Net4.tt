@@ -1,0 +1,23 @@
+﻿<#@ template debug="false" hostspecific="True" language="C#" #>
+<#@ assembly name="D:\\workplace\\git\\Engine\\Engine\\bin\\TypeLite.dll" #>
+<#@ assembly name="D:\\workplace\\git\\Engine\\Engine\\bin\\TypeLite.Net4.dll" #>
+<#@ assembly name="D:\\workplace\\git\\Engine\\Engine\\bin\\Engine.dll" #>
+
+<#@ import namespace="TypeLite" #> 
+<#@ import namespace="TypeLite.Net4" #> 
+<#@output extension=".d.ts"#>
+
+ <#@include file="Manager.ttinclude"#>
+<# var manager = Manager.Create(Host, GenerationEnvironment); #>
+
+<# var ts = TypeScript.Definitions()
+		.WithReference("Enums.ts")
+		.ForLoadedAssemblies();
+#>
+
+<#= ts.Generate(TsGeneratorOutput.Properties) #>
+
+<# manager.StartNewFile("Enums.ts"); #>
+<#= ts.Generate(TsGeneratorOutput.Enums) #>
+<# manager.EndBlock(); #>
+<# manager.Process(true); #>

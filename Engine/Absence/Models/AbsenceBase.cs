@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using TypeLite;
+using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Absence.Models
 {
     [TsClass]
-    public class AbsenceBase
+    public class AbsenceBase :BaseEntity
     {
-        [Key]
-        public long Id { get; set; }
     }
 }

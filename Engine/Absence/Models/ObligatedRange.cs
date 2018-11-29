@@ -18,7 +18,7 @@ namespace Engine.Absence.Models
             WorkGroupObligatedRanges = new List<WorkGroupObligatedRange>();
         }
 
-    public string Name { get; set; }
+    public override string Name { get; set; }
         public DayOfWeek OffDay { get; set; }
 
         public virtual ICollection<ObligatedRangeWeeks> ObligatedRangeWeeks { get; set; }

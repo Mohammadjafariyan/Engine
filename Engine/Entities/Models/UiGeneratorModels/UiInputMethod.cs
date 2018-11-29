@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using Engine.Attributes;
@@ -26,5 +27,13 @@ namespace Engine.Entities.Models.UiGeneratorModels
 
         public virtual DefineControllerMethod DefineControllerMethod { get; set; }
         public virtual UiInput UiInput { get; set; }
+        
+        [NotMapped]
+        public string SubSystemName { get; set; }
+
+        [NotMapped]
+        public string ControllerName { get; set; }
+        [NotMapped]
+        public string MethodName { get; set; }
     }
 }

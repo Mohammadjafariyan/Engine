@@ -17,6 +17,9 @@ namespace Engine.Absence.Models
         public DayOfWeek DayOfWeek { get; set; }
         public string DayOfWeekFaName { get; set; }
         public bool IsSelected { get; set; }
+        
+        
+        public int WeekNumber { get; set; }
 
         [JsonIgnore]
         public virtual ObligatedRange ObligatedRange { get; set; }

@@ -12,10 +12,13 @@ using ViewModel.Parameters;
 using WebAppIDEEngine.Models;
 using WebAppIDEEngine.Models.ICore;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using Engine.Areas.JUiEngine.Controllers;
+using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.UiGeneratorModels;
 using Engine.ServiceLayer.Systems.Engine;
 using Engine.Service.AbstractControllers;
+using WebAppIDEEngine.Models.UiGeneratorModels;
 using WebGrease.Css.Extensions;
 
 namespace WebAppIDEEngine.Areas.App.Controllers
@@ -25,11 +28,13 @@ namespace WebAppIDEEngine.Areas.App.Controllers
     {
         public RelationshipLinkService relationshipLinkService = new RelationshipLinkService();
 
+
         protected IUiEngineDataProvider _uiEngineDataProvider = new UiEngineDataProvider();
         protected IUiFormDataProvider _uiFormDataProvider = new UiFormDataProvider();
 
-        public string DefaultDataTableName = "";
-        public string DefaultSaveName = "";
+        protected IFormConstructProvider _formConstructProvider;
+        protected ITableConstructProvider _tableConstructProvider;
+
 
 
         public EBaseAppController()
@@ -37,24 +42,64 @@ namespace WebAppIDEEngine.Areas.App.Controllers
             _injector = new Engine.Utitliy.Injector();
         }
 
-        protected virtual void SetDynamicTableViewData(string tableName,
-            string SubSystemName, string ControllerName,
-            string ControllerMethod, IDataTable table)
-        {
-            _uiEngineDataProvider.GetTable(tableName, ViewData, Request, SubSystemName,
-                ControllerName, ControllerMethod, null, table);
-        }
 
-        protected virtual void SetDynamicFormViewData(string formName)
+        protected virtual void SetDynamicTableViewData(string actionName,
+            string subSystemName, string controllerName,
+            string controllerMethod, IDataTable table)
         {
-            if (string.IsNullOrEmpty(formName))
+            if (actionName == nameof(GetDataTable))
             {
-                throw new Exception("formName is null");
+                EjTable ejtable = _tableConstructProvider.GetDataTable(actionName);
+
+              
+                ejtable.UiTableForms.Add(new UiTableForm
+                    {EjTable = ejtable, UiForm = SetDynamicFormViewData(actionName)});
+
+
+                _uiEngineDataProvider.GetTable(ejtable, ViewData, Request,
+                    controllerName, controllerMethod, null, table);
             }
 
+            /*_uiEngineDataProvider.GetTable(tableName, ViewData, Request, SubSystemName,
+                ControllerName, ControllerMethod, null, table);*/
+        }
+
+
+        protected virtual UiForm SetDynamicFormViewData(string actionName)
+        {
+            if (string.IsNullOrEmpty(actionName))
+            {
+                throw new Exception("actionName is null");
+            }
+
+            if (actionName == nameof(ForEdit) || actionName == nameof(Save))
+            {
+                UiForm form = _formConstructProvider.GetSaveForm();
+
+                string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+                string areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+
+                _uiFormDataProvider.GetForm(form, areaName, controllerName, nameof(Save)
+                    , ViewData);
+                return form;
+            }
+
+            if (actionName == nameof(GetDataTable))
+            {
+                UiForm form = _formConstructProvider.GetDataTableSearchForm();
+
+                string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+                string areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+
+                _uiFormDataProvider.GetForm(form, areaName, controllerName, actionName
+                    , ViewData);
+                return form;
+            }
+
+            throw new Exception("فرم مورد نظر یافت نشد");
             //از خود جدول فرم انتخاب کن نه از فرم های جداول
-            _uiFormDataProvider.GetForm(formName, ViewData, isTableForm: false,
-                postType: UiFormControllerMethodType.Save);
+            /*_uiFormDataProvider.GetForm(formName, ViewData, isTableForm: false,
+                postType: UiFormControllerMethodType.Save);*/
         }
 
 
@@ -76,8 +121,6 @@ namespace WebAppIDEEngine.Areas.App.Controllers
         }
 
 
-        
-
         // GET: App/Models
         public async Task<ActionResult> GetDataTable(IDataTableParameter p)
         {
@@ -86,13 +129,37 @@ namespace WebAppIDEEngine.Areas.App.Controllers
 
             string actionName = ControllerContext.RouteData.Values["action"].ToString();
             string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
-            string areaName = (string)HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+            string areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
 
-            SetDynamicTableViewData(DefaultDataTableName, areaName,controllerName,actionName, res);
+
+            SetDynamicTableViewData(GetTableNamePattern(), areaName, controllerName, actionName, res);
             return View(res);
         }
 
-      
+
+        protected string GetTableNamePattern()
+        {
+            string actionName = ControllerContext.RouteData.Values["action"].ToString();
+            /*
+            string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+
+            return controllerName + "_table_" + actionName;
+            */
+            return actionName;
+        }
+
+        protected string GetFormNamePattern()
+        {
+            string actionName = ControllerContext.RouteData.Values["action"].ToString();
+
+            /*
+string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+*/
+
+            //   return controllerName + "_form_" + actionName;
+            return actionName;
+        }
+
 
         // GET: App/Models/Details/5
         public async Task<ActionResult> Details(long? id)
@@ -132,15 +199,19 @@ namespace WebAppIDEEngine.Areas.App.Controllers
 
                 await _engineService.EngineContext.SaveChangesAsync();
 
-                string actionName = ControllerContext.RouteData.Values["action"].ToString();
-
-                SetDynamicFormViewData( DefaultSaveName);
+                SetDynamicFormViewData(GetFormNamePattern());
 
                 return RedirectToAction("GetDataTable");
             }
+            
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
-            return View(model);
+            ViewData[GlobalNames.AllErrors] = allErrors;
+
+            var id = model?.Id != 0 ? model?.Id : null;
+            return await ForEdit(id);
         }
+
 
 
         // GET: App/Models/Edit/5
@@ -149,18 +220,18 @@ namespace WebAppIDEEngine.Areas.App.Controllers
             if (id == null)
             {
                 var m = _injector.Inject<T>();
-                SetDynamicFormViewData(this.DefaultSaveName);
-                return View(m);
+                SetDynamicFormViewData(GetFormNamePattern());
+                return View("ForEdit",m);
             }
 
             var model = _engineService.GetForEdit(id.Value);
-            SetDynamicFormViewData(this.DefaultSaveName);
+            SetDynamicFormViewData(GetFormNamePattern());
             if (model == null)
             {
                 return HttpNotFound();
             }
 
-            return View(model);
+            return View("ForEdit",model);
         }
 
 

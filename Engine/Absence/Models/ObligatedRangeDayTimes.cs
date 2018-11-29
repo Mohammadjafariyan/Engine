@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Engine.Areas.Absence.Models;
 using Newtonsoft.Json;
 using TypeLite;
 
@@ -17,5 +18,7 @@ namespace Engine.Absence.Models
         
         [NotMapped]
         public bool IsRemoved { get; set; }
+        
+        public RangeType RangeType { get; set; }
     }
 }

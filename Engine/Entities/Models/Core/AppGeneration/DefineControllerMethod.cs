@@ -38,6 +38,12 @@ namespace Engine.Entities.Models.Core.AppGeneration
         /// </summary>
         [Text(Name = "ترجمه ")]
         public string Translate { get; set; }
+        
+        /// <summary>
+        /// در کلاس پدر است
+        /// </summary>
+        [Checkbox(Name = "در کلاس پدر است ")]
+        public bool InParent { get; set; }
 
         /*/// <summary>
         /// زیر سیستم

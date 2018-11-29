@@ -120,9 +120,35 @@
         var inputMethod = uiFormInput.UiInput.UiInputMethods.FirstOrDefault();
         if (inputMethod != null)
         {
-            var subSystemName = inputMethod.DefineControllerMethod.DefineController.SubSystem.Name;
-            var controllerName = inputMethod.DefineControllerMethod.DefineController.Name;
-            var methodName = inputMethod.DefineControllerMethod.Name;
+            string subSystemName;
+            if (string.IsNullOrEmpty(inputMethod.SubSystemName))
+            {
+                subSystemName= inputMethod.DefineControllerMethod.DefineController.SubSystem.Name;
+            }
+            else
+            {
+                subSystemName = inputMethod.SubSystemName;
+            }
+           
+            string controllerName ;
+            if (string.IsNullOrEmpty(inputMethod.ControllerName))
+            {
+                controllerName= inputMethod.DefineControllerMethod.DefineController.Name;
+            }
+            else
+            {
+                controllerName = inputMethod.ControllerName;
+            }
+           
+            string methodName;
+            if (string.IsNullOrEmpty(inputMethod.MethodName))
+            {
+                methodName= inputMethod.DefineControllerMethod.Name;
+            }
+            else
+            {
+                methodName = inputMethod.MethodName;
+            }
 
 
             var ajaxFunctionName = uiFormInput.UiInput.Name + "_Ajax";
@@ -175,7 +201,7 @@
                 selected = "'selected'";
             }
 
-            optionStr += "<option id='" + result[i].Id + "' " + selected + ">" + result[i].Value + "</option>";
+            optionStr += "<option value='" + result[i].Id + "' " + selected + ">" + result[i].Value + "</option>";
         }
 
         $(id).html(optionStr);
