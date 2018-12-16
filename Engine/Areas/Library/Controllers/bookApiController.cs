@@ -31,7 +31,7 @@ namespace Engine.Areas.Library.Controllers
             this._engineService = _injector.Inject<BookService>();
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public IDataTable getAll(long id)
         {
             try
@@ -43,6 +43,6 @@ namespace Engine.Areas.Library.Controllers
             {
                 throw e;
             }
-        }
+        }*/
     }
 }

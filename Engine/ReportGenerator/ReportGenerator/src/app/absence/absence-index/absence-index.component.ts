@@ -23,6 +23,58 @@ export class AbsenceIndexComponent implements OnInit {
 
   }
 
+  decreaseWeek() {
+
+// آنهای که حذف نشده اند
+    if (this.ObligatedRange.ObligatedRangeWeeks.filter(o => !o.IsRemoved).length > 7) {
+      var isYes = confirm("آیا از حذف هفته آخر مطمئن هستید ؟");
+      if (isYes) {
+
+        // آخرین هفته را پیدا کن که حذف نشده است
+        let notFirstWeek = this.ObligatedRange.ObligatedRangeWeeks.slice(7, this.ObligatedRange.ObligatedRangeWeeks.length - 1);
+
+        if (!notFirstWeek.length || !notFirstWeek[0]) {
+          throw new Error("خطا در سیستم : هفته آخری برای حذف نال است");
+        }
+
+        // برعکس کن و اولین حذف نشده را بردار تا با شماره هفته آن ایتم ، آن هفته حذف شود
+        var last = notFirstWeek.reverse().find(n => !n.IsRemoved);
+
+        // اگر از نوع جدید باشد یعنی قبلا در دیتابیس ذخیره نشده است
+        if (!last.Id) {
+          this.ObligatedRange.ObligatedRangeWeeks = this.ObligatedRange.ObligatedRangeWeeks.filter(wk => wk.WeekNumber != last.WeekNumber);
+        } else {
+
+          // فیلتر کن و با شماره آن هفته ، حذف کن
+          this.ObligatedRange.ObligatedRangeWeeks
+            .filter(wk => wk.WeekNumber == last.WeekNumber)
+            .forEach(wk2 => {
+              if (wk2.IsRemoved) {
+                throw new Error("خطا در سیستم عملیات اشتباه ، این مورد قبلا حذف شده است");
+              }
+              wk2.IsRemoved = true;
+            });
+        }
+
+      }
+    }
+
+    this.reorder();
+
+  }
+
+  increaseWeek() {
+    var lastweeknumber = this.ObligatedRange.ObligatedRangeWeeks[0].WeekNumber;
+
+    let week: ObligatedRangeWeeks[] = this.absenceDataProviderService.getWeek(lastweeknumber++);
+    for (let i = 0; i < week.length; i++) {
+      this.ObligatedRange.ObligatedRangeWeeks.push(week[i]);
+    }
+
+    this.reorder();
+
+  }
+
   display = false;
 
   select(week: ObligatedRangeWeeks) {
@@ -52,7 +104,7 @@ export class AbsenceIndexComponent implements OnInit {
     this.selectedWeek = week;
   }
 
-  loadById(id){
+  loadById(id) {
     this.absenceDataProviderService.GetById(id).toPromise().then(res => {
 
       if (res.Status == CustomResultType.success) {
@@ -84,7 +136,7 @@ export class AbsenceIndexComponent implements OnInit {
 
   ngOnInit() {
     this.ObligatedRange = new ObligatedRange();
-    this.ObligatedRange.ObligatedRangeWeeks = this.absenceDataProviderService.getWeek();
+    this.ObligatedRange.ObligatedRangeWeeks = this.absenceDataProviderService.getWeek(1);
     var id = this.router.snapshot.queryParams["id"];
     if (id) {
       this.loadById(id);
@@ -101,11 +153,24 @@ export class AbsenceIndexComponent implements OnInit {
     this.absenceDataProviderService.Save(this.ObligatedRange).toPromise().then(res => {
       AppComponent.ShowMsgByType('توجه', res.Status, res.Message);
 
-      if(res.Status==CustomResultType.success){
+      if (res.Status == CustomResultType.success) {
         this.loadById(res.result);
       }
+
 
     })
   }
 
+  reorder() {
+
+    let counter = 0;
+    for (let i = 0; i < this.ObligatedRange.ObligatedRangeWeeks.length; i += 7) {
+      counter++;
+      let week = this.ObligatedRange.ObligatedRangeWeeks.slice(i, i + 7);
+      for (let j = 0; j < week.length; j++) {
+        week[j].WeekNumber = counter;
+      }
+    }
+
+  }
 }

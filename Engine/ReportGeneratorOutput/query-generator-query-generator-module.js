@@ -6421,7 +6421,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<br>\n<div class=\"card\">\n  <div class=\"card-header\">\n    <button (click)=\"generate()\" class=\"btn btn-primary\"> تولید خروجی</button>\n    <b style=\"text-align: left;float: left\">Sql Query</b></div>\n  <div class=\"card-body\"\n       style=\"direction: ltr !important;text-align: left !important;\"\n  >{{ dataComponent.SQL}}\n  </div>\n  <div class=\"card-footer\">Footer</div>\n</div>\n"
+module.exports = "<br>\n<div class=\"card\">\n  <div class=\"card-header\">\n    <button (click)=\"generate()\" class=\"btn btn-primary\"> تولید خروجی</button>\n    <b style=\"text-align: left;float: left\">Sql Query</b></div>\n  <pre class=\"card-body\"\n       style=\"direction: ltr !important;text-align: left !important;\"\n  > <code style=\"direction: ltr !important;text-align: left !important;\" >{{ dataComponent.SQL}}</code>\n  </pre>\n  <div class=\"card-footer\">Footer</div>\n</div>\n"
 
 /***/ }),
 
@@ -6459,9 +6459,14 @@ var QueryGeneratorComponent = /** @class */ (function () {
         var _this = this;
         this.sqlQueryGeneratorComponent.Generate(this.dataComponent.getPropertiesOnly(), null, this.dataComponent.joinTables, this.dataComponent.mainTable).toPromise().then(function (r) {
             _this.dataComponent.SQL = r;
+            /*$('code').each(function(i, block) {
+              hljs.highlightBlock(block);
+            });*/
         });
     };
     QueryGeneratorComponent.prototype.ngOnInit = function () {
+    };
+    QueryGeneratorComponent.prototype.ngAfterViewInit = function () {
     };
     QueryGeneratorComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({

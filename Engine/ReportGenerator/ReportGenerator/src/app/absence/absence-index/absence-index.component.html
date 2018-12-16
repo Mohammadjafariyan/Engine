@@ -29,9 +29,15 @@
 <hr/>
 
 <div class="container">
+  <div class="row">
+    <button id="increaseWeek" class="btn btn-primary" (click)="increaseWeek()" >افزایش هفته </button>
+    <button id="decreaseWeek" class="btn btn-primary" (click)="decreaseWeek()" > کاهش هفته </button>
+
+  </div>
+
   <div style="display: inline-flex">
     <ng-template ngFor [ngForOf]="ObligatedRange.ObligatedRangeWeeks" let-weekDay let-i="index">
-      <div [class.card]="true"
+      <div *ngIf="!weekDay.IsRemoved" [class.card]="true"
            [class.text-white]="weekDay.IsSelected && ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek!=ObligatedRange.OffDay"
            [class.bg-success]="weekDay.IsSelected && ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek!=ObligatedRange.OffDay"
            [class.bg-danger]="ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek==ObligatedRange.OffDay"
@@ -68,15 +74,19 @@
     <ng-template ngFor [ngForOf]="selectedWeek.ObligatedRangeDayTimes" let-time let-i="index">
       <ng-template [ngIf]="!selectedWeek.ObligatedRangeDayTimes[i].IsRemoved">
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label>زمان شروع </label>
             <p-calendar [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].Start" [timeOnly]="true"></p-calendar>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label>زمان پایان </label>
             <p-calendar [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].End" [timeOnly]="true"></p-calendar>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
+            <label for="IsTwoDay">زمان پایان در فردا قرار دارد؟  </label>
+            <input id="IsTwoDay" type="checkbox" [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].IsTwoDay" />
+          </div>
+          <div class="col-md-3">
             <br>
             <button class="btn btn-danger" (click)="remove(selectedWeek.ObligatedRangeDayTimes[i])">حذف</button>
           </div>

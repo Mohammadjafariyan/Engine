@@ -9,6 +9,7 @@ using WebAppIDEEngine.Models.Core;
 using System.Data.Entity;
 using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.UiGeneratorModels;
+using WebAppIDEEngine.Models;
 using WebAppIDEEngine.Models.UiGeneratorModels;
 
 namespace ServiceLayer.Systems
@@ -18,10 +19,15 @@ namespace ServiceLayer.Systems
         
         public override async Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p)
         {
-            var dt=EngineContext.Set<M>();
-            return await dt.Select(f =>
-                    new IDropDownOption { Id = f.Id.ToString(), Value = f.Name })
-                .ToListAsync();
+            using (var EngineContext = new EngineContext())
+            {
+                var dt=EngineContext.Set<M>();
+                return await dt.Select(f =>
+                        new IDropDownOption { Id = f.Id.ToString(), Value = f.Name })
+                    .ToListAsync();
+            }
+
+           
         }
     }
     /// <summary>
@@ -75,10 +81,16 @@ namespace ServiceLayer.Systems
     {
         public override async Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p)
         {
-            var dt = EngineContext.Set<DefineControllerMethod>();
-            return await dt.Select(f =>
-                new IDropDownOption { Id = f.Id.ToString(), Value = f.DefineController.Name  + "(" + f.Name + ")" }).ToListAsync();
-        }
+
+            using (var EngineContext = new EngineContext())
+            {
+
+                var dt = EngineContext.Set<DefineControllerMethod>();
+                return await dt.Select(f =>
+                    new IDropDownOption { Id = f.Id.ToString(), Value = f.DefineController.Name  + "(" + f.Name + ")" }).ToListAsync();
+
+            }
+  }
 
     } 
     /// <summary>
@@ -129,10 +141,17 @@ namespace ServiceLayer.Systems
 
         public override async Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p)
         {
-            var dt=EngineContext.Set<ServiceMethod>();
-            return await dt.Select(f =>
+
+            using (var EngineContext = new EngineContext())
+            {
+
+                var dt=EngineContext.Set<ServiceMethod>();
+                return await dt.Select(f =>
                     new IDropDownOption { Id = f.Id.ToString(), Value = f.Name + "("+f.DefineService.Name+")"}).ToListAsync();
-        }
+
+            }
+
+          }
     }
 
     
@@ -206,9 +225,17 @@ namespace ServiceLayer.Systems
     {
         public override async Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p)
         {
-            var dt = EngineContext.Set<Property>();
-            return await dt.Select(f =>
-                new IDropDownOption { Id = f.Id.ToString(), Value = f.Model.Name  + "(" + f.NameInModel + ")" }).ToListAsync();
+
+            using (var EngineContext = new EngineContext())
+            {
+                         
+                var dt = EngineContext.Set<Property>();
+                return await dt.Select(f =>
+                    new IDropDownOption { Id = f.Id.ToString(), Value = f.Model.Name  + "(" + f.NameInModel + ")" }).ToListAsync();
+
+                
+            }
+                
         }
     }
 

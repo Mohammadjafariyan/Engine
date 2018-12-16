@@ -20,7 +20,6 @@ namespace Engine.Service.AbstractControllers
     {
     //    IDataTable Search<T>(NameValueCollection nameValues) where T : IModel, new();
 
-        EngineContext EngineContext { get; set; }
 
         Dictionary<string, List<SelectListItem>> GetEnumsAttributes<TEnum>(object model);
 

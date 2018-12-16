@@ -11,7 +11,7 @@ namespace ServiceLayer.Systems.Library
 {
     public class BookService : CommonService<Book>
     {
-        public IDataTable GetAll(long @id)
+        /*public IDataTable GetAll(long @id)
         {
             var dt = _entities.SqlQuery(@" 
             select * from books");
@@ -29,6 +29,6 @@ namespace ServiceLayer.Systems.Library
                 Headers = GetPropertyNames<Book>()
                 ,  RecordsList = l.Cast<dynamic>().ToList()
             };
-        }
+        }*/
     }
 }

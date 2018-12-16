@@ -61,7 +61,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n\r\n  <div [class.card]=\"true\">\r\n    <div class=\"card-header\">تعریف بازه موظفی</div>\r\n    <div class=\"card-body\">\r\n      <div class=\"row\">\r\n        <div class=\"col-md-6 form-group\">\r\n          <label> روز تعطیل  </label>\r\n          <select class=\"form-control\" [(ngModel)]=\"ObligatedRange.OffDay\">\r\n            <ng-template ngFor [ngForOf]=\"ObligatedRange.ObligatedRangeWeeks\" let-day>\r\n              <option [value]=\"day.DayOfWeek\"> {{day.DayOfWeekFaName}}</option>\r\n            </ng-template>\r\n          </select>\r\n        </div>\r\n        <div class=\"col-md-6 form-group\">\r\n          <label for=\"email\">نام بازه موظفی  </label>\r\n          <input class=\"form-control\"  type=\"email\" placeholder=\"روزکار عادی\" [(ngModel)]=\"ObligatedRange.Name\" class=\"form-control\" id=\"email\">\r\n        </div>\r\n\r\n        <div class=\"col-md-6 form-group\">\r\n          <button class=\"btn btn-primary\" (click)=\"save()\" >ذخیره </button>\r\n        </div>\r\n\r\n      </div>\r\n    </div>\r\n\r\n\r\n</div>\r\n<hr/>\r\n\r\n<div class=\"container\">\r\n  <div style=\"display: inline-flex\">\r\n    <ng-template ngFor [ngForOf]=\"ObligatedRange.ObligatedRangeWeeks\" let-weekDay let-i=\"index\">\r\n      <div [class.card]=\"true\"\r\n           [class.text-white]=\"weekDay.IsSelected && ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek!=ObligatedRange.OffDay\"\r\n           [class.bg-success]=\"weekDay.IsSelected && ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek!=ObligatedRange.OffDay\"\r\n           [class.bg-danger]=\"ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek==ObligatedRange.OffDay\"\r\n           style=\"width: 150px\" >\r\n        <div class=\"card-header\">{{weekDay.DayOfWeekFaName}}</div>\r\n        <div class=\"card-body\">\r\n          <button class=\"btn btn-primary\"   (click)=\"select(weekDay)\" title=\"انتخاب\"><span class=\"oi\" data-glyph=\"check\"></span> </button>\r\n          <button class=\"btn btn-primary\"   (click)=\"setTimes(weekDay)\" title=\"تنظیم زمان ها\"><span class=\"oi\" data-glyph=\"timer\"></span> </button>\r\n          <p class=\"card-text\">\r\n            <ng-template ngFor [ngForOf]=\"weekDay.ObligatedRangeDayTimes\" let-time>\r\n              <ng-template [ngIf]=\"!time.IsRemoved\">\r\n                ({{time.Start.getHours()}}:{{time.Start.getMinutes()}} - {{time.End.getHours()}}:{{time.End.getMinutes()}}) <br>\r\n              </ng-template>\r\n            </ng-template>\r\n          </p>\r\n        </div>\r\n      </div>\r\n    </ng-template>\r\n  </div>\r\n</div>\r\n<p-dialog [(visible)]=\"display\" [draggable]=\"true\" [maximizable]=\"true\"\r\n          [closable]=\"true\"\r\n          [minWidth]=\"700\"\r\n          [responsive]=\"true\" [rtl]=\"true\" [resizable]=\"true\" [height]=\"500\">\r\n  <p-header>\r\n    تنظیم ساعت ها\r\n  </p-header>\r\n\r\n  <button class=\"btn btn-primary\" (click)=\"NewObligatedRangeDayTime()\">بازه جدید</button>\r\n  <hr/>\r\n\r\n\r\n  <ng-template [ngIf]=\"selectedWeek && selectedWeek.ObligatedRangeDayTimes\">\r\n    <ng-template ngFor [ngForOf]=\"selectedWeek.ObligatedRangeDayTimes\" let-time let-i=\"index\">\r\n      <ng-template [ngIf]=\"!selectedWeek.ObligatedRangeDayTimes[i].IsRemoved\">\r\n        <div class=\"row\">\r\n          <div class=\"col-md-4\">\r\n            <label>زمان شروع </label>\r\n            <p-calendar [(ngModel)]=\"selectedWeek.ObligatedRangeDayTimes[i].Start\" [timeOnly]=\"true\"></p-calendar>\r\n          </div>\r\n          <div class=\"col-md-4\">\r\n            <label>زمان پایان </label>\r\n            <p-calendar [(ngModel)]=\"selectedWeek.ObligatedRangeDayTimes[i].End\" [timeOnly]=\"true\"></p-calendar>\r\n          </div>\r\n          <div class=\"col-md-4\">\r\n            <br>\r\n            <button class=\"btn btn-danger\" (click)=\"remove(selectedWeek.ObligatedRangeDayTimes[i])\">حذف</button>\r\n          </div>\r\n        </div>\r\n\r\n      </ng-template>\r\n    </ng-template>\r\n  </ng-template>\r\n  <p-footer>\r\n    <button class=\"btn btn-info\" (click)=\"display=false\">بستن</button>\r\n  </p-footer>\r\n</p-dialog>\r\n</div>\r\n"
+module.exports = "<div class=\"container\">\r\n\r\n  <div [class.card]=\"true\">\r\n    <div class=\"card-header\">تعریف بازه موظفی</div>\r\n    <div class=\"card-body\">\r\n      <div class=\"row\">\r\n        <div class=\"col-md-6 form-group\">\r\n          <label> روز تعطیل  </label>\r\n          <select class=\"form-control\" [(ngModel)]=\"ObligatedRange.OffDay\">\r\n            <ng-template ngFor [ngForOf]=\"ObligatedRange.ObligatedRangeWeeks\" let-day>\r\n              <option [value]=\"day.DayOfWeek\"> {{day.DayOfWeekFaName}}</option>\r\n            </ng-template>\r\n          </select>\r\n        </div>\r\n        <div class=\"col-md-6 form-group\">\r\n          <label for=\"email\">نام بازه موظفی  </label>\r\n          <input class=\"form-control\"  type=\"email\" placeholder=\"روزکار عادی\" [(ngModel)]=\"ObligatedRange.Name\" class=\"form-control\" id=\"email\">\r\n        </div>\r\n\r\n        <div class=\"col-md-6 form-group\">\r\n          <button class=\"btn btn-primary\" (click)=\"save()\" >ذخیره </button>\r\n        </div>\r\n\r\n      </div>\r\n    </div>\r\n\r\n\r\n</div>\r\n<hr/>\r\n\r\n<div class=\"container\">\r\n  <div class=\"row\">\r\n    <button id=\"increaseWeek\" class=\"btn btn-primary\" (click)=\"increaseWeek()\" >افزایش هفته </button>\r\n    <button id=\"decreaseWeek\" class=\"btn btn-primary\" (click)=\"decreaseWeek()\" > کاهش هفته </button>\r\n\r\n  </div>\r\n\r\n  <div style=\"display: inline-flex\">\r\n    <ng-template ngFor [ngForOf]=\"ObligatedRange.ObligatedRangeWeeks\" let-weekDay let-i=\"index\">\r\n      <div *ngIf=\"!weekDay.IsRemoved\" [class.card]=\"true\"\r\n           [class.text-white]=\"weekDay.IsSelected && ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek!=ObligatedRange.OffDay\"\r\n           [class.bg-success]=\"weekDay.IsSelected && ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek!=ObligatedRange.OffDay\"\r\n           [class.bg-danger]=\"ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek==ObligatedRange.OffDay\"\r\n           style=\"width: 150px\" >\r\n        <div class=\"card-header\">{{weekDay.DayOfWeekFaName}}</div>\r\n        <div class=\"card-body\">\r\n          <button class=\"btn btn-primary\"   (click)=\"select(weekDay)\" title=\"انتخاب\"><span class=\"oi\" data-glyph=\"check\"></span> </button>\r\n          <button class=\"btn btn-primary\"   (click)=\"setTimes(weekDay)\" title=\"تنظیم زمان ها\"><span class=\"oi\" data-glyph=\"timer\"></span> </button>\r\n          <p class=\"card-text\">\r\n            <ng-template ngFor [ngForOf]=\"weekDay.ObligatedRangeDayTimes\" let-time>\r\n              <ng-template [ngIf]=\"!time.IsRemoved\">\r\n                ({{time.Start.getHours()}}:{{time.Start.getMinutes()}} - {{time.End.getHours()}}:{{time.End.getMinutes()}}) <br>\r\n              </ng-template>\r\n            </ng-template>\r\n          </p>\r\n        </div>\r\n      </div>\r\n    </ng-template>\r\n  </div>\r\n</div>\r\n<p-dialog [(visible)]=\"display\" [draggable]=\"true\" [maximizable]=\"true\"\r\n          [closable]=\"true\"\r\n          [minWidth]=\"700\"\r\n          [responsive]=\"true\" [rtl]=\"true\" [resizable]=\"true\" [height]=\"500\">\r\n  <p-header>\r\n    تنظیم ساعت ها\r\n  </p-header>\r\n\r\n  <button class=\"btn btn-primary\" (click)=\"NewObligatedRangeDayTime()\">بازه جدید</button>\r\n  <hr/>\r\n\r\n\r\n  <ng-template [ngIf]=\"selectedWeek && selectedWeek.ObligatedRangeDayTimes\">\r\n    <ng-template ngFor [ngForOf]=\"selectedWeek.ObligatedRangeDayTimes\" let-time let-i=\"index\">\r\n      <ng-template [ngIf]=\"!selectedWeek.ObligatedRangeDayTimes[i].IsRemoved\">\r\n        <div class=\"row\">\r\n          <div class=\"col-md-3\">\r\n            <label>زمان شروع </label>\r\n            <p-calendar [(ngModel)]=\"selectedWeek.ObligatedRangeDayTimes[i].Start\" [timeOnly]=\"true\"></p-calendar>\r\n          </div>\r\n          <div class=\"col-md-3\">\r\n            <label>زمان پایان </label>\r\n            <p-calendar [(ngModel)]=\"selectedWeek.ObligatedRangeDayTimes[i].End\" [timeOnly]=\"true\"></p-calendar>\r\n          </div>\r\n          <div class=\"col-md-3\">\r\n            <label for=\"IsTwoDay\">زمان پایان در فردا قرار دارد؟  </label>\r\n            <input id=\"IsTwoDay\" type=\"checkbox\" [(ngModel)]=\"selectedWeek.ObligatedRangeDayTimes[i].IsTwoDay\" />\r\n          </div>\r\n          <div class=\"col-md-3\">\r\n            <br>\r\n            <button class=\"btn btn-danger\" (click)=\"remove(selectedWeek.ObligatedRangeDayTimes[i])\">حذف</button>\r\n          </div>\r\n        </div>\r\n\r\n      </ng-template>\r\n    </ng-template>\r\n  </ng-template>\r\n  <p-footer>\r\n    <button class=\"btn btn-info\" (click)=\"display=false\">بستن</button>\r\n  </p-footer>\r\n</p-dialog>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -102,6 +102,26 @@ var AbsenceIndexComponent = /** @class */ (function () {
         this.router = router;
         this.display = false;
     }
+    AbsenceIndexComponent.prototype.decreaseWeek = function () {
+        if (this.ObligatedRange.WorkGroupObligatedRanges.length > 7) {
+            var isYes = confirm("آیا از حذف هفته آخر مطمئن هستید ؟");
+            if (isYes) {
+                var size = this.ObligatedRange.ObligatedRangeWeeks.length - 1;
+                for (var i = size; i < size - 7; i--) {
+                    this.ObligatedRange.ObligatedRangeWeeks[i].IsRemoved = true;
+                }
+            }
+        }
+        this.reorder();
+    };
+    AbsenceIndexComponent.prototype.increaseWeek = function () {
+        var lastweeknumber = this.ObligatedRange.ObligatedRangeWeeks[0].WeekNumber;
+        var week = this.absenceDataProviderService.getWeek(lastweeknumber++);
+        for (var i = 0; i < week.length; i++) {
+            this.ObligatedRange.ObligatedRangeWeeks.push(week[i]);
+        }
+        this.reorder();
+    };
     AbsenceIndexComponent.prototype.select = function (week) {
         if (week.IsSelected == null) {
             week.IsSelected = false;
@@ -146,7 +166,7 @@ var AbsenceIndexComponent = /** @class */ (function () {
     };
     AbsenceIndexComponent.prototype.ngOnInit = function () {
         this.ObligatedRange = new _absence_models__WEBPACK_IMPORTED_MODULE_4__["ObligatedRange"]();
-        this.ObligatedRange.ObligatedRangeWeeks = this.absenceDataProviderService.getWeek();
+        this.ObligatedRange.ObligatedRangeWeeks = this.absenceDataProviderService.getWeek(1);
         var id = this.router.snapshot.queryParams["id"];
         if (id) {
             this.loadById(id);
@@ -163,6 +183,14 @@ var AbsenceIndexComponent = /** @class */ (function () {
                 _this.loadById(res.result);
             }
         });
+    };
+    AbsenceIndexComponent.prototype.reorder = function () {
+        for (var i = 0; i < this.ObligatedRange.ObligatedRangeWeeks.length; i + 6) {
+            var week = this.ObligatedRange.ObligatedRangeWeeks.slice(i, i + 6);
+            for (var j = 0; j < week.length; j++) {
+                week[j].WeekNumber = i;
+            }
+        }
     };
     AbsenceIndexComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -215,21 +243,22 @@ var AbsenceDataProviderService = /** @class */ (function () {
             })
         };
     }
-    AbsenceDataProviderService.prototype.getDay = function (name, t) {
+    AbsenceDataProviderService.prototype.getDay = function (name, t, WeekNumber) {
         var sat = new _absence_models__WEBPACK_IMPORTED_MODULE_2__["ObligatedRangeWeeks"]();
         sat.DayOfWeek = t;
         sat.DayOfWeekFaName = name;
+        sat.WeekNumber = WeekNumber;
         return sat;
     };
-    AbsenceDataProviderService.prototype.getWeek = function () {
+    AbsenceDataProviderService.prototype.getWeek = function (WeekNumber) {
         var weeks = [];
-        weeks.push(this.getDay("شنبه", 6 /* Saturday */));
-        weeks.push(this.getDay("یکشنبه", 0 /* Sunday */));
-        weeks.push(this.getDay("دوشنبه", 1 /* Monday */));
-        weeks.push(this.getDay("سه شنبه", 2 /* Tuesday */));
-        weeks.push(this.getDay("چهارشنبه", 3 /* Wednesday */));
-        weeks.push(this.getDay("پنجشنبه", 4 /* Thursday */));
-        weeks.push(this.getDay("جمعه", 5 /* Friday */));
+        weeks.push(this.getDay("شنبه", 6 /* Saturday */, WeekNumber));
+        weeks.push(this.getDay("یکشنبه", 0 /* Sunday */, WeekNumber));
+        weeks.push(this.getDay("دوشنبه", 1 /* Monday */, WeekNumber));
+        weeks.push(this.getDay("سه شنبه", 2 /* Tuesday */, WeekNumber));
+        weeks.push(this.getDay("چهارشنبه", 3 /* Wednesday */, WeekNumber));
+        weeks.push(this.getDay("پنجشنبه", 4 /* Thursday */, WeekNumber));
+        weeks.push(this.getDay("جمعه", 5 /* Friday */, WeekNumber));
         return weeks.reverse();
     };
     AbsenceDataProviderService.prototype.GetById = function (id) {
@@ -274,7 +303,7 @@ var AbsenceDataProviderService = /** @class */ (function () {
 /*!*********************************************************!*\
   !*** ./src/app/absence/absence-index/absence.models.ts ***!
   \*********************************************************/
-/*! exports provided: AbsenceBase, BiometricData, Machine, ObligatedRange, ObligatedRangeDayTimes, ObligatedRangeWeeks, Personnel, PersonnelMachine, WorkGroup, WorkGroupObligatedRange */
+/*! exports provided: AbsenceBase, BiometricData, Machine, ObligatedRange, ObligatedRangeDayTimes, RangeType, ObligatedRangeWeeks, Personnel, PersonnelMachine, WorkGroup, WorkGroupObligatedRange */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -284,6 +313,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Machine", function() { return Machine; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObligatedRange", function() { return ObligatedRange; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObligatedRangeDayTimes", function() { return ObligatedRangeDayTimes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RangeType", function() { return RangeType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObligatedRangeWeeks", function() { return ObligatedRangeWeeks; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Personnel", function() { return Personnel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PersonnelMachine", function() { return PersonnelMachine; });
@@ -335,6 +365,15 @@ var ObligatedRangeDayTimes = /** @class */ (function (_super) {
     return ObligatedRangeDayTimes;
 }(AbsenceBase));
 
+var RangeType;
+(function (RangeType) {
+    RangeType[RangeType["Normal"] = 0] = "Normal";
+    RangeType[RangeType["Overtime"] = 1] = "Overtime";
+    RangeType[RangeType["NightWork"] = 2] = "NightWork";
+    RangeType[RangeType["HolidayWork"] = 3] = "HolidayWork";
+    RangeType[RangeType["ShiftWork"] = 4] = "ShiftWork";
+    RangeType[RangeType["Interrupion"] = 5] = "Interrupion";
+})(RangeType || (RangeType = {}));
 var ObligatedRangeWeeks = /** @class */ (function (_super) {
     __extends(ObligatedRangeWeeks, _super);
     function ObligatedRangeWeeks() {

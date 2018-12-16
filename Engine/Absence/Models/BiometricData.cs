@@ -7,14 +7,12 @@ using TypeLite;
 namespace Engine.Absence.Models
 {
     [TsClass]
-    public class BiometricData
+    public class BiometricData :AbsenceBase
     {
         public BiometricData()
         {
             BiometricDataTimes = new List<BiometricDataTime>();
         }
-        [Key]
-        public long Id { get; set; }
         public long UserId { get; set; }
         public long MachineId { get; set; }
         public DateTime Date { get; set; }
@@ -25,11 +23,9 @@ namespace Engine.Absence.Models
         public virtual  ICollection<BiometricDataTime> BiometricDataTimes { get; set; }
     }
 
-    public class BiometricDataTime
+    public class BiometricDataTime :AbsenceBase
     {
         
-        [Key]
-        public long Id { get; set; }
         public  long BiometricDataId { get; set; }
         public  virtual BiometricData BiometricData { get; set; }
         public DateTime TimeIn { get; set; }
@@ -40,18 +36,17 @@ namespace Engine.Absence.Models
     
     
     [TsClass]
-    public class BiometricRawData
+    public class BiometricRawData :AbsenceBase
     {
-        [Key]
-        public long Id { get; set; }
         public long UserId { get; set; }
         public long MachineId { get; set; }
-        public DateTime Time { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Time { get; set; }
+        public DateTime? Date { get; set; }
         public BiometricDataType Type { get; set; }
         
         public  PersonnelMachine PersonnelMachine { get; set; }
         public  long PersonnelMachineId { get; set; }
+        public bool IsManual { get; set; }
     }
 
     public enum BiometricDataType

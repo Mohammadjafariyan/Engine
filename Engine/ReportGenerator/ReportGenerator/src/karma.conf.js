@@ -10,7 +10,9 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
+      require('karma-firefox-launcher'),
       require('@angular-devkit/build-angular/plugins/karma')
+
     ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
@@ -26,6 +28,23 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: false
+    singleRun: false,
+    browserNoActivityTimeout:100000000,
+    browserDisconnectTimeout:100000000,
+    browserDisconnectTolerance: 10/*,
+    customLaunchers: {
+      Chrome: {
+        base: 'Chrome',
+        flags: [
+          '--no-sandbox',
+          '--headless',
+          '--disable-gpu',
+          '--disable-translate',
+          '--use-mock-keychain',
+          '--disable-extensions'
+        ]
+      }
+    }*/
+
   });
 };

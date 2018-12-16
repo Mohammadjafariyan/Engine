@@ -11,23 +11,22 @@ namespace ServiceLayer.Engine
     public interface ICRUDService<T> where T:IModel
     {
 
-        IDataTable GetDataTable(IDataTableParameter p);
+        IDataTable GetDataTable(T p);
         ITreeNode GetTree(ITreeParameter p);
         List<IDropDownOption> GetDropDown(IDropDownParameter p);
         List<IDropDownOption> GetMultiSelect(IDropDownParameter p);
 
 
 
-        Task<ObjectDataTable<T>> GetDataTableAsync(IDataTableParameter p);
+        Task<IDataTable> GetDataTableAsync(T p);
         Task<ITreeNode> GetTreeAsync(ITreeParameter p);
         Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p);
         Task<List<IDropDownOption>> GetMultiSelectAsync(IMultiSelectParameter p);
 
 
-          void Insert(T p);
+          void Save(T p);
 
-          void Update(T p);
-        T Delete(long id);
+        void Delete(long id);
         T GetForEdit(long id);
         T GetById(long id);
         

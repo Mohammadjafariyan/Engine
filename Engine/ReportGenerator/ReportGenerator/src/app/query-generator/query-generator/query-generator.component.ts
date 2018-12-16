@@ -1,14 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {SqlQueryGeneratorComponent} from "./sql-query-generator/sql-query-generator.component";
 import {DataComponent} from "../data/data.component";
 
+declare var hljs:any;
+declare var $:any;
 @Component({
   selector: 'app-query-generator',
   templateUrl: './query-generator.component.html',
   styleUrls: ['./query-generator.component.css'],
   providers: [SqlQueryGeneratorComponent]
 })
-export class QueryGeneratorComponent implements OnInit {
+export class QueryGeneratorComponent implements OnInit , AfterViewInit {
 
 
   constructor(public sqlQueryGeneratorComponent: SqlQueryGeneratorComponent,
@@ -23,12 +25,25 @@ export class QueryGeneratorComponent implements OnInit {
     ).toPromise().then(r => {
 
       this.dataComponent.SQL = r;
+
+      /*$('code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });*/
+
     });
   }
 
   ngOnInit() {
 
 
+
   }
+
+  ngAfterViewInit(): void {
+
+
+  }
+
+
 
 }

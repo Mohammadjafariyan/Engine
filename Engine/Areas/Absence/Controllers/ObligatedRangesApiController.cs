@@ -13,7 +13,6 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using ViewModel.ActionTypes;
 using ViewModel.Parameters;
 using WebAppIDEEngine.Models;
@@ -25,7 +24,6 @@ using Engine.ServiceLayer.Systems.Engine;
 using Engine.Service.AbstractControllers;
 using WebGrease.Css.Extensions;
 using WebAppIDEEngine.Models;
-using WebAppIDEEngine.Areas.App.Controllers;
 using System.Web.Http;
 using ServiceLayer.Absence;
 
@@ -42,5 +40,7 @@ namespace Engine.Areas.Absence.Controllers
         {
             _engineService = new ObligatedRangesService();
         }
+        
+      
     }
 }

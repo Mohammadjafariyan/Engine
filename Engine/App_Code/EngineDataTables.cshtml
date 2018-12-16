@@ -97,7 +97,7 @@ if ((datatable is IDataTable))
         @foreach (var record in RecordsList)
         {
             <tr>
-                <td>@record.Id</td>
+                <td>  @record.GetType().GetProperty("Id").GetValue(record, null)</td>
                 @foreach(var header in headers)
                 {
                     if (header.Key == "Id")

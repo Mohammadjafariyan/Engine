@@ -14,22 +14,23 @@ export class AbsenceDataProviderService {
   constructor(public http:HttpClient){
 
   }
-  getDay(name, t: DayOfWeek) {
+  getDay(name, t: DayOfWeek,WeekNumber:number) {
     let sat = new ObligatedRangeWeeks();
     sat.DayOfWeek = t;
     sat.DayOfWeekFaName = name;
+    sat.WeekNumber=WeekNumber;
     return sat;
   }
 
-  getWeek() {
+  getWeek(WeekNumber:number):ObligatedRangeWeeks[] {
     var weeks = [];
-    weeks.push(this.getDay( "شنبه",DayOfWeek.Saturday));
-    weeks.push(this.getDay( "یکشنبه",DayOfWeek.Sunday));
-    weeks.push(this.getDay( "دوشنبه",DayOfWeek.Monday));
-    weeks.push(this.getDay( "سه شنبه",DayOfWeek.Tuesday));
-    weeks.push(this.getDay( "چهارشنبه",DayOfWeek.Wednesday));
-    weeks.push(this.getDay( "پنجشنبه",DayOfWeek.Thursday));
-    weeks.push(this.getDay( "جمعه",DayOfWeek.Friday));
+    weeks.push(this.getDay( "شنبه",DayOfWeek.Saturday,WeekNumber));
+    weeks.push(this.getDay( "یکشنبه",DayOfWeek.Sunday,WeekNumber));
+    weeks.push(this.getDay( "دوشنبه",DayOfWeek.Monday,WeekNumber));
+    weeks.push(this.getDay( "سه شنبه",DayOfWeek.Tuesday,WeekNumber));
+    weeks.push(this.getDay( "چهارشنبه",DayOfWeek.Wednesday,WeekNumber));
+    weeks.push(this.getDay( "پنجشنبه",DayOfWeek.Thursday,WeekNumber));
+    weeks.push(this.getDay( "جمعه",DayOfWeek.Friday,WeekNumber));
 
     return weeks.reverse();
   }

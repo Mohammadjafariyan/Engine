@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using AppSourceGenerator;
+using Engine.Controllers.AbstractControllers.AttributeBased;
 using Engine.Entities.Models.Core.AppGeneration;
 using ServiceLayer.Systems;
 using ViewModel.Parameters;
-using WebAppIDEEngine.Areas.App.Controllers;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Areas.AppGeneration.Controllers
@@ -31,49 +31,52 @@ namespace Engine.Areas.AppGeneration.Controllers
                 return View("GetDataTable");
             }
 
-            var dd =Directory.GetCurrentDirectory();
 
             try
             {
-
-                var path = filepath;
-                g.CreateIsNotExist(path);
-                g.LoadProject(path);
-
-                var subsystem = _engineService.EngineContext.SubSystem.Where(d => d.Id == subsystemId).ToList();
-
-                if (type == 1)
+                using (var EngineContext = new EngineContext())
                 {
-                    g.MakeSubsystems(subsystem);
                     
-                    var d = subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault();
-                    g.MakeControllers(d);
+                    var path = filepath;
+                    g.CreateIsNotExist(path);
+                    g.LoadProject(path);
+
+                    var subsystem = EngineContext.SubSystem.Where(d => d.Id == subsystemId).ToList();
+
+                    if (type == 1)
+                    {
+                        g.MakeSubsystems(subsystem);
+                    
+                        var d = subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault();
+                        g.MakeControllers(d);
                    
-                    var d1 = subsystem.Select(s => s.DefineServices.ToList()).FirstOrDefault();
-                    g.MakeServices(d1);
+                        var d1 = subsystem.Select(s => s.DefineServices.ToList()).FirstOrDefault();
+                        g.MakeServices(d1);
                    
-                    var d3 = subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault();
-                    g.MakeApiControllers(d3);
+                        var d3 = subsystem.Select(s => s.DefineControllers.ToList()).FirstOrDefault();
+                        g.MakeApiControllers(d3);
 
-                    g.MakeViews(d3);
+                        g.MakeViews(d3);
 
-                    var d4 = _engineService.EngineContext.Models.ToList();
-                    g.MakeModels(d4);
+                        var d4 = EngineContext.Models.ToList();
+                        g.MakeModels(d4);
 
 
-                    g.RegisterServices(d1, "IBaseEngineService");
+                        g.RegisterServices(d1, "IBaseEngineService");
 
-                    ViewBag.successmsg = "با موفقیت ایجاد شد";
-                    return View("GetDataTable",null);
+                        ViewBag.successmsg = "با موفقیت ایجاد شد";
+                        return View("GetDataTable",null);
 
-                }
-                else if (type == 2)
-                {
-                    throw new Exception("این نوع پیاده سازی نشده است");
-                }
-                else
-                {
-                    throw new Exception("ساپورت نشده");
+                    }
+                    else if (type == 2)
+                    {
+                        throw new Exception("این نوع پیاده سازی نشده است");
+                    }
+                    else
+                    {
+                        throw new Exception("ساپورت نشده");
+                    }
+
                 }
 
             }

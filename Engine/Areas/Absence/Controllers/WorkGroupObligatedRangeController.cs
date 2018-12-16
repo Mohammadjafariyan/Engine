@@ -24,10 +24,10 @@ using Engine.ServiceLayer.Systems.Engine;
 using Engine.Service.AbstractControllers;
 using WebGrease.Css.Extensions;
 using WebAppIDEEngine.Models;
-using WebAppIDEEngine.Areas.App.Controllers;
 using System.Web.Mvc;
 using Engine.Absence.Models;
 using Engine.Areas.Absence.UiConstructs;
+using Engine.Controllers.AbstractControllers.ObjectBased;
 using ServiceLayer.Absence;
 
 
@@ -42,8 +42,8 @@ namespace Engine.Areas.Absence.Controllers
         public WorkGroupObligatedRangeController()
         {
             _engineService=new WorkGroupObligatedRangService();
-            _formConstructProvider = new  WorkGroupObligatedRangeConstruct();
-            _tableConstructProvider = new WorkGroupObligatedRangeConstruct();
+            FormConstructProvider = new  WorkGroupObligatedRangeConstruct();
+            TableConstructProvider = new WorkGroupObligatedRangeConstruct();
         }
     }
 }

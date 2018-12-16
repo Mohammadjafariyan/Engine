@@ -105,9 +105,47 @@
                 if (uiFormInput.UiInput.FieldType == FieldType.DropDown)
                 {
                     <select onchange="@onchange" value="@val" id="@uiFormInput.UiInput.Name" class="form-control" placeholder="@uiFormInput.Name" name="@uiFormInput.UiInput.Name">
-                        <option></option>
+
+                        @if (uiFormInput.SelectList != null)
+                        {
+                            <option>انتخاب کنید</option>
+
+                            foreach (SelectListItem selectListItem in uiFormInput.SelectList.Items)
+                            {
+                                string isSelected = selectListItem.Value == uiFormInput.SelectList.SelectedValue ? "selected='selected'" : "";
+
+                                <option @isSelected value="@selectListItem.Value">@selectListItem.Text</option>
+                            }
+                        }
+                        else
+                        {
+                            <option></option>
+                        }
                     </select>
                 }
+                if (uiFormInput.UiInput.FieldType == FieldType.Date)
+                {
+                    <input type="hidden" value="@uiFormInput.UiInput.Name" name="@uiFormInput.UiInput.Name"
+                           class="form-control" hidden="hidden" id="@uiFormInput.UiInput.Name">
+                    <input type="text" onchange="dateToChanged(this, 'fa_@uiFormInput.UiInput.Name', '@uiFormInput.UiInput.Name')"  value="@val" name="fa_@uiFormInput.UiInput.Name" class="form-control"
+                           id="fa_@uiFormInput.UiInput.Name">
+                }
+
+                if (uiFormInput.UiInput.FieldType == FieldType.Time)
+                {
+                   
+                    
+                    <div class="input-group clockpicker">
+                        <input type="text" class="form-control"
+                               name="@uiFormInput.UiInput.Name"
+                               class="form-control" id="@uiFormInput.UiInput.Name"
+                               value="@val">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                    </div>
+                }
+
                 if (uiFormInput.UiInput.FieldType == FieldType.TextArea)
                 {
                     <textarea onchange="@onchange" value="@val" id="@uiFormInput.UiInput.Name" class="form-control" placeholder="@uiFormInput.Name" rows="5" cols="10" name="@uiFormInput.UiInput.Name">  </textarea>
@@ -123,27 +161,27 @@
             string subSystemName;
             if (string.IsNullOrEmpty(inputMethod.SubSystemName))
             {
-                subSystemName= inputMethod.DefineControllerMethod.DefineController.SubSystem.Name;
+                subSystemName = inputMethod.DefineControllerMethod.DefineController.SubSystem.Name;
             }
             else
             {
                 subSystemName = inputMethod.SubSystemName;
             }
-           
-            string controllerName ;
+
+            string controllerName;
             if (string.IsNullOrEmpty(inputMethod.ControllerName))
             {
-                controllerName= inputMethod.DefineControllerMethod.DefineController.Name;
+                controllerName = inputMethod.DefineControllerMethod.DefineController.Name;
             }
             else
             {
                 controllerName = inputMethod.ControllerName;
             }
-           
+
             string methodName;
             if (string.IsNullOrEmpty(inputMethod.MethodName))
             {
-                methodName= inputMethod.DefineControllerMethod.Name;
+                methodName = inputMethod.DefineControllerMethod.Name;
             }
             else
             {
@@ -253,4 +291,90 @@
         }
     }
     
+    
+    function dateToChanged(el, from, to) {
+        fromTo('#' + from, "#" + to);
+    }
+
+    function fromTo(one, two) {
+        debugger;
+        var tmpDate = $(one).MdPersianDateTimePicker('getDate');
+        var parsedDate = Date.parse(tmpDate);
+
+        console.log('parsedDate', parsedDate);
+        var date = new Date(parsedDate);
+
+        console.log('date', date);
+        //  var garegorianDate = toGregorian(date.getFullYear(),date.getMonth(),date.getDate());
+
+        console.log('garegorianDate', date.toJSON());
+
+        $(two).val(date.toJSON());
+    }
+
+
+    $(document).ready(function() {
+
+        $('.clockpicker').clockpicker({
+            donetext: 'انتخاب'});
+
+        
+        @{
+            var dates = uiFormInputs.Where(fi => fi.UiInput.FieldType == FieldType.Date);
+
+            foreach (var date in dates)
+            {
+                 var todate = date.IsToDate ? "true" : "false";
+                var fromDate = date.IsFromDate ? "true" : "false";
+
+                if (string.IsNullOrEmpty(date.DateGroupId))
+                {
+                    <text>
+                        $('#fa_@date.UiInput.Name').MdPersianDateTimePicker({
+                            Placement: 'left',
+                            Trigger: 'click',
+                            EnableTimePicker: false,
+                            TargetSelector: '#fa_@date.UiInput.Name',
+                            ToDate: @todate,
+                            FromDate: @fromDate,
+                            DisableBeforeToday: false,
+                            Disabled: false,
+                            Format: 'yyyy/MM/dd',
+                            IsGregorian: false,
+                            EnglishNumber: false,
+                            InLine: false,
+                            GroupId: "@date.DateGroupId"
+                        });
+
+                    </text>
+                }
+                else
+                {
+                    <text>
+        
+                        $('#fa_@date.UiInput.Name').MdPersianDateTimePicker({
+                            Placement: 'left',
+                            Trigger: 'click',
+                            EnableTimePicker: false,
+                            TargetSelector: '#fa_@date.UiInput.Name',
+                            ToDate: @todate,
+                            FromDate: @fromDate,
+                            DisableBeforeToday: false,
+                            Disabled: false,
+                            Format: 'yyyy/MM/dd',
+                            IsGregorian: false,
+                            EnglishNumber: false,
+                            InLine: false
+                        });
+
+                    </text>
+                }
+            }
+        }
+        
+        
+       
+    });
+
+
 </script>

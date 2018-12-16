@@ -1,7 +1,7 @@
 ﻿@using Engine.Areas.JUiEngine.Controllers
+@using Engine.Areas.ReportGenerator.Controllers
 @using Engine.Entities.Models.UiGeneratorModels
 @using Engine.Service.AbstractControllers
-@using WebAppIDEEngine.Areas.App.Controllers
 @model Engine.Entities.Models.UiGeneratorModels.UiForm
 @{
     ViewBag.Title = "ShowView";
@@ -37,35 +37,32 @@
 }
 @Html.Partial("~/Areas/JUiEngine/Views/Shared/ItemsPartial.cshtml")
 
+@if (ViewData[GlobalNames.MVCResponseMessage] != null)
+{
+    var res = (CustomResult) ViewData[GlobalNames.MVCResponseMessage];
+    var type = res.Status == CustomResultType.success ? "alert-success" : "alert-warning";
+
+    <div class="alert @type">
+        <strong>پیغام ها!</strong>
+        <p>@res.Message</p>
+    </div>
+}
 
 @if (ViewData[GlobalNames.AllErrors] != null)
 {
     var errors = ViewData[GlobalNames.AllErrors] as IEnumerable<ModelError>;
     if (errors != null)
-     {
-         
-         <div class="alert alert-warning">
-             <strong>خطا ها!</strong> 
-             
-             @foreach (var modelError in errors)
-             {
-                 <p>@modelError.ErrorMessage</p>
-             }
+    {
+        <div class="alert alert-warning">
+            <strong>خطا ها!</strong>
 
-         </div>
-         @*<div class="card bg-danger text-white">
-             <div class="card-header">خطا ها</div>
-             <div class="card-body">
+            @foreach (var modelError in errors)
+            {
+                <p>@modelError.ErrorMessage</p>
+            }
 
-                 @foreach (var modelError in errors)
-                 {
-                     <p>@modelError.ErrorMessage</p>
-                 }
-
-             </div>
-
-         </div>*@
-     }
+        </div>
+    }
 }
 
 
@@ -73,12 +70,16 @@
 
 @if (isAjax == true)
 {
-    PostControllerUrl = PostControllerUrl + "api";
-    var action = $@"/{PostSubsystemUrl}/{PostControllerUrl}/{PostActionUrl}" + Request.Url.Query;
+    //PostControllerUrl = PostControllerUrl + "api";
+    //  var action = $@"/{PostSubsystemUrl}/{PostControllerUrl}/{PostActionUrl}" + Request.Url.Query;
+      var action = $@"/{PostSubsystemUrl}/{PostControllerUrl}/{PostActionUrl}" + Request.Url.Query;
     <form action="@action"
           class="" id="@formId" method="post">
         @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
         <br>
+        
+        <input id="isAjax_@Model.Id" value="true" name="isajax" type="hidden" class="btn btn-primary"> 
+
         <button id="search_@Model.Id" type="submit" class="btn btn-primary">جستجو </button>
         <button id="reset_@Model.Id" type="reset" class="btn btn-primary">ریست</button>
     </form>
@@ -100,7 +101,7 @@
                     e.preventDefault();
 
                     $.ajax({
-                        url: "/@PostSubsystemUrl/api/@PostControllerUrl/@PostActionUrl/5",
+                        url: "@action",
                         type: 'POST',
                         data: $('#form_@Model.Id').serialize(),
                         success: function(e) {

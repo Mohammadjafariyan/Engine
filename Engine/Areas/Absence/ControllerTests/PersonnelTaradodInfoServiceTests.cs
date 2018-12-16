@@ -12,7 +12,104 @@ namespace Engine.Areas.Absence.ControllerTests
 {
     public class PersonnelTaradodInfoServiceTests
     {
+        
 
+        /// <summary>
+        /// تست شیفت های دو هفته ای و چند هفته ای
+        /// </summary>
+        [Fact]
+        public void MultiWeekPersonnelTaradodTestDetail()
+        {
+            // ایجاد دیتای فیک
+            var fakeBiometricRepository = new MultiWeekFakeBiometricRepository();
+            fakeBiometricRepository.init();
+            
+            
+            
+            // اطلاعات از تاریخ تا تاریخ را بده برای پرسنل خاص
+            var c = new PersonnelTaradodInfoService();
+            var personnelId = fakeBiometricRepository.personnel.Id;
+            var fromDate = DateTime.Now;
+            var toDate = DateTime.Now.AddDays(15);
+            var biometricData = c.GetBiometricData(personnelId, fromDate, toDate);
+            
+            
+            // بازه موظفی شخص
+            ObligatedRange obligatedRange = c.GetObligatedRange(personnelId);
+            Assert.NotNull(obligatedRange);
+            Assert.True(obligatedRange.ObligatedRangeWeeks.Count>=14);
+
+            
+            // محاسبه اطلاعات
+            List<BiometryCalculatedDetail> taradodInfo = c.CompareAndJoin(fakeBiometricRepository.workgroupRange.DateTime.Value, toDate,biometricData, obligatedRange);
+            
+            // روز اول 
+            var firstDay=taradodInfo.ElementAt(1);
+
+            /*ValidateFirst(firstDay);
+
+            var nineDay=taradodInfo.ElementAt(9);
+            ValidateNine(nineDay);*/
+       
+
+            //   Assert.True(taradodInfo.Count==biometricData.Count());
+
+            
+            // محاسبه جمع
+            BiometryCalculatedDetail total=c.CalculateTotal(taradodInfo);
+            
+            
+            }
+
+        private void ValidateNine(BiometryCalculatedDetail nineDay)
+        {
+            Assert.True(nineDay.TotalAbsence.Hours==0 );
+            Assert.True(nineDay.TotalAbsence.Minutes==30 );
+            Assert.True(nineDay.TotalAbsence.Seconds==20 );
+            
+            Assert.True(nineDay.TotalOvertime.Hours==0 );
+            Assert.True(nineDay.TotalOvertime.Minutes==0 );
+            Assert.True(nineDay.TotalOvertime.Seconds==0 );
+            
+            
+            Assert.True(nineDay.InValid.Hours==0 );
+            Assert.True(nineDay.InValid.Minutes==0 );
+            Assert.True(nineDay.InValid.Seconds==10 );
+            
+            Assert.True(nineDay.TotalValid.Hours==9 );
+            Assert.True(nineDay.TotalValid.Minutes==29 );
+            Assert.True(nineDay.TotalValid.Seconds==40 );
+            
+            
+            Assert.True(nineDay.Times.Count==4 );
+        }
+
+        private void ValidateFirst(BiometryCalculatedDetail firstDay)
+        {
+            Assert.True(firstDay.TotalAbsence.Hours==9 );
+            Assert.True(firstDay.TotalAbsence.Minutes==0 );
+            Assert.True(firstDay.TotalAbsence.Seconds==50 );
+            
+            Assert.True(firstDay.TotalOvertime.Hours==2 );
+            Assert.True(firstDay.TotalOvertime.Minutes==0 );
+            Assert.True(firstDay.TotalOvertime.Seconds==0 );
+            
+            
+            Assert.True(firstDay.InValid.Hours==0 );
+            Assert.True(firstDay.InValid.Minutes==30 );
+            Assert.True(firstDay.InValid.Seconds==10 );
+            
+            Assert.True(firstDay.TotalAbsence.Hours==0 );
+            Assert.True(firstDay.TotalAbsence.Minutes==30 );
+            Assert.True(firstDay.TotalAbsence.Seconds==20 );
+            
+            Assert.True(firstDay.TotalValid.Hours==7 );
+            Assert.True(firstDay.TotalValid.Minutes==29 );
+            Assert.True(firstDay.TotalValid.Seconds==40 );
+            
+            
+            Assert.True(firstDay.Times.Count==4 );
+        }
 
         [Fact]
         public void TestPersonnelWorkDetail()

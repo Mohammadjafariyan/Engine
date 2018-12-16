@@ -12,43 +12,23 @@ using System.Web.Mvc;
 using System.ComponentModel;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using WebAppIDEEngine.Models.ICore;
 using Engine.Attributes;
 using ViewModel.ActionTypes;
 using Domain.Attributes;
+using Engine.ServiceLayer.Engine;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Service.AbstractControllers
 {
     public abstract class BaseEngineService<T> : IEngineService<T> where T : class, IModel
     {
-        // protected Injector _injector;
-        /*  public IDataTable Search<T1>(NameValueCollection nameValues) where T1 : class, IModel
-          {
-              var entities = EngineContext.Set<T1>();
-  
-              var tableName=Extentions.GetTableName<T1>(EngineContext);
-  
-              entities.toL
-  
-              var sql = $@"select * from {tableName} where ";
-              foreach (string name in nameValues)
-              {
-                  sql+= name + " " +nameValues[name];
-              }
-  
-          }*/
-
-
-        public WebAppIDEEngine.Models.EngineContext EngineContext { get; set; }
-        protected System.Data.Entity.DbSet<T> _entities;
         public virtual Injector Injector { get; set; }
 
         public BaseEngineService()
         {
-            EngineContext = new WebAppIDEEngine.Models.EngineContext();
-            this._entities = EngineContext.Set<T>();
             this.Injector = new Injector();
         }
 
@@ -255,9 +235,9 @@ namespace Engine.Service.AbstractControllers
 
         public static Dictionary<string, string> GetPropertyNames<M>()
         {
-            var names = typeof(M).GetProperties().Where(p=>
+            var names = typeof(M).GetProperties().Where(p =>
                     !p.PropertyType.IsArray && !p.PropertyType.IsGenericType &&
-                    !p.PropertyType.IsInterface )
+                    !p.PropertyType.IsInterface)
                 .ToDictionary(key => key.Name, property =>
                     property.GetCustomAttributes().Where(c => c is IEngineAttribute && !(c is HiddenColumnAttribute))
                         .Select(c => c as IEngineAttribute)
@@ -266,20 +246,55 @@ namespace Engine.Service.AbstractControllers
             return names;
         }
 
+        public virtual IQueryable<T> Search(T p, IQueryable<T> dt)
+        {
+            var props = p.GetType().GetProperties();
+            foreach (var propertyInfo in props)
+            {
+                var val = propertyInfo.GetValue(p);
+                if (!(val is IModel) && 
+                    !propertyInfo.PropertyType.IsArray && 
+                    !propertyInfo.PropertyType.IsInterface && 
+                    !propertyInfo.PropertyType.IsAbstract)
+                {
+                    if (val != null && val.ToString()!="0")
+                    {
+                        Expression<Func<T, bool>> whereClause;
+                        whereClause = DynamicQueryBuilder.Equal<T>(propertyInfo.Name, val);
+                        dt = dt.Where(whereClause);
+                    }
+                }
+               
+            }
+
+
+            return dt;
+        }
+
 
         /// <summary>
         /// دیتای جدول مدل را بر میگرداند
         /// </summary>
         /// <typeparam name="B"></typeparam>
         /// <returns></returns>
-        public virtual IDataTable GetDataTable(IDataTableParameter p)
+        public virtual IDataTable GetDataTable(T p)
         {
-            IDataTable dataTable = new ObjectDataTable<T>
+            using (var db = new EngineContext())
             {
-                Records = _entities.AsNoTracking(),
-                Headers = GetPropertyNames<T>()
-            };
-            return dataTable;
+                var set = db.Set<T>();
+                db.Configuration.ProxyCreationEnabled = false;
+
+                var dt = Search(p, set.ToList().AsQueryable());
+
+                IDataTable dataTable = new ObjectDataTable<T>
+                {
+                    Records = dt,
+                    RecordsList = dt.ToList(),
+                    Headers = GetPropertyNames<T>()
+                };
+                db.Configuration.ProxyCreationEnabled = true;
+                return dataTable;
+            }
         }
 
         public virtual ITreeNode GetTree(ITreeParameter p)
@@ -289,8 +304,12 @@ namespace Engine.Service.AbstractControllers
 
         public virtual List<IDropDownOption> GetDropDown(IDropDownParameter p)
         {
-            return _entities.Select(d =>
-                new IDropDownOption {Id = d.Id.ToString(), Value = d.Name}).ToList();
+            using (var EngineContext = new EngineContext())
+            {
+                var _entities = EngineContext.Set<T>();
+                return _entities.Select(d =>
+                    new IDropDownOption {Id = d.Id.ToString(), Value = d.Name}).ToList();
+            }
         }
 
         public virtual List<IDropDownOption> GetMultiSelect(IDropDownParameter p)
@@ -298,15 +317,9 @@ namespace Engine.Service.AbstractControllers
             return this.GetDropDown(p);
         }
 
-        public virtual async Task<ObjectDataTable<T>> GetDataTableAsync(IDataTableParameter p)
+        public virtual async Task<IDataTable> GetDataTableAsync(T p)
         {
-            ObjectDataTable<T> dataTable = new ObjectDataTable<T>
-            {
-                Records = _entities.AsQueryable(),
-                Headers = GetPropertyNames<T>()
-            };
-
-            return await Task.FromResult(dataTable);
+            return await Task.FromResult(GetDataTable(p));
         }
 
         public virtual async Task<ITreeNode> GetTreeAsync(ITreeParameter p)
@@ -324,37 +337,53 @@ namespace Engine.Service.AbstractControllers
             return await Task.FromResult<List<IDropDownOption>>(null);
         }
 
-        public virtual void Insert(T p)
+        public virtual void Save(T p)
         {
-            _entities.Add(p);
-        }
-
-        public virtual void Update(T p)
-        {
-            EngineContext.Entry(p).State = System.Data.Entity.EntityState.Modified;
-        }
-
-
-        public virtual T Delete(long id)
-        {
-            var entity = _entities.Find(id);
-            if (entity == null)
+            using (var db = new EngineContext())
             {
-                throw new BaseEngineException("رکورد یافت نشد");
-            }
+                if (p.Id == 0)
+                {
+                    db.Set<T>().Add(p);
+                }
+                else
+                {
+                    db.Entry(p).State = System.Data.Entity.EntityState.Modified;
+                }
 
-            EngineContext.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
-            return entity;
+                db.SaveChanges();
+            }
+        }
+
+
+        public virtual void Delete(long id)
+        {
+            using (var EngineContext = new EngineContext())
+            {
+                var entity = EngineContext.Set<T>().Find(id);
+                if (entity == null)
+                {
+                    throw new BaseEngineException("رکورد یافت نشد");
+                }
+
+                EngineContext.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
+                EngineContext.SaveChanges();
+            }
         }
 
         public virtual T GetForEdit(long id)
         {
-            return _entities.Find(id);
+            using (var EngineContext = new EngineContext())
+            {
+                return EngineContext.Set<T>().Find(id);
+            }
         }
 
         public virtual T GetById(long id)
         {
-            return _entities.Find(id);
+            using (var EngineContext = new EngineContext())
+            {
+                return EngineContext.Set<T>().Find(id);
+            }
         }
 
 

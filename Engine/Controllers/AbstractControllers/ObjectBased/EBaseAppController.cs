@@ -1,0 +1,335 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using Engine.Areas.JUiEngine.Controllers;
+using Engine.Areas.ReportGenerator.Controllers;
+using Engine.Attributes;
+using Engine.Controllers.AbstractControllers.AttributeBased;
+using Engine.Entities.Models.UiGeneratorModels;
+using Engine.Service.AbstractControllers;
+using Engine.ServiceLayer.Systems.Engine;
+using ServiceLayer.Absence;
+using ViewModel.ActionTypes;
+using WebAppIDEEngine.Models.ICore;
+using WebAppIDEEngine.Models.UiGeneratorModels;
+using WebGrease.Css.Extensions;
+using BaseEngineException = Engine.Controllers.AbstractControllers.AttributeBased.BaseEngineException;
+
+namespace Engine.Controllers.AbstractControllers.ObjectBased
+{
+    public abstract class EBaseAppController<T, Parameter> : BaseEngineController<T, Parameter>
+        where Parameter : IActionParameter where T : IModel, new()
+    {
+
+
+        protected IUiEngineDataProvider UiEngineDataProvider = new UiEngineDataProvider();
+        protected IUiFormDataProvider UiFormDataProvider = new UiFormDataProvider();
+
+        protected IFormConstructProvider FormConstructProvider;
+        protected ITableConstructProvider TableConstructProvider;
+
+
+        public EBaseAppController()
+        {
+            _injector = new Engine.Utitliy.Injector();
+        }
+
+
+        protected virtual void SetDynamicTableViewData(string actionName,
+            string subSystemName, string controllerName,
+            string controllerMethod, IDataTable table)
+        {
+            if (actionName.ToLower() == nameof(GetDataTable).ToLower())
+            {
+                EjTable ejtable = TableConstructProvider.GetDataTable(actionName);
+
+
+                ejtable.UiTableForms.Add(new UiTableForm
+                    {EjTable = ejtable, UiForm = SetDynamicFormViewData(actionName)});
+
+
+                UiEngineDataProvider.GetTable(ejtable, ViewData, Request,
+                    controllerName, controllerMethod, null, table);
+            }
+
+            /*_uiEngineDataProvider.GetTable(tableName, ViewData, Request, SubSystemName,
+                ControllerName, ControllerMethod, null, table);*/
+        }
+
+
+        protected virtual UiForm SetDynamicFormViewData(string actionName)
+        {
+            if (string.IsNullOrEmpty(actionName))
+            {
+                throw new Exception("actionName is null");
+            }
+
+            if (actionName.ToLower() == nameof(ForEdit).ToLower() || actionName.ToLower() == nameof(Save).ToLower())
+            {
+                UiForm form = FormConstructProvider.GetSaveForm();
+
+                string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+                string areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+
+                UiFormDataProvider.GetForm(form, areaName, controllerName, nameof(Save)
+                    , ViewData);
+                return form;
+            }
+
+            if (actionName.ToLower() == nameof(GetDataTable).ToLower())
+            {
+                UiForm form = FormConstructProvider.GetDataTableSearchForm();
+
+                if (form == null)
+                    return form;
+
+                string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+                string areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+
+                UiFormDataProvider.GetForm(form, areaName, controllerName, actionName
+                    , ViewData);
+                return form;
+            }
+
+            throw new Exception("فرم مورد نظر یافت نشد");
+            //از خود جدول فرم انتخاب کن نه از فرم های جداول
+            /*_uiFormDataProvider.GetForm(formName, ViewData, isTableForm: false,
+                postType: UiFormControllerMethodType.Save);*/
+        }
+
+        
+        // GET: App/Models
+        public virtual async Task<ActionResult> GetDataTable(T p,bool? isajax)
+        {
+            var res = await _engineService.GetDataTableAsync(p);
+
+            if (isajax==true)
+            {
+                return Json(res,JsonRequestBehavior.AllowGet);
+            }
+            
+            SetDynamicTableViewDataHelper(res);
+            return View(res);
+        }
+
+
+        public void SetDynamicTableViewDataHelper(dynamic res)
+        {
+            string actionName = ControllerContext.RouteData.Values["action"].ToString();
+            string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+            string areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+
+            TableConstructProvider.CurrentArea = areaName;
+            TableConstructProvider.CurrentController = controllerName;
+            TableConstructProvider.CurrentAction = actionName;
+
+            SetDynamicTableViewData(GetTableNamePattern(), areaName, controllerName, actionName, res);
+        }
+
+
+        protected string GetTableNamePattern()
+        {
+            string actionName = ControllerContext.RouteData.Values["action"].ToString();
+            /*
+            string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+
+            return controllerName + "_table_" + actionName;
+            */
+            return actionName;
+        }
+
+        protected string GetFormNamePattern()
+        {
+            string actionName = ControllerContext.RouteData.Values["action"].ToString();
+
+            /*
+string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+*/
+
+            //   return controllerName + "_form_" + actionName;
+            return actionName;
+        }
+
+
+        // GET: App/Models/Details/5
+        public async Task<ActionResult> Details(long? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            var model = _engineService.GetById(id.Value);
+            await this.RenderFormAsync(model);
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(model);
+        }
+
+
+        // POST: App/Models/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        public virtual async Task<ActionResult> Save(T model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _engineService.Save(model);
+
+                    //await _engineService.EngineContext.SaveChangesAsync();
+
+                    SetDynamicFormViewData(GetFormNamePattern());
+
+                    return RedirectToAction("GetDataTable");
+                }
+
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                ViewData[GlobalNames.AllErrors] = allErrors;
+
+            }
+            catch (JServiceException e)
+            {
+                ViewData[GlobalNames.MVCResponseMessage] = new CustomResult
+                {
+                    Message = e.Message,
+                    Status = CustomResultType.fail
+                };
+            }
+            catch (Exception e)
+            {
+                IEnumerable<ModelError> allErrors = new List<ModelError>
+                {
+                    new ModelError(e.Message)
+                };
+
+                ViewData[GlobalNames.AllErrors] = allErrors;
+            }
+
+            ViewData[GlobalNames.MVCResponseMessage] = new CustomResult
+            {
+                Message = "با موفقیت ثبت شد",
+                Status = CustomResultType.success
+            };
+            var id = model?.Id != 0 ? model?.Id : null;
+            return await ForEdit(id);
+        }
+
+
+        // GET: App/Models/Edit/5
+        public virtual async Task<ActionResult> ForEdit(long? id)
+        {
+            if (id == null)
+            {
+                var m = _injector.Inject<T>();
+                SetDynamicFormViewData(GetFormNamePattern());
+                return View("ForEdit", m);
+            }
+
+            var model = _engineService.GetForEdit(id.Value);
+            SetDynamicFormViewData(GetFormNamePattern());
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View("ForEdit", model);
+        }
+
+
+        public virtual async Task RenderFormAsync(IModel r)
+        {
+            if (r == null)
+                throw new BaseEngineException("پارامتر نال است");
+
+
+            var parameters = Request?.Params;
+
+            IDropDownParameter dropdownparam = GetDropDownParams(parameters);
+            ITreeParameter _ITreeParameter = GetTreeParams(parameters);
+            IMultiSelectParameter _IMultiSelectParameter = GetMultiSelectParams(parameters);
+            IDataTableParameter _IDataTableParameter = GetDataTableParams(parameters);
+
+            Dictionary<string, DropDownAttribute> dropdowns = _engineService.GetModelDropdownAttributes<T>();
+            Dictionary<string, DataTableAttribute> datatables = _engineService.GetModelTableAttributes<T>();
+            Dictionary<string, TreeAttribute> trees = _engineService.GetModelTreeAttributes<T>();
+            Dictionary<string, MultiSelectAttribute> multiselects = _engineService.GetModelMultiSelectAttributes<T>();
+            Dictionary<string, List<SelectListItem>> enums = _engineService.GetEnumsAttributes<T>(r);
+
+            Dictionary<string, List<IDropDownOption>> dropdownData =
+                await _engineService.GetDropdownDataAsync(dropdowns, dropdownparam);
+            Dictionary<string, IQueryable<IDataTable>> dataTableData =
+                await _engineService.GetDataTableDataAsync(datatables, _IDataTableParameter);
+            Dictionary<string, ITreeNode> treeData = await _engineService.GetTreeDataAsync(trees, _ITreeParameter);
+            Dictionary<string, List<IDropDownOption>> multiSelectData =
+                await _engineService.GetMultiSelectDataAsync(multiselects, _IMultiSelectParameter);
+
+            _engineService.SetData(dropdownData.Keys.ToArray(), dropdownData.Values.ToArray(), ViewData);
+            _engineService.SetData(dataTableData.Keys.ToArray(), datatables.Values.ToArray(), ViewData);
+            _engineService.SetData(treeData.Keys.ToArray(), treeData.Values.ToArray(), ViewData);
+            _engineService.SetData(multiSelectData.Keys.ToArray(), multiSelectData.Values.ToArray(), ViewData);
+            _engineService.SetData(enums.Keys.ToArray(), enums.Values.ToArray(), ViewData);
+        }
+
+        protected virtual IDataTableParameter GetDataTableParams(NameValueCollection parameters)
+        {
+            return null;
+        }
+
+        protected virtual IMultiSelectParameter GetMultiSelectParams(NameValueCollection parameters)
+        {
+            return null;
+        }
+
+        protected virtual ITreeParameter GetTreeParams(NameValueCollection parameters)
+        {
+            return null;
+        }
+
+        protected virtual IDropDownParameter GetDropDownParams(NameValueCollection parameters)
+        {
+            return null;
+        }
+        
+        [HttpPost]
+        public virtual ActionResult Delete(long id)
+        {
+            try
+            {
+                _engineService.Delete(id);
+
+                return Json(new CustomResult
+                {
+                    Status = CustomResultType.success,
+                    Message = "با موفقیت حذف شد"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (JServiceException e)
+            {
+                return Json( new CustomResult
+                {
+                    Status = CustomResultType.fail,
+                    Message = e.Message
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json( new CustomResult
+                {
+                    Status = CustomResultType.fail,
+                    Message = "حذف با خطا مواجه شد"
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+    }
+}

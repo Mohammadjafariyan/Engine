@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - سیستم کاربردی آشارداشار - کلیه حقوق محفوظ است</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/Bootstrap-rtl.css" rel="stylesheet" />
@@ -25,11 +25,13 @@
     <link href="~/Content/DataTables/Scroller-1.5.0/css/scroller.bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/DataTables/Select-1.2.6/css/select.bootstrap.min.css" rel="stylesheet" />
 
+    <link href="~/Content/Datepicker/jquery.Bootstrap-PersianDateTimePicker.css" rel="stylesheet" />
 
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <link href="~/Content/timepicker/bootstrap-clockpicker.min.css" rel="stylesheet" />
 
 
 </head>
@@ -62,7 +64,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - سیستم کاربردی آشارداشار - کلیه حقوق محفوظ است</p>
         </footer>
     </div>
 
@@ -84,6 +86,11 @@
     <script src="~/Content/DataTables/RowReorder-1.2.4/js/rowReorder.bootstrap.min.js"></script>
     <script src="~/Content/DataTables/Scroller-1.5.0/js/scroller.bootstrap.min.js"></script>
     <script src="~/Content/DataTables/Select-1.2.6/js/select.bootstrap.min.js"></script>
+<script src="~/Content/timepicker/bootstrap-clockpicker.min.js"></script>
+
+
+<script src="~/Content/Datepicker/jalaali.js"></script>
+<script src="~/Content/Datepicker/jquery.Bootstrap-PersianDateTimePicker.js"></script>
 
 
 </body>

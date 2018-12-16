@@ -20,5 +20,6 @@ namespace Engine.Absence.Models
         public bool IsRemoved { get; set; }
         
         public RangeType RangeType { get; set; }
+        public bool IsTwoDay { get; set; }
     }
 }

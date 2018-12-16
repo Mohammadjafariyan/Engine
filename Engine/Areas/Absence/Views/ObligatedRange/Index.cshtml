@@ -19,12 +19,12 @@
 
 
 <script>
-
+    var path = "@Request.Url.AbsoluteUri";
     var modelId = "@Model?.Id";
     $(document).ready(function() {
         
-        if (window.location.href.indexOf("Absence/Index") ==-1) {
-            
+        if (window.location.href.indexOf("Absence/ObligatedRange/Index/#/absence/home") ==-1) {
+            window.location.href = path+ "/#/absence/home";
         }
        // window.location.href += "Absence/Index" + modelId;
     });

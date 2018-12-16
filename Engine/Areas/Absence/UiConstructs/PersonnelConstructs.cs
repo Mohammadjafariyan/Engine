@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Engine.Areas.Absence.Controllers;
 using Engine.Controllers.AbstractControllers;
+using Engine.Controllers.AbstractControllers.ObjectBased;
 using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.UiGeneratorModels;
 using WebAppIDEEngine.Models.CoreEnum;
@@ -9,9 +10,9 @@ using NotImplementedException = System.NotImplementedException;
 
 namespace Engine.Areas.Absence.UiConstructs
 {
-    public class PersonnelConstructs : BaseTableConstructProvider, IFormConstructProvider, ITableConstructProvider
+    public class PersonnelConstructs : BaseConstructProvider, IFormConstructProvider, ITableConstructProvider
     {
-        public UiForm GetSaveForm()
+        public override UiForm GetSaveForm()
         {
             return GetForm();
         }
@@ -39,7 +40,7 @@ namespace Engine.Areas.Absence.UiConstructs
             return uiform;
         }
 
-        public UiForm GetDataTableSearchForm()
+        public override UiForm GetDataTableSearchForm()
         {
             return GetForm();
         }

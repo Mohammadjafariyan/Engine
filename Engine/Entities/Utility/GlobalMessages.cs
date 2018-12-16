@@ -23,6 +23,7 @@ namespace Engine.Service.AbstractControllers
         public const string GetDataTable = "GetDataTable";
         
         public static readonly string AllErrors = "AllErrors";
+        public static readonly string MVCResponseMessage = "MVCResponseMessage";
 
 
         public const string ActionService = "ActionService";
@@ -63,6 +64,13 @@ namespace Engine.Service.AbstractControllers
 
         public const string AppArea = "AppArea";
     }
+    
+    
+    public class GlobalLinkProvider
+    {
+        
+    }
+
 
     public class GlobalUtilities
     {

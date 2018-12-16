@@ -14,6 +14,10 @@
     div.dataTables_wrapper {
         direction: rtl;
     }
+    
+    td , th {
+        text-align: right
+    }
  
     
 </style>
@@ -25,9 +29,6 @@
     var uiForm = ViewData[UiHomeController.Form] as UiForm;
     var uiTableItems = ViewData[UiHomeController.UiTableItems] as List<UiTableItem>;
 
-    var PostSubsystemUrl = ViewData[UiFormEngineController.PostSubsystemUrl] as string;
-    var PostActionUrl = ViewData[UiFormEngineController.PostActionUrl] as string;
-    var PostControllerUrl = ViewData[UiFormEngineController.PostControllerUrl] as string;
 }
 
 
@@ -47,42 +48,53 @@
 }
 <div class="panel panel-default">
     <div class="panel-heading">
+        
+        <div class="row">
+        <span class="col-md-1"> اطلاعات</span>
+        <span class="col-md-11">
 
+            @if (uiTableItems != null && uiTableItems.Count > 0)
+            {
+                <div class="btn-group">
 
-
-        @if (uiTableItems != null && uiTableItems.Count > 0)
-        {
-            <div class="btn-group">
-
-                @foreach (var item in uiTableItems)
-                {
-                    var icon = item.UiItem.Icon;
-                    var name = item.UiItem.Name;
-                    var url = "";
-                    if (item.UiItem.UiItemType == UiItemType.GoToSave)
+                    @foreach (var item in uiTableItems)
                     {
-                        url = $@"/{PostSubsystemUrl}/{PostControllerUrl}/ForEdit";
-                        url = $@"openSaveLink('{url}')";
-                    }
-                    if (item.UiItem.UiItemType == UiItemType.Form)
-                    {
-                        url = $@"/JUiEngine/UiFormEngine/showView?formName={item.UiItem.FormName}";
-                        url = $@"openFormLink('{url}')";
-                    }
-                    if (item.UiItem.UiItemType == UiItemType.Delete)
-                    {
-                        url = $@"/{PostSubsystemUrl}/Api/{PostControllerUrl}Api/Delete";
-                        url = $@"Delete('{url}')";
+                        var icon = item.UiItem.Icon;
+                        var name = item.UiItem.Name;
+                        var url = "";
+                        if (item.UiItem.UiItemType == UiItemType.GoToSave)
+                        {
+                            url = $@"{item.UiItem.CustomUrl}";
+                            url = $@"openSaveLink('{url}')";
+                        }
+                        if (item.UiItem.UiItemType == UiItemType.Link)
+                        {
+                            url = item.UiItem.CustomUrl;
+                            url = $@"openSaveLink('{url}')";
+                        }
+                        if (item.UiItem.UiItemType == UiItemType.Form)
+                        {
+                            url = $@"/JUiEngine/UiFormEngine/showView?formName={item.UiItem.FormName}";
+                            url = $@"openFormLink('{url}')";
+                        }
+                        if (item.UiItem.UiItemType == UiItemType.Delete)
+                        {
+                            url = $@"{item.UiItem.CustomUrl}";
+                            url = $@"Delete('{url}')";
+                        }
+
+                        <button onclick="@url" class="btn btn-primary">
+                            <span class="@icon"></span> @name</button>
                     }
 
-                    <button onclick="@url" class="btn btn-primary">
-                        <span class="@icon"></span> @name</button>
-                }
+
+                </div>
+            }
+
+        </span>
+        </div>
 
 
-            </div>
-        }
-        <span > اطلاعات</span>
 
     </div>
     <div class="panel-body">

@@ -11,6 +11,12 @@ namespace ViewModel.ActionTypes
     
     public abstract class BaseDataTable<T> : IDataTable
     {
+
+        public BaseDataTable()
+        {
+        }
+
+        public long Id { get; set; }
         public Dictionary<string, string> Headers { get; set; }
         public int? Total { get; set; }
         public int? Filtered { get; set; }

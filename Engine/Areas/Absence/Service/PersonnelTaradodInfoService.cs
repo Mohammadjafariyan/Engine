@@ -30,7 +30,7 @@ namespace Engine.Areas.Absence.Service
             DateTime toDate, List<BiometricData> biometricData,
             ObligatedRange obligatedRange)
         {
-            var totalDays = (toDate - fromDate).TotalDays;
+            var totalDays = (toDate.Date - fromDate.Date).TotalDays;
             List<BiometryCalculatedDetail> data = new List<BiometryCalculatedDetail>();
             var firstDay = fromDate;
 
@@ -49,6 +49,33 @@ namespace Engine.Areas.Absence.Service
                 var obligatedRangeDayTimeses =
                     whichDayInInterval.ObligatedRangeDayTimes.OrderBy(t => t.Start.Hour).ToList();
 
+                
+                // تاریخ های بازه را به همان روزی می برد که میخواهیم مقایسه های ساعت هارا انجام دهیم
+                for (var index = 0; index < obligatedRangeDayTimeses.Count; index++)
+                {
+                    obligatedRangeDayTimeses[index].Start = new DateTime(vm.Date.Year
+                        , vm.Date.Month
+                        , vm.Date.Day
+                        , obligatedRangeDayTimeses[index].Start.TimeOfDay.Hours
+                        , obligatedRangeDayTimeses[index].Start.TimeOfDay.Minutes,
+                        obligatedRangeDayTimeses[index].Start.TimeOfDay.Seconds);
+
+
+                    var enddate = new DateTime(vm.Date.Year
+                        , vm.Date.Month
+                        , vm.Date.Day
+                        , obligatedRangeDayTimeses[index].End.TimeOfDay.Hours
+                        , obligatedRangeDayTimeses[index].End.TimeOfDay.Minutes,
+                        obligatedRangeDayTimeses[index].End.TimeOfDay.Seconds);
+
+                    // اگر بازه دو روزه ای باشد ، تاریخ پایان یک روز آن طرف تر می رود
+                    if (obligatedRangeDayTimeses[index].IsTwoDay)
+                    {
+                        enddate = enddate.AddDays(1);
+                    }
+
+                    obligatedRangeDayTimeses[index].End = enddate;
+                }
 
                 // کارکرد امروز را بده
                 var workday = biometricData.FirstOrDefault(d => d.Date.Date == vm.Date.Date);
@@ -187,12 +214,22 @@ namespace Engine.Areas.Absence.Service
             // بازه بیش از یک هفته
             // درچندمین هفته هستیم ؟
             var totalDays = (int) Math.Round((today - firstDay).TotalDays);
+            // جهت محاسبه 5*1/2
             var week = totalDays / 7;
+            var dayInNewWeek = totalDays % 7;
+
+            // اگر بیش از یک هفته بود مثلا دو هفته گذشته پس هفته کنونی باید هفته سوم باشد
+            if (dayInNewWeek != 0 && totalDays >= 7)
+                week += 1;
+
+            // اگر کمتر از هفت بود یعنی حتی یک هفته نشده است
+            if (totalDays <= 7)
+                week = 0;
 
             //در هفته اول
-            if (week <= 1)
+            if (week == 0)
             {
-                var firstWeek = weekInterval.Where(w => w.WeekNumber == 0).OrderBy(o => o.DayOfWeek).ToList();
+                var firstWeek = weekInterval.Where(w => w.WeekNumber == 1).OrderBy(o => o.DayOfWeek).ToList();
                 if (firstWeek.Count() < 7)
                 {
                     throw new Exception("تعداد روز های هفته درست نیست");
@@ -208,11 +245,21 @@ namespace Engine.Areas.Absence.Service
                 var whichDay = totalDays % 7;
 
                 //چند هفته ای است ؟
-                var max = weekInterval.Select(w => w.WeekNumber).Max();
+                var max = weekInterval.Count / 7;
 
                 // تعداد کل هفته گذشته بر چند هفته ای بودن 
                 // چندمین هفته است ؟
                 var whichWeekIsNow = week % max;
+
+
+                // اگر باقی مانده هفته کنونی بر ماکس هفته ها صفر باشد یعنی در هفته اخر هستیم
+                if (whichWeekIsNow == 0)
+                    whichWeekIsNow = max;
+
+                // اگر هفته کمتر از ماکس باشد یعنی حتی یک دور کامل هم نشده است 
+                if (week < max)
+                    whichWeekIsNow = week;
+
 
                 var whichWeek = weekInterval.Where(w => w.WeekNumber == whichWeekIsNow).OrderBy(o => o.DayOfWeek)
                     .ToList();
@@ -227,10 +274,10 @@ namespace Engine.Areas.Absence.Service
             foreach (var detail in taradodInfo)
             {
                 bioDetail.Total += detail.Total;
-                bioDetail.TotalValid += GetTotal(detail.Times,BiometryCalculatedDetailTimeType.Valid);
-                bioDetail.TotalAbsence += GetTotal(detail.Times,BiometryCalculatedDetailTimeType.Absence);
-                bioDetail.InValid += GetTotal(detail.Times,BiometryCalculatedDetailTimeType.NotValid);
-                bioDetail.TotalOvertime += GetTotal(detail.Times,BiometryCalculatedDetailTimeType.Overtime);
+                bioDetail.TotalValid += GetTotal(detail.Times, BiometryCalculatedDetailTimeType.Valid);
+                bioDetail.TotalAbsence += GetTotal(detail.Times, BiometryCalculatedDetailTimeType.Absence);
+                bioDetail.InValid += GetTotal(detail.Times, BiometryCalculatedDetailTimeType.NotValid);
+                bioDetail.TotalOvertime += GetTotal(detail.Times, BiometryCalculatedDetailTimeType.Overtime);
             }
 
             return bioDetail;
@@ -244,36 +291,41 @@ namespace Engine.Areas.Absence.Service
             {
                 throw  new Exception("زمان ورود یا خروج نال است");
             }*/
+            
+            detailTimes.Where(t => t.Type == type)
+                .ForEach(t => totalValid += (t.TimeOut-t.TimeIn).Value);
 
+            /*
             if (type == BiometryCalculatedDetailTimeType.Valid)
             {
                 detailTimes.Where(t => t.Type == type)
                     .ForEach(t => totalValid += t.Valid);
-            }else if (type == BiometryCalculatedDetailTimeType.Absence)
+            }
+            else if (type == BiometryCalculatedDetailTimeType.Absence)
             {
                 detailTimes.Where(t => t.Type == type)
                     .ForEach(t => totalValid += t.Absence);
-            }else if (type == BiometryCalculatedDetailTimeType.Overtime)
+            }
+            else if (type == BiometryCalculatedDetailTimeType.Overtime)
             {
                 detailTimes.Where(t => t.Type == type)
                     .ForEach(t => totalValid += t.Overtime);
             }
             else if (type == BiometryCalculatedDetailTimeType.NotValid)
             {
-                detailTimes.Where(t => t.Type == type).
-                    Where(t=>t.TimeOut.HasValue && t.TimeIn.HasValue)
-                    .ForEach(t => totalValid += t.TimeOut.Value-t.TimeIn.Value);
+                detailTimes.Where(t => t.Type == type).Where(t => t.TimeOut.HasValue && t.TimeIn.HasValue)
+                    .ForEach(t => totalValid += t.TimeOut.Value - t.TimeIn.Value);
             }
             else
             {
                 throw new Exception("not implemented type");
             }
-            
+*/
+
 
             return totalValid;
         }
 
-       
 
         public List<BiometricData> GetBiometricData(long personnelId,
             DateTime fromDate, DateTime toDate)

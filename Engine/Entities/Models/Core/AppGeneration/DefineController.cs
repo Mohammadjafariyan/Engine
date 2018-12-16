@@ -23,7 +23,7 @@ namespace Engine.Entities.Models.Core.AppGeneration
         /// <summary>
         /// نام
         /// </summary>
-        [Text(Name = "نام سرویس ")]
+        [Text(Name = "نام کنترولر ")]
         public override string Name { get; set; }
         
 

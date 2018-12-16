@@ -354,6 +354,7 @@ namespace WebAppIDEEngine.Models
         public DbSet<Rent> Rents { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<BiometricData> BiometricDatas { get; set; }
+        public DbSet<BiometricRawData> BiometricRawDatas { get; set; }
 
         #endregion
 

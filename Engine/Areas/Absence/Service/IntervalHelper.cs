@@ -31,9 +31,10 @@ namespace Engine.Areas.Absence.Service
                 orderedTimes.Add(o.TimeIn);
                 orderedTimes.Add(o.TimeOut);
             });
-
+            
             orderedTimes = orderedTimes.Where(o => o.HasValue).DistinctBy(o=>o.Value).OrderBy(o => o.Value).ToList();
 
+       //     orderedTimes.Add(new DateTime(orderedTimes.ElementAt(0).Value.Ticks));
             return orderedTimes;
         }
 
@@ -60,9 +61,14 @@ namespace Engine.Areas.Absence.Service
         public static ObligatedRangeDayTimes IsInRanges(DateTime? from, DateTime? to,
             List<ObligatedRangeDayTimes> obligatedRangeDayTimeses)
         {
+            if (!from.HasValue || !to.HasValue)
+            {
+                throw new Exception("تاریخ بازه از یا تا نال است ");
+            }
+            
             foreach (var dayTimese in obligatedRangeDayTimeses)
             {
-                if (dayTimese.Start <= from && dayTimese.End >= to)
+                if (dayTimese.Start <= from.Value && dayTimese.End >= to.Value)
                 {
                     return dayTimese;
                 }
@@ -74,12 +80,44 @@ namespace Engine.Areas.Absence.Service
         public static BiometricDataTime IsInWorkTimes(DateTime? from, DateTime? to,
             ICollection<BiometricDataTime> workdayBiometricDataTimes)
         {
+            if (!from.HasValue || !to.HasValue)
+            {
+                throw new Exception("تاریخ بازه از یا تا نال است ");
+            }
             foreach (var dayTimese in workdayBiometricDataTimes)
             {
-                if (dayTimese.TimeIn <= from && dayTimese.TimeOut >= to)
+                /*bool isTwoDay = false;
+                var daydiff=(dayTimese.TimeOut.Date - dayTimese.TimeIn.Date).Days;
+                if(daydiff>1)
+                    throw new Exception("اطلاعات ورود و خروج اشتباه است و بیش از یک روز را نشان می دهد");
+                if (daydiff == 1)
+                    isTwoDay = true;
+                if (!isTwoDay)
+                {*/
+                    if (dayTimese.TimeIn <= from.Value && dayTimese.TimeOut >= to.Value)
+                    {
+                        return dayTimese;
+                    }
+                /*}
+                else
                 {
-                    return dayTimese;
-                }
+                    var s1 = dayTimese.TimeIn.TimeOfDay;
+                    var e1=new DateTime(2018,1,1,23,59,59).AddDays(1);
+
+                    var s2=new DateTime(2018,1,1,0,0,0).AddDays(1);
+                    var e2=dayTimese.TimeOut.TimeOfDay;
+
+                    if (s1 <= from.Value.TimeOfDay && e1.TimeOfDay >= to.Value.TimeOfDay)
+                    {
+                        return dayTimese;
+                    }else if (s2.TimeOfDay <= from.Value.TimeOfDay && e2 >= to.Value.TimeOfDay)
+                    {
+                        return dayTimese;
+                    }
+                }*/
+
+              
+               
             }
             return null;
         }

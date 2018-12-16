@@ -3,9 +3,9 @@
   <div class="card-header">
     <button (click)="generate()" class="btn btn-primary"> تولید خروجی</button>
     <b style="text-align: left;float: left">Sql Query</b></div>
-  <div class="card-body"
+  <pre class="card-body"
        style="direction: ltr !important;text-align: left !important;"
-  >{{ dataComponent.SQL}}
-  </div>
+  > <code style="direction: ltr !important;text-align: left !important;" >{{ dataComponent.SQL}}</code>
+  </pre>
   <div class="card-footer">Footer</div>
 </div>

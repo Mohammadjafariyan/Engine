@@ -13,6 +13,72 @@ namespace ServiceLayer.Systems.Library
 {
     public class RentService : CommonService<Rent>
     {
+     /*
+     public DynaDataTable GetAllRentsInfo()
+     {
+      var dt = EngineContext.Database.SqlQuery<Rent>(@"  
+    select  Book.
+      Id  
+      as  
+       [کد امانت] , Book.
+      Name  
+      as  
+       [نام کتاب] , Book.
+      Author  
+      as  
+       [نویسنده] , Rent.
+      Id  
+      as  
+       [Id] , Rent.
+      BookId  
+      as  
+       [کد کتاب] , Rent.
+      StudentId  
+      as  
+       [[کد دانش آموز]] , Student.
+      Id  
+      as  
+       [Id] , Student.
+      Name  
+      as  
+       [نام دانش آموز] , Student.
+      LastName  
+      as  
+       [[نام خانوادگی دانش آموز]] , Student.
+      Code  
+      as  
+       [کد ملی]  from null as
+     _Rent    join null
+          as _Book on 
+           _Book.
+           null=
+           Book0.
+           null  join null
+          as _Student on 
+           _Rent.
+           StudentId=
+           _Student.
+           Id");
+      var res = dt.AsQueryable();
+      Dictionary<string, string> headers = new Dictionary<string, string>
+      {
+       {"Id ", "[Id] "}, {"StudentId ", "[StudentId] "}, {"BookId ", "[BookId] "}, {"Id ", "[Id] "},
+       {"Id ", "[Id] "}, {"Name ", "[Name] "}, {"Author ", "[Author] "}, {"Id ", "[Id] "},
+       {"Name ", "[Name] "}, {"LastName ", "[LastName] "}, {"Code ", "[Code] "}, {"Id ", "[Id] "},
+       {"BookId ", "[BookId] "}, {"StudentId ", "[StudentId] "}
+      };
+      var count = res.Count();
+      var l = res.ToList();
+
+      return new DynaDataTable
+      {
+       Total = count,
+       Filtered = count,
+       Headers = headers,
+       RecordsList = l.Cast<dynamic>().ToList()
+      };
+     }
+     
         public IDataTable GetAllUsers()
         {
             var dt = EngineContext.Database.SqlQuery<Book>(@"  
@@ -138,6 +204,7 @@ namespace ServiceLayer.Systems.Library
                 RecordsList = l.Cast<dynamic>().ToList()
             };
         }
+*/
 
     }
 }

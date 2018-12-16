@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Engine.Attributes;
 using Engine.Service.AbstractControllers;
+using WebAppIDEEngine.Models.CoreEnum;
 using WebAppIDEEngine.Models.ICore;
 using WebAppIDEEngine.Models.UiGeneratorModels;
 
@@ -49,10 +50,14 @@ namespace Engine.Entities.Models.UiGeneratorModels
         [NotMapped]
         [DropDown(Name = "نام جدول جهت انتخاب ", Service = GlobalNames.TablesServiceName, MethodName = GlobalNames.GetDropDownAsync)]
         public long UiTable { get; set; }
+
+        public string CustomUrl { get; set; }
+        public ActionMethodType MethodType { get; set; }
     }
 }
 
 public enum UiItemType
 {
     GoToSave,Delete,Custom,Form,Table,//OpenFormInModal,OpenTableInModal
+    Link
 }

@@ -25,9 +25,9 @@ using Engine.ServiceLayer.Systems.Engine;
 using Engine.Service.AbstractControllers;
 using WebGrease.Css.Extensions;
 using WebAppIDEEngine.Models;
-using WebAppIDEEngine.Areas.App.Controllers;
 using System.Web.Mvc;
 using Engine.Areas.Absence.UiConstructs;
+using Engine.Controllers.AbstractControllers.ObjectBased;
 using ServiceLayer.Absence;
 
 
@@ -42,8 +42,8 @@ namespace Engine.Areas.Absence.Controllers
         public WorkGroupController()
         {
             _engineService=new WorkGroupService();
-            _formConstructProvider = new WorkGroupConstructs();
-            _tableConstructProvider = new WorkGroupConstructs();
+            FormConstructProvider = new WorkGroupConstructs();
+            TableConstructProvider = new WorkGroupConstructs();
 
         }
     }
