@@ -15,6 +15,22 @@ namespace TestProjectAppGeneratorSource
         [Fact]
         public void TestQueryInsert()
         {
+           
+/*
+ 
+  IIf(
+  IsNull
+  (
+  [Forms]![ExportTotalList]![Code]),true,
+ (
+ (
+ (Tir.Code)=[Forms]![ExportTotalList]![Code])
+  AND ((Tir.WorkDate) Between
+   [Forms]![ExportTotalList]![FromDate]
+    And [Forms]![ExportTotalList]![ToDate])
+    ) 
+)
+ 
 
             var q=new Query();
             var model=new Model();;
@@ -40,6 +56,7 @@ namespace TestProjectAppGeneratorSource
                 db.SaveChanges();
 
             }
+*/
 
 
             Assert.True(true);

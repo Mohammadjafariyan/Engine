@@ -64,6 +64,42 @@
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Mvc2Futures.2.0.50217.0\lib\Microsoft.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvcContrib, Version=2.0.95.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvcContrib.TestHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\MvcContrib.TestHelper.2.0.95.0\lib\net\MvcContrib.TestHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SautinSoft.Document, Version=3.6.12.4, Culture=neutral, PublicKeyToken=e759c76c7515592a">
+      <HintPath>..\packages\sautinsoft.document.3.6.12.4\lib\net461\SautinSoft.Document.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Spire.Common, Version=1.2.788.14040, Culture=neutral, PublicKeyToken=663f351905198cb3">
+      <HintPath>..\packages\FreeSpire.XLS.8.3.0\lib\net40\Spire.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Spire.License, Version=1.3.6.40, Culture=neutral, PublicKeyToken=b1144360237c8b3f">
+      <HintPath>..\packages\FreeSpire.XLS.8.3.0\lib\net40\Spire.License.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Spire.Pdf, Version=4.3.6.14040, Culture=neutral, PublicKeyToken=663f351905198cb3">
+      <HintPath>..\packages\FreeSpire.XLS.8.3.0\lib\net40\Spire.Pdf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Spire.XLS, Version=8.3.0.61040, Culture=neutral, PublicKeyToken=663f351905198cb3">
+      <HintPath>..\packages\FreeSpire.XLS.8.3.0\lib\net40\Spire.XLS.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.7.0\lib\net45\StructureMap.dll</HintPath>
     </Reference>
@@ -325,6 +361,17 @@
     <Compile Include="Areas\App\Controllers\ActionsController.cs" />
     <Compile Include="Areas\App\Controllers\FormsController.cs" />
     <Compile Include="Areas\App\Controllers\PanelsController.cs" />
+    <Compile Include="Areas\ImportExport\Controllers\ImportController.cs" />
+    <Compile Include="Areas\ImportExport\ControllerTests\ImportControllerTests.cs" />
+    <Compile Include="Areas\ImportExport\ImportExportAreaRegistration.cs" />
+    <Compile Include="Areas\ImportExport\ServiceTests\BaseExcelImporter.cs" />
+    <Compile Include="Areas\ImportExport\ServiceTests\ExcelBiometryDataImporter.cs" />
+    <Compile Include="Areas\ImportExport\ServiceTests\ExcelPersonnelNameImporter.cs" />
+    <Compile Include="Areas\ImportExport\ServiceTests\ExcelStructreTable.cs" />
+    <Compile Include="Areas\ImportExport\ServiceTests\ExcelStructreTableNode.cs" />
+    <Compile Include="Areas\ImportExport\ServiceTests\IExcelImporter.cs" />
+    <Compile Include="Areas\ImportExport\ServiceTests\ImportTests.cs" />
+    <Compile Include="Areas\ImportExport\Service\TableColumnsStructureFactory.cs" />
     <Compile Include="Areas\JUiEngine\Controllers\UiFormDataProvider.cs" />
     <Compile Include="Areas\JUiEngine\Controllers\UiFormEngineController.cs" />
     <Compile Include="Areas\Library\Controllers\bookApiController.cs" />
@@ -501,6 +548,8 @@
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\Delete.cshtml" />
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\ForEdit.cshtml" />
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\GetDataTable.cshtml" />
+    <Content Include="Areas\ImportExport\Views\Import\ImportExcel.cshtml" />
+    <Content Include="Areas\ImportExport\Views\Import\ImportExcelPreview.cshtml" />
     <Content Include="Areas\JUiEngine\Views\Shared\Backup of update on change.html" />
     <Content Include="Areas\Library\Views\Rent\Delete.cshtml" />
     <Content Include="Areas\Library\Views\Rent\ForEdit.cshtml" />
@@ -3995,6 +4044,7 @@
     <Content Include="Areas\Library\Views\Book\ForEdit.cshtml" />
     <Content Include="Areas\Library\Views\Book\GetDataTable.cshtml" />
     <Content Include="Areas\Library\Views\web.config" />
+    <Content Include="Areas\ImportExport\Views\web.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -4052,12 +4102,15 @@
     <Folder Include="Areas\AppGeneration\Models\" />
     <Folder Include="Areas\AppGeneration\Views\Shared\" />
     <Folder Include="Areas\App\Models\" />
+    <Folder Include="Areas\ImportExport\Controllers\" />
+    <Folder Include="Areas\ImportExport\Models\" />
+    <Folder Include="Areas\ImportExport\Views\Shared\" />
     <Folder Include="Areas\JUiEngine\Models\" />
     <Folder Include="Areas\Library\Models\" />
     <Folder Include="Areas\ReportGenerator\Models\" />
     <Folder Include="Areas\System\Models\" />
     <Folder Include="Areas\System\Views\Shared\" />
-    <Folder Include="Content\font" />
+    <Folder Include="Content\font\" />
     <Folder Include="ReportGenerator\ReportGenerator\.idea\inspectionProfiles\" />
     <Folder Include="ReportGenerator\ReportGenerator\node_modules\.cache\uglifyjs-webpack-plugin\tmp\" />
     <Folder Include="ViewModel\" />

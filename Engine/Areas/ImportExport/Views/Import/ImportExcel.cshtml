@@ -1,0 +1,47 @@
+@using Engine.Areas.ImportExport.Controllers
+@model Engine.Areas.ImportExport.ServiceTests.ExcelStructreTable
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>title</h2>
+@if (ViewData[ImportController.Error] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData[ImportController.Error]!
+    </div>
+}
+
+@if (ViewData[ImportController.Success] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewData[ImportController.Success]!
+    </div>
+}
+
+<table>
+    <thead>
+
+    <tr>
+        @{
+            foreach (var node in Model.Nodes)
+            {
+                <th>@node.ColumnTranslate</th>
+            }
+        }
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        @{
+            foreach (var node in Model.Nodes)
+            {
+                <td><input value="@node.NumberInExcel" name="@node.ColumnName" /></td>
+            }
+        }
+    </tr>
+
+    </tbody>
+</table>

@@ -125,7 +125,7 @@ namespace ServiceLayer.Absence
         {
             using (var EngineContext = new EngineContext())
             {
-                var record = GetById(id);
+                var record = EngineContext.ObligatedRanges.Find(id);
                 if (record == null)
                 {
                     throw new JServiceException("رکورد موجود نیست");
