@@ -1,4 +1,5 @@
 ﻿@using System.Collections.Specialized
+@using System.Globalization
 @using WebAppIDEEngine.Models.Core
 @using ViewModel.ActionTypes
 @using WebAppIDEEngine.Models.ICore
@@ -10,6 +11,7 @@
 
 @using Engine.Areas.App.Controllers
 @using Engine.Areas.JUiEngine.Controllers
+@using Engine.Controllers.AbstractControllers
 @using Engine.Service.AbstractControllers
 @using Engine.DomainLayer.Models.Core.ViewGeneration
 @using Engine.Entities.Models.Core.AppGeneration
@@ -27,8 +29,37 @@
     var formGroupClass = ViewData["form-group"] as string ?? "col-md-3";
 
     Layout = null;
-    var modelNameValue = ViewData[UiFormEngineController.ModelNameValue] as NameValueCollection;
+    // var modelNameValue = ViewData[UiFormEngineController.ModelNameValue] as NameValueCollection;
     var model = ViewData[UiFormEngineController.Model] as dynamic;
+
+
+    Dictionary<string, object> modelNameValue = new Dictionary<string, object>();
+
+    if (model != null)
+    {
+        foreach (var pi in model.GetType().GetProperties())
+        {
+            var val = pi.GetValue(model, null);
+
+            if (val is Enum)
+            {
+                modelNameValue.Add(pi.Name,((int) val).ToString());
+            }
+            else
+            {
+                modelNameValue.Add(pi.Name, val);
+            }
+            
+        }
+
+        ViewData[UiFormEngineController.ModelNameValue] = modelNameValue;
+        ViewData[UiFormEngineController.Model] = Model;
+
+        ViewData[UiFormEngineController.NoLayoutForShowView] = true;
+    }
+
+
+    var pc = new PersianCalendar();
 
     List<string> inputAjaxFuncNames = new List<string>();
 }
@@ -39,7 +70,7 @@
 @if (uiFormInputs != null)
 {
     @Html.Hidden("BackUrl", Request?.Url?.AbsoluteUri)
-    if (modelNameValue?["Id"] != null)
+    if (modelNameValue.ContainsKey("Id"))
     {
         @Html.Hidden("Id", modelNameValue["Id"])
     }
@@ -65,9 +96,11 @@
 
 
         string val = null;
-        if (modelNameValue?[uiFormInput.UiInput.Name] != null)
+        if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name]!=null)
         {
+
             val = modelNameValue[uiFormInput.UiInput.Name].ToString();
+
         }
         <div class="form-group @formGroupClass @uiFormInput.Css">
             <label>@uiFormInput.Name</label>
@@ -112,7 +145,7 @@
 
                             foreach (SelectListItem selectListItem in uiFormInput.SelectList.Items)
                             {
-                                string isSelected = selectListItem.Value == uiFormInput.SelectList.SelectedValue ? "selected='selected'" : "";
+                                string isSelected = selectListItem.Value == val ? "selected='selected'" : "";
 
                                 <option @isSelected value="@selectListItem.Value">@selectListItem.Text</option>
                             }
@@ -125,16 +158,50 @@
                 }
                 if (uiFormInput.UiInput.FieldType == FieldType.Date)
                 {
-                    <input type="hidden" value="@uiFormInput.UiInput.Name" name="@uiFormInput.UiInput.Name"
+                    if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name]!=null)
+                    {
+                        if (modelNameValue[uiFormInput.UiInput.Name] is DateTime?)
+                        {
+                            var value = (modelNameValue[uiFormInput.UiInput.Name] as DateTime?).Value;
+                            val = Engine.Controllers.AbstractControllers.EngineUtility.GaregorianToDateOnlyFormat(value);
+                        }
+                        else if (modelNameValue[uiFormInput.UiInput.Name] is DateTime)
+                        {
+                            var value =(DateTime) modelNameValue[uiFormInput.UiInput.Name] ;
+                            val = Engine.Controllers.AbstractControllers.EngineUtility.GaregorianToDateOnlyFormat(value);
+                        }
+                        else
+                        {
+                            throw new Exception("دیتایی بغیر از تاریخ برای مدل پاس شده است");
+                        }
+                    }
+
+                    <input type="hidden" value="@val" name="@uiFormInput.UiInput.Name"
                            class="form-control" hidden="hidden" id="@uiFormInput.UiInput.Name">
-                    <input type="text" onchange="dateToChanged(this, 'fa_@uiFormInput.UiInput.Name', '@uiFormInput.UiInput.Name')"  value="@val" name="fa_@uiFormInput.UiInput.Name" class="form-control"
+                    <input type="text" onchange="dateToChanged(this, 'fa_@uiFormInput.UiInput.Name', '@uiFormInput.UiInput.Name')" value="@val" name="fa_@uiFormInput.UiInput.Name" class="form-control"
                            id="fa_@uiFormInput.UiInput.Name">
                 }
 
                 if (uiFormInput.UiInput.FieldType == FieldType.Time)
                 {
-                   
-                    
+                    if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name]!=null)
+                    {
+                        if (modelNameValue[uiFormInput.UiInput.Name] is DateTime?)
+                        {
+                            var value = (modelNameValue[uiFormInput.UiInput.Name] as DateTime?).Value;
+                         val=   EngineUtility.ConvertTimeSpanToStr(value.TimeOfDay);
+                        }
+                        else if (modelNameValue[uiFormInput.UiInput.Name] is DateTime)
+                        {
+                            var value =(DateTime) modelNameValue[uiFormInput.UiInput.Name] ;
+                            val=   EngineUtility.ConvertTimeSpanToStr(value.TimeOfDay);
+                        }
+                        else
+                        {
+                            throw new Exception("دیتایی بغیر از تاریخ برای مدل پاس شده است");
+                        }
+                    }
+
                     <div class="input-group clockpicker">
                         <input type="text" class="form-control"
                                name="@uiFormInput.UiInput.Name"
@@ -316,7 +383,8 @@
     $(document).ready(function() {
 
         $('.clockpicker').clockpicker({
-            donetext: 'انتخاب'});
+            donetext: 'انتخاب'
+        });
 
         
         @{
@@ -324,7 +392,7 @@
 
             foreach (var date in dates)
             {
-                 var todate = date.IsToDate ? "true" : "false";
+                var todate = date.IsToDate ? "true" : "false";
                 var fromDate = date.IsFromDate ? "true" : "false";
 
                 if (string.IsNullOrEmpty(date.DateGroupId))

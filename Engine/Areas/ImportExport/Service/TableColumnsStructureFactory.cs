@@ -14,7 +14,7 @@ namespace Engine.Areas.ImportExport.Service
         {
             if (string.IsNullOrEmpty(biometricDataName))
             {
-                throw new Exception("نال است");
+                throw new ExcelImporterException("نال است");
             }
 
             switch (biometricDataName)
@@ -27,7 +27,7 @@ namespace Engine.Areas.ImportExport.Service
                     break;
             }
 
-            throw new Exception("یافت نشد");
+            throw new ExcelImporterException("یافت نشد");
         }
     }
 

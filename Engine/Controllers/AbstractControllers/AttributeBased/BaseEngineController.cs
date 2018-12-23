@@ -7,6 +7,7 @@ using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Controllers.AbstractControllers.AttributeBased
 {
+    [Authorize(Roles = "SuperUser,SystemAdmin")]
     public abstract class BaseEngineController<T,Parameter> : Controller where Parameter : IActionParameter where T:IModel
     {
         protected Service.AbstractControllers.IEngineService<T> _engineService;

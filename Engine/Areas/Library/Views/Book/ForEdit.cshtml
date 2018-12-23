@@ -18,25 +18,7 @@
 
 @{
 
-    if (Model != null)
-    {
-        NameValueCollection modelNameValue = new NameValueCollection();
-        foreach (var pi in Model.GetType().GetProperties())
-        {
-            var val=pi.GetValue(Model, null);
-            string strval=null;
-            if (val != null)
-            {
-                strval = val.ToString();
-            }
-            modelNameValue.Add(pi.Name, strval );
-        }
-
-        ViewData[UiFormEngineController.ModelNameValue] = modelNameValue;
-        ViewData[UiFormEngineController.Model] = Model;
-
-        ViewData[UiFormEngineController.NoLayoutForShowView] = true;
-    }
+   
 }
 
 @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowView.cshtml", form)

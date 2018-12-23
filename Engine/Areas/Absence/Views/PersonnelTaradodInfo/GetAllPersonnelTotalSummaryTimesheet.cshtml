@@ -1,0 +1,38 @@
+@using Engine.Areas.JUiEngine.Controllers
+@model ViewModel.ActionTypes.IDataTable
+@{
+}
+
+
+@{
+    ViewBag.Title = "لیست خلاصه کارکرد پرسنل";
+   // Layout = "_Layout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var datatable = ViewData[UiHomeController.TableObject];
+}
+
+<br />
+<br />
+<br />
+<div class="container">
+    <h5 class="alert alert-info">فقط پرسنل هایی نمایش داده می شود که بازه موظفی برای گروه کاری آنها تعریف شده است 
+        </h5    >
+    @*<div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary">چاپ </button>
+        </div>
+        
+        <div class="col-md-12">
+            <button class="btn btn-primary">چاپ </button>
+        </div>
+    </div>*@
+</div>
+
+
+@if (ViewData["from"] != null && ViewData["to"] != null)
+{
+    <h3 class="alert alert-info">     ViewData["to"]  خلاصه لیست کارکرد پرسنل از تاریخ @ViewData["from"] تا تاریخ </h3>
+}
+
+
+@Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)

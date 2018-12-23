@@ -38,14 +38,14 @@ namespace Engine.Areas.JUiEngine.Controllers
             string controllerMethod, IDataTable debatable = null)
         {
 
-                    viewData[UiHomeController.ApiActionURL] = request.ApplicationPath +
+                    viewData[UiHomeController.ApiActionURL] = request?.ApplicationPath +
                                                               $@"{subSystemName}/api/{controllerName}/{
                                                                       controllerMethod
                                                                   }" +
-                                                              request.Url.Query;
-                    viewData[UiHomeController.ActionURL] = request.ApplicationPath +
+                                                              request?.Url?.Query;
+                    viewData[UiHomeController.ActionURL] = request?.ApplicationPath +
                                                            $@"{subSystemName}/{controllerName}/{controllerMethod}" +
-                                                           request.Url.Query;
+                                                           request?.Url?.Query;
                     viewData[UiHomeController.TableObject] = table;
                     viewData[UiHomeController.DataTable] = debatable;
                     viewData[UiHomeController.UiTableItems] = table.UiTableItems;
@@ -54,7 +54,7 @@ namespace Engine.Areas.JUiEngine.Controllers
         
         
         public EjTable GetTable(string tableName,
-            ViewDataDictionary ViewData, HttpRequestBase Request, string SubSystemName, string ControllerName,
+            ViewDataDictionary viewData, HttpRequestBase Request, string SubSystemName, string ControllerName,
             string ControllerMethod,
             string ServiceMethodName, IDataTable debatable = null)
         {
@@ -80,7 +80,7 @@ namespace Engine.Areas.JUiEngine.Controllers
 
                     var searchForm = table.UiTableForms.FirstOrDefault();
                     if (searchForm != null)
-                        _uiFormprovider.GetForm(searchForm.Name, ViewData, isTableForm: true,
+                        _uiFormprovider.GetForm(searchForm.Name, viewData, isTableForm: true,
                             postType: UiFormControllerMethodType.Search);
 
 
@@ -97,17 +97,17 @@ namespace Engine.Areas.JUiEngine.Controllers
 
                     ControllerName = ControllerName.Replace("Controller", "");
 
-                    ViewData[UiHomeController.ApiActionURL] = Request.ApplicationPath +
+                    viewData[UiHomeController.ApiActionURL] = Request.ApplicationPath +
                                                               $@"{SubSystemName}/api/{ControllerName}/{
                                                                       ControllerMethod
                                                                   }" +
                                                               Request.Url.Query;
-                    ViewData[UiHomeController.ActionURL] = Request.ApplicationPath +
+                    viewData[UiHomeController.ActionURL] = Request.ApplicationPath +
                                                            $@"{SubSystemName}/{ControllerName}/{ControllerMethod}" +
                                                            Request.Url.Query;
-                    ViewData[UiHomeController.TableObject] = table;
-                    ViewData[UiHomeController.DataTable] = debatable;
-                    ViewData[UiHomeController.UiTableItems] = table.UiTableItems;
+                    viewData[UiHomeController.TableObject] = table;
+                    viewData[UiHomeController.DataTable] = debatable;
+                    viewData[UiHomeController.UiTableItems] = table.UiTableItems;
 
                     return table;
                 }

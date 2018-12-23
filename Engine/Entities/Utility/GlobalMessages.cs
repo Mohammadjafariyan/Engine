@@ -63,6 +63,9 @@ namespace Engine.Service.AbstractControllers
         public const string UiFormControllerMethodController = nameof(Areas.AppGeneration.Controllers.UiFormMethodController);
 
         public const string AppArea = "AppArea";
+        public const string SuperUserName = "MsfjWfl@6517s@mJKsf52v56sf2";
+        public const string SuperUser = "SuperUser";
+        public const string SystemAdmin = "SystemAdmin";
     }
     
     

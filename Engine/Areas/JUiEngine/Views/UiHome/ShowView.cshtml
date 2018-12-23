@@ -7,17 +7,13 @@
 
 @{
     ViewData[UiFormEngineController.WithLayout] = false;
-    Layout = "~/Views/Shared/_Layout.cshtml";
+   // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
-    div.dataTables_wrapper {
-        direction: rtl;
-    }
-    
-    td , th {
-        text-align: right
-    }
+    div.dataTables_wrapper { direction: rtl; }
+
+    td, th { text-align: right }
  
     
 </style>
@@ -28,72 +24,75 @@
     ViewData[UiFormEngineController.UpdateIdafterpost] = "Rootdt_" + Model.Id.ToString();
     var uiForm = ViewData[UiHomeController.Form] as UiForm;
     var uiTableItems = ViewData[UiHomeController.UiTableItems] as List<UiTableItem>;
-
 }
 
 
 @if (uiForm != null)
 {
+    <div class="container">
+@{
+   
     ViewData[UiFormEngineController.IsAjax] = true;
     ViewData[UiFormEngineController.SubmitName + uiForm.Id] = "جستجو";
     ViewData[UiFormEngineController.OnCompleteFunction + uiForm.Id] = "onSearchAjaxComplete(e,'" + Model.Id.ToString() + "')";
-    <div class="panel panel-default">
-        <div class="panel-heading">فیلتر اطلاعات</div>
-        <div class="panel-body">
-            <div class="row" style="direction: rtl">
-                @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowForm.cshtml", uiForm)
+
+} <div class="panel panel-default">
+            <div class="panel-heading">فیلتر اطلاعات</div>
+            <div class="panel-body">
+                <div class="row" style="direction: rtl">
+                    @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowForm.cshtml", uiForm)
+                </div>
             </div>
         </div>
     </div>
 }
 <div class="panel panel-default">
     <div class="panel-heading">
-        
+
         <div class="row">
-        <span class="col-md-1"> اطلاعات</span>
-        <span class="col-md-11">
+            <span class="col-md-1"> اطلاعات</span>
+            <span class="col-md-11">
 
-            @if (uiTableItems != null && uiTableItems.Count > 0)
-            {
-                <div class="btn-group">
+                @if (uiTableItems != null && uiTableItems.Count > 0)
+                {
+                    <div class="btn-group">
 
-                    @foreach (var item in uiTableItems)
-                    {
-                        var icon = item.UiItem.Icon;
-                        var name = item.UiItem.Name;
-                        var url = "";
-                        if (item.UiItem.UiItemType == UiItemType.GoToSave)
+                        @foreach (var item in uiTableItems)
                         {
-                            url = $@"{item.UiItem.CustomUrl}";
-                            url = $@"openSaveLink('{url}')";
-                        }
-                        if (item.UiItem.UiItemType == UiItemType.Link)
-                        {
-                            url = item.UiItem.CustomUrl;
-                            url = $@"openSaveLink('{url}')";
-                        }
-                        if (item.UiItem.UiItemType == UiItemType.Form)
-                        {
-                            url = $@"/JUiEngine/UiFormEngine/showView?formName={item.UiItem.FormName}";
-                            url = $@"openFormLink('{url}')";
-                        }
-                        if (item.UiItem.UiItemType == UiItemType.Delete)
-                        {
-                            url = $@"{item.UiItem.CustomUrl}";
-                            url = $@"Delete('{url}')";
+                            var icon = item.UiItem.Icon;
+                            var name = item.UiItem.Name;
+                            var url = "";
+                            if (item.UiItem.UiItemType == UiItemType.GoToSave)
+                            {
+                                url = $@"{item.UiItem.CustomUrl}";
+                                url = $@"openSaveLink('{url}')";
+                            }
+                            if (item.UiItem.UiItemType == UiItemType.Link)
+                            {
+                                url = item.UiItem.CustomUrl;
+                                url = $@"openSaveLink('{url}')";
+                            }
+                            if (item.UiItem.UiItemType == UiItemType.Form)
+                            {
+                                url = $@"/JUiEngine/UiFormEngine/showView?formName={item.UiItem.FormName}";
+                                url = $@"openFormLink('{url}')";
+                            }
+                            if (item.UiItem.UiItemType == UiItemType.Delete)
+                            {
+                                url = $@"{item.UiItem.CustomUrl}";
+                                url = $@"Delete('{url}')";
+                            }
+
+                            <button onclick="@url" class="btn btn-primary">
+                                <span class="@icon"></span> @name</button>
                         }
 
-                        <button onclick="@url" class="btn btn-primary">
-                            <span class="@icon"></span> @name</button>
-                    }
 
+                    </div>
+                }
 
-                </div>
-            }
-
-        </span>
+            </span>
         </div>
-
 
 
     </div>

@@ -16,6 +16,9 @@ using WebGrease.Css.Extensions;
 
 namespace Engine.Controllers.AbstractControllers.AttributeBased
 {
+    
+    
+    [Authorize(Roles = "SuperUser,SystemAdmin")]
     public abstract class AppController<T, Parameter> : BaseEngineController<T, Parameter>
         where Parameter : IActionParameter where T : IModel, new()
     {

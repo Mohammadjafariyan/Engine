@@ -325,6 +325,7 @@
     <Compile Include="Areas\Absence\ControllerTests\PersonnelTaradodInfoServiceTests.cs" />
     <Compile Include="Areas\Absence\Models\BiometryCalculatedDetail.cs" />
     <Compile Include="Areas\Absence\Service\BiometricRawDataService.cs" />
+    <Compile Include="Areas\Absence\Service\BiometryCalculatedDetailService.cs" />
     <Compile Include="Areas\Absence\Service\IntervalHelperDepricated.cs" />
     <Compile Include="Areas\Absence\Service\IntervalHelper.cs" />
     <Compile Include="Areas\Absence\Service\PersonnelTaradodInfoService.cs" />
@@ -333,6 +334,7 @@
     <Compile Include="Areas\Absence\UiConstructs\ObligatedRangesConstructs.cs" />
     <Compile Include="Areas\Absence\UiConstructs\PersonnelConstructs.cs" />
     <Compile Include="Areas\Absence\UiConstructs\PersonnelMachinesConstructs.cs" />
+    <Compile Include="Areas\Absence\UiConstructs\PersonnelTaradodInfoConstruct.cs" />
     <Compile Include="Areas\Absence\UiConstructs\WorkGroupConstructs.cs" />
     <Compile Include="Areas\Absence\UiConstructs\WorkGroupObligatedRangeConstruct.cs" />
     <Compile Include="Areas\AppGeneration\AppGenerationAreaRegistration.cs" />
@@ -400,7 +402,7 @@
     <Compile Include="Controllers\AbstractControllers\ObjectBased\EBaseAppController.cs" />
     <Compile Include="Controllers\AbstractControllers\ObjectBased\IFormConstructProvider.cs" />
     <Compile Include="Controllers\AbstractControllers\ObjectBased\ITableConstructProvider.cs" />
-    <Compile Include="Controllers\AbstractControllers\Utility.cs" />
+    <Compile Include="Controllers\AbstractControllers\EngineUtility.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -474,6 +476,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\SecurityTets\MvcApplicationTests.cs" />
     <Compile Include="ServiceLayer\AbsenceTests\ObligatedRangeServiceTests.cs" />
     <Compile Include="ServiceLayer\Absence\JServiceException.cs" />
     <Compile Include="ServiceLayer\Absence\MachinesService.cs" />
@@ -514,6 +517,7 @@
     <Content Include="Areas\Absence\Views\PersonnelMachines\Delete.cshtml" />
     <Content Include="Areas\Absence\Views\PersonnelMachines\ForEdit.cshtml" />
     <Content Include="Areas\Absence\Views\PersonnelMachines\GetDataTable.cshtml" />
+    <Content Include="Areas\Absence\Views\PersonnelTaradodInfo\GetAllPersonnelTotalSummaryTimesheet.cshtml" />
     <Content Include="Areas\Absence\Views\PersonnelTaradodInfo\Index.cshtml" />
     <Content Include="Areas\Absence\Views\PersonnelTaradodInfo\TaradodDetailList.cshtml" />
     <Content Include="Areas\Absence\Views\Personnel\Delete.cshtml" />

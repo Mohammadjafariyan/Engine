@@ -29,6 +29,8 @@ namespace ViewModel.ActionTypes
         Dictionary<string, string> Headers { get; set; }
         int? Total { get; set; }
         int? Filtered { get; set; }
+        
+
     }
 
     public class DynaDataTable : BaseDataTable<dynamic>

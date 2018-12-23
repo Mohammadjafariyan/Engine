@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using Engine.Absence.Models;
 using Engine.Areas.Absence.Models;
 using Engine.Areas.Library.Controllers;
+using Engine.Controllers.AbstractControllers;
 using ServiceLayer.Systems;
 using WebAppIDEEngine.Models;
 using WebGrease.Css.Extensions;
@@ -20,9 +22,17 @@ namespace Engine.Areas.Absence.Service
                 var obligatedRanges = db.ObligatedRanges.Include(d => d.ObligatedRangeWeeks)
                     .Include(d => d.ObligatedRangeWeeks.Select(s => s.ObligatedRangeDayTimes)).Where(o =>
                         o.WorkGroupObligatedRanges.Any(w => w.WorkGroup.Personnels.Any(p => p.Id == personnelId)));
-                var obligatedRange = obligatedRanges.First();
 
-                return obligatedRange;
+                try
+                {
+                    var obligatedRange = obligatedRanges.First();
+
+                    return obligatedRange;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($@"پرسنل با کد {personnelId} دارای بازه موظفی نیست ");
+                }
             }
         }
 
@@ -49,7 +59,7 @@ namespace Engine.Areas.Absence.Service
                 var obligatedRangeDayTimeses =
                     whichDayInInterval.ObligatedRangeDayTimes.OrderBy(t => t.Start.Hour).ToList();
 
-                
+
                 // تاریخ های بازه را به همان روزی می برد که میخواهیم مقایسه های ساعت هارا انجام دهیم
                 for (var index = 0; index < obligatedRangeDayTimeses.Count; index++)
                 {
@@ -104,6 +114,8 @@ namespace Engine.Areas.Absence.Service
                 // کل حضور
                 workday.BiometricDataTimes.ForEach(b => vm.Total += b.TimeOut - b.TimeIn);
 
+                
+                //todo:exception for more than two days
                 // تمامی رنج ساعت های حظور و عدم حظور
                 List<DateTime?> intervals =
                     IntervalHelper.ToOneOrderedTimeList(workday.BiometricDataTimes, obligatedRangeDayTimeses);
@@ -264,7 +276,15 @@ namespace Engine.Areas.Absence.Service
                 var whichWeek = weekInterval.Where(w => w.WeekNumber == whichWeekIsNow).OrderBy(o => o.DayOfWeek)
                     .ToList();
 
-                return whichWeek.First(w => (int) w.DayOfWeek == whichDay);
+
+                try
+                {
+                    return whichWeek.First(w => (int) w.DayOfWeek == whichDay);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("بازه موظفی گروه کاری اشتباه تعریف شده است");
+                }
             }
         }
 
@@ -278,10 +298,27 @@ namespace Engine.Areas.Absence.Service
                 bioDetail.TotalAbsence += GetTotal(detail.Times, BiometryCalculatedDetailTimeType.Absence);
                 bioDetail.InValid += GetTotal(detail.Times, BiometryCalculatedDetailTimeType.NotValid);
                 bioDetail.TotalOvertime += GetTotal(detail.Times, BiometryCalculatedDetailTimeType.Overtime);
+
+                bioDetail.TotalStr =EngineUtility. ConvertTimeSpanToStr(bioDetail.Total);
+                bioDetail.TotalValidStr = EngineUtility.ConvertTimeSpanToStr(bioDetail.TotalValid);
+                bioDetail.TotalAbsenceStr =EngineUtility. ConvertTimeSpanToStr(bioDetail.TotalAbsence);
+                bioDetail.InValidStr = EngineUtility.ConvertTimeSpanToStr(bioDetail.InValid);
+                bioDetail.TotalOvertimeStr = EngineUtility.ConvertTimeSpanToStr(bioDetail.TotalOvertime);
+
+                bioDetail.VacationStr =EngineUtility. ConvertTimeSpanToStr(bioDetail.Vacation);
+                bioDetail.HolidayWorkStr = EngineUtility.ConvertTimeSpanToStr(bioDetail.HolidayWork);
+                bioDetail.MissionWorkStr = EngineUtility.ConvertTimeSpanToStr(bioDetail.MissionWork);
+                bioDetail.NightWorkStr = EngineUtility.ConvertTimeSpanToStr(bioDetail.NightWork);
+                bioDetail.ShiftWorkStr = EngineUtility.ConvertTimeSpanToStr(bioDetail.ShiftWork);
+                /*bioDetail.DateStr =
+                    Engine.Controllers.AbstractControllers.Utility
+                        .ConvertToShamsiDate(bioDetail.Date, false, true);*/
+                bioDetail.ShiftWorkStr = EngineUtility.ConvertTimeSpanToStr(bioDetail.ShiftWork);
             }
 
             return bioDetail;
         }
+
 
         private TimeSpan GetTotal(ICollection<BiometryCalculatedDetailTime> detailTimes
             , BiometryCalculatedDetailTimeType type)
@@ -291,9 +328,9 @@ namespace Engine.Areas.Absence.Service
             {
                 throw  new Exception("زمان ورود یا خروج نال است");
             }*/
-            
+
             detailTimes.Where(t => t.Type == type)
-                .ForEach(t => totalValid += (t.TimeOut-t.TimeIn).Value);
+                .ForEach(t => totalValid += (t.TimeOut - t.TimeIn).Value);
 
             /*
             if (type == BiometryCalculatedDetailTimeType.Valid)
@@ -340,5 +377,7 @@ namespace Engine.Areas.Absence.Service
                 return dt.ToList();
             }
         }
+
+        
     }
 }

@@ -1,40 +1,107 @@
 ﻿@model Engine.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "ثبت نام";
 }
 
-<h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
+<style>
+    body{
+        background: -webkit-linear-gradient(left, #0072ff, #00c6ff);
+    }
+    .contact-form{
+        background: #fff;
+        margin-top: 10%;
+        margin-bottom: 5%;
+        width: 70%;
+    }
+    .contact-form .form-control{
+        border-radius:1rem;
+    }
+    .contact-image{
+        text-align: center;
+    }
+    .contact-image img{
+        border-radius: 6rem;
+        width: 11%;
+        margin-top: -3%;
+        transform: rotate(29deg);
+    }
+    .contact-form form{
+        padding: 14%;
+    }
+    .contact-form form .row{
+        margin-bottom: -7%;
+    }
+    .contact-form h3{
+        margin-bottom: 8%;
+        margin-top: -10%;
+        text-align: center;
+        color: #0062cc;
+    }
+    .contact-form .btnContact {
+        width: 50%;
+        border: none;
+        border-radius: 1rem;
+        padding: 1.5%;
+        background: #dc3545;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+    }
+    .btnContactSubmit
+    {
+        width: 50%;
+        border-radius: 1rem;
+        padding: 1.5%;
+        color: #fff;
+        background-color: #0062cc;
+        border: none;
+        cursor: pointer;
+    }
+    
+    input {
+        direction: ltr !important;
+    }
+</style>
+
+<div class="container contact-form">
+    <div class="contact-image">
+        @*<img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>*@
+    </div>
+    <div method="post">
+        <div class="row">
+                   
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <h3>@ViewBag.title</h3>
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                <h4>فرم ثبت نام.</h4>
+                <hr />
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                    </div>
+                    @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                    </div>
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" class="btn btn-default" value="ثبت نام" />
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
-        </div>
-    </div>
-}
+</div>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

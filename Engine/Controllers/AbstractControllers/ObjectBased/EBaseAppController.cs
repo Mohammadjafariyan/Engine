@@ -21,11 +21,11 @@ using BaseEngineException = Engine.Controllers.AbstractControllers.AttributeBase
 
 namespace Engine.Controllers.AbstractControllers.ObjectBased
 {
+    
+    [Authorize(Roles = "SuperUser,SystemAdmin")]
     public abstract class EBaseAppController<T, Parameter> : BaseEngineController<T, Parameter>
         where Parameter : IActionParameter where T : IModel, new()
     {
-
-
         protected IUiEngineDataProvider UiEngineDataProvider = new UiEngineDataProvider();
         protected IUiFormDataProvider UiFormDataProvider = new UiFormDataProvider();
 
@@ -41,48 +41,42 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
 
         protected virtual void SetDynamicTableViewData(string actionName,
             string subSystemName, string controllerName,
-            string controllerMethod, IDataTable table)
+            string controllerMethod, IDataTable table, UiForm form)
         {
-            if (actionName.ToLower() == nameof(GetDataTable).ToLower())
-            {
-                EjTable ejtable = TableConstructProvider.GetDataTable(actionName);
+            EjTable ejtable = TableConstructProvider.GetDataTable(actionName);
 
+            ejtable.UiTableForms.Add(new UiTableForm
+                {EjTable = ejtable, UiForm = form});
 
-                ejtable.UiTableForms.Add(new UiTableForm
-                    {EjTable = ejtable, UiForm = SetDynamicFormViewData(actionName)});
-
-
-                UiEngineDataProvider.GetTable(ejtable, ViewData, Request,
-                    controllerName, controllerMethod, null, table);
-            }
+            UiEngineDataProvider.GetTable(ejtable, ViewData, Request,
+                controllerName, controllerMethod, null, table);
 
             /*_uiEngineDataProvider.GetTable(tableName, ViewData, Request, SubSystemName,
                 ControllerName, ControllerMethod, null, table);*/
         }
 
 
-        protected virtual UiForm SetDynamicFormViewData(string actionName)
+        protected virtual UiForm SetDynamicFormViewData
+            (bool isSave, string controllerName, string action, string areaName)
         {
-            if (string.IsNullOrEmpty(actionName))
+            UiForm form = null;
+            if (isSave)
             {
-                throw new Exception("actionName is null");
+                form = FormConstructProvider.GetSaveForm();
+            }
+            else
+            {
+                form = FormConstructProvider.GetDataTableSearchForm();
             }
 
-            if (actionName.ToLower() == nameof(ForEdit).ToLower() || actionName.ToLower() == nameof(Save).ToLower())
-            {
-                UiForm form = FormConstructProvider.GetSaveForm();
-
-                string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
-                string areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
-
-                UiFormDataProvider.GetForm(form, areaName, controllerName, nameof(Save)
+            if (form != null)
+                UiFormDataProvider.GetForm(form, areaName, controllerName, action
                     , ViewData);
-                return form;
-            }
+            return form;
+/*
 
             if (actionName.ToLower() == nameof(GetDataTable).ToLower())
             {
-                UiForm form = FormConstructProvider.GetDataTableSearchForm();
 
                 if (form == null)
                     return form;
@@ -95,39 +89,50 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                 return form;
             }
 
-            throw new Exception("فرم مورد نظر یافت نشد");
+            throw new Exception("فرم مورد نظر یافت نشد");*/
             //از خود جدول فرم انتخاب کن نه از فرم های جداول
             /*_uiFormDataProvider.GetForm(formName, ViewData, isTableForm: false,
                 postType: UiFormControllerMethodType.Save);*/
         }
 
-        
+
         // GET: App/Models
-        public virtual async Task<ActionResult> GetDataTable(T p,bool? isajax)
+        public virtual async Task<ActionResult> GetDataTable(T p, bool? isajax)
         {
             var res = await _engineService.GetDataTableAsync(p);
 
-            if (isajax==true)
+            if (isajax == true)
             {
-                return Json(res,JsonRequestBehavior.AllowGet);
+                return Json(res, JsonRequestBehavior.AllowGet);
             }
-            
+
             SetDynamicTableViewDataHelper(res);
             return View(res);
         }
 
+        public string MockAreaName { get; set; }
 
-        public void SetDynamicTableViewDataHelper(dynamic res)
+        public void SetDynamicTableViewDataHelper(dynamic res,
+            string tableControllerName = null,
+            string tableActionName = null, string tableAreaName = null,
+            string formControllerName = null,
+            string formActionName = null, string formAreaName = null, bool withform=true)
         {
-            string actionName = ControllerContext.RouteData.Values["action"].ToString();
-            string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
-            string areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+            string actionName = tableAreaName ?? ControllerContext.RouteData.Values["action"].ToString();
+            string controllerName = tableControllerName ?? GetCurrentControllerName();
+            string areaName = tableActionName ?? GetCurrentAreaName();
+
 
             TableConstructProvider.CurrentArea = areaName;
             TableConstructProvider.CurrentController = controllerName;
             TableConstructProvider.CurrentAction = actionName;
 
-            SetDynamicTableViewData(GetTableNamePattern(), areaName, controllerName, actionName, res);
+            UiForm form=null;
+            if (withform)
+                form = SetDynamicFormViewData(false, formControllerName ?? controllerName, formActionName ?? actionName,
+                    formAreaName ?? areaName);
+            SetDynamicTableViewData(GetTableNamePattern(), areaName,
+                controllerName, actionName, res, form);
         }
 
 
@@ -139,18 +144,6 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
 
             return controllerName + "_table_" + actionName;
             */
-            return actionName;
-        }
-
-        protected string GetFormNamePattern()
-        {
-            string actionName = ControllerContext.RouteData.Values["action"].ToString();
-
-            /*
-string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
-*/
-
-            //   return controllerName + "_form_" + actionName;
             return actionName;
         }
 
@@ -186,17 +179,33 @@ string controllerName = ControllerContext.RouteData.Values["controller"].ToStrin
                 {
                     _engineService.Save(model);
 
+                    
+                    ViewData[GlobalNames.MVCResponseMessage] = new CustomResult
+                    {
+                        Message = "با موفقیت ثبت شد",
+                        Status = CustomResultType.success
+                    };
                     //await _engineService.EngineContext.SaveChangesAsync();
+/*
 
-                    SetDynamicFormViewData(GetFormNamePattern());
+                    SetDynamicFormViewData(true,
+                        GetCurrentControllerName(),GetCurrentActionName(),
+                        GetCurrentAreaName());*/
 
                     return RedirectToAction("GetDataTable");
+                }
+                else
+                {
+                    ViewData[GlobalNames.MVCResponseMessage] = new CustomResult
+                    {
+                        Message = "ورودی های اشتباه است ثبت نشد",
+                        Status = CustomResultType.fail
+                    };
                 }
 
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
                 ViewData[GlobalNames.AllErrors] = allErrors;
-
             }
             catch (JServiceException e)
             {
@@ -216,11 +225,7 @@ string controllerName = ControllerContext.RouteData.Values["controller"].ToStrin
                 ViewData[GlobalNames.AllErrors] = allErrors;
             }
 
-            ViewData[GlobalNames.MVCResponseMessage] = new CustomResult
-            {
-                Message = "با موفقیت ثبت شد",
-                Status = CustomResultType.success
-            };
+          
             var id = model?.Id != 0 ? model?.Id : null;
             return await ForEdit(id);
         }
@@ -232,18 +237,50 @@ string controllerName = ControllerContext.RouteData.Values["controller"].ToStrin
             if (id == null)
             {
                 var m = _injector.Inject<T>();
-                SetDynamicFormViewData(GetFormNamePattern());
+                ViewData[UiFormEngineController.Model] = m;
+
+                SetDynamicFormViewData(true,
+                    GetCurrentControllerName(),"Save",
+                    GetCurrentAreaName());
                 return View("ForEdit", m);
             }
 
             var model = _engineService.GetForEdit(id.Value);
-            SetDynamicFormViewData(GetFormNamePattern());
+            SetDynamicFormViewData(true,
+                GetCurrentControllerName(), "Save",
+                GetCurrentAreaName());
             if (model == null)
             {
                 return HttpNotFound();
             }
+            ViewData[UiFormEngineController.Model] = model;
 
             return View("ForEdit", model);
+        }
+
+        private string GetCurrentAreaName()
+        {
+            string areaName = "";
+            if (string.IsNullOrEmpty(MockAreaName))
+                areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+            else
+            {
+                areaName = MockAreaName;
+            }
+
+            return areaName;
+        }
+
+        private string GetCurrentActionName()
+        {
+            string action = ControllerContext.RouteData.Values["action"].ToString();
+            return action;
+        }
+
+        private string GetCurrentControllerName()
+        {
+            string controllerName = ControllerContext.RouteData.Values["controller"].ToString();
+            return controllerName;
         }
 
 
@@ -300,7 +337,7 @@ string controllerName = ControllerContext.RouteData.Values["controller"].ToStrin
         {
             return null;
         }
-        
+
         [HttpPost]
         public virtual ActionResult Delete(long id)
         {
@@ -316,7 +353,7 @@ string controllerName = ControllerContext.RouteData.Values["controller"].ToStrin
             }
             catch (JServiceException e)
             {
-                return Json( new CustomResult
+                return Json(new CustomResult
                 {
                     Status = CustomResultType.fail,
                     Message = e.Message
@@ -324,7 +361,7 @@ string controllerName = ControllerContext.RouteData.Values["controller"].ToStrin
             }
             catch (Exception e)
             {
-                return Json( new CustomResult
+                return Json(new CustomResult
                 {
                     Status = CustomResultType.fail,
                     Message = "حذف با خطا مواجه شد"

@@ -1,18 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Engine.Absence.Device;
 using Engine.Absence.Models;
 using Engine.Areas.Absence.Controllers;
 using Engine.Areas.Absence.Models;
 using Engine.Areas.Absence.Service;
+using Engine.Controllers.AbstractControllers;
 using Xunit;
 
 namespace Engine.Areas.Absence.ControllerTests
 {
     public class PersonnelTaradodInfoServiceTests
     {
-        
+
+
+        [Fact]
+        public void TimeSpanToStrTest()
+        {
+            var time=new DateTime(2017,05,05,2,50,58);
+           // var c = new PersonnelTaradodInfoService();
+
+            var str=EngineUtility.ConvertTimeSpanToStr(time.TimeOfDay);
+
+            Assert.True(str=="2:50:58");
+
+        }
 
         /// <summary>
         /// تست شیفت های دو هفته ای و چند هفته ای

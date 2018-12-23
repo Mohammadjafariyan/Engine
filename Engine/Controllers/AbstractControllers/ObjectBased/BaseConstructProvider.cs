@@ -23,6 +23,8 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             return null;
         }
 
+     
+
 
         public  virtual UiForm GetDataTableSearchForm()
         {
@@ -107,7 +109,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
         {
             EjTable ejtable = new EjTable();
             ejtable.Name = actionName;
-            ejtable.Translate = Utility.GetDescription(this.GetType());
+            ejtable.Translate = EngineUtility.GetDescription(this.GetType());
             ejtable.TableMethods.Add(new TableMethod
             {
                 EjTable = ejtable,

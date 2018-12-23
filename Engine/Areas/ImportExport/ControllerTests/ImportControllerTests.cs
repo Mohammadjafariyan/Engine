@@ -21,7 +21,7 @@ namespace Engine.Areas.ImportExport.ControllerTests
         [Fact]
         public void ImportExcel()
         {
-            IExcelImporter impoerter = new ExcelPersonnelNameImporter();
+            IExcelImporter impoerter = new ExcelBiometryDataImporter();
 
             ExcelStructreTable tbl = impoerter.GetTableTemplate();
 
@@ -39,7 +39,7 @@ namespace Engine.Areas.ImportExport.ControllerTests
         public void ImportExcelPreview()
         {
             var imprtController = Engine.Controllers.AbstractControllers
-                    .Utility.InitializeMockControllerContext(new ImportController())
+                    .EngineUtility.InitializeMockControllerContext(new ImportController())
                 as ImportController;
 
 

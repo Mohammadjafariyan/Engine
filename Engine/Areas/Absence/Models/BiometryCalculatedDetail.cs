@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Engine.Absence.Models;
+using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Areas.Absence.Models
 {
@@ -71,7 +73,7 @@ namespace Engine.Areas.Absence.Models
     }
 
 
-    public class BiometryCalculatedDetail
+    public class BiometryCalculatedDetail : IModel
     {
         public BiometryCalculatedDetail()
         {
@@ -82,6 +84,13 @@ namespace Engine.Areas.Absence.Models
         
         public BiometricData BiometricData { get; set; }
 
+        /*
+
+        [NotMapped]
+        /// <summary>
+        /// شماره ردیف در دیتاتیبل
+        /// </summary>
+        public long Index { get; set; }*/
         /// <summary>
         /// کد پرسنلی
         /// </summary>
@@ -126,12 +135,15 @@ namespace Engine.Areas.Absence.Models
         /// تاریخ
         /// </summary>
         public DateTime Date { get; set; }
+        public string  DateStr { get; set; }
 
 
         /// <summary>
         /// مجموع حضور
         /// </summary>
         public TimeSpan Total { get; set; }
+        
+        public string TotalStr { get; set; }
 
 
         /// <summary>
@@ -139,56 +151,71 @@ namespace Engine.Areas.Absence.Models
         /// </summary>
         public TimeSpan TotalValid { get; set; }
 
+        public string TotalValidStr { get; set; }
+
         /// <summary>
         /// تاخیر در ورود
         /// </summary>
         public TimeSpan TotalDelayIn { get; set; }
+        public string  TotalDelayStr { get; set; }
 
         /// <summary>
         /// تعجیل در خروج
         /// </summary>
         public TimeSpan TotalHurryOut { get; set; }
+        public string  TotalHurryStr { get; set; }
 
         /// <summary>
         /// غیبت و کسری کار
         /// </summary>
         public TimeSpan TotalAbsence { get; set; }
+        public string  TotalAbsenceStr { get; set; }
 
         /// <summary>
         /// اضافه کاری
         /// </summary>
         public TimeSpan TotalOvertime { get; set; }
+        public string  TotalOvertimeStr { get; set; }
 
         /// <summary>
         /// نوبت کاری
         /// </summary>
         public TimeSpan ShiftWork { get; set; }
+        public string  ShiftWorkStr { get; set; }
 
         /// <summary>
         /// شب کاری
         /// </summary>
         public TimeSpan NightWork { get; set; }
+        public string  NightWorkStr { get; set; }
 
         /// <summary>
         /// ماموریت
         /// </summary>
         public TimeSpan MissionWork { get; set; }
+        public string  MissionWorkStr { get; set; }
 
         /// <summary>
         /// تعطیل کاری
         /// </summary>
         public TimeSpan HolidayWork { get; set; }
+        public string  HolidayWorkStr { get; set; }
 
         /// <summary>
         /// مرخصی
         /// </summary>
         public TimeSpan Vacation { get; set; }
+        public string  VacationStr { get; set; }
 
         /// <summary>
         /// نامجاز
         /// </summary>
 
         public TimeSpan InValid { get; set; }
+        public string  InValidStr { get; set; }
+
+        public long Id { get; set; }
+        public string Name { get; set; }
     }
 
     public enum PersonnelTaradodInfoStatus

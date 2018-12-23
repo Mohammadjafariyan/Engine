@@ -2,19 +2,24 @@
 
 @{
     ViewBag.Title = "زیر سیستم تردد آشار داشار";
-    Layout = "../../Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>به زیر سیستم تردد خوش آمدید</h2>
+<div class="container">
+    <h2 style="text-align: center"> به زیر سیستم تردد خوش آمدید</h2>
 
-<h3> سیستم تردد (Attendance System)</h3>
-<div class="btn-group-vertical">
-    @Html.ActionLink(" فراموشی کارت", "GetDataTable", "ManualAttendance", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("تعریف بازه موظفی", "Index", "ObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("بازه های موظفی", "GetDataTable", "ObligatedRanges", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("پرسنل", "GetDataTable", "Personnel", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("گروه کاری", "GetDataTable", "WorkGroup", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("دستگاه ها", "GetDataTable", "Machines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("پرسنل دستگاه ها", "GetDataTable", "PersonnelMachines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-    @Html.ActionLink("بازه موظفی گروه های کاری", "GetDataTable", "WorkGroupObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-info"})
+    <h3 style="text-align: center"> سیستم تردد (Attendance System)</h3>
+    <div class="btn-group-vertical">
+        @Html.ActionLink(" فراموشی کارت", "GetDataTable", "ManualAttendance", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+        @Html.ActionLink("تعریف بازه موظفی", "Index", "ObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+        @Html.ActionLink("بازه های موظفی", "GetDataTable", "ObligatedRanges", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+        @Html.ActionLink("پرسنل", "GetDataTable", "Personnel", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+        @Html.ActionLink("گروه کاری", "GetDataTable", "WorkGroup", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+        @Html.ActionLink("دستگاه ها", "GetDataTable", "Machines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+        @Html.ActionLink("پرسنل دستگاه ها", "GetDataTable", "PersonnelMachines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+        @Html.ActionLink("بازه موظفی گروه های کاری", "GetDataTable", "WorkGroupObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-info"})
+        @Html.ActionLink("خلاصه لیست کارکرد پرسنل", "GetAllPersonnelTotalSummaryTimesheetView", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})
+        @Html.ActionLink("دیتا از سیستم های دیگر (Import Data)", "ImportExcel", "Import", new {Area = "ImportExport"}, new {@class = "btn btn-info"})
+
+    </div>
 </div>

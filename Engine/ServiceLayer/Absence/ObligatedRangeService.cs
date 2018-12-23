@@ -107,7 +107,7 @@ namespace ServiceLayer.Absence
                     {
                         Id = s.Id,
                         Name = s.Name,
-                        OffDay = Utility.GetTranslate(s.OffDay)
+                        OffDay = EngineUtility.GetTranslate(s.OffDay)
                     }
                 ).Cast<dynamic>().ToList();
 
