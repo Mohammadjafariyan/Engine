@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbsenceDataProviderService} from "./absence.DataProviderService";
 import {ActivatedRoute} from "@angular/router";
 import {CustomResultType} from "../../database/tables.service";
-import {ObligatedRange, ObligatedRangeDayTimes, ObligatedRangeWeeks} from "./absence.models";
+import {ObligatedRange, ObligatedRangeDayTimes, ObligatedRangeWeeks, RangeType} from "./absence.models";
 import {AppComponent} from "../../app.component";
 
 @Component({
@@ -16,6 +16,7 @@ export class AbsenceIndexComponent implements OnInit {
 
   ObligatedRange: ObligatedRange;
   selectedWeek: ObligatedRangeWeeks;
+  rangeTypes: { name: string, type: RangeType }[];
 
 
   constructor(public absenceDataProviderService: AbsenceDataProviderService,
@@ -124,9 +125,9 @@ export class AbsenceIndexComponent implements OnInit {
             var milli = temp2.replace(/\/Date\((-?\d+)\)\//, '$1');
             this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].Start = new Date(parseInt(milli));
 
-
           }
         }
+        this.reorder();
 
       } else {
         alert(res.Message);
@@ -140,7 +141,12 @@ export class AbsenceIndexComponent implements OnInit {
     var id = this.router.snapshot.queryParams["id"];
     if (id) {
       this.loadById(id);
+    } else {
+      this.reorder();
+
     }
+
+    this.initRangeTypes();
 
 
   }
@@ -161,6 +167,13 @@ export class AbsenceIndexComponent implements OnInit {
     })
   }
 
+  getWeekByNumber(num) {
+    num++;
+    return this.ObligatedRange.ObligatedRangeWeeks.filter(o => o.WeekNumber == num)
+  }
+
+  iterates: number[] = [];
+
   reorder() {
 
     let counter = 0;
@@ -171,6 +184,22 @@ export class AbsenceIndexComponent implements OnInit {
         week[j].WeekNumber = counter;
       }
     }
+    this.iterates = [];
+    for (let i = 0; i < counter; i++) {
+      this.iterates.push(i);
+    }
 
+  }
+
+  private initRangeTypes() {
+    this.rangeTypes = [];
+    this.rangeTypes.push({name: 'شب کاری', type: RangeType.NightWork})
+    this.rangeTypes.push({name: 'تعطیل کاری', type: RangeType.NightWork})
+    this.rangeTypes.push({name: 'استراحت', type: RangeType.Interrupion})
+    this.rangeTypes.push({name: 'معمولی', type: RangeType.Normal})
+    this.rangeTypes.push({name: 'اضافه کاری', type: RangeType.Overtime})
+    this.rangeTypes.push({name: ' نوبت کاری : صبح و عصر', type: RangeType.ShiftWorkMorningAndAfternoon})
+    this.rangeTypes.push({name: ' نوبت کاری : صبح و عصر و شب', type: RangeType.ShiftWorkMorningAndAfternoonAndNight})
+    this.rangeTypes.push({name: ' نوبت کاری : صبح و شب یا عصر و شب', type: RangeType.ShiftWorkMorningAndAfternoon})
   }
 }

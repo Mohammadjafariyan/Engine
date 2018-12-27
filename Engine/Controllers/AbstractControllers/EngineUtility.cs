@@ -15,8 +15,9 @@ namespace Engine.Controllers.AbstractControllers
     {
         public static string ConvertTimeSpanToStr(TimeSpan time)
         {
-            return $@"{Math.Round(time.TotalHours)}:{time.Minutes}:{time.Seconds}";
+            return $@"{(int)Math.Floor(time.TotalHours)}:{time.Minutes}:{time.Seconds}";
         }
+
         public static Controller InitializeMockControllerContext(Controller controller)
         {
             var context = MockRepository.GenerateStub<HttpContextBase>();
@@ -25,7 +26,7 @@ namespace Engine.Controllers.AbstractControllers
             var file = MockRepository.GenerateStub<HttpPostedFileBase>();
 
             request.Stub(r => r.ApplicationPath).Return("");
-            
+
             var exelUrlWithWrongGroupids = "D:\\temp\\work\\personnel - Copy.xlsx";
             Stream stream = File.OpenRead(exelUrlWithWrongGroupids);
 
@@ -37,16 +38,15 @@ namespace Engine.Controllers.AbstractControllers
             RouteConfig.RegisterRoutes(routes);
             RouteData routeDate = routes.GetRouteData(context);
             routeDate.DataTokens.Add("area", "Admin");
-            
-        
+
+
             files.Stub(x => x[0]).Return(file);
-          //  request.Stub(x => x.Files).Return(files);
+            //  request.Stub(x => x.Files).Return(files);
             context.Stub(c => c.Request.Files).Return(files);
             controller.ControllerContext = new ControllerContext(context, routeDate, controller);
 
-           // var f=context.Request.Files[0];
+            // var f=context.Request.Files[0];
             return controller;
-
         }
 
         public static string GetDescription(Type type)
@@ -58,7 +58,6 @@ namespace Engine.Controllers.AbstractControllers
             {
                 return null;
             }
-
             return descriptions[0].Description;
         }
 
@@ -94,15 +93,26 @@ namespace Engine.Controllers.AbstractControllers
 
         public static string GaregorianToDateOnlyFormat(DateTime @from)
         {
-            string date = $@"{from.Year}/{from.Month}/{from.Day}";
+            var month = from.Month < 10 ? "0" + from.Month : from.Month + "";
+
+            var day = from.Day < 10 ? "0" + from.Day : from.Day + "";
+            string date = $@"{from.Year}/{month}/{day}";
             return date;
         }
+
         public static string ConvertToShamsiDate(DateTime @from, bool withtime
             , bool withweekday)
         {
             var pc = new PersianCalendar();
 
-            string date = $@"{pc.GetYear(@from)}/{pc.GetMonth(@from)}/{pc.GetDayOfMonth(@from)}";
+
+            var tmp = pc.GetDayOfMonth(@from);
+            var day = tmp < 10 ? "0" + tmp : tmp + "";
+
+            var monthtmp = pc.GetMonth(@from);
+            var month = monthtmp < 10 ? "0" + monthtmp : monthtmp + "";
+
+            string date = $@"{pc.GetYear(@from)}/{month}/{day}";
             if (withtime)
             {
                 date += $@" - {@from.TimeOfDay}";

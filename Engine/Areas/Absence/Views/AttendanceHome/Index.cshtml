@@ -18,8 +18,10 @@
         @Html.ActionLink("دستگاه ها", "GetDataTable", "Machines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
         @Html.ActionLink("پرسنل دستگاه ها", "GetDataTable", "PersonnelMachines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
         @Html.ActionLink("بازه موظفی گروه های کاری", "GetDataTable", "WorkGroupObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-info"})
+        @Html.ActionLink("ریز کارکرد پرسنل", "Index", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})
         @Html.ActionLink("خلاصه لیست کارکرد پرسنل", "GetAllPersonnelTotalSummaryTimesheetView", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})
-        @Html.ActionLink("دیتا از سیستم های دیگر (Import Data)", "ImportExcel", "Import", new {Area = "ImportExport"}, new {@class = "btn btn-info"})
+        @Html.ActionLink("دیتا از سیستم های دیگر (Import Data)", "Index", "Import", new {Area = "ImportExport"}, new {@class = "btn btn-info"})
+        @Html.ActionLink("تعریف ساختار excel", "GetDataTable", "ExcelStructures", new {Area = "ImportExport"}, new {@class = "btn btn-info"})
 
     </div>
 </div>

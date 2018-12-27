@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web.Mvc;
 using Engine.Areas.ImportExport.Service;
 using Engine.Areas.ImportExport.ServiceTests;
+using Engine.Controllers.AbstractControllers.ObjectBased;
+using ViewModel.Parameters;
 using WebAppIDEEngine.Models;
 using NotImplementedException = System.NotImplementedException;
 
@@ -11,44 +13,56 @@ namespace Engine.Areas.ImportExport.Controllers
 {
     public class ImportController : Controller
     {
-        public const string Error = "Error";
-        public const string Success = "Success";
+        public static string Error = "Error";
+        public static string Success = "Success";
 
-        public ActionResult ImportExcel(string tableName)
+
+        public ActionResult Index()
         {
-
-            IExcelImporter impoerter = new TableColumnsStructureFactory().GetImporter(tableName);
-
-            ExcelStructreTable tbl = impoerter.GetTableTemplate();
-            return View(tbl);
+            using (var db = new EngineContext())
+            {
+                return View(db.ExcelStructreTables.ToList());
+            }
         }
 
-        public ActionResult ImportExcelSave(string tableName,bool confirmed)
+        public ActionResult ImportExcel(long id)
+        {
+            using (var db = new EngineContext())
+            {
+                var model = db.ExcelStructreTables.Include("Nodes").Where(d => d.Id == id).FirstOrDefault();
+                if (model == null)
+                {
+                    EBaseAppController<ExcelStructreTable, CommonParameter>
+                        .GenErrorMessage(ViewData, "مدل یافت نشد");
+                    return View("Index");
+                }
+                else
+                {
+                    return View("ImportExcel", model);
+                }
+            }
+        }
+
+        public ActionResult ImportExcelSave(long id, bool confirmed)
         {
             try
             {
-                IExcelImporter impoerter = new TableColumnsStructureFactory().GetImporter(tableName);
-                ImportExcel(impoerter,confirmed);
-
-                impoerter.Save();
-                ExcelStructreTable tbl2 = impoerter.GetTableTemplate();
-                ViewData[Success] = "با موفقیت ثبت شد";
-                return View("ImportExcel", tbl2);
+                return  ImportExcelHelper(id, confirmed, true, "با موفقیت ثبت شد","ImportExcelPreview");
             }
             catch (Exception e)
             {
-                ViewData[Error] = e.Message;
+                EBaseAppController<ExcelStructreTable, CommonParameter>
+                    .GenErrorMessage(ViewData, e.Message);
                 return View("ImportExcel");
             }
         }
 
 
-        private void ImportExcel(IExcelImporter impoerter,bool Confirmed)
+        private void ImportExcelMainFunction(IExcelImporter impoerter, ExcelStructreTable tbl, bool Confirmed)
         {
             if (impoerter == null)
                 throw new Exception("impoerter ارسالی نال است ");
 
-            var tbl = impoerter.GetTableTemplate();
             if (tbl == null)
                 throw new Exception("tbl ارسالی نال است ");
             if (Request.Files.Count == 0)
@@ -67,19 +81,60 @@ namespace Engine.Areas.ImportExport.Controllers
             impoerter.ValidateModels();
         }
 
-        public ActionResult ImportExcelPreview(string tableName,bool confirmed )
+        private ActionResult ImportExcelHelper(long id, 
+            bool confirmed, bool isSave,
+            string msg,string viewName)
+        {
+            using (var db = new EngineContext())
+            {
+                var model = db.ExcelStructreTables.Find(id);
+                if (model == null)
+                {
+                    EBaseAppController<ExcelStructreTable, CommonParameter>
+                        .GenErrorMessage(ViewData, "ساختار اکسل یافت نشد");
+                    return View("ImportExcel");
+                }
+
+                if (!model.Table.HasValue)
+                {
+                    EBaseAppController<ExcelStructreTable, CommonParameter>
+                        .GenErrorMessage(ViewData, "نوع جدولی یافت نشد");
+                    return View("ImportExcel");
+                }
+
+                var table = new TableColumnsStructureFactory();
+                IExcelImporter impoerter = table.GetImporter(table
+                    .GetImporterName(model.Table.Value));
+
+                ImportExcelMainFunction(impoerter, model, confirmed);
+                var models = impoerter.GetModels();
+
+                ViewData["ModelsName"] = models;
+
+
+                if (isSave)
+                {
+                    impoerter.Save();
+                }
+
+                ViewData[Success] = msg;
+                return View(viewName,model);
+            }
+        }
+
+        public ActionResult ImportExcelPreview(long id, bool confirmed)
         {
             try
             {
-                IExcelImporter impoerter = new TableColumnsStructureFactory().GetImporter(tableName);
-                ImportExcel(impoerter,confirmed);
-
-                return View(impoerter.GetModels());
+                return ImportExcelHelper(id, confirmed, false,
+                    "دیتای زیر از فایل وارد شده استخراج گردیده است و جهت پیش نمایش می باشد",
+                    "ImportExcelPreview");
             }
             catch (Exception e)
             {
-                ViewData[Error] = e.Message;
-                return View();
+                EBaseAppController<ExcelStructreTable, CommonParameter>
+                    .GenErrorMessage(ViewData, e.Message);
+                return ImportExcel(id);
             }
         }
     }

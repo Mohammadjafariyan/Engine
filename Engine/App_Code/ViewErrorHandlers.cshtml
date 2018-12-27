@@ -1,0 +1,41 @@
+@using System.Collections
+@using System.Reflection
+@using WebAppIDEEngine.Models.Core
+@using ViewModel.ActionTypes
+@using WebAppIDEEngine.Models.ICore
+@using Engine.Attributes
+@using System.Web.Mvc
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+@using System.Web.Mvc.Html;
+@using System.Web.Routing
+@using Engine.Service.AbstractControllers
+@using System.Linq
+@using Engine.Areas.ReportGenerator.Controllers
+@helper ShowCustomMsg(dynamic html,ViewDataDictionary ViewData)
+{
+
+    var msg=ViewData[GlobalNames.MVCResponseMessage] as CustomResult;
+    if (msg != null)
+    {
+        if (msg.Status == CustomResultType.fail)
+        {
+            <div class="alert alert-danger">@html.Raw(msg.Message)</div>
+        }
+        else
+        {
+            <div class="alert alert-success">@html.Raw(msg.Message)</div>
+
+        }
+    }
+    var modelErrors = ViewData[GlobalNames.AllErrors] as List<ModelError>;
+
+    if (modelErrors != null)
+    {
+        foreach (var modelError in modelErrors)
+        {
+            <div class="alert alert-danger">@html.Raw(modelError.ErrorMessage)</div>
+        }
+    }
+    
+}

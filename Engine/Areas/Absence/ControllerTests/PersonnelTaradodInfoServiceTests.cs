@@ -15,7 +15,17 @@ namespace Engine.Areas.Absence.ControllerTests
     public class PersonnelTaradodInfoServiceTests
     {
 
+        [Fact]
+        public void ConvertToShamsiDateTest()
+        {
+            var time=new DateTime(1994,09,29,2,50,58);
+            // var c = new PersonnelTaradodInfoService();
 
+            var str=EngineUtility.ConvertToShamsiDate(time,false,false);
+
+            Assert.True(str=="1373/07/07");
+
+        }
         [Fact]
         public void TimeSpanToStrTest()
         {

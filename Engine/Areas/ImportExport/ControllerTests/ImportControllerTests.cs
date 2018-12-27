@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -9,30 +10,48 @@ using Engine.Areas.ImportExport.Service;
 using Engine.Areas.ImportExport.ServiceTests;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
+using WebAppIDEEngine.Models;
 using Xunit;
 
 namespace Engine.Areas.ImportExport.ControllerTests
 {
     public class ImportControllerTests
     {
-        private ImportController _importController = new ImportController();
-
-
         [Fact]
         public void ImportExcel()
         {
-            IExcelImporter impoerter = new ExcelBiometryDataImporter();
+            var controller = Engine.Controllers.AbstractControllers
+                    .EngineUtility.InitializeMockControllerContext(new ImportController())
+                as ImportController;
 
-            ExcelStructreTable tbl = impoerter.GetTableTemplate();
+            using (var db = new EngineContext())
+            {
+                var model = db.ExcelStructreTables.FirstOrDefault();
 
+                if (model != null)
+                {
+                    ViewResult vr =
+                        controller.ImportExcel(model.Id) as ViewResult;
 
-            ViewResult vr =
-                _importController.ImportExcel(TableColumnsStructureFactory.BiometricRawDataName) as ViewResult;
+                    ExcelStructreTable table = vr.Model as ExcelStructreTable;
 
-            ExcelStructreTable m = vr.Model as ExcelStructreTable;
-
-            Assert.True(m.Nodes.Count == tbl.Nodes.Count);
-            Assert.True(m.Nodes.Count == tbl.Nodes.Count);
+                    Assert.NotNull(table);
+                    Assert.True(table.Nodes.Count > 0);
+                }
+                else
+                {
+                    try
+                    {
+                        ViewResult vr =
+                            controller.ImportExcel(6516465) as ViewResult;
+                        Assert.True(false);
+                    }
+                    catch (Exception e)
+                    {
+                        Assert.True(true);
+                    }
+                }
+            }
         }
 
         [Fact]
@@ -43,44 +62,88 @@ namespace Engine.Areas.ImportExport.ControllerTests
                 as ImportController;
 
 
-            var res = imprtController.ImportExcelPreview
-                (TableColumnsStructureFactory.PersonnelName, true) as ViewResult;
+            using (var db = new EngineContext())
+            {
+                var model = db.ExcelStructreTables.FirstOrDefault();
+                if (model != null)
+                {
+                    var res = imprtController.ImportExcelPreview
+                        (model.Id, true) as ViewResult;
+                    Assert.NotNull(res.Model);
+                    var table = res.Model as ExcelStructreTable;
+                    Assert.NotNull(table);
+                    Assert.True(table.Nodes.Count > 0);
 
-            // assert
-            res
-                .AssertViewRendered();
+                    // assert
+                    Assert.NotNull(res
+                        .AssertViewRendered().ViewData["ModelsName"]);
+
+                    var list = res
+                        .AssertViewRendered().ViewData["ModelsName"] as List<dynamic>;
+
+                    Assert.NotNull(list);
+                    Assert.True(list.Count > 0);
+                    Assert.Equal(list.GetType().GetProperties().Length, model.Nodes.Count);
+                }
+                else
+                {
+                    try
+                    {
+                        var res = imprtController.ImportExcelPreview
+                            (0, true) as ViewResult;
+                    }
+                    catch (Exception e)
+                    {
+                        Assert.True(true);
+                    }
+
+                    // دیتایی برای تیست نیست
+                    Assert.True(false);
+                }
+            }
         }
+
 
         [Fact]
         public void ImportExcelWrongName()
         {
-            IExcelImporter impoerter = new ExcelPersonnelNameImporter();
+            var _importController = Engine.Controllers.AbstractControllers
+                    .EngineUtility.InitializeMockControllerContext(new ImportController())
+                as ImportController;
+            using (var db = new EngineContext())
+            {
+                var model = db.ExcelStructreTables.FirstOrDefault();
 
-            ExcelStructreTable tbl = impoerter.GetTableTemplate();
-            try
-            {
-                ViewResult vr = _importController.ImportExcel("sdf") as ViewResult;
-                ExcelStructreTable m = vr.Model as ExcelStructreTable;
-            }
-            catch (Exception e)
-            {
-                Assert.True(true);
-            }
-            try
-            {
-                ViewResult vr2 = _importController.ImportExcel("") as ViewResult;
-            }
-            catch (Exception e)
-            {
-                Assert.True(true);
-            }
-            try
-            {
-                ViewResult vr3 = _importController.ImportExcel(null) as ViewResult;
-            }
-            catch (Exception e)
-            {
-                Assert.True(true);
+                if (model != null)
+                {
+                    try
+                    {
+                        ViewResult vr = _importController.ImportExcel(model.Id) as ViewResult;
+                        ExcelStructreTable m = vr.Model as ExcelStructreTable;
+                    }
+                    catch (Exception e)
+                    {
+                        Assert.True(true);
+                    }
+
+                    try
+                    {
+                        ViewResult vr2 = _importController.ImportExcel(65156) as ViewResult;
+                    }
+                    catch (Exception e)
+                    {
+                        Assert.True(true);
+                    }
+
+                    try
+                    {
+                        ViewResult vr3 = _importController.ImportExcel(651) as ViewResult;
+                    }
+                    catch (Exception e)
+                    {
+                        Assert.True(true);
+                    }
+                }
             }
         }
     }

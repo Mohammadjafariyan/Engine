@@ -1,0 +1,23 @@
+@using Engine.Areas.ImportExport.Controllers
+@model System.Collections.Generic.List<Engine.Areas.ImportExport.ServiceTests.ExcelStructreTable>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@ViewErrorHandlers.ShowCustomMsg(Html,ViewData)
+@if (ViewData[ImportController.Success] != null)
+{
+    <br>
+    <div class="alert alert-success">@ViewData[ImportController.Success]</div>
+}
+<h3 style="text-align: center"> جهت انتقال اطلاعات یکی از موارد زیر را انتخاب کنید</h3>
+<div class="btn-group-vertical">
+@foreach (var m in Model)
+{
+    @Html.ActionLink(m.Name, "ImportExcel", "Import", new {Area = "ImportExport",Id=m.Id}, new {@class = "btn btn-info"})
+}
+</div>
+
+

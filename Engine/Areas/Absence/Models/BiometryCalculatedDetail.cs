@@ -69,7 +69,7 @@ namespace Engine.Areas.Absence.Models
     
     public enum RangeType
     {
-        Normal,Overtime,NightWork,HolidayWork,ShiftWork,Interrupion
+        Normal,Overtime,NightWork,HolidayWork, ShiftWorkMorningAndAfternoon,ShiftWorkMorningAndAfternoonAndNight,ShiftWorkMorningAndNightOrAfternoonAndNight,Interrupion
     }
 
 

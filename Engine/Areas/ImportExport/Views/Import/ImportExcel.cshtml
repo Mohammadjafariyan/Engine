@@ -3,45 +3,102 @@
 
 @{
     ViewBag.Title = "title";
-    Layout = "_Layout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>title</h2>
-@if (ViewData[ImportController.Error] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewData[ImportController.Error]!
-    </div>
-}
-
+@ViewErrorHandlers.ShowCustomMsg(Html,ViewData)
 @if (ViewData[ImportController.Success] != null)
 {
-    <div class="alert alert-success" role="alert">
-        @ViewData[ImportController.Success]!
-    </div>
+    <br>
+    <div class="alert alert-success">@ViewData[ImportController.Success]</div>
 }
+<div class="container">
 
-<table>
-    <thead>
-
-    <tr>
-        @{
-            foreach (var node in Model.Nodes)
+    <div class="panel panel-primary">
+        <div class="panel-heading ">ثبت ساختار جدید</div>
+        <div class="panel-body" style="padding: 50px">
+            @if (Model != null && Model.Nodes.Count > 0)
             {
-                <th>@node.ColumnTranslate</th>
-            }
-        }
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        @{
-            foreach (var node in Model.Nodes)
-            {
-                <td><input value="@node.NumberInExcel" name="@node.ColumnName" /></td>
-            }
-        }
-    </tr>
+                <div class="row">
+                    @Html.HiddenFor(model => model.Id)
 
-    </tbody>
-</table>
+
+                    @Html.ActionLink("ویرایش ساختار", "Create", "ExcelStructures", new {id = Model.Id}, null)
+                    @Html.HiddenFor(d => d.Id)
+                    @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Name)  :
+                        @Html.DisplayFor(model => model.Name)
+                    </div>
+
+                    @{
+                        Model.Nodes = Model.Nodes.OrderBy(n => n.NumberInExcel).Reverse().ToList();
+                    }
+
+                    <table class="table table-bordered table-condensed table-responsive table-primary table-striped">
+                        <thead>
+                        <tr>
+                            @for (int i = 0; i < Model.Nodes.Count; i++)
+                            {
+                                <th>
+                                    @Html.DisplayFor(model => Model.Nodes[i].NumberInExcel)
+                                    -
+                                    @Html.DisplayFor(model => Model.Nodes[i].ColumnTranslate)
+                                </th>
+                            }
+                        </tr>
+                        </thead>
+                    </table>
+
+
+                    <hr/>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @using (Html.BeginForm("ImportExcelSave", "Import", FormMethod.Post,new {enctype="multipart/form-data"}))
+                                {
+                                   
+
+                                    @Html.HiddenFor(d => d.Id)
+                                    <div class="form-group">
+                                        <label> ذخیره فایل Excel</label>
+                                        <input name="file" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel "/>
+                                    </div>
+                                    Model.Confirmed = true;
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Confirmed)
+                                        @Html.EditorFor(d => d.Confirmed)
+                                    </div>
+                                    
+                                    <button class="btn btn-primary" type="submit">ذخیره</button>
+                                }
+                            </div>
+                            <div class="col-md-6">
+                                @using (Html.BeginForm("ImportExcelPreview", "Import", FormMethod.Post,new {enctype="multipart/form-data"}))
+                                {
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Confirmed)
+                                        @Html.EditorFor(d => d.Confirmed)
+                                    </div>
+                                    
+                                    
+                                    @Html.HiddenFor(d => d.Id)
+                                    <div class="form-group">
+                                        <label> پیش نمایش فایل Excel</label>
+                                        <input type="file" name="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel "/>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">پیش نمایش</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

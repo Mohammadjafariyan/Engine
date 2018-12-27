@@ -21,7 +21,6 @@ using BaseEngineException = Engine.Controllers.AbstractControllers.AttributeBase
 
 namespace Engine.Controllers.AbstractControllers.ObjectBased
 {
-    
     [Authorize(Roles = "SuperUser,SystemAdmin")]
     public abstract class EBaseAppController<T, Parameter> : BaseEngineController<T, Parameter>
         where Parameter : IActionParameter where T : IModel, new()
@@ -116,7 +115,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             string tableControllerName = null,
             string tableActionName = null, string tableAreaName = null,
             string formControllerName = null,
-            string formActionName = null, string formAreaName = null, bool withform=true)
+            string formActionName = null, string formAreaName = null, bool withform = true)
         {
             string actionName = tableAreaName ?? ControllerContext.RouteData.Values["action"].ToString();
             string controllerName = tableControllerName ?? GetCurrentControllerName();
@@ -127,7 +126,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             TableConstructProvider.CurrentController = controllerName;
             TableConstructProvider.CurrentAction = actionName;
 
-            UiForm form=null;
+            UiForm form = null;
             if (withform)
                 form = SetDynamicFormViewData(false, formControllerName ?? controllerName, formActionName ?? actionName,
                     formAreaName ?? areaName);
@@ -175,11 +174,12 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
         {
             try
             {
+                ViewData[GlobalNames.PostedModel] = model;
                 if (ModelState.IsValid)
                 {
                     _engineService.Save(model);
 
-                    
+
                     ViewData[GlobalNames.MVCResponseMessage] = new CustomResult
                     {
                         Message = "با موفقیت ثبت شد",
@@ -217,17 +217,25 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             }
             catch (Exception e)
             {
-                IEnumerable<ModelError> allErrors = new List<ModelError>
-                {
-                    new ModelError(e.Message)
-                };
-
-                ViewData[GlobalNames.AllErrors] = allErrors;
+                GenErrorMessage(ViewData,e.Message);
             }
 
-          
+
             var id = model?.Id != 0 ? model?.Id : null;
             return await ForEdit(id);
+        }
+
+        public static IEnumerable<ModelError>
+            GenErrorMessage(ViewDataDictionary viewData, params string[] eMessage)
+        {
+            List<ModelError> allErrors = new List<ModelError>();
+            foreach (var s in eMessage)
+            {
+                allErrors.Add(new ModelError(s));
+            }
+
+            viewData[GlobalNames.AllErrors] = allErrors;
+            return allErrors;
         }
 
 
@@ -240,7 +248,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                 ViewData[UiFormEngineController.Model] = m;
 
                 SetDynamicFormViewData(true,
-                    GetCurrentControllerName(),"Save",
+                    GetCurrentControllerName(), "Save",
                     GetCurrentAreaName());
                 return View("ForEdit", m);
             }
@@ -253,6 +261,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             {
                 return HttpNotFound();
             }
+
             ViewData[UiFormEngineController.Model] = model;
 
             return View("ForEdit", model);

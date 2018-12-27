@@ -1,0 +1,122 @@
+@using System.Collections.Specialized
+@using System.Web.Mvc.Html
+@using Engine.Areas.ImportExport.ServiceTests
+@using Engine.Areas.JUiEngine.Controllers
+@using Engine.Controllers.AbstractControllers.ObjectBased
+@using Engine.Entities.Models.UiGeneratorModels
+@using Engine.Service.AbstractControllers
+@using MvcContrib.EnumerableExtensions
+@using WebAppIDEEngine.Models.Core
+@model Engine.Areas.ImportExport.ServiceTests.ExcelStructreTable
+
+@{
+
+    ViewBag.Title = "تعریف ساختار Excel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+   
+}
+
+
+@ViewErrorHandlers.ShowCustomMsg(Html,ViewData)
+
+
+<div class="container">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading ">ثبت ساختار جدید</div>
+        <div class="panel-body" style="padding: 50px">
+            <p>لطفا برای تعریف ساختار جدید ابتدا جدول را انتخاب نمایید تا ساختار جدول لود شود</p><hr/>
+            <p>@Html.ActionLink("بازگشت به لیست", "GetDataTable", "ExcelStructures")</p>
+            @using (Html.BeginForm("Create", "ExcelStructures", FormMethod.Get))
+            {
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Table)
+                    @Html.EnumDropDownListFor(d => d.Table, "جدول را انتخاب نمایید تا ساختار آن لود شود", new {@class = "form-control", onchange = "this.form.submit()"})
+                    @Html.ValidationMessageFor(model => model.Table, "", new {@class = "text-danger"})
+                </div>
+            }
+
+            @if (Model != null && Model.Nodes.Count > 0)
+            {
+                <div class="row">
+
+
+                    @using (Html.BeginForm("Save", "ExcelStructures", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(d => d.Table)
+                        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name)
+                            @Html.EditorFor(d => d.Name)
+                            @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
+                        </div>
+
+                        Model.Nodes = Model.Nodes.OrderBy(n => n.NumberInExcel).ToList();
+
+                        <table class="table table-bordered table-condensed table-responsive table-primary table-striped">
+                            <thead>
+                            <tr>
+                                <th>
+                                    نام ستون
+                                </th>
+                                <th>
+                                    باید در ساختار باشد
+                                </th>
+                                <th>
+                                    اولویت در Excel
+                                </th>
+                                <th>
+                                    حذف
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="addNew">
+                            @for (int i = 0; i < Model.Nodes.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DropDownListFor(m => m.Nodes[i].ColumnName, Model.Nodes.
+                                            ToSelectList(d => d.ColumnName, d => d.ColumnTranslate, d => d.ColumnName == Model.Nodes[i].ColumnName), new {onchange = @"setSiblingTranslate(this)"})
+                                        @Html.HiddenFor(m => m.Nodes[i].ColumnTranslate)
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(m => m.Nodes[i].IsRequired)
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(m => m.Nodes[i].NumberInExcel)
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger" onclick="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)">حذف</button>
+
+
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+
+                        </table>
+
+
+                        <hr/>
+                        <button class="btn btn-primary" type="submit">ثبت</button>
+                    }
+
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function setSiblingTranslate(el) {
+        debugger;
+        var elval = $(el).val();
+        var val = $(el).children('option[value="' + elval + '"]').text();
+
+        $(el).next().val(val);
+    }
+</script>

@@ -50,6 +50,9 @@ namespace Engine.Utitliy
             For<IBaseEngineService>().Add<StudentService>().Named("StudentService");
 
             #endregion
+            
+            
+            
         }
     }
 }

@@ -26,10 +26,20 @@ namespace Engine.ServiceLayer.AbsenceTests
             w2.ForEach(o => Assert.True(o.WeekNumber == 2));
             w3.ForEach(o => Assert.True(o.WeekNumber == 3));
 
+            
 
             var service = new ObligatedRangesService();
             service.Save(range);
+
+            var l=range.ObligatedRangeWeeks.ToList();
+            l.AddRange(provider.GetWeek(4));
+            range.ObligatedRangeWeeks = l;
             
+
+            service.Save(range);
+            
+            Assert.True(range.ObligatedRangeWeeks.Count==28);
+
             // DELETE test
             range.ObligatedRangeWeeks.Skip(7).Take(7).ForEach(o => { o.IsRemoved = true; });
             service.Save(range);
@@ -42,7 +52,7 @@ namespace Engine.ServiceLayer.AbsenceTests
             
                 w1 = updatedRange.ObligatedRangeWeeks.Take(7);
                 w2 = updatedRange.ObligatedRangeWeeks.Skip(7).Take(7);
-                Assert.True(updatedRange.ObligatedRangeWeeks.Count == 14);
+                Assert.True(updatedRange.ObligatedRangeWeeks.Count == 21);
 
                 w1.ForEach(o => Assert.True(o.WeekNumber == 1));
                 w2.ForEach(o => Assert.True(o.WeekNumber == 3));

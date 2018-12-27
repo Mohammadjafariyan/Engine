@@ -363,9 +363,12 @@
     <Compile Include="Areas\App\Controllers\ActionsController.cs" />
     <Compile Include="Areas\App\Controllers\FormsController.cs" />
     <Compile Include="Areas\App\Controllers\PanelsController.cs" />
+    <Compile Include="Areas\ImportExport\Controllers\ExcelStructuresController.cs" />
     <Compile Include="Areas\ImportExport\Controllers\ImportController.cs" />
+    <Compile Include="Areas\ImportExport\ControllerTests\ExcelStructuresControllerTests.cs" />
     <Compile Include="Areas\ImportExport\ControllerTests\ImportControllerTests.cs" />
     <Compile Include="Areas\ImportExport\ImportExportAreaRegistration.cs" />
+    <Compile Include="Areas\ImportExport\Models\ExcelStructureTableNames.cs" />
     <Compile Include="Areas\ImportExport\ServiceTests\BaseExcelImporter.cs" />
     <Compile Include="Areas\ImportExport\ServiceTests\ExcelBiometryDataImporter.cs" />
     <Compile Include="Areas\ImportExport\ServiceTests\ExcelPersonnelNameImporter.cs" />
@@ -373,7 +376,9 @@
     <Compile Include="Areas\ImportExport\ServiceTests\ExcelStructreTableNode.cs" />
     <Compile Include="Areas\ImportExport\ServiceTests\IExcelImporter.cs" />
     <Compile Include="Areas\ImportExport\ServiceTests\ImportTests.cs" />
+    <Compile Include="Areas\ImportExport\Service\ExcelStructreTableService.cs" />
     <Compile Include="Areas\ImportExport\Service\TableColumnsStructureFactory.cs" />
+    <Compile Include="Areas\ImportExport\UiConstructs\ExcelStructreTableConstruct.cs" />
     <Compile Include="Areas\JUiEngine\Controllers\UiFormDataProvider.cs" />
     <Compile Include="Areas\JUiEngine\Controllers\UiFormEngineController.cs" />
     <Compile Include="Areas\Library\Controllers\bookApiController.cs" />
@@ -503,6 +508,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Code\ViewErrorHandlers.cshtml" />
     <Content Include="Areas\Absence\Views\AttendanceHome\Index.cshtml" />
     <Content Include="Areas\Absence\Views\Machines\Delete.cshtml" />
     <Content Include="Areas\Absence\Views\Machines\ForEdit.cshtml" />
@@ -552,8 +558,12 @@
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\Delete.cshtml" />
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\ForEdit.cshtml" />
     <Content Include="Areas\AppGeneration\Views\UiInputMethod\GetDataTable.cshtml" />
+    <Content Include="Areas\ImportExport\Views\ExcelStructures\Create.cshtml" />
+    <Content Include="Areas\ImportExport\Views\ExcelStructures\Delete.cshtml" />
+    <Content Include="Areas\ImportExport\Views\ExcelStructures\GetDataTable.cshtml" />
     <Content Include="Areas\ImportExport\Views\Import\ImportExcel.cshtml" />
     <Content Include="Areas\ImportExport\Views\Import\ImportExcelPreview.cshtml" />
+    <Content Include="Areas\ImportExport\Views\Import\Index.cshtml" />
     <Content Include="Areas\JUiEngine\Views\Shared\Backup of update on change.html" />
     <Content Include="Areas\Library\Views\Rent\Delete.cshtml" />
     <Content Include="Areas\Library\Views\Rent\ForEdit.cshtml" />
@@ -564,6 +574,12 @@
     <Content Include="Areas\JUiEngine\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\JUiEngine\Views\UiHome\ShowView.cshtml" />
     <Content Include="Areas\JUiEngine\Views\web.config" />
+    <Content Include="Content\attendance images\-employees-hr-workflow---vector-stencils-library.png--diagram-flowchart-example.png" />
+    <Content Include="Content\attendance images\card.png" />
+    <Content Include="Content\attendance images\download.jif" />
+    <Content Include="Content\attendance images\download.png" />
+    <Content Include="Content\attendance images\images.png" />
+    <Content Include="Content\attendance images\Thumbs.db" />
     <Content Include="Content\Bootstrap-rtl.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />

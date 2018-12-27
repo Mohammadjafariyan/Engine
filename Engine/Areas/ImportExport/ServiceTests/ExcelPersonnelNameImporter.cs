@@ -43,15 +43,16 @@ namespace Engine.Areas.ImportExport.ServiceTests
                 {
                     using (var db = new EngineContext())
                     {
-                        @group = new WorkGroup();
+                        @group = db.WorkGroups.Create(); /*new WorkGroup();
                         @group.Name = DateTime.Now.TimeOfDay + " گروه کاری ایجاد شده توسط سیستم ";
                         db.WorkGroups.Add(@group);
-                        db.SaveChanges();
+                        db.SaveChanges();*/
                     }
 
                     foreach (var model in workupNematodes)
                     {
-                        model.WorkGroupId = @group.Id;
+                        //model.WorkGroupId = @group.Id;
+                        model.WorkGroup = @group;
                     }
                 }
             }

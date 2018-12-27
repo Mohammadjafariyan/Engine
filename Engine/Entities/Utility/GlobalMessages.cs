@@ -17,6 +17,8 @@ namespace Engine.Service.AbstractControllers
 
     public class GlobalNames
     {
+        public const string PostedModel = "PostedModel";
+
         public const string GetDropDown = "GetDropDown";
         public const string GetDropDownAsync = "GetDropDownAsync";
         public const string GetDataTableAsync = "GetDataTableAsync";
@@ -66,6 +68,7 @@ namespace Engine.Service.AbstractControllers
         public const string SuperUserName = "MsfjWfl@6517s@mJKsf52v56sf2";
         public const string SuperUser = "SuperUser";
         public const string SystemAdmin = "SystemAdmin";
+        public const string ErrorMsg = "ErrorMsg";
     }
     
     

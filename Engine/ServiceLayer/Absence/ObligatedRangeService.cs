@@ -9,6 +9,7 @@ using Engine.Absence.Models;
 using Engine.Areas.ReportGenerator.Controllers;
 using Engine.Controllers.AbstractControllers;
 using WebAppIDEEngine.Models;
+using WebAppIDEEngine.Models.ICore;
 
 namespace ServiceLayer.Absence
 {
@@ -40,46 +41,51 @@ namespace ServiceLayer.Absence
 
                     foreach (var weekDay in obligatedRange.ObligatedRangeWeeks)
                     {
-                        var recordWeekDay = record.ObligatedRangeWeeks.First(w => w.Id == weekDay.Id);
-
-
-                        db.Entry(recordWeekDay).CurrentValues.SetValues(weekDay);
-                        if (weekDay.IsRemoved)
+                        if (weekDay.Id == 0)
                         {
-                            foreach (var dayTimese in recordWeekDay.ObligatedRangeDayTimes)
-                            {
-                                db.Entry(dayTimese).State = EntityState.Deleted;
-                            }
-                            
-                            db.Entry(recordWeekDay).State = EntityState.Deleted;
-                           
-                            continue;
-                            
+                            record.ObligatedRangeWeeks.Add(weekDay);
                         }
-                        
-
-                        foreach (var time in weekDay.ObligatedRangeDayTimes)
+                        else
                         {
-                            if (time.Id == 0)
-                            {
-                                recordWeekDay.ObligatedRangeDayTimes.Add(time);
-                            }
-                            else if (time.IsRemoved)
-                            {
-                                var existTime = recordWeekDay.ObligatedRangeDayTimes.First(t => t.Id == time.Id);
-                                db.Entry(existTime).State = EntityState.Deleted;
-                            }
-                            else
-                            {
-                                var existTime = recordWeekDay.ObligatedRangeDayTimes.First(t => t.Id == time.Id);
-                                db.Entry(existTime).CurrentValues.SetValues(time);
-                                db.Entry(existTime).State = EntityState.Modified;
-                            }
-                        }
+                            ObligatedRangeWeeks recordWeekDay = null;
+                            recordWeekDay = record.ObligatedRangeWeeks.First(w => w.Id == weekDay.Id);
 
-                        
+
+                            db.Entry(recordWeekDay).CurrentValues.SetValues(weekDay);
+                            if (weekDay.IsRemoved)
+                            {
+                                foreach (var dayTimese in recordWeekDay.ObligatedRangeDayTimes)
+                                {
+                                    db.Entry(dayTimese).State = EntityState.Deleted;
+                                }
+
+                                db.Entry(recordWeekDay).State = EntityState.Deleted;
+
+                                continue;
+                            }
+
+
+                            foreach (var time in weekDay.ObligatedRangeDayTimes)
+                            {
+                                if (time.Id == 0)
+                                {
+                                    recordWeekDay.ObligatedRangeDayTimes.Add(time);
+                                }
+                                else if (time.IsRemoved)
+                                {
+                                    var existTime = recordWeekDay.ObligatedRangeDayTimes.First(t => t.Id == time.Id);
+                                    db.Entry(existTime).State = EntityState.Deleted;
+                                }
+                                else
+                                {
+                                    var existTime = recordWeekDay.ObligatedRangeDayTimes.First(t => t.Id == time.Id);
+                                    db.Entry(existTime).CurrentValues.SetValues(time);
+                                    db.Entry(existTime).State = EntityState.Modified;
+                                }
+                            }
+
                             db.Entry(recordWeekDay).State = EntityState.Modified;
-                        
+                        }
                     }
 
                     db.Entry(record).State = EntityState.Modified;
@@ -88,6 +94,8 @@ namespace ServiceLayer.Absence
                 db.SaveChanges();
             }
         }
+
+     
 
         public override IDataTable GetDataTable(ObligatedRange p)
         {
@@ -152,4 +160,8 @@ namespace ServiceLayer.Absence
             }
         }
     }
+
+   
+
+    
 }

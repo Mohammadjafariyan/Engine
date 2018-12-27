@@ -11,6 +11,7 @@ import {CalendarModule} from "primeng/primeng";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {RouterTestingModule} from "@angular/router/testing";
+import {RangeType} from "./absence.models";
 
 describe('AbsenceIndexComponent', () => {
   let component: AbsenceIndexComponent;
@@ -161,6 +162,21 @@ debugger;
     component.ObligatedRange.ObligatedRangeWeeks.slice(21, 28).forEach(w => {
       expect(w.WeekNumber).toBe(4);
     })
+  });
+
+  it('range types', () => {
+
+    component.ngOnInit();
+    expect(component.rangeTypes.length).toBe(Object.keys(RangeType).length);
+
+
+    var element=fixture.debugElement.query(By.css('.settimes')) as any;
+    element.click();
+
+    var addrangeelement=fixture.debugElement.query(By.css('#addrange')) as any;
+    addrangeelement.click();
+
+
   });
 
 /*

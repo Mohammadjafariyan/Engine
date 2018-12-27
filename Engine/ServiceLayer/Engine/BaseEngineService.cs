@@ -10,6 +10,7 @@ using Engine.Utitliy;
 using System.Reflection;
 using System.Web.Mvc;
 using System.ComponentModel;
+using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq.Expressions;
@@ -18,6 +19,7 @@ using WebAppIDEEngine.Models.ICore;
 using Engine.Attributes;
 using ViewModel.ActionTypes;
 using Domain.Attributes;
+using Engine.Areas.ImportExport.Service;
 using Engine.ServiceLayer.Engine;
 using WebAppIDEEngine.Models;
 
@@ -30,6 +32,36 @@ namespace Engine.Service.AbstractControllers
         public BaseEngineService()
         {
             this.Injector = new Injector();
+        }
+
+
+        public virtual void SaveRemoveableList<TBase, T>(TBase record, List<T> recordNodes,
+            EngineContext db) where T : class,IRemovableNode 
+            where TBase :class, IRemovable<T>
+        {
+            foreach (var weekDay in recordNodes)
+            {
+                if (weekDay.Id == 0)
+                {
+                    record.Nodes.Add(weekDay);
+                }
+                else
+                {
+                    var recordWeekDay = record.Nodes.First(w => w.Id == weekDay.Id);
+
+
+                    db.Entry(recordWeekDay).CurrentValues.SetValues(weekDay);
+                    if (weekDay.IsRemoved)
+                    {
+                        db.Entry(recordWeekDay).State = EntityState.Deleted;
+                        continue;
+                    }
+
+                    db.Entry(recordWeekDay).State = EntityState.Modified;
+                }
+            }
+
+            db.Entry(record).State = EntityState.Modified;
         }
 
         /// <summary>
@@ -252,19 +284,19 @@ namespace Engine.Service.AbstractControllers
             foreach (var propertyInfo in props)
             {
                 var val = propertyInfo.GetValue(p);
-                if (!(val is IModel) && 
-                    !propertyInfo.PropertyType.IsArray && 
-                    !propertyInfo.PropertyType.IsInterface && 
+                if (!(val is IModel) &&
+                    !propertyInfo.PropertyType.IsArray &&
+                    !propertyInfo.PropertyType.IsInterface &&
+                    !propertyInfo.PropertyType.IsGenericType &&
                     !propertyInfo.PropertyType.IsAbstract)
                 {
-                    if (val != null && val.ToString()!="0")
+                    if (val != null && val.ToString() != "0")
                     {
                         Expression<Func<T, bool>> whereClause;
                         whereClause = DynamicQueryBuilder.Equal<T>(propertyInfo.Name, val);
                         dt = dt.Where(whereClause);
                     }
                 }
-               
             }
 
 
@@ -281,10 +313,10 @@ namespace Engine.Service.AbstractControllers
         {
             using (var db = new EngineContext())
             {
-                var set = db.Set<T>();
+                var dt = db.Set<T>();
                 db.Configuration.ProxyCreationEnabled = false;
 
-                var dt = Search(p, set.ToList().AsQueryable());
+            //    var dt = Search(p, set.ToList().AsQueryable());
 
                 IDataTable dataTable = new ObjectDataTable<T>
                 {
@@ -490,7 +522,18 @@ namespace Engine.Service.AbstractControllers
         {
         }
     }
+    
+    public interface IRemovable<T> : IModel where T : IRemovableNode
+    {
+        List<T> Nodes { get; set; }
+    }
+
+    public interface IRemovableNode : IModel
+    {
+        bool IsRemoved { get; set; }
+    }
 }
+
 
 public static class Extentions
 {

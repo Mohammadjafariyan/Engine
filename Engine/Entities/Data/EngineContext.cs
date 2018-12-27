@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Services.Description;
 using Engine.Absence.Device;
 using Engine.Absence.Models;
+using Engine.Areas.ImportExport.ServiceTests;
 using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.Core.QueryBuild;
 using Engine.Entities.Models.UiGeneratorModels;
@@ -278,6 +279,16 @@ namespace WebAppIDEEngine.Models
             
 
             #endregion
+            
+            
+        #region ExcelImporter
+            modelBuilder.Entity<ExcelStructreTable>().HasMany(f => f.Nodes)
+                .WithRequired(f => f.StructureTable)
+                .HasForeignKey(f => f.StructureTableId).WillCascadeOnDelete(false);
+
+       
+        #endregion
+
 
             base.OnModelCreating(modelBuilder);
         }
@@ -355,6 +366,14 @@ namespace WebAppIDEEngine.Models
         public DbSet<Student> Students { get; set; }
         public DbSet<BiometricData> BiometricDatas { get; set; }
         public DbSet<BiometricRawData> BiometricRawDatas { get; set; }
+
+        #endregion
+
+
+        #region ExcelImporter
+
+        public DbSet<ExcelStructreTable> ExcelStructreTables { get; set; }
+        public DbSet<ExcelStructreTableNode> ExcelStructreTableNode { get; set; }
 
         #endregion
 

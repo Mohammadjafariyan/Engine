@@ -18,6 +18,11 @@
     IDataTable dataTable = ViewData[UiHomeController.DataTable] as IDataTable;
     EjTable ejTableObject = (EjTable) ViewData[UiHomeController.TableObject];
 }
+<style>
+    .dt-buttons.btn-group {
+        float: left;
+    }
+</style>
 
 <h3 style="text-align: center">@ejTableObject.Translate</h3>
 <hr/>
@@ -114,6 +119,10 @@
                 select: {
                     style: 'single'
                 },
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 language: {
                     "sEmptyTable": "هیچ داده ای در جدول وجود ندارد",
                     "sInfo": "نمایش _START_ تا _END_ از _TOTAL_ رکورد",
