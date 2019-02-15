@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Controllers.AbstractControllers;
 
 namespace Entities.Data
 {
@@ -21,13 +22,14 @@ namespace Entities.Data
             return userIdentity;
         }
     }
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-             : base("DefaultConnection", throwIfV1Schema: false)
+            : base(EngineUtility.AuthenticationContextName(), throwIfV1Schema: false)
         {
-          //  Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
-         //   Database.Connection.ConnectionString = new ConnectionProviderFactory().Current.GetConnectionString();
+            //  Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
+            //   Database.Connection.ConnectionString = new ConnectionProviderFactory().Current.GetConnectionString();
         }
 
         public static ApplicationDbContext Create()

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.IO;
 using System.Web;
@@ -13,9 +14,24 @@ namespace Engine.Controllers.AbstractControllers
 {
     public class EngineUtility
     {
+        public static readonly bool IsDebugMode = System.Diagnostics.Debugger.IsAttached;
+
+        public static string ContextName()
+        {
+            return IsDebugMode ? "EngineContext" : "EngineContext";
+        }
+
+        public static string AuthenticationContextName()
+        {
+            return IsDebugMode ? "EngineContext" : "DefaultConnection";
+        }
+
         public static string ConvertTimeSpanToStr(TimeSpan time)
         {
-            return $@"{(int)Math.Floor(time.TotalHours)}:{time.Minutes}:{time.Seconds}";
+            var TotalHours = time.TotalHours < 0 ? time.TotalHours * -1 : time.TotalHours;
+            var Minutes = time.Minutes < 0 ? time.Minutes * -1 : time.Minutes;
+            var Seconds = time.Seconds < 0 ? time.Seconds * -1 : time.Seconds;
+            return $@"{(int) Math.Floor(TotalHours)}:{Minutes}:{Seconds}";
         }
 
         public static Controller InitializeMockControllerContext(Controller controller)
@@ -58,6 +74,7 @@ namespace Engine.Controllers.AbstractControllers
             {
                 return null;
             }
+
             return descriptions[0].Description;
         }
 

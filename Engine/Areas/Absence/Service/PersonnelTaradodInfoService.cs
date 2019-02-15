@@ -112,7 +112,7 @@ namespace Engine.Areas.Absence.Service
                 // کارکرد دارد
 
                 // کل حضور
-                workday.BiometricDataTimes.ForEach(b => vm.Total += b.TimeOut - b.TimeIn);
+                workday.BiometricDataTimes.Where(b=>b.TimeIn.HasValue && b.TimeOut.HasValue).ForEach(b => vm.Total += b.TimeOut.Value - b.TimeIn.Value);
 
                 
                 //todo:exception for more than two days
@@ -372,7 +372,8 @@ namespace Engine.Areas.Absence.Service
                 var dt = db.BiometricDatas.Include("BiometricDataTimes").AsQueryable();
                 dt = dt.Where(b => b.Date > fromDate);
                 dt = dt.Where(b => b.Date < toDate);
-                dt = dt.Where(b => b.PersonnelMachine.PersonnelId == personnelId);
+                dt = dt.Where(b => b.PersonnelMachine.PersonnelId == personnelId || 
+                b.WorkplacePersonnelId==personnelId);
 
                 return dt.ToList();
             }

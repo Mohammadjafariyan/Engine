@@ -15,7 +15,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Engine.Controllers
 {
-    [Authorize(Roles = "SuperUser")]
+    [Authorize(Roles = "SuperUser,SystemAdmin")]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -144,9 +144,11 @@ namespace Engine.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+
             if (ModelState.IsValid )
             {
-                var user = new ApplicationUser {UserName = model.UserName};
+                var user = new ApplicationUser {UserName = model.UserName,Email= "empty@empty.com" };
+
 
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

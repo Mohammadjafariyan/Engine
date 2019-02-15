@@ -8,6 +8,7 @@ using WebAppIDEEngine.Models;
 
 namespace Engine.Areas.ReportGenerator.Controllers
 {
+    [Authorize(Roles = "SuperUser,SystemAdmin")]
     public class TablesController : ApiController
     {
         public EngineContext _context = new EngineContext();

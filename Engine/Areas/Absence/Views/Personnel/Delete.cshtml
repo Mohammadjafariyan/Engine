@@ -1,3 +1,4 @@
+@using Engine.Areas.JUiEngine.Controllers
 @using WebAppIDEEngine.Models.Core
 @model dynamic
 
@@ -6,7 +7,9 @@
     ViewBag.SaveAction = ViewBag.SaveAction ?? "Save";
     ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
     ViewBag.ForEditDisabled = true;
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Absence/Views/Shared/_Layout.cshtml";
+    ViewData[UiFormEngineController.NoLayoutForShowView] = true;
+
 }
 
 @Html.Partial("~/Areas/App/Views/Shared/Delete.cshtml")

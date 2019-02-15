@@ -10,9 +10,10 @@
     ViewBag.Title = "فراموشی کارت";
     ViewBag.SaveAction = ViewBag.SaveAction ?? "Save";
     ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["inline"] = true;
     var form=ViewData[UiHomeController.Form] as UiForm;  
+    Layout = "~/Areas/Absence/Views/Shared/_Layout.cshtml";
+
     
 }
 

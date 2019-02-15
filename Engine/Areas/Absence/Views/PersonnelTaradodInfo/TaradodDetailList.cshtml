@@ -24,6 +24,23 @@
     var todateStr =todate.HasValue ? $@"{persianCalendar.GetYear(todate.Value)}/{persianCalendar.GetMonth(todate.Value)}/{persianCalendar.GetDayOfMonth(todate.Value)}": "";
 }
 
+<style id="beforePrint">
+
+
+    .range {
+        border: 1px solid cornflowerblue;
+        background-color: aliceblue;
+        display:flow-root;
+    }
+        .range:hover {
+            border: 1px solid red;
+            background-color: red;
+            cursor:pointer;
+            color:white;
+        }
+</style>
+
+
 @if (ViewData[PersonnelTaradodInfoController.NoStyle] as bool? == true)
 {
     
@@ -44,6 +61,11 @@ else
          text-align: center;
          white-space: nowrap;
      }
+
+
+        * {
+            font-family: "bykan" !important;
+        }
     
 /*.range {
         background-color: #8e6969;
@@ -128,13 +150,25 @@ else
                 <td >
                     @PrintTimes(daytime.Times, BiometryCalculatedDetailTimeType.Absence)
                 </td>
-                <td >[@daytime.Total.Hours:@daytime.Total.Minutes:@daytime.Total.Seconds]</td>
+                <td >
+                    @if(daytime.Total.Hours!=0 && daytime.Total.Minutes==0 && daytime.Total.Seconds == 0)
+                    {
+                        <span>[@daytime.Total.Hours:@daytime.Total.Minutes:@daytime.Total.Seconds]</span>
+                    }
+                </td>
                 <td >
                     @if (daytime.BiometricData != null)
                     {
                         foreach (var data in daytime.BiometricData.BiometricDataTimes)
                         {
-                            <span class="range">@data.TimeOut.Hour:@data.TimeOut.Minute:@data.TimeOut.Second</span><br>
+                            if (data.TimeOut.HasValue)
+                            {
+                                <span class="range">@data.TimeOut.Value.Hour:@data.TimeOut.Value.Minute:@data.TimeOut.Value.Second</span><br>
+                            }
+                            else
+                            {
+                                <span class="range"></span><br>
+                            }
                         }
                     }
                 </td>
@@ -143,7 +177,16 @@ else
                     {
                         foreach (var data in daytime.BiometricData.BiometricDataTimes)
                         {
-                            <span class="range">@data.TimeIn.Hour:@data.TimeIn.Minute:@data.TimeIn.Second</span><br>
+
+                            if (data.TimeIn.HasValue )
+                            {
+                                <span class="range">@data.TimeIn.Value.Hour:@data.TimeIn.Value.Minute:@data.TimeIn.Value.Second</span><br>
+                            }
+                            else
+                            {
+                                <span class="range"></span><br>
+                            }
+
                         }
                     }
 
@@ -232,25 +275,53 @@ else
 
 @helper PrintTimes(ICollection<BiometryCalculatedDetailTime> Times, BiometryCalculatedDetailTimeType type)
 {
-    var _times=Times.Where(t => t.Type == type);
-    foreach (BiometryCalculatedDetailTime detailTime in _times)
-    {
-        switch (detailTime.Type)
-        {
-            case BiometryCalculatedDetailTimeType.Absence:
-                <span class="range">@detailTime.TimeIn.Value.Hour:@detailTime.TimeIn.Value.Minute:@detailTime.TimeIn.Value.Second - @detailTime.TimeOut.Value.Hour:@detailTime.TimeOut.Value.Minute:@detailTime.TimeOut.Value.Second</span><br>
-                break;
-            case BiometryCalculatedDetailTimeType.Overtime:
-                <span class="range">@detailTime.TimeIn.Value.Hour:@detailTime.TimeIn.Value.Minute:@detailTime.TimeIn.Value.Second - @detailTime.TimeOut.Value.Hour:@detailTime.TimeOut.Value.Minute:@detailTime.TimeOut.Value.Second</span><br>
-                break;
-            case BiometryCalculatedDetailTimeType.Valid:
-                <span class="range">@detailTime.TimeIn.Value.Hour:@detailTime.TimeIn.Value.Minute:@detailTime.TimeIn.Value.Second - @detailTime.TimeOut.Value.Hour:@detailTime.TimeOut.Value.Minute:@detailTime.TimeOut.Value.Second</span><br>    
-                break;
-            case BiometryCalculatedDetailTimeType.NotValid:
-                <span class="range">@detailTime.TimeIn.Value.Hour:@detailTime.TimeIn.Value.Minute:@detailTime.TimeIn.Value.Second - @detailTime.TimeOut.Value.Hour:@detailTime.TimeOut.Value.Minute:@detailTime.TimeOut.Value.Second</span><br>    
-                break;
-        }
+var _times = Times.Where(t => t.Type == type);
+   
 
+
+
+foreach (BiometryCalculatedDetailTime detailTime in _times)
+{
+
+    string timeIn = null;
+    string timeOut = null;
+    if (detailTime.TimeIn.HasValue)
+    {
+        timeIn = $@"{detailTime.TimeIn.Value.Hour}:{detailTime.TimeIn.Value.Minute}:{detailTime.TimeIn.Value.Second}";
     }
+    else
+    {
+        timeIn = "ورود ندارد";
+    }
+
+    if (detailTime.TimeOut.HasValue)
+    {
+        timeOut = $@"{detailTime.TimeOut.Value.Hour}:{detailTime.TimeOut.Value.Minute}:{detailTime.TimeOut.Value.Second}";
+    }
+    else
+    {
+        timeOut = "خروج ندارد";
+    }
+
+    switch (detailTime.Type)
+    {
+        case BiometryCalculatedDetailTimeType.Absence:
+                <span class="range">@timeIn - @timeOut</span><br>
+            break;
+        case BiometryCalculatedDetailTimeType.Overtime:
+                @*<span class="range">@detailTime.TimeIn.Value.Hour:@detailTime.TimeIn.Value.Minute:@detailTime.TimeIn.Value.Second - @detailTime.TimeOut.Value.Hour:@detailTime.TimeOut.Value.Minute:@detailTime.TimeOut.Value.Second</span><br>*@
+                <span class="range">@timeIn - @timeOut</span><br>
+            break;
+        case BiometryCalculatedDetailTimeType.Valid:
+                <span class="range">@timeIn - @timeOut</span><br>
+                @*<span class="range">@detailTime.TimeIn.Value.Hour:@detailTime.TimeIn.Value.Minute:@detailTime.TimeIn.Value.Second - @detailTime.TimeOut.Value.Hour:@detailTime.TimeOut.Value.Minute:@detailTime.TimeOut.Value.Second</span><br>*@
+    break;
+case BiometryCalculatedDetailTimeType.NotValid:
+    <span class="range">@timeIn - @timeOut</span><br>
+                @*<span class="range">@detailTime.TimeIn.Value.Hour:@detailTime.TimeIn.Value.Minute:@detailTime.TimeIn.Value.Second - @detailTime.TimeOut.Value.Hour:@detailTime.TimeOut.Value.Minute:@detailTime.TimeOut.Value.Second</span><br>*@
+            break;
+    }
+
+}
 }
     

@@ -22,6 +22,7 @@
 @model dynamic
 
 
+<link rel="stylesheet" href="~/Content/multiselect/dist/css/bootstrap-multiselect.css" type="text/css"/>
 
 
 @{
@@ -37,19 +38,31 @@
 
     if (model != null)
     {
-        foreach (var pi in model.GetType().GetProperties())
+      var propx=  (model as object).GetType().GetProperties().Where(p =>
+            p.PropertyType == typeof(int) || p.PropertyType == typeof(int?) ||
+            p.PropertyType == typeof(long) ||
+            p.PropertyType == typeof(long?) ||
+            p.PropertyType == typeof(float) ||
+            p.PropertyType == typeof(float?) ||
+            p.PropertyType == typeof(double) ||
+            p.PropertyType == typeof(double?) ||
+            p.PropertyType == typeof(bool) ||
+            p.PropertyType == typeof(bool?) ||
+            p.PropertyType == typeof(string)
+
+            );
+        foreach (var pi in propx)
         {
             var val = pi.GetValue(model, null);
 
             if (val is Enum)
             {
-                modelNameValue.Add(pi.Name,((int) val).ToString());
+                modelNameValue.Add(pi.Name, ((int) val).ToString());
             }
             else
             {
                 modelNameValue.Add(pi.Name, val);
             }
-            
         }
 
         ViewData[UiFormEngineController.ModelNameValue] = modelNameValue;
@@ -93,14 +106,14 @@
         {
             onchange += uiFormInput.ChangeScript + ";";
         }
+        
+        
 
 
         string val = null;
-        if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name]!=null)
+        if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name] != null)
         {
-
             val = modelNameValue[uiFormInput.UiInput.Name].ToString();
-
         }
         <div class="form-group @formGroupClass @uiFormInput.Css">
             <label>@uiFormInput.Name</label>
@@ -118,22 +131,31 @@
                     min = uiFormInput.UiInput.Min.HasValue ? $@"min=""{uiFormInput.UiInput.Min.ToString()}""" : "";
                     regex = !string.IsNullOrEmpty(uiFormInput.UiInput.Regex) ? $@"regex="" {uiFormInput.UiInput.Regex} """ : "";
                     size = uiFormInput.UiInput.Size.HasValue ? $@"size="" {uiFormInput.UiInput.Size.ToString()}""" : "";
+                    var styleClass = "form-control";
+                    
                     if (uiFormInput.UiInput.InputType == InputType.Text)
                     {
                         type = @"""text""";
+                        <input  onchange="@onchange" value="@val" @max @min @regex @size id="@uiFormInput.UiInput.Name" class="@styleClass" placeholder="@uiFormInput.UiInput.PlaceHolder" type="@type" name="@uiFormInput.UiInput.Name"/>
+    // @Html.TextBox(uiFormInput.UiInput.Name,modelNameValue[uiFormInput.UiInput.Name]  ,new {@id=uiFormInput.UiInput.Name, @onchange="@onchange" })
                     }
                     if (uiFormInput.UiInput.InputType == InputType.Number)
                     {
                         type = @"""number""";
-                    }
+                        <input onchange="@onchange" value="@val" @max @min @regex @size id="@uiFormInput.UiInput.Name" class="@styleClass" placeholder="@uiFormInput.UiInput.PlaceHolder" type="@type" name="@uiFormInput.UiInput.Name"/>
+                     //   @Html.TextBox(uiFormInput.UiInput.Name,modelNameValue[uiFormInput.UiInput.Name]  ,new {@id=uiFormInput.UiInput.Name, @onchange="@onchange" ,@type="number" })
+                    }    
 
                     if (uiFormInput.UiInput.InputType == InputType.Checkbox)
                     {
-                        type = @"""checkbox""";
+                        type = @"checkbox";
+                        styleClass = "";
+                        bool d = (modelNameValue[uiFormInput.UiInput.Name] as bool?).HasValue ? (modelNameValue[uiFormInput.UiInput.Name] as bool?).Value : false;
+                        @Html.CheckBox(uiFormInput.UiInput.Name,d,new {@id=uiFormInput.UiInput.Name, @onchange="@onchange" })
                     }
 
 
-                    <input onchange="@onchange" value="@val" @max @min @regex @size id="@uiFormInput.UiInput.Name" class="form-control" placeholder="@uiFormInput.Name" @type name="@uiFormInput.UiInput.Name"/>
+                    //<input onchange="@onchange" value="@val" @max @min @regex @size id="@uiFormInput.UiInput.Name" class="@styleClass" placeholder="@uiFormInput.Name" type="@type" name="@uiFormInput.UiInput.Name"/>
                 }
                 if (uiFormInput.UiInput.FieldType == FieldType.DropDown)
                 {
@@ -156,9 +178,36 @@
                         }
                     </select>
                 }
+                if (uiFormInput.UiInput.FieldType == FieldType.MultiSelect)
+                {
+                 //   uiFormInput.UiInput.Name += "[]";
+                    <select 
+                            id="@uiFormInput.UiInput.Name"
+                            class="mymultiselect form-control"
+                            placeholder="@uiFormInput.Name"
+                            name="@uiFormInput.UiInput.Name"
+                            multiple="multiple">
+
+                        @if (uiFormInput.SelectList != null)
+                        {
+                            <option>انتخاب کنید</option>
+
+                            foreach (SelectListItem selectListItem in uiFormInput.SelectList.Items)
+                            {
+                                string isSelected = selectListItem.Value == val ? "selected='selected'" : "";
+
+                                <option @isSelected value="@selectListItem.Value">@selectListItem.Text</option>
+                            }
+                        }
+                        else
+                        {
+                            <option></option>
+                        }
+                    </select>
+                }
                 if (uiFormInput.UiInput.FieldType == FieldType.Date)
                 {
-                    if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name]!=null)
+                    if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name] != null)
                     {
                         if (modelNameValue[uiFormInput.UiInput.Name] is DateTime?)
                         {
@@ -167,7 +216,7 @@
                         }
                         else if (modelNameValue[uiFormInput.UiInput.Name] is DateTime)
                         {
-                            var value =(DateTime) modelNameValue[uiFormInput.UiInput.Name] ;
+                            var value = (DateTime) modelNameValue[uiFormInput.UiInput.Name];
                             val = Engine.Controllers.AbstractControllers.EngineUtility.GaregorianToDateOnlyFormat(value);
                         }
                         else
@@ -184,17 +233,17 @@
 
                 if (uiFormInput.UiInput.FieldType == FieldType.Time)
                 {
-                    if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name]!=null)
+                    if (modelNameValue.ContainsKey(uiFormInput.UiInput.Name) && modelNameValue[uiFormInput.UiInput.Name] != null)
                     {
                         if (modelNameValue[uiFormInput.UiInput.Name] is DateTime?)
                         {
                             var value = (modelNameValue[uiFormInput.UiInput.Name] as DateTime?).Value;
-                         val=   EngineUtility.ConvertTimeSpanToStr(value.TimeOfDay);
+                            val = EngineUtility.ConvertTimeSpanToStr(value.TimeOfDay);
                         }
                         else if (modelNameValue[uiFormInput.UiInput.Name] is DateTime)
                         {
-                            var value =(DateTime) modelNameValue[uiFormInput.UiInput.Name] ;
-                            val=   EngineUtility.ConvertTimeSpanToStr(value.TimeOfDay);
+                            var value = (DateTime) modelNameValue[uiFormInput.UiInput.Name];
+                            val = EngineUtility.ConvertTimeSpanToStr(value.TimeOfDay);
                         }
                         else
                         {
@@ -293,6 +342,9 @@
     }
 }
 
+
+
+
 <script>
     function parseDropDownAndSetValue(result, id, value) {
         console.log(result);
@@ -303,7 +355,7 @@
         for (var i = 0; i < result.length; i++) {
             selected = "";
             if (value && value === result[i].Id) {
-                selected = "'selected'";
+                selected = 'selected="selected"';
             }
 
             optionStr += "<option value='" + result[i].Id + "' " + selected + ">" + result[i].Value + "</option>";
@@ -381,6 +433,9 @@
 
 
     $(document).ready(function() {
+
+       // $('#mymultiselect').multiselect();
+
 
         $('.clockpicker').clockpicker({
             donetext: 'انتخاب'

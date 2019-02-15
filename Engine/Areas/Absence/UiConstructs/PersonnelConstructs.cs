@@ -44,5 +44,17 @@ namespace Engine.Areas.Absence.UiConstructs
         {
             return GetForm();
         }
+
+        /*public override void GetTableUiItems(EjTable ejtable)
+        {
+            base.GetTableUiItems(ejtable);
+            var GoToSave = new UiItem {Name = "دسترسی از طریق موبایل", UiItemType = UiItemType.GoToSave};
+
+            GoToSave.CustomUrl = $@"/Mobile/WorkplacePersonnel/Create";
+            //    Delete.CustomUrl =$@"/{CurrentArea}/Api/{CurrentController}Api/Delete";;
+
+
+            ejtable.UiTableItems.Add(new UiTableItem {EjTable = ejtable, UiItem = Delete});
+        }*/
     }
 }

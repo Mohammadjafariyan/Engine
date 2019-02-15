@@ -5,7 +5,7 @@ using System.Web.Mvc;
 
 namespace Engine.Areas.ReportGenerator.Controllers
 {
-   // [Authorize]
+    [Authorize(Roles = "SuperUser,SystemAdmin")]
     public class RHomeController : Controller
     {
         public ActionResult Index()

@@ -19,6 +19,7 @@ namespace Engine.Controllers
             return View();
         }
 
+        [Authorize(Roles = "SuperUser")]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

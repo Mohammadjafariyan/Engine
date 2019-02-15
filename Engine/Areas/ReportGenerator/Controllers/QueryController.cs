@@ -15,6 +15,7 @@ using WebAppIDEEngine.Models.Core.QueryBuild;
 
 namespace Engine.Areas.ReportGenerator.Controllers
 {
+    [Authorize(Roles = "SuperUser,SystemAdmin")]
     public class QueryController : ApiController
     {
         public void DeleteByIdHelper(long id, bool deleteQuery, EngineContext _context)

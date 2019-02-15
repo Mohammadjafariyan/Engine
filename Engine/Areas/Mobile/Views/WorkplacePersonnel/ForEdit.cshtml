@@ -1,19 +1,21 @@
 @using System.Collections.Specialized
 @using System.Web.Mvc.Html
 @using Engine.Areas.JUiEngine.Controllers
+@using Engine.Areas.Mobile.Models
 @using Engine.Entities.Models.UiGeneratorModels
 @using WebAppIDEEngine.Models.Core
 @model dynamic
 
 @{
 
-    ViewBag.Title = "مکان های کاری";
+    ViewBag.Title = "دسترسی موبایلی پرسنل";
     ViewBag.SaveAction = ViewBag.SaveAction ?? "Save";
     ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
     Layout = "~/Areas/Absence/Views/Shared/_Layout.cshtml";
     ViewData["inline"] = true;
-    var form=ViewData[UiHomeController.Form] as UiForm;  
-    
+    var form=ViewData[UiHomeController.Form] as UiForm;
+    ViewData[UiFormEngineController.NoLayoutForShowView] = true;
+
 }
 
 @{

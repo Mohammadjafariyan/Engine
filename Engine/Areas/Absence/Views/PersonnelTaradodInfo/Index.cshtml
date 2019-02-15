@@ -6,7 +6,9 @@
 
 @{
     ViewBag.Title = "جزئیات تردد پرسنل";
-    Layout = "../Shared/_Layout.cshtml";
+    //Layout = "../Shared/_Layout.cshtml";
+    Layout = "~/Areas/Absence/Views/Shared/_Layout.cshtml";
+
 
     List<Personnel> personnels = (List<Personnel>) ViewData[PersonnelTaradodInfoController.Personnel];
 
@@ -19,7 +21,12 @@
     var fromdateStr = fromdate.HasValue ? $@"{persianCalendar.GetYear(fromdate.Value)}/{persianCalendar.GetMonth(fromdate.Value)}/{persianCalendar.GetDayOfMonth(fromdate.Value)}" : "";
     var todateStr = todate.HasValue ? $@"{persianCalendar.GetYear(todate.Value)}/{persianCalendar.GetMonth(todate.Value)}/{persianCalendar.GetDayOfMonth(todate.Value)}" : "";
 }
-
+<style>
+    
+    .dt-buttons.btn-group {
+        float: left;
+    }
+</style>
 @if (ViewData["error"] != null)
 {
     var error = ViewData["error"] as string;
@@ -132,7 +139,38 @@
         });
        */
 
-    
+        $('table').DataTable({
+            "order": [[ 1, "desc" ]],
+            "pageLength": 31,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'print'
+            ],
+            language: {
+                "sEmptyTable": "هیچ داده ای در جدول وجود ندارد",
+                "sInfo": "نمایش _START_ تا _END_ از _TOTAL_ رکورد",
+                "sInfoEmpty": "نمایش 0 تا 0 از 0 رکورد",
+                "sInfoFiltered": "(فیلتر شده از _MAX_ رکورد)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ",",
+                "sLengthMenu": "نمایش _MENU_ رکورد",
+                "sLoadingRecords": "در حال بارگزاری...",
+                "sProcessing": "در حال پردازش...",
+                "sSearch": "جستجو:",
+                "sZeroRecords": "رکوردی با این مشخصات پیدا نشد",
+                "oPaginate": {
+                    "sFirst": "ابتدا",
+                    "sLast": "انتها",
+                    "sNext": "بعدی",
+                    "sPrevious": "قبلی"
+                },
+                "oAria": {
+                    "sSortAscending": ": فعال سازی نمایش به صورت صعودی",
+                    "sSortDescending": ": فعال سازی نمایش به صورت نزولی"
+                }
+            }
+
+        });
     </script>
 
     <script>
@@ -240,10 +278,16 @@
         window.onafterprint=function() {
             $('#body').show();
             $('#printHelper').empty();
+
+            $('#beforePrint').html(beforePrint);
         }
-        
+
+        var beforePrint;
         function myPrint(divId) {
 
+
+            beforePrint = $('#beforePrint').html();
+            $('#beforePrint').empty();
            
             $('#body').hide();
             $('#printHelper').empty();

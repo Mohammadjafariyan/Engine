@@ -30,7 +30,7 @@ namespace Engine.Areas.Absence.UiConstructs
             
             
             UiFormInput ObligatedRangeId = GetDropDownInput("ObligatedRanges", MethodType.GetDropDown, "Absence",
-                "ObligatedRangeId", "بازه موظفی", FieldType.Date);
+                "ObligatedRangeId", "بازه موظفی", FieldType.DropDown);
 
             uiform.UiFormInputs.Add(WorkGroupId);
             uiform.UiFormInputs.Add(ObligatedRangeId);

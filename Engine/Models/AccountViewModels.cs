@@ -65,13 +65,12 @@ namespace Engine.Models
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
         [Display(Name = "نام کاربری")]
         public string UserName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = " {0} حداقل باید  {2} طول داشته باشند.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
+        //[DataType(DataType.Password)]
         [Display(Name = "رمز عبور")]
         public string Password { get; set; }
 

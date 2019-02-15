@@ -64,6 +64,7 @@ namespace Engine.Entities.Models.UiGeneratorModels
         [NotMapped]
         public long? PropertyId { get; set; }
 
-
+        [Text(Name= "PlaceHolder")]
+        public string PlaceHolder { get; set; }
     }
 }

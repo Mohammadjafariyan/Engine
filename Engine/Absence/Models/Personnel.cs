@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Engine.Areas.Mobile.Models;
 using TypeLite;
 
 namespace Engine.Absence.Models
@@ -21,5 +22,6 @@ namespace Engine.Absence.Models
         public virtual ICollection<PersonnelMachine> PersonnelMachines { get; set; }
         public virtual WorkGroup WorkGroup { get; set; }
         public virtual long WorkGroupId { get; set; }
+        public ICollection<WorkplacePersonnel> WorkplacePersonnels { get; set; }
     }
 }

@@ -1,34 +1,18 @@
-package service.models;
+using System.ComponentModel.DataAnnotations;
+using Engine.Areas.Mobile.Service;
 
-public abstract class BaseViewModel {
+namespace Engine.Areas.Mobile.ViewModel
+{
+    public abstract class BaseViewModel
+    {
+        public BaseViewModel()
+        {
+            token = SessionManagerSingeton.TokenManager.Token;
+        }
 
-    private boolean success;
-    private String message;
-
-    public boolean isSuccess() {
-        return success;
+        [Key] public long Id { get; set; }
+        public bool success { get; set; }
+        public string message { get; set; }
+        public string token { get; set; }
     }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    private String token;
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
 }

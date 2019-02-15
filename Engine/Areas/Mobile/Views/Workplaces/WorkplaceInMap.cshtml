@@ -1,8 +1,249 @@
+@using Engine.Areas.Mobile.Models
+@using Newtonsoft.Json
 @model long
 
 @{
     ViewBag.Title = "title";
-    Layout = "_Layout";
+    Layout = "~/Areas/Absence/Views/Shared/_Layout.cshtml";
 }
 
-<h2>title</h2>
+<link rel="stylesheet" href="/Content/leaflet/leaflet.css"/>
+<link rel="stylesheet" href="/Content/leaflet/leafletdraw.css"/>
+<script src="/Content/leaflet/leaflet.js"></script>
+<script src="/Content/leaflet/leafletdraw.js"></script>
+
+<style>
+    #mapid { height: 500px; }
+
+</style>
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="form">
+                <div class="form-group">
+                    <label for="email">کد محل کار</label>
+                    <input readonly="readonly" name="id" id="id" value="@ViewData["id"]" type="text" class="form-control" id="email">
+                </div>
+                <div class="form-group">
+                    <label for="pwd">نام محل کار:</label>
+                    <input name="name" id="name" value="@ViewData["name"]" type="text" class="form-control" id="pwd">
+                </div>
+
+
+                <input name="token" value="@ViewData["token"]" type="hidden" style="display:none" />
+
+                <button type="submit" class="btn btn-primary"  onclick="mysubmit()"> ثبت</button>
+                <hr/>
+                </div>
+
+        </div>
+        <div class="col-md-4"></div>
+
+
+    </div>
+    <div class="row">
+
+        <div id="mapid"></div>
+
+        <div class='calculation-box'>
+            <p>با استفاده از ابزار نقشه حوزه کاری محل کار را مشخص نمایید.</p>
+            <div id='calculated-area'></div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var mymap;
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 60000,
+        maximumAge: 0
+    };
+
+
+    var draw;
+    var map;
+
+    function showDefault() {
+        console.warn("default");
+        mymap = L.map('mapid').setView([37.9642, 46.0517], 13);
+
+        init();
+    }
+
+    var mylayer;
+var drawnItems;
+    function init() {
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+            {
+                attribution:
+                    'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox.streets',
+                accessToken:
+                    'pk.eyJ1IjoibW9oYW1tYWRqYWZhcml5YW43IiwiYSI6ImNqcXRqenkyczBha2k0M281NjQ0amVlNWwifQ.xD69Nt5VabUT8dwmlTOdWQ'
+            }).addTo(mymap);
+
+        // FeatureGroup is to store editable layers
+         drawnItems = new L.FeatureGroup();
+        mymap.addLayer(drawnItems);
+
+
+
+        mymap.on(L.Draw.Event.CREATED, function (e) {
+            var type = e.layerType,
+                layer = e.layer;
+
+            if (type === 'marker') {
+                layer.bindPopup('A popup!');
+            }
+
+
+
+            drawnItems.addLayer(layer);
+        });
+
+        if (existData) {
+
+            var c = 0;
+                existData.data.forEach(function(e) {
+                    c++;
+                    var pol=L.polygon([]);
+                    pol.setLatLngs(e);
+                    drawnItems.addLayer(pol);
+
+                    if (c >= 1) {
+                        mymap.setView([e[0][0].lat, e[0][0].lng], 19);
+                    }
+
+
+
+                });
+
+        }
+
+        var drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems
+            },
+            draw: {
+                polygon: {
+                    allowIntersection: false, // Restricts shapes to simple polygons
+                    drawError: {
+                        color: '#e1e100', // Color the shape will turn when intersects
+                        message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                    },
+                    shapeOptions: {
+                        color: '#bada55'
+                    }
+                },
+                polyline: false,
+                circle: false, // Turns off this drawing tool
+                rectangle: false,
+                marker: false
+            }
+
+        });
+        mymap.addControl(drawControl);
+    }
+
+    function getLocation() {
+        showDefault();
+
+    debugger;
+        //if (navigator && navigator.geolocation) {
+        //    navigator.geolocation.getCurrentPosition(showPosition);
+        //} else {
+        //    showDefault();
+
+        //}
+    }
+
+    function showPosition(position) {
+        console.warn("success position.coords.longitude", position.coords.longitude);
+        console.warn("success position.coords.latitude", position.coords.latitude);
+
+        mymap = L.map('mapid').setView([position.coords.latitude, position.coords.longitude], 13);
+        init();
+
+        if (existData && existData.data && existData.data.features && existData.data.features.length > 0) {
+            debugger;
+            data = existData.data;
+            area = existData.area;
+            updateAreaHelp(data);
+            draw.add(data);
+        }
+    }
+
+
+    var data;
+    var area;
+
+    function updateArea(e) {
+
+    }
+
+    function updateAreaHelp(data) {
+
+    }
+
+
+    function mysubmit() {
+
+        var id = $("#id").val();
+        var name = $("#name").val();
+        var arr = [];
+        drawnItems.getLayers().forEach(function(e) {
+            arr.push(e.getLatLngs());
+        });
+
+        var body = { WorkplaceId: id, data: arr, Name: name };
+
+
+
+        debugger;
+        $.ajax({
+            type: "POST",
+            //url: '',
+            data: JSON.parse(JSON.stringify(body)),
+            success: function (e) {
+                console.info(e);
+
+                alert("با موفقیت ذخیره شد");
+            },
+            dataType: 'json',
+            error: function(e) {
+                console.error(e);
+                alert("در ثبت خطایی رخ داد");
+            }
+        });
+
+
+    }
+
+    var existData;
+    @{
+
+        var gps = ViewData["gps"] as string;
+
+        if (gps != null)
+        {
+            <text>
+                existData = JSON.parse('@Html.Raw(gps)');
+            </text>
+        }
+    }
+
+
+
+
+
+
+    getLocation();
+
+
+</script>

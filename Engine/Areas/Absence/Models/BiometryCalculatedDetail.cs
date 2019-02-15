@@ -7,7 +7,7 @@ using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Areas.Absence.Models
 {
-    public class BiometryCalculatedDetailTime
+    public class BiometryCalculatedDetailTime :IModel
     {
         /// <summary>
         /// ورود
@@ -60,6 +60,8 @@ namespace Engine.Areas.Absence.Models
         public TimeSpan Overtime { get; set; }
 
         public BiometryCalculatedDetailTimeType Type { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
     }
 
     public enum BiometryCalculatedDetailTimeType

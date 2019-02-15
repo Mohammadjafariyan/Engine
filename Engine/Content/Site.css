@@ -6,8 +6,8 @@
     font-style: normal;
 }
 
-p,h1,h2,h3,h4,h5,h6,th,input,title,footer,select,option ,a {
-    font-family: "bykan";
+p,h1,h2,h3,h4,h5,h6,th,input,title,footer,select,option ,a ,b {
+    font-family: "bykan" !important;
     font-weight: bold;
 }
 

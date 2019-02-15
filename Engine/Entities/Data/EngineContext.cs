@@ -8,7 +8,11 @@ using System.Threading.Tasks;
 using System.Web.Services.Description;
 using Engine.Absence.Device;
 using Engine.Absence.Models;
+using Engine.Areas.Absence.Models;
 using Engine.Areas.ImportExport.ServiceTests;
+using Engine.Areas.Mobile.Models;
+using Engine.Areas.Mobile.ViewModel;
+using Engine.Controllers.AbstractControllers;
 using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.Core.QueryBuild;
 using Engine.Entities.Models.UiGeneratorModels;
@@ -23,10 +27,10 @@ namespace WebAppIDEEngine.Models
 {
     public class EngineContext : DbContext
     {
-        public EngineContext() : base("EngineContext")
+        public EngineContext() : base(EngineUtility.ContextName())
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<EngineContext, Configuration>());
-            //  Database.SetInitializer(new DropCreateDatabaseIfModelChanges<EngineContext>());
+             //   Database.SetInitializer(new DropCreateDatabaseIfModelChanges<EngineContext>());
 
 
             //Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
@@ -226,7 +230,6 @@ namespace WebAppIDEEngine.Models
                 .WithMany(f => f.UiInputMethods)
                 .HasForeignKey(f => f.DefineControllerMethodId).WillCascadeOnDelete(false);
 
-            
             #endregion
 
 
@@ -250,11 +253,10 @@ namespace WebAppIDEEngine.Models
                 .WithMany(f => f.Rents).HasForeignKey(f => f.StudentId).WillCascadeOnDelete(false);
 
             #endregion
-            
-            
+
+
             #region Absence
 
-            
             modelBuilder.Entity<PersonnelMachine>().HasRequired(f => f.Personnel)
                 .WithMany(f => f.PersonnelMachines).HasForeignKey(f => f.PersonnelId).WillCascadeOnDelete(false);
 
@@ -265,8 +267,9 @@ namespace WebAppIDEEngine.Models
                 .WithRequired(f => f.ObligatedRange).HasForeignKey(f => f.ObligatedRangeId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ObligatedRangeWeeks>().HasMany(f => f.ObligatedRangeDayTimes)
-                .WithRequired(f => f.ObligatedRangeWeek).HasForeignKey(f => f.ObligatedRangeWeekId).WillCascadeOnDelete(false);
-            
+                .WithRequired(f => f.ObligatedRangeWeek).HasForeignKey(f => f.ObligatedRangeWeekId)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<WorkGroup>().HasMany(f => f.Personnels)
                 .WithRequired(f => f.WorkGroup).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
 
@@ -274,20 +277,98 @@ namespace WebAppIDEEngine.Models
                 .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<WorkGroupObligatedRange>().HasRequired(f => f.ObligatedRange)
-                .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.ObligatedRangeId).WillCascadeOnDelete(false);
-
-            
+                .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.ObligatedRangeId)
+                .WillCascadeOnDelete(false);
 
             #endregion
-            
-            
-        #region ExcelImporter
+
+
+            #region ExcelImporter
+
             modelBuilder.Entity<ExcelStructreTable>().HasMany(f => f.Nodes)
                 .WithRequired(f => f.StructureTable)
                 .HasForeignKey(f => f.StructureTableId).WillCascadeOnDelete(false);
 
-       
-        #endregion
+            #endregion
+
+            #region Mobile
+
+            modelBuilder.Entity<Workplace>().HasMany(f => f.WorkplacePersonnels)
+                .WithRequired(f => f.Workplace)
+                .HasForeignKey(f => f.WorkplaceId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<WorkplacePersonnel>()
+                .HasOptional(f => f.Personnel)
+                .WithMany(f => f.WorkplacePersonnels)
+                .HasForeignKey(f => f.PersonnelId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<ClockInViewModel>()
+                .HasMany(f => f.location)
+                .WithOptional(f => f.ClockInViewModel)
+                .HasForeignKey(f => f.ClockInViewModelId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ClockInViewModel>()
+                .HasMany(f => f.scanResults)
+                .WithOptional(f => f.ClockInViewModel)
+                .HasForeignKey(f => f.ClockInViewModelId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<BiometricData>()
+                .HasMany(f => f.BiometricDataTimes)
+                .WithRequired(f => f.BiometricData)
+                .HasForeignKey(f => f.BiometricDataId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<BiometricData>()
+                .HasOptional(f => f.PersonnelMachine)
+                .WithMany(f => f.BiometricDatas)
+                .HasForeignKey(f => f.PersonnelMachineId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<BiometricData>()
+                .HasOptional(f => f.WorkplacePersonnel)
+                .WithMany(f => f.BiometricDatas)
+                .HasForeignKey(f => f.WorkplacePersonnelId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<BiometricDataTime>()
+                .HasMany(f => f.ClockInViewModels)
+                .WithRequired(f => f.BiometricDataTime)
+                .HasForeignKey(f => f.BiometricDataTimeId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<WorkplaceSetting>()
+                .HasMany(f => f.location)
+                .WithOptional(f => f.WorkplaceSetting)
+                .HasForeignKey(f => f.WorkplaceSettingId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<WorkplaceSetting>()
+                .HasMany(f => f.scanResults)
+                .WithOptional(f => f.WorkplaceSetting)
+                .HasForeignKey(f => f.WorkplaceSettingId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Workplace>()
+                .HasMany(f => f.WorkplaceSettings)
+                .WithOptional(f => f.Workplace)
+                .HasForeignKey(f => f.WorkplaceId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<WorkplacePersonnel>()
+                .HasMany(f => f.WorkplaceSettings)
+                .WithOptional(f => f.WorkplacePersonnel)
+                .HasForeignKey(f => f.WorkplacePersonnelId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<Workplace>()
+                .HasMany(f => f.Locations)
+                .WithOptional(f => f.Workplace)
+                .HasForeignKey(f => f.WorkplaceId).WillCascadeOnDelete(false);
+
+
+        
+            
+           
+            #endregion
 
 
             base.OnModelCreating(modelBuilder);
@@ -303,6 +384,7 @@ namespace WebAppIDEEngine.Models
         //  public DbSet<WebAppIDEEngine.Models.Core.QueryBuild.Column> Columns { get; set; }
 
         #region Absence
+
         public DbSet<Machine> Machines { get; set; }
         public DbSet<ObligatedRange> ObligatedRanges { get; set; }
         public DbSet<ObligatedRangeWeeks> ObligatedRangeWeekss { get; set; }
@@ -310,7 +392,10 @@ namespace WebAppIDEEngine.Models
         public DbSet<Personnel> Personnels { get; set; }
         public DbSet<PersonnelMachine> PersonnelMachines { get; set; }
         public DbSet<WorkGroup> WorkGroups { get; set; }
+
         public DbSet<WorkGroupObligatedRange> WorkGroupObligatedRanges { get; set; }
+        //  public DbSet<BiometryCalculatedDetail> BiometryCalculatedDetails { get; set; }
+
         #endregion
 
         #region ReportGenerator
@@ -365,6 +450,7 @@ namespace WebAppIDEEngine.Models
         public DbSet<Rent> Rents { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<BiometricData> BiometricDatas { get; set; }
+        public DbSet<BiometricDataTime> BiometricDataTimes { get; set; }
         public DbSet<BiometricRawData> BiometricRawDatas { get; set; }
 
         #endregion
@@ -374,6 +460,16 @@ namespace WebAppIDEEngine.Models
 
         public DbSet<ExcelStructreTable> ExcelStructreTables { get; set; }
         public DbSet<ExcelStructreTableNode> ExcelStructreTableNode { get; set; }
+
+        #endregion
+
+
+        #region Mobile
+
+        public DbSet<Workplace> Workplaces { get; set; }
+        public DbSet<WorkplacePersonnel> WorkplacePersonnels { get; set; }
+        public DbSet<ClockInViewModel> ClockInViewModels { get; set; }
+        public DbSet<WorkplaceSetting> WorkplaceSettings { get; set; }
 
         #endregion
 

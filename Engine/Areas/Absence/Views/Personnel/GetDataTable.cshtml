@@ -11,8 +11,10 @@
 @model IDataTable
 @{
     ViewBag.Title = "پرسنل";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Absence/Views/Shared/_Layout.cshtml";
     var datatable= ViewData[UiHomeController.TableObject];
+    ViewData[UiFormEngineController.NoLayoutForShowView] = true;
+
 }
 
 

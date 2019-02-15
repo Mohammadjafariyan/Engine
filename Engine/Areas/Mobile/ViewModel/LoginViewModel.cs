@@ -1,29 +1,11 @@
-package service.models;
+using System;
 
-public class LoginViewModel extends  BaseViewModel {
-
-    private String username;
-    private String password;
-
-
-    public LoginViewModel(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+namespace Engine.Areas.Mobile.ViewModel
+{
+    public class LoginViewModel : BaseViewModel
+    {
+        public string username { get; set; }
+        public string password { get; set; }
+        public string encoded { get; set; }
     }
 }

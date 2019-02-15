@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - سیستم تردد</title>
     @*    @Styles.Render("~/Content/css")*@
     <link href="~/Content/Bootstrap-rtl.css" rel="stylesheet"/>
+    <link href="~/Content/Site.css" rel="stylesheet"/>
 
 
     <link href="~/Content/DataTables/datatables.min.css" rel="stylesheet"/>
@@ -30,6 +31,8 @@
 
     <link href="~/Content/timepicker/bootstrap-clockpicker.min.css" rel="stylesheet" />
 
+    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/bootstrap")*@
 </head>
 <body>
 <div id="body">
@@ -51,16 +54,62 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("(گزارش ساز) Report Generator", "index", "RHome", new {Area = "reportGenerator"}, new {})</li>
                     <li>@Html.ActionLink("(فرم ساز) App Generator", "Index", "Home", new {Area = ""}, new {})</li>
-                </ul> @*@Html.Partial("_LoginPartial")*@
+                    <li>@Html.ActionLink("(زیر سیستم تردد) Attendance System", "Index", "AttendanceHome", new {Area = "Absence"}, new {})</li>
+
+                    
+                    <style>
+                        .mulinks .btn-primary{
+                            color: white;
+                        }
+                    </style>
+                    
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">منو
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu mulinks">
+                            <li>@Html.ActionLink(" فراموشی کارت", "GetDataTable", "ManualAttendance", new {Area = "Absence"}, new {@class = "btn btn-primary"})</li>
+                            <li>@Html.ActionLink("تعریف بازه موظفی", "Index", "ObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-primary"})</li>
+                            <li>@Html.ActionLink("بازه های موظفی", "GetDataTable", "ObligatedRanges", new {Area = "Absence"}, new {@class = "btn btn-primary"})</li>
+                            <li>@Html.ActionLink("پرسنل", "GetDataTable", "Personnel", new {Area = "Absence"}, new {@class = "btn btn-primary"})</li>
+                            <li>@Html.ActionLink("گروه کاری", "GetDataTable", "WorkGroup", new {Area = "Absence"}, new {@class = "btn btn-primary"})</li>
+                            <li>@Html.ActionLink("دستگاه ها", "GetDataTable", "Machines", new {Area = "Absence"}, new {@class = "btn btn-primary"})</li>
+                            <li>@Html.ActionLink("پرسنل دستگاه ها", "GetDataTable", "PersonnelMachines", new {Area = "Absence"}, new {@class = "btn btn-primary"})</li>
+                            <li>@Html.ActionLink("بازه موظفی گروه های کاری", "GetDataTable", "WorkGroupObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-info"})</li>
+                            <li>@Html.ActionLink("ریز کارکرد پرسنل", "Index", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})</li>
+                            <li>@Html.ActionLink("خلاصه لیست کارکرد پرسنل", "GetAllPersonnelTotalSummaryTimesheetView", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})</li>
+                            <li>@Html.ActionLink("دیتا از سیستم های دیگر (imgort Data)", "Index", "Import", new {Area = "imgortExport"}, new {@class = "btn btn-info"})</li>
+                            <li>@Html.ActionLink("تعریف ساختار excel", "GetDataTable", "ExcelStructures", new {Area = "imgortExport"}, new {@class = "btn btn-info"})</li>
+                         
+                            
+                            <li>@Html.ActionLink("(GPS) محل های کار " , "GetDataTable", "Workplaces", new {Area = "Mobile"}, new {@class = "btn btn-default"})</li>
+                            <li>@Html.ActionLink("نام کاربری و رمز عبور " , "GetDataTable", "workplacePersonnel", new {Area = "Mobile"}, new {@class = "btn btn-default"})</li>
+
+
+                            
+                            @*<li><a href="#">Page 1-1</a></li>
+                            <li><a href="#">Page 1-2</a></li>
+                            <li><a href="#">Page 1-3</a></li>*@
+                        </ul>
+                    </li>
+                    </ul> @*@Html.Partial("_LoginPartial")*@
+                
+                
             </div>
 
 
         </div>
     </div>
     <div class="body-content">
+
         <br/>
         <br/>
         <br/>
+        <li style="font-size: 21px; text-align: left; direction: ltr; border: 2px solid aliceblue; list-style: none; margin-bottom: 8px;">
+            <a href="#" style=""  onclick="window.history.back();"><span class="glyphicon glyphicon-arrow-left"></span>بازگشت</a>
+            <a href="#" style="float: right" onclick="window.history.forward();"><span 
+                                                             class="glyphicon glyphicon-arrow-right"></span>برو به جلو</a>
+        </li>
+
         @RenderBody()
         <hr/>
         <footer>

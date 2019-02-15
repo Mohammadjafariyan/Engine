@@ -35,6 +35,7 @@
     function MakeDataTable(id, columns, data) {
         if (data) {
             table = $(id).DataTable({
+                responsive: true,
                 data: data,
                 columns: columns,
                 initComplete: function() {
@@ -94,7 +95,8 @@
             });
         } else {
             table = $(id).DataTable({
-                initComplete: function () {
+                responsive: true,
+                                initComplete: function () {
 
                     this.api().columns().every(function () {
                         var column = this;

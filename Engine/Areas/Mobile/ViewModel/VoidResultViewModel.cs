@@ -1,7 +1,6 @@
-package service.models;
-
-public class VoidResultViewModel  extends  BaseViewModel {
-
-
-
+namespace Engine.Areas.Mobile.ViewModel
+{
+    public class VoidResultViewModel : BaseViewModel
+    {
+    }
 }

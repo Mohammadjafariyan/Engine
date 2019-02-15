@@ -228,6 +228,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
         public static IEnumerable<ModelError>
             GenErrorMessage(ViewDataDictionary viewData, params string[] eMessage)
         {
+            
             List<ModelError> allErrors = new List<ModelError>();
             foreach (var s in eMessage)
             {
@@ -373,7 +374,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                 return Json(new CustomResult
                 {
                     Status = CustomResultType.fail,
-                    Message = "حذف با خطا مواجه شد"
+                    Message = " حذف با خطا مواجه شد " + e.Message
                 }, JsonRequestBehavior.AllowGet);
             }
         }

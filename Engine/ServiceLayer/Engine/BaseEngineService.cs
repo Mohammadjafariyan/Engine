@@ -265,7 +265,7 @@ namespace Engine.Service.AbstractControllers
         }
 
 
-        public static Dictionary<string, string> GetPropertyNames<M>()
+        public virtual Dictionary<string, string> GetPropertyNames<M>()
         {
             var names = typeof(M).GetProperties().Where(p =>
                     !p.PropertyType.IsArray && !p.PropertyType.IsGenericType &&
@@ -397,9 +397,16 @@ namespace Engine.Service.AbstractControllers
                     throw new BaseEngineException("رکورد یافت نشد");
                 }
 
+                ValidateDelete(EngineContext, entity);
+
                 EngineContext.Entry(entity).State = System.Data.Entity.EntityState.Deleted;
                 EngineContext.SaveChanges();
             }
+        }
+
+        protected virtual void ValidateDelete(EngineContext engineContext, T entity) 
+        {
+           
         }
 
         public virtual T GetForEdit(long id)

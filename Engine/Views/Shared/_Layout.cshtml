@@ -31,9 +31,12 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    
+    
 
     
     <link href="~/Content/timepicker/bootstrap-clockpicker.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet"/>
 
 
 </head>
@@ -47,16 +50,23 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("گزارش ساز آشار داشار", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
-                <small>Report & Query Generator</small>
+                @Html.ActionLink("سیستم تردد آشارداشار", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
+                <small>Report & Query Generator & Attendance System</small>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("(گزارش ساز) Report Generator", "index", "RHome", new {Area = "reportGenerator"}, new {})</li>
                     <li>@Html.ActionLink("(فرم ساز) App Generator", "Index", "Home", new {Area = ""}, new {})</li>
                     <li>@Html.ActionLink("(زیر سیستم تردد) Attendance System", "Index", "AttendanceHome", new {Area = "Absence"}, new {})</li>
+                    <li>                        
+                        @Html.Partial("_LoginPartial")
+                    </li>
+                    
+                  
+                    
                 </ul> @*@Html.Partial("_LoginPartial")*@
             </div>
 

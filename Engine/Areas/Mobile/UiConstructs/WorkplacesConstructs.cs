@@ -18,6 +18,21 @@ namespace Engine.Areas.Absence.UiConstructs
         {
             return GetForm();
         }
+        
+        public override void GetTableUiItems(EjTable ejtable)
+        {
+            
+            base.GetTableUiItems(ejtable);
+            
+            var GoToSave = new UiItem {Name = "محدوده مکانی در نقشه GPS", UiItemType = UiItemType.Link};
+
+            GoToSave.CustomUrl = $@"/{CurrentArea}/{CurrentController}/WorkplaceInMap";
+            //    Delete.CustomUrl =$@"/{CurrentArea}/Api/{CurrentController}Api/Delete";;
+
+            ejtable.UiTableItems.Add(new UiTableItem {EjTable = ejtable, UiItem = GoToSave});
+
+        }
+        
 
         private UiForm GetForm()
         {
