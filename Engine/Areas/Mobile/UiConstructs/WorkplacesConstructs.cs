@@ -56,7 +56,20 @@ namespace Engine.Areas.Absence.UiConstructs
             {
                 UiInput = new UiInput
                 {
-                    Name = "notificationsEnabled", Translate = "notifications", FieldType = FieldType.Text,
+                    Name = "IsNotificationsEnabled",
+                    Translate = " خبر رسانی فعال باشد ",
+                    FieldType = FieldType.Text,
+                    InputType = InputType.Checkbox
+                }
+            });
+
+            uiform.UiFormInputs.Add(new UiFormInput
+            {
+                UiInput = new UiInput
+                {
+                    Name = "IsFaceRecognationEnabled",
+                    Translate = "تشخیص چهره فعال باشد",
+                    FieldType = FieldType.Text,
                     InputType = InputType.Checkbox
                 }
             });

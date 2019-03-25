@@ -41,7 +41,7 @@ namespace Engine
         }
 
 
-        public async Task<ApplicationUser> GenerateSuperUserIfNotExists()
+        public static async Task<ApplicationUser> GenerateSuperUserIfNotExists()
         {
             using (var context = new ApplicationDbContext())
             {

@@ -11,7 +11,7 @@ namespace Engine.Areas.Mobile.Controllers
     [TokenFilter]
     public class BaseMobileApiController:ApiController
     {
-        protected WorkplacePersonnel GetWorkplacePersonnelFromToken(EngineContext db, string token)
+        public static WorkplacePersonnel GetWorkplacePersonnelFromToken(EngineContext db, string token)
         {
             string username = SecurityService.GetUsernameFromToken(token);
 

@@ -164,7 +164,9 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
 
             return View(model);
         }
-
+        protected virtual async void beforeSave(T model)
+        {
+        }
 
         // POST: App/Models/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -177,6 +179,8 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                 ViewData[GlobalNames.PostedModel] = model;
                 if (ModelState.IsValid)
                 {
+
+                    beforeSave(model);
                     _engineService.Save(model);
 
 
@@ -186,12 +190,13 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                         Status = CustomResultType.success
                     };
                     //await _engineService.EngineContext.SaveChangesAsync();
-/*
+                    /*
 
-                    SetDynamicFormViewData(true,
-                        GetCurrentControllerName(),GetCurrentActionName(),
-                        GetCurrentAreaName());*/
+                                        SetDynamicFormViewData(true,
+                                            GetCurrentControllerName(),GetCurrentActionName(),
+                                            GetCurrentAreaName());*/
 
+                     await afterSave(model);
                     return RedirectToAction("GetDataTable");
                 }
                 else
@@ -223,6 +228,10 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
 
             var id = model?.Id != 0 ? model?.Id : null;
             return await ForEdit(id);
+        }
+
+        protected virtual async Task afterSave(T model)
+        {
         }
 
         public static IEnumerable<ModelError>

@@ -147,7 +147,22 @@ namespace Engine.Controllers
 
             if (ModelState.IsValid )
             {
-                var user = new ApplicationUser {UserName = model.UserName,Email= "empty@empty.com" };
+
+
+                string name = model.UserName.Replace("@", "J");
+                var user = new ApplicationUser {UserName = model.UserName,Email = name + "@empty.com" };
+
+
+                using (var context = new ApplicationDbContext())
+                {
+
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+                    if (roleManager.FindByName(GlobalNames.SystemAdmin) == null)
+                    {
+                        await Engine.MvcApplication.GenerateSuperUserIfNotExists();
+                    }
+                }
+                
 
 
                 var result = await UserManager.CreateAsync(user, model.Password);

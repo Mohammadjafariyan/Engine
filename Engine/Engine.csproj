@@ -404,6 +404,7 @@
     <Compile Include="Areas\Mobile\Controllers\LoginController.cs" />
     <Compile Include="Areas\Mobile\Controllers\OfficeLocationsController.cs" />
     <Compile Include="Areas\Mobile\Controllers\SettingsController.cs" />
+    <Compile Include="Areas\Mobile\Controllers\WebController.cs" />
     <Compile Include="Areas\Mobile\Controllers\WorkplacePersonnelController.cs" />
     <Compile Include="Areas\Mobile\Controllers\WorkplacesController.cs" />
     <Compile Include="Areas\Mobile\ControllerTests\ClockControllerTests.cs" />
@@ -1004,6 +1005,8 @@
     <Content Include="Content\leaflet\images\spritesheet-2x.png" />
     <Content Include="Content\leaflet\images\spritesheet.svg" />
     <Content Include="Content\leaflet\images\userpassowrd.jpg" />
+    <Content Include="Content\leaflet\leaflet-bing-layer.js" />
+    <Content Include="Content\leaflet\leaflet-pollyfills.js" />
     <Content Include="Content\leaflet\leaflet.css" />
     <Content Include="Content\leaflet\leaflet.js" />
     <Content Include="Content\leaflet\leafletdraw.css" />
@@ -1247,6 +1250,8 @@
     <Content Include="Areas\Library\Views\web.config" />
     <Content Include="Areas\ImportExport\Views\web.config" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -1309,6 +1314,7 @@
     <Folder Include="Areas\Library\Models\" />
     <Folder Include="Areas\Mobile\mobileside\" />
     <Folder Include="Areas\Mobile\Views\Shared\" />
+    <Folder Include="Areas\Mobile\Views\Web\" />
     <Folder Include="Areas\ReportGenerator\Models\" />
     <Folder Include="Areas\System\Models\" />
     <Folder Include="Areas\System\Views\Shared\" />

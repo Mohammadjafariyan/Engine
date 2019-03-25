@@ -10,6 +10,8 @@ namespace Engine.Areas.Mobile.Service
 {
     public class WorkplacePersonnelService : CommonService<WorkplacePersonnel>
     {
+        public string NormalPassword { get; private set; }
+
         public override void Save(WorkplacePersonnel p)
         {
             using (var db = new EngineContext())
@@ -66,6 +68,8 @@ namespace Engine.Areas.Mobile.Service
                         throw new JServiceException("برای این کاربر قبلا نام کاربری و رمز عبور تعریف شده است");
 
 
+                    NormalPassword = p.Password;
+
                     p.Password = SecurityUtility.EncryptAndEncode(p.Password);
                     db.WorkplacePersonnels.Add(p);
                 }
@@ -93,7 +97,7 @@ namespace Engine.Areas.Mobile.Service
                     try
                     {
                         // اگر قبلا شده باشد ، خطا نمی دهد
-                         SecurityUtility.DecodeAndDecrypt(p.Password);
+                        NormalPassword= SecurityUtility.DecodeAndDecrypt(p.Password);
 
                     }
                     catch (Exception)

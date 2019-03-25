@@ -12,6 +12,8 @@
 <script src="/Content/leaflet/leaflet.js"></script>
 <script src="/Content/leaflet/leafletdraw.js"></script>
 
+<script src="~/Content/leaflet/leaflet-pollyfills.js"></script>
+<script src="~/Content/leaflet/leaflet-bing-layer.js"></script>
 <style>
     #mapid { height: 500px; }
 
@@ -78,15 +80,21 @@
     var mylayer;
 var drawnItems;
     function init() {
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
-            {
-                attribution:
-                    'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                maxZoom: 18,
-                id: 'mapbox.streets',
-                accessToken:
-                    'pk.eyJ1IjoibW9oYW1tYWRqYWZhcml5YW43IiwiYSI6ImNqcXRqenkyczBha2k0M281NjQ0amVlNWwifQ.xD69Nt5VabUT8dwmlTOdWQ'
-            }).addTo(mymap);
+        //L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+        //    {
+        //        attribution:
+        //        'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        //        maxZoom: 18,
+        //        id: 'mapbox.streets',
+        //        accessToken:
+        //        'pk.eyJ1IjoibW9oYW1tYWRqYWZhcml5YW43IiwiYSI6ImNqcXRqenkyczBha2k0M281NjQ0amVlNWwifQ.xD69Nt5VabUT8dwmlTOdWQ'
+        //    }).addTo(mymap);
+
+
+        var BING_KEY = 'AqayHMtdnKlKdnR4LlQp3Ey0lXYaWV0PEsUMBZgepa7U4iP4YikGp955N-btWCI5';
+
+
+        var bingLayer = L.tileLayer.bing(BING_KEY).addTo(mymap);
 
         // FeatureGroup is to store editable layers
          drawnItems = new L.FeatureGroup();
@@ -152,15 +160,16 @@ var drawnItems;
     }
 
     function getLocation() {
+       // showDefault();
+
         showDefault();
 
-    debugger;
-        //if (navigator && navigator.geolocation) {
-        //    navigator.geolocation.getCurrentPosition(showPosition);
-        //} else {
-        //    showDefault();
+        debugger;
+        if (navigator && navigator.geolocation) {
+            
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
 
-        //}
     }
 
     function showPosition(position) {
@@ -168,6 +177,9 @@ var drawnItems;
         console.warn("success position.coords.latitude", position.coords.latitude);
 
         mymap = L.map('mapid').setView([position.coords.latitude, position.coords.longitude], 13);
+
+        var latlng = new L.LatLng(position.coords.latitude, position.coords.longitude);
+        var marker = L.marker(latlng).addTo(mymap);
         init();
 
         if (existData && existData.data && existData.data.features && existData.data.features.length > 0) {

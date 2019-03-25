@@ -18,12 +18,50 @@ namespace Engine.Controllers.AbstractControllers
 
         public static string ContextName()
         {
-            return IsDebugMode ? "EngineContext" : "EngineContext";
+            string domainName = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+
+            if (string.IsNullOrEmpty(domainName))
+                throw new Exception("domainName is null");
+
+            if (domainName.Contains("sobhansystems"))
+            {
+                return "EngineContext";
+            }
+            else if (domainName.Contains("localhost"))
+            {
+                return "EngineContextSomee";// "EngineContextDebug";
+            }
+            else if (domainName.Contains("somee"))
+            {
+                return "EngineContextSomee";
+            }
+            else
+                throw new Exception("not recognise domain name " + domainName);
+
         }
 
         public static string AuthenticationContextName()
         {
-            return IsDebugMode ? "EngineContext" : "DefaultConnection";
+            string domainName = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+
+            if (string.IsNullOrEmpty(domainName))
+                throw new Exception("domainName is null");
+
+            if (domainName.Contains("sobhansystems"))
+            {
+                return "DefaultConnection";
+            }
+            else if (domainName.Contains("localhost"))
+            {
+                return "EngineContextSomee";// "EngineContextDebug";
+           //     return "DefaultConnectionDebug";
+            }
+            else if (domainName.Contains("somee"))
+            {
+                return "DefaultConnectionSomee";
+            }
+            else
+                throw new Exception("authen, not recognise domain name " + domainName);
         }
 
         public static string ConvertTimeSpanToStr(TimeSpan time)

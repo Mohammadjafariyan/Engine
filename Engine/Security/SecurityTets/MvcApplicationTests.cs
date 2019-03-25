@@ -19,8 +19,8 @@ namespace Engine.Security.SecurityTets
         public async void LoginTests()
         {
 
-            var mvc = new MvcApplication();
-            ApplicationUser superUser = await mvc.GenerateSuperUserIfNotExists();
+          //  var mvc = new MvcApplication();
+            ApplicationUser superUser = await MvcApplication.GenerateSuperUserIfNotExists();
 
             Assert.True(superUser.UserName == GlobalNames.SuperUser);
 
