@@ -42,7 +42,7 @@ namespace Engine.Controllers.AbstractControllers
 
         public static string AuthenticationContextName()
         {
-            string domainName = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+            string domainName = HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? "localhost";
 
             if (string.IsNullOrEmpty(domainName))
                 throw new Exception("domainName is null");

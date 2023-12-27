@@ -14,6 +14,7 @@ using Entities.Data;
 using Engine.Service.AbstractControllers;
 using Microsoft.AspNet.Identity;
 using System;
+using Engine.Entities.Data;
 
 namespace Engine.Areas.Mobile.Controllers
 {

@@ -12,7 +12,7 @@
     ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
     ViewData["inline"] = true;
     var form=ViewData[UiHomeController.Form] as UiForm;  
-    Layout = "~/Areas/Absence/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 
     
 }

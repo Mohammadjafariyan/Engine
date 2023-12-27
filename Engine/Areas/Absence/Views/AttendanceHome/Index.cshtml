@@ -1,198 +1,173 @@
 @model dynamic
 
 @{
-    ViewBag.Title = "زیر سیستم تردد آشار داشار";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "زیر  سیستم مدیریت تردد آشار داشار";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    
 }
 
-<br />
-<br />
-<br />
-<br />
-<style>
-    .img-thumbnail {
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-        transition: 0.3s;
-    }
-
-    .desc {
-        display: block;
- 
-    }
-  
-    
-    img {
-        width: auto; 
-        height: 173px !important;
-    }
-    
-    h4,p {
-        text-align: center
-    }
-</style>
-
-<div class="container">
 
 
-    <div class="row">
-        <button onclick="$('#showtype2').fadeToggle();$('#showtype1').fadeToggle()" class="btn btn-primary">تغییر نمایش</button>
+@*
+<div class="container-fluid" id="showtype2" >
+   
+    <div class="row" >
+
+        <div class="col-md-10">
+            <h2 style="text-align: center"> به زیر  سیستم مدیریت تردد خوش آمدید</h2>
+                    
+            <h3 style="text-align: center">  سیستم مدیریت تردد (Attendance System)</h3>
+            <div class="row">
+                <hr >
+                            
+                            
+                <a class="card col-md-2" href="@Url.Action("GetDataTable", "ManualAttendance")">
+                    <img class="img-thumbnail" src="~/Content/attendance images/card.png" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">فراموشی کارت</b></h4>
+                    </div>
+                </a>
+                            
+                    
+                <a class="card col-md-2" href="@Url.Action("GetDataTable", "ObligatedRanges", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/what_are_time_intervals.png" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">بازه های موظفی</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                <a class="card col-md-2" href="@Url.Action("Index", "ObligatedRange", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/download (2).jpg" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">تعریف بازه موظفی</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                    
+                            
+                    
+                    
+                <a class="card col-md-2" href="@Url.Action("GetDataTable", "Personnel", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/-employees-hr-workflow---vector-stencils-library.png--diagram-flowchart-example.png" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">پرسنل</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                            
+                <a class="card col-md-2" href="@Url.Action("Index", "PersonnelTaradodInfo", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/Consulting-Timesheet-Template1.jpg"/>
+                    <div >
+                        <h4><b class="btn btn-primary desc">ریز کارکرد پرسنل</b></h4> 
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                            
+                <a class="card col-md-2" href="@Url.Action("GetAllPersonnelTotalSummaryTimesheetView", "PersonnelTaradodInfo", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/02.jpg"/>
+                    <div >
+                        <h4><b class="btn btn-primary desc">خلاصه لیست کارکرد پرسنل</b></h4> 
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                    
+                    
+                    
+                    
+                <a class="card col-md-2" href="@Url.Action("GetDataTable", "WorkGroup", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/workgroup.jpg" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">گروه کاری</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                <a class="card col-md-2" href="@Url.Action("GetDataTable", "WorkGroupObligatedRange", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/images (1).png" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">بازه موظفی گروه های کاری</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                            
+                <a class="card col-md-2" href="@Url.Action("GetDataTable", "Machines", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/attendanceDevices.jpg" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">دستگاه ها</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                    
+                    
+                <a class="card col-md-2" href="@Url.Action("GetDataTable", "PersonnelMachines", new {Area = "Absence"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/attendanceDevicespersonnel.jpg" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">پرسنل دستگاه ها</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                    
+                <a class="card col-md-2" href="@Url.Action("Index", "import", new {Area = "imgortExport"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/importdata.jpg" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">دیتا از سیستم های دیگر</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                    
+                <a class="card col-md-2" href="@Url.Action("GetDataTable", "ExcelStructures", new {Area = "imgortExport"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/download (1).png" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">تعریف ساختار excel</b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                <hr style="width: 100%" >
+                <h3>تنظیمات موبایل پرسنل</h3>
+                <a class="card col-md-2" 
+                   href="@Url.Action("GetDataTable", "Workplaces", new {Area = "Mobile"})">
+                    <img class="img-thumbnail" src="~/Content/attendance images/gpsworkplaces.jpg" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">(GPS) محل های کار   </b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                <a class="card col-md-2" 
+                   href="@Url.Action("GetDataTable", "WorkplacePersonnel", new {Area = "Mobile"})">
+                    <img class="img-thumbnail" src="~/Content/leaflet/images/userpassowrd.jpg" />
+                    <div >
+                        <h4><b class="btn btn-primary desc">نام کاربری و رمز عبور   </b></h4>
+                        $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
+                    </div>
+                </a>
+                    
+                            
+                            
+                            
+                    
+            </div>
+        </div>
+        
+            <div class="col-md-2">
+                     <div class="btn-group-vertical">
+                             @Html.ActionLink(" فراموشی کارت", "GetDataTable", "ManualAttendance", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+                             @Html.ActionLink("تعریف بازه موظفی", "Index", "ObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+                             @Html.ActionLink("بازه های موظفی", "GetDataTable", "ObligatedRanges", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+                             @Html.ActionLink("پرسنل", "GetDataTable", "Personnel", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+                             @Html.ActionLink("گروه کاری", "GetDataTable", "WorkGroup", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+                             @Html.ActionLink("دستگاه ها", "GetDataTable", "Machines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+                             @Html.ActionLink("پرسنل دستگاه ها", "GetDataTable", "PersonnelMachines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+                             @Html.ActionLink("بازه موظفی گروه های کاری", "GetDataTable", "WorkGroupObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-info"})
+                             @Html.ActionLink("ریز کارکرد پرسنل", "Index", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})
+                             @Html.ActionLink("خلاصه لیست کارکرد پرسنل", "GetAllPersonnelTotalSummaryTimesheetView", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})
+                             @Html.ActionLink("دیتا از سیستم های دیگر (imgort Data)", "Index", "Import", new {Area = "imgortExport"}, new {@class = "btn btn-info"})
+                             @Html.ActionLink("تعریف ساختار excel", "GetDataTable", "ExcelStructures", new {Area = "imgortExport"}, new {@class = "btn btn-info"})
+                             @Html.ActionLink("(GPS) محل های کار " ,  "GetDataTable", "Workplaces", new {Area = "Mobile"}, new {@class = "btn btn-info"})
+                             @Html.ActionLink("نام کاربری و رمز عبور " ,  "GetDataTable", "workplacePersonnel", new {Area = "Mobile"}, new {@class = "btn btn-info"})
+                         </div>
+                 </div>
 
     </div>
-</div>
+</div>*@
 
-<div class="container" id="showtype2">
-    <h2 style="text-align: center"> به زیر سیستم تردد خوش آمدید</h2>
-
-    <h3 style="text-align: center"> سیستم تردد (Attendance System)</h3>
-    <div class="row">
-        <hr >
-        
-        
-        <a class="card col-md-2" href="@Url.Action("GetDataTable", "ManualAttendance")">
-            <img class="img-thumbnail" src="~/Content/attendance images/card.png" />
-            <div >
-                <h4><b class="btn btn-primary desc">فراموشی کارت</b></h4>
-            </div>
-        </a>
-        
-
-        <a class="card col-md-2" href="@Url.Action("GetDataTable", "ObligatedRanges", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/what_are_time_intervals.png" />
-            <div >
-                <h4><b class="btn btn-primary desc">بازه های موظفی</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-        <a class="card col-md-2" href="@Url.Action("Index", "ObligatedRange", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/download (2).jpg" />
-            <div >
-                <h4><b class="btn btn-primary desc">تعریف بازه موظفی</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-
-        
-
-
-        <a class="card col-md-2" href="@Url.Action("GetDataTable", "Personnel", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/-employees-hr-workflow---vector-stencils-library.png--diagram-flowchart-example.png" />
-            <div >
-                <h4><b class="btn btn-primary desc">پرسنل</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-        
-        <a class="card col-md-2" href="@Url.Action("Index", "PersonnelTaradodInfo", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/Consulting-Timesheet-Template1.jpg"/>
-            <div >
-                <h4><b class="btn btn-primary desc">ریز کارکرد پرسنل</b></h4> 
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-        
-        <a class="card col-md-2" href="@Url.Action("GetAllPersonnelTotalSummaryTimesheetView", "PersonnelTaradodInfo", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/02.jpg"/>
-            <div >
-                <h4><b class="btn btn-primary desc">خلاصه لیست کارکرد پرسنل</b></h4> 
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-
-
-
-
-        <a class="card col-md-2" href="@Url.Action("GetDataTable", "WorkGroup", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/workgroup.jpg" />
-            <div >
-                <h4><b class="btn btn-primary desc">گروه کاری</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-        <a class="card col-md-2" href="@Url.Action("GetDataTable", "WorkGroupObligatedRange", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/images (1).png" />
-            <div >
-                <h4><b class="btn btn-primary desc">بازه موظفی گروه های کاری</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-        
-        <a class="card col-md-2" href="@Url.Action("GetDataTable", "Machines", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/attendanceDevices.jpg" />
-            <div >
-                <h4><b class="btn btn-primary desc">دستگاه ها</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-
-
-        <a class="card col-md-2" href="@Url.Action("GetDataTable", "PersonnelMachines", new {Area = "Absence"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/attendanceDevicespersonnel.jpg" />
-            <div >
-                <h4><b class="btn btn-primary desc">پرسنل دستگاه ها</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-
-        <a class="card col-md-2" href="@Url.Action("Index", "import", new {Area = "imgortExport"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/importdata.jpg" />
-            <div >
-                <h4><b class="btn btn-primary desc">دیتا از سیستم های دیگر</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-
-        <a class="card col-md-2" href="@Url.Action("GetDataTable", "ExcelStructures", new {Area = "imgortExport"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/download (1).png" />
-            <div >
-                <h4><b class="btn btn-primary desc">تعریف ساختار excel</b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-        <hr style="width: 100%" >
-        <h3>تنظیمات موبایل پرسنل</h3>
-        <a class="card col-md-2" 
-           href="@Url.Action("GetDataTable", "Workplaces", new {Area = "Mobile"})">
-            <img class="img-thumbnail" src="~/Content/attendance images/gpsworkplaces.jpg" />
-            <div >
-                <h4><b class="btn btn-primary desc">(GPS) محل های کار   </b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-        <a class="card col-md-2" 
-           href="@Url.Action("GetDataTable", "WorkplacePersonnel", new {Area = "Mobile"})">
-            <img class="img-thumbnail" src="~/Content/leaflet/images/userpassowrd.jpg" />
-            <div >
-                <h4><b class="btn btn-primary desc">نام کاربری و رمز عبور   </b></h4>
-                @*<p>در صورت فراموشی کارت توسط پرسنل </p> *@
-            </div>
-        </a>
-
-        
-        
-        
-
-    </div>
-</div>
-
-
-<div class="container" id="showtype1" style="display: none">
-    <h2 style="text-align: center"> به زیر سیستم تردد خوش آمدید</h2>
-
-    <h3 style="text-align: center"> سیستم تردد (Attendance System)</h3>
-    <div class="btn-group-vertical">
-        @Html.ActionLink(" فراموشی کارت", "GetDataTable", "ManualAttendance", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-        @Html.ActionLink("تعریف بازه موظفی", "Index", "ObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-        @Html.ActionLink("بازه های موظفی", "GetDataTable", "ObligatedRanges", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-        @Html.ActionLink("پرسنل", "GetDataTable", "Personnel", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-        @Html.ActionLink("گروه کاری", "GetDataTable", "WorkGroup", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-        @Html.ActionLink("دستگاه ها", "GetDataTable", "Machines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-        @Html.ActionLink("پرسنل دستگاه ها", "GetDataTable", "PersonnelMachines", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-        @Html.ActionLink("بازه موظفی گروه های کاری", "GetDataTable", "WorkGroupObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-info"})
-        @Html.ActionLink("ریز کارکرد پرسنل", "Index", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})
-        @Html.ActionLink("خلاصه لیست کارکرد پرسنل", "GetAllPersonnelTotalSummaryTimesheetView", "PersonnelTaradodInfo", new {Area = "Absence"}, new {@class = "btn btn-info"})
-        @Html.ActionLink("دیتا از سیستم های دیگر (imgort Data)", "Index", "Import", new {Area = "imgortExport"}, new {@class = "btn btn-info"})
-        @Html.ActionLink("تعریف ساختار excel", "GetDataTable", "ExcelStructures", new {Area = "imgortExport"}, new {@class = "btn btn-info"})
-        @Html.ActionLink("(GPS) محل های کار " ,  "GetDataTable", "Workplaces", new {Area = "Mobile"}, new {@class = "btn btn-info"})
-        @Html.ActionLink("نام کاربری و رمز عبور " ,  "GetDataTable", "workplacePersonnel", new {Area = "Mobile"}, new {@class = "btn btn-info"})
-    </div>
-</div>
+     <div class="btn-group-vertical">
+ </div>

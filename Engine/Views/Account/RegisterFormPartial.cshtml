@@ -1,0 +1,65 @@
+﻿@using Engine.Localization
+@model Engine.Models.RegisterViewModel
+
+<div class="col-md-6">
+
+    <div class="form-group">
+        @Html.TextBoxFor(m => m.FirstName, new { placeholder = Request.GetText("نام *"), @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.TextBoxFor(m => m.LastName, new { placeholder = Request.GetText("نام خانوادگی *"), @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.PasswordFor(m => m.Password, new { placeholder = Request.GetText("رمز عبور *"), @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = Request.GetText("تکرار رمز عبور *"), @class = "form-control" })
+    </div>
+    
+
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        @Html.TextBoxFor(m => m.Email, new { placeholder = Request.GetText("ایمیل شما *"), @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.TextBoxFor(m => m.Mobile, new { placeholder = Request.GetText("موبایل شما "), @class = "form-control" })
+    </div>
+    @*<div class="form-group" style="    height: calc(2.25rem + 2px);">
+                                    $1$<select class="form-control" >
+                                        <option class="hidden" selected disabled>یک سوال امنیتی انتخاب نمایید</option>
+                                        <option>What is your Birthdate?</option>
+                                        <option>What is Your old Phone Number</option>
+                                        <option>What is your Pet Name?</option>
+                                    </select>#1#
+                                </div>*@
+    @*<div class="form-group" style="    height: calc(2.25rem + 2px);">
+                                    @#1#Html.PasswordFor(m => m.Password, new { placeholder = Request.GetText("پاسخ امنیتی *"), @class = "form-control" })#1#
+                                </div>*@
+    <div class="form-group" style="text-align: right">
+
+
+        <div class="maxl">
+            <label class="radio inline">
+                <input type="radio" name="Gender" value="male" checked>
+                <span> @Request.GetText("مرد") </span>
+            </label>
+            <label class="radio inline">
+                <input type="radio" name="Gender" value="female">
+                <span>@Request.GetText("زن") </span>
+            </label>
+        </div>
+    </div>
+    
+    
+    
+    <div class="form-group">
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+    
+    </div>
+    
+    <div class="form-group">
+            <input type="submit" class="btnRegister" value="ثبت نام"/>
+    
+        </div>
+</div>

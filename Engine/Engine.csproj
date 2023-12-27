@@ -70,11 +70,11 @@
       <HintPath>..\packages\Microsoft.CodeCoverage.15.9.0\lib\net45\Microsoft.VisualStudio.CodeCoverage.Shim.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework">
-      <HintPath>..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MSTest.TestFramework.3.2.0-preview.23623.1\lib\net462\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions">
-      <HintPath>..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MSTest.TestFramework.3.2.0-preview.23623.1\lib\net462\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\Mvc2Futures.2.0.50217.0\lib\Microsoft.Web.Mvc.dll</HintPath>
@@ -87,6 +87,9 @@
     <Reference Include="MvcContrib.TestHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\MvcContrib.TestHelper.2.0.95.0\lib\net\MvcContrib.TestHelper.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f">
       <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
@@ -111,6 +114,9 @@
     <Reference Include="Spire.XLS, Version=8.3.0.61040, Culture=neutral, PublicKeyToken=663f351905198cb3">
       <HintPath>..\packages\FreeSpire.XLS.8.3.0\lib\net40\Spire.XLS.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="StarkbankEcdsa, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b2e6337a5d77bfbc, processorArchitecture=MSIL">
+      <HintPath>..\packages\starkbank-ecdsa.1.3.3\lib\net452\StarkbankEcdsa.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.7.0\lib\net45\StructureMap.dll</HintPath>
@@ -215,9 +221,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http.Formatting">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
@@ -519,6 +522,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Localization\Languages.cs" />
+    <Compile Include="Localization\Localizer.cs" />
+    <Compile Include="Localization\LocalizerExtention.cs" />
+    <Compile Include="Localization\TextTranslation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelRegistery\ModelRegistery.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -639,8 +646,29 @@
     <Content Include="Areas\JUiEngine\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\JUiEngine\Views\UiHome\ShowView.cshtml" />
     <Content Include="Areas\JUiEngine\Views\web.config" />
+    <Content Include="Content\admin\0d6a47ce8c185a9436b2.woff2" />
+    <Content Include="Content\admin\1e59d2330b4c6deb84b3.ttf" />
+    <Content Include="Content\admin\20fd1704ea223900efa9.woff2" />
+    <Content Include="Content\admin\29b39089170885ae2967.woff" />
+    <Content Include="Content\admin\58c84f666915410c0ba8.woff2" />
+    <Content Include="Content\admin\6878d55e3615ccf40c38.svg" />
+    <Content Include="Content\admin\7128634a83fa3eece1bf.woff2" />
+    <Content Include="Content\admin\8b43027f47b20503057d.eot" />
+    <Content Include="Content\admin\901a97d34e331f269815.woff2" />
+    <Content Include="Content\admin\9bad94440d49256265a5.eot" />
+    <Content Include="Content\admin\a929468e39d61ead9a4a.woff2" />
+    <Content Include="Content\admin\aa14df29ec50d5e9c2c9.woff2" />
+    <Content Include="Content\admin\b130af771aa495b1ef8c.woff2" />
+    <Content Include="Content\admin\b1912a963a6414094c08.woff2" />
+    <Content Include="Content\admin\bc7d8f11b2c39fd0a880.woff2" />
+    <Content Include="Content\admin\c4292f34297f1004471a.svg" />
+    <Content Include="Content\admin\eda8b94308c6f538f04a.ttf" />
+    <Content Include="Content\admin\f691f37e57f04c152e23.woff" />
+    <Content Include="Content\admin\main.js" />
+    <Content Include="Content\admin\main.js.map" />
     <Content Include="Content\attendance images\-employees-hr-workflow---vector-stencils-library.png--diagram-flowchart-example.png" />
     <Content Include="Content\attendance images\02.jpg" />
+    <Content Include="Content\attendance images\andriod.png" />
     <Content Include="Content\attendance images\attendanceDevices.jpg" />
     <Content Include="Content\attendance images\attendanceDevicespersonnel.jpg" />
     <Content Include="Content\attendance images\card.png" />
@@ -655,6 +683,24 @@
     <Content Include="Content\attendance images\images (1).png" />
     <Content Include="Content\attendance images\images.png" />
     <Content Include="Content\attendance images\importdata.jpg" />
+    <Content Include="Content\attendance images\mobile.png" />
+    <Content Include="Content\attendance images\mobile\1.jpeg" />
+    <Content Include="Content\attendance images\mobile\1.webp" />
+    <Content Include="Content\attendance images\mobile\2.jpeg" />
+    <Content Include="Content\attendance images\mobile\2.webp" />
+    <Content Include="Content\attendance images\mobile\3.jpeg" />
+    <Content Include="Content\attendance images\mobile\3.webp" />
+    <Content Include="Content\attendance images\mobile\4.jpeg" />
+    <Content Include="Content\attendance images\mobile\4.webp" />
+    <Content Include="Content\attendance images\mobile\5.jpeg" />
+    <Content Include="Content\attendance images\mobile\5.webp" />
+    <Content Include="Content\attendance images\mobile\6.jpeg" />
+    <Content Include="Content\attendance images\mobile\6.webp" />
+    <Content Include="Content\attendance images\mobile\7.jpeg" />
+    <Content Include="Content\attendance images\mobile\7.webp" />
+    <Content Include="Content\attendance images\mobile\8.jpeg" />
+    <Content Include="Content\attendance images\mobile\8.webp" />
+    <Content Include="Content\attendance images\myket.png" />
     <Content Include="Content\attendance images\SmartAttendanceManagemntsystem.jpg" />
     <Content Include="Content\attendance images\sourcecode.jpg" />
     <Content Include="Content\attendance images\what_are_time_intervals.png" />
@@ -662,6 +708,9 @@
     <Content Include="Content\Bootstrap-rtl.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Bootstrap4\bootstrap4.min.css" />
+    <Content Include="Content\Bootstrap4\bootstrap4.min.js" />
+    <Content Include="Content\Bootstrap4\jquery3.2.1.min.js" />
     <Content Include="Content\DataTables\AutoFill-2.3.0\css\autoFill.bootstrap.css" />
     <Content Include="Content\DataTables\AutoFill-2.3.0\css\autoFill.bootstrap.min.css" />
     <Content Include="Content\DataTables\AutoFill-2.3.0\css\autoFill.bootstrap4.css" />
@@ -1001,6 +1050,17 @@
     <Content Include="Content\Datepicker\jquery.Bootstrap-PersianDateTimePicker.css" />
     <Content Include="Content\Datepicker\jquery.Bootstrap-PersianDateTimePicker.js" />
     <Content Include="Content\Datepicker\jquery.md.bootstrap.datetimepicker.style.css" />
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fonts\IranianSans.ttf" />
+    <Content Include="Content\fonts\iranyekanwebregular.eot" />
+    <Content Include="Content\fonts\iranyekanwebregular.ttf" />
+    <Content Include="Content\fonts\iranyekanwebregular.woff" />
+    <Content Include="Content\fonts\iranyekanwebregular.woff2" />
+    <Content Include="Content\fonts\Yekan.ttf" />
     <Content Include="Content\font\byekan.ttf" />
     <Content Include="Content\leaflet\images\spritesheet-2x.png" />
     <Content Include="Content\leaflet\images\spritesheet.svg" />
@@ -1026,6 +1086,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Localization\Languages\default_Persian.json" />
     <Content Include="ReportGeneratorOutput\absence-absence-module.js" />
     <Content Include="ReportGeneratorOutput\absence-absence-module.js.map" />
     <Content Include="ReportGeneratorOutput\assets\bootstrap\bootstrap.min.css" />
@@ -1264,6 +1325,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\TypeLite.tt" />
+    <Content Include="Views\Account\RegisterFormPartial.cshtml" />
+    <Content Include="Views\Shared\_LanguagePartial.cshtml" />
+    <Content Include="Views\Shared\_Layout_Admin.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

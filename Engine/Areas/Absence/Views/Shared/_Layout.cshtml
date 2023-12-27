@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - سیستم تردد</title>
+    <title>@ViewBag.Title -  سیستم مدیریت تردد</title>
     @*    @Styles.Render("~/Content/css")*@
     <link href="~/Content/Bootstrap-rtl.css" rel="stylesheet"/>
     <link href="~/Content/Site.css" rel="stylesheet"/>
@@ -54,7 +54,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("(گزارش ساز) Report Generator", "index", "RHome", new {Area = "reportGenerator"}, new {})</li>
                     <li>@Html.ActionLink("(فرم ساز) App Generator", "Index", "Home", new {Area = ""}, new {})</li>
-                    <li>@Html.ActionLink("(زیر سیستم تردد) Attendance System", "Index", "AttendanceHome", new {Area = "Absence"}, new {})</li>
+                    <li>@Html.ActionLink("(زیر  سیستم مدیریت تردد) Attendance System", "Index", "AttendanceHome", new {Area = "Absence"}, new {})</li>
 
                     
                     <style>
@@ -113,7 +113,7 @@
         @RenderBody()
         <hr/>
         <footer>
-            <p>&copy; @DateTime.Now.Year - زیرسیستم تردد آشارداشار</p>
+            <p>&copy; @DateTime.Now.Year - زیرسیستم تردد بلوسافت</p>
         </footer>
     </div>
 

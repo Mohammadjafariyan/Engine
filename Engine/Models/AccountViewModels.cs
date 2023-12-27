@@ -49,7 +49,7 @@ namespace Engine.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "نام کاربری")]
+        [Display(Name = "نام کاربری یا ایمیل")]
         [DataType(DataType.Text)]
         public string UserName { get; set; }
 
@@ -64,20 +64,53 @@ namespace Engine.Models
 
     public class RegisterViewModel
     {
-        [Required]
+        /*[Required(ErrorMessage = "نام کاربری ضروری است")]
         [Display(Name = "نام کاربری")]
-        public string UserName { get; set; }
+        public string UserName { get; set; }*/
 
-        [Required]
+        [Required(ErrorMessage = "رمز عبور ضروری است")]
         [StringLength(100, ErrorMessage = " {0} حداقل باید  {2} طول داشته باشند.", MinimumLength = 6)]
         //[DataType(DataType.Password)]
         [Display(Name = "رمز عبور")]
         public string Password { get; set; }
 
-/*        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "نام ضروری است")]
+        [StringLength(100, ErrorMessage = " {0} حداقل باید  {2} طول داشته باشند.", MinimumLength = 2)]
+        //[DataType(DataType.Password)]
+        [Display(Name = "نام")]
+        public string FirstName { get; set; }
+
+        
+        [Required(ErrorMessage = "نام خانوادگی ضروری است")]
+        [StringLength(100, ErrorMessage = " {0} حداقل باید  {2} طول داشته باشند.", MinimumLength = 2)]
+        //[DataType(DataType.Password)]
+        [Display(Name = "نام خانوادگی")]
+        public string LastName { get; set; }
+
+               [DataType(DataType.Password)]
         [Display(Name = "تاکید رمز عبور")]
         [Compare("Password", ErrorMessage = "رمز با تاکید آن یکسان نیست ")]
-        public string ConfirmPassword { get; set; }*/
+        public string ConfirmPassword { get; set; }
+        
+        
+        [Required]
+        [EmailAddress(ErrorMessage = "ایمیل صحیح نیست لطفا یک ایمیل درست وارد نمایید")]
+        //[DataType(DataType.Password)]
+        [Display(Name = "ایمیل")]
+        public string Email { get; set; }
+        
+        
+        
+        //[Phone]
+        //[DataType(DataType.Password)]
+        [Display(Name = "موبایل")]
+        //[Required(ErrorMessage = "شماره موبایل ضروری است ")]
+        [RegularExpression("^(?!0+$)(\\+\\d{1,3}[- ]?)?(?!0+$)\\d{10,15}$", ErrorMessage = "لطفا شماره موبایل صحیح وارد کنید")]
+        public string Mobile { get; set; }
+        
+        //[DataType(DataType.Password)]
+        [Display(Name = "جنسیت")]
+        public string Gender { get; set; }
     }
 
     public class ResetPasswordViewModel

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Engine.Entities.Data;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -67,8 +69,16 @@ namespace Engine.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe,
+
+            var user = UserManager.Users
+                .FirstOrDefault(s => s.UserName == model.UserName || s.Mobile == model.UserName || s.Email == model.UserName);
+
+            string username = user?.UserName ?? model?.UserName;
+
+            Debug.Assert(model != null, nameof(model) + " != null");
+            var result = await SignInManager.PasswordSignInAsync(username, model.Password, model.RememberMe,
                 shouldLockout: false);
+            
             switch (result)
             {
                 case SignInStatus.Success:
@@ -79,14 +89,14 @@ namespace Engine.Controllers
                     return RedirectToAction("SendCode", new {ReturnUrl = returnUrl, RememberMe = model.RememberMe});
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "شماره موبایل / ایمیل یا رمز عبور اشتباه است");
                     return View(model);
             }
         }
 
         //
         // GET: /Account/VerifyCode
-    //    [AllowAnonymous]
+        [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
             // Require that the user has already logged in via username/password or external login
@@ -101,7 +111,7 @@ namespace Engine.Controllers
         //
         // POST: /Account/VerifyCode
         [HttpPost]
-      //  [AllowAnonymous]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
         {
@@ -149,10 +159,17 @@ namespace Engine.Controllers
             {
 
 
-                string name = model.UserName.Replace("@", "J");
-                var user = new ApplicationUser {UserName = model.UserName,Email = name + "@empty.com" };
-
-
+             //   string name = model.UserName.Replace("@", "J");
+                var user = new ApplicationUser
+                {
+                    UserName = model.Mobile,
+                    Email = model.Email ,
+                    FirstName=model.FirstName,
+                    LastName=model.LastName,
+                    Mobile=model.Mobile,
+                    Gender=model.Gender,
+                };
+                
                 using (var context = new ApplicationDbContext())
                 {
 
@@ -163,6 +180,15 @@ namespace Engine.Controllers
                     }
                 }
                 
+                
+                var userExists = UserManager.Users
+                    .FirstOrDefault(s => s.UserName == user.UserName || s.Mobile == user.UserName || s.Email == user.UserName);
+
+                if (userExists!=null)
+                {
+                    AddErrors(new IdentityResult("این ایمیل یا شماره موبایل قبلا ثبت شده است ، در صورتی که رمز عبور خود را فراموش کرده اید از طریق فراموشی رمز عبور اقدام فرمایید"));
+                    return View(model);
+                }
 
 
                 var result = await UserManager.CreateAsync(user, model.Password);
@@ -174,11 +200,11 @@ namespace Engine.Controllers
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("ConfirmEmail");
                 }
 
                 AddErrors(result);
@@ -190,7 +216,7 @@ namespace Engine.Controllers
 
         //
         // GET: /Account/ConfirmEmail
-     //   [AllowAnonymous]
+        [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)
@@ -204,7 +230,7 @@ namespace Engine.Controllers
 
         //
         // GET: /Account/ForgotPassword
-     //   [AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
             return View();
@@ -213,13 +239,19 @@ namespace Engine.Controllers
         //
         // POST: /Account/ForgotPassword
         [HttpPost]
-       // [AllowAnonymous]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                
+                var u = UserManager.Users
+                    .FirstOrDefault(s => s.UserName == model.Email || s.Email == model.Email );
+
+                string username = u?.UserName ?? u?.Email;
+                
+                var user = await UserManager.FindByNameAsync(username);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -228,10 +260,10 @@ namespace Engine.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -240,7 +272,7 @@ namespace Engine.Controllers
 
         //
         // GET: /Account/ForgotPasswordConfirmation
-    //    [AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
@@ -248,7 +280,7 @@ namespace Engine.Controllers
 
         //
         // GET: /Account/ResetPassword
-      //  [AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
             return code == null ? View("Error") : View();
@@ -257,7 +289,7 @@ namespace Engine.Controllers
         //
         // POST: /Account/ResetPassword
         [HttpPost]
-      //  [AllowAnonymous]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -285,7 +317,7 @@ namespace Engine.Controllers
 
         //
         // GET: /Account/ResetPasswordConfirmation
-      //  [AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();
@@ -294,7 +326,7 @@ namespace Engine.Controllers
         //
         // POST: /Account/ExternalLogin
         [HttpPost]
-       // [AllowAnonymous]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
@@ -305,7 +337,7 @@ namespace Engine.Controllers
 
         //
         // GET: /Account/SendCode
-     //   [AllowAnonymous]
+        [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
             var userId = await SignInManager.GetVerifiedUserIdAsync();
@@ -324,7 +356,7 @@ namespace Engine.Controllers
         //
         // POST: /Account/SendCode
         [HttpPost]
-     //   [AllowAnonymous]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SendCode(SendCodeViewModel model)
         {
@@ -345,7 +377,7 @@ namespace Engine.Controllers
 
         //
         // GET: /Account/ExternalLoginCallback
-      //  [AllowAnonymous]
+        [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
@@ -377,7 +409,7 @@ namespace Engine.Controllers
         //
         // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
-       // [AllowAnonymous]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model,
             string returnUrl)
@@ -427,7 +459,7 @@ namespace Engine.Controllers
 
         //
         // GET: /Account/ExternalLoginFailure
-      //  [AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
