@@ -21,5 +21,9 @@ namespace Engine.Absence.Models
         
         public RangeType RangeType { get; set; }
         public bool IsTwoDay { get; set; }
+
+        public ObligatedRangeDayTimes()
+        {
+        }
     }
 }

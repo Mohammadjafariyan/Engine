@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebAppIDEEngine.Models.Core;
-using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Entities.Models.Core.QueryBuild
 {

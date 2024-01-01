@@ -1,7 +1,11 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Engine.Areas.Mobile.Models;
+using Engine.Areas.Mobile.ViewModel;
 using Engine.Controllers.AbstractControllers;
+using Engine.Entities.Data.Absence.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -15,6 +19,18 @@ namespace Engine.Entities.Data
         public string LastName { get; set; }
         public string Mobile { get; set; }
         public string Gender { get; set; }
+        public virtual ICollection<WorkGroup> WorkGroups { get; set; }
+        public virtual ICollection<Machine> Machines { get; set; }
+        public virtual ICollection<ObligatedRange> ObligatedRanges { get; set; }
+        public virtual ICollection<ObligatedRangeWeeks> ObligatedRangeWeekss { get; set; }
+        public virtual ICollection<ObligatedRangeDayTimes> ObligatedRangeDayTimess { get; set; }
+        public virtual ICollection<Personnel> Personnels { get; set; }
+        public virtual ICollection<PersonnelMachine> PersonnelMachines { get; set; }
+        public virtual ICollection<WorkGroupObligatedRange> WorkGroupObligatedRanges { get; set; }
+        public virtual ICollection<Workplace> Workplaces { get; set; }
+        public virtual ICollection<WorkplacePersonnel> WorkplacePersonnels { get; set; }
+        public virtual ICollection<WorkplaceSetting> WorkplaceSettings { get; set; }
+        public ICollection<BiometricData> BiometricDatas { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -25,9 +41,9 @@ namespace Engine.Entities.Data
         }
     }
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    /*public class EngineContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
+        public EngineContext()
             : base(EngineUtility.AuthenticationContextName(), throwIfV1Schema: false)
         {
             //  Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
@@ -37,9 +53,9 @@ namespace Engine.Entities.Data
             
         }
 
-        public static ApplicationDbContext Create()
+        public static EngineContext Create()
         {
-            return new ApplicationDbContext();
+            return new EngineContext();
         }
-    }
+    }*/
 }

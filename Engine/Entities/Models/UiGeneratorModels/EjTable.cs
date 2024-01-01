@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Engine.Attributes;
+using Engine.Entities.Models.ICore;
 using Engine.Entities.Models.UiGeneratorModels;
-using WebAppIDEEngine.Models.ICore;
 
 namespace WebAppIDEEngine.Models.UiGeneratorModels
 {

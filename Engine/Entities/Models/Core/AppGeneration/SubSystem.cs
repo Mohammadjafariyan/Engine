@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
-using WebAppIDEEngine.Models.ICore;
+using Engine.Entities.Models.ICore;
 
 namespace Engine.Entities.Models.Core.AppGeneration
 {

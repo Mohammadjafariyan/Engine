@@ -5,8 +5,8 @@ using System.Linq;
 using System.Web;
 using Engine.Attributes;
 using Engine.Entities.Models.Core.AppGeneration;
+using Engine.Entities.Models.ICore;
 using Engine.Service.AbstractControllers;
-using WebAppIDEEngine.Models.ICore;
 using WebAppIDEEngine.Models.UiGeneratorModels;
 
 namespace Engine.Entities.Models.UiGeneratorModels

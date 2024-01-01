@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebAppIDEEngine.Models.ICore;
+using Engine.Entities.Models.ICore;
 
 namespace Engine.DomainLayer.Models.Core.ViewGeneration
 {

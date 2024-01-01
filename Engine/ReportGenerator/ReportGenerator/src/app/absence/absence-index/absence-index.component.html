@@ -1,30 +1,42 @@
 <div class="container">
 
 
-  <a href="/Absence/ObligatedRanges/GetDataTable">لیست بازه موظفی</a>
+  <a style="float: left;text-align: left" href="/Absence/ObligatedRanges/GetDataTable">لیست بازه موظفی</a>
 
   <br>
-  <div [class.card]="true" class="card-primary">
-    <div class="card-header">تعریف بازه موظفی</div>
+  <div>
+    <h4 class="card-header">تعریف بازه موظفی</h4>
+    <br/>
     <div class="card-body">
       <div class="row">
-        <div class="col-md-6 form-group">
-          <label> روز تعطیل </label>
-          <select class="form-control" [(ngModel)]="ObligatedRange.OffDay">
-            <ng-template ngFor [ngForOf]="ObligatedRange.ObligatedRangeWeeks" let-day>
-              <option [value]="day.DayOfWeek"> {{day.DayOfWeekFaName}}</option>
-            </ng-template>
-          </select>
+        <div class="col-md-6 ">
+          <div class="form-group">
+            <label for="title">نام بازه موظفی </label>
+            <input class="form-control" type="text" placeholder="روزکار عادی" [(ngModel)]="ObligatedRange.Name"
+                   class="form-control" id="title">
+          </div>
+
         </div>
         <div class="col-md-6 form-group">
-          <label for="email">نام بازه موظفی </label>
-          <input class="form-control" type="email" placeholder="روزکار عادی" [(ngModel)]="ObligatedRange.Name"
-                 class="form-control" id="email">
+          <small class="alert alert-info">
+            برای مثال : روزکار عادی ، حراست و ...
+          </small>
+          <!--<label> انتخاب روز تعطیل </label>-->
+          <!--<p-multiSelect [options]="ObligatedRange.ObligatedRangeWeeks" [(ngModel)]="ObligatedRange.OffDay"
+
+                         (change)="offDayChanged()"
+                         defaultLabel="انتخاب روز های تعطیل"
+                         [style]="{width:'100%'}"
+                         [panelStyle]="{textAlign:'right'}"
+                         optionLabel="DayOfWeekFaName"></p-multiSelect>-->
+
+          <!--   <select class="form-control" [(ngModel)]="ObligatedRange.OffDay">
+               <ng-template ngFor [ngForOf]="ObligatedRange.ObligatedRangeWeeks" let-day>
+                 <option [value]="day.DayOfWeek"> {{day.DayOfWeekFaName}}</option>
+               </ng-template>
+             </select>-->
         </div>
 
-        <div class="col-md-6 form-group">
-          <button class="btn btn-primary" (click)="save()">ذخیره</button>
-        </div>
 
       </div>
     </div>
@@ -32,100 +44,256 @@
 
   </div>
 </div>
-  <hr/>
+<hr/>
 
-  <div class="container">
+<div class="container">
+  <h5> شیفت های چرخشی هفتگی :</h5>
 
-    <div class="row">
-      <div class="col-md-1">
-      </div>
-      <div class="col-md-3">
-        <button id="increaseWeek" class="btn btn-primary" (click)="increaseWeek()">افزایش هفته</button>
-        <button id="decreaseWeek" class="btn btn-primary" (click)="decreaseWeek()"> کاهش هفته</button>
+  <div class="row">
+    <div class="col-md-4">
+      <button id="increaseWeek" class="btn btn-primary m-sm-2" (click)="increaseWeek()">افزایش هفته</button>
+      <button id="decreaseWeek" class="btn btn-primary" (click)="decreaseWeek()"> کاهش هفته</button>
 
-      </div>
-      <div class="col-md-8">
-      </div>
     </div>
-    <ng-template ngFor [ngForOf]="iterates" let-weekDay let-j="index">
-      <div class="row" style="margin-top: 20px">
-      <div style="display: inline-flex">
+    <div class="col-md-8">
+    </div>
+  </div>
+<div class="row">
+
+  <ng-template ngFor [ngForOf]="iterates" let-weekDay let-j="index">
+
+    <div class="col-md-6">
+      <table class="table" >
+        <thead>
+        <tr>
+
+          <th >
+
+            <small *ngIf="j<=10"> هفته {{weekNumNames[j]}} :</small>
+            <small *ngIf="j>10"> هفته {{j}} :</small>
+
+          </th>
+          <th colspan="6">
+            <small *ngIf="j<=10"> ساعت هفته {{weekNumNames[j]}} :</small>
+            <small *ngIf="j>10"> ساعت هفته {{j}} :</small>
+          </th>
+        </tr>
+
+        </thead>
+        <tbody>
+        <ng-template ngFor [ngForOf]="getWeekByNumber(j)" let-weekDay
+                     let-i="index">
+          <tr>
+            <th>{{weekDay.DayOfWeekFaName}}
+
+            </th>
+            <th>
+              <button class="btn btn-default settimes" (click)="setTimes(weekDay)" title="تنظیم زمان ها"><span
+                class="oi"
+                data-glyph="timer"></span>
+              </button>
+            </th>
+            <th>
+              <label class="btn btn-default " [class.btn-outline-danger]="weekDay.IsOffDay">
+                <input type="checkbox" (change)="toggleOffday(weekDay)">
+
+
+                تعطیل
+              </label>
+            </th>
+            <td colspan="6">
+              <ng-template ngFor [ngForOf]="weekDay.ObligatedRangeDayTimes" let-time>
+                <ng-template [ngIf]="!time.IsRemoved">
+                  <!-- ({{time.Start.getHours()}}:{{time.Start.getMinutes()}} -
+                   {{time.End.getHours()}}:{{time.End.getMinutes()}}) <br>-->
+
+                  {{time.Start}} -
+                  {{time.End}}  -
+                  <span style="font-size: 10px"
+                        *ngIf="rangeTypes[time.RangeType]">{{getRangeTypeName(time.RangeType)}}</span>
+                  <span class="btn btn-default" style="font-size: 10px" (click)="remove(time)"><i
+                    class="c-deep-purple-500 ti-close "></i></span>
+                  <br>
+
+
+                </ng-template>
+              </ng-template>
+            </td>
+          </tr>
+
+        </ng-template>
+        </tbody>
+
+      </table>
+    </div>
+  </ng-template>
+</div>
+
+
+  <!--<ng-template ngFor [ngForOf]="iterates" let-weekDay let-j="index">
+    <div class="row week" style="margin-top: 20px">
+
+      <small *ngIf="j<=10"> هفته {{weekNumNames[j]}} :</small>
+      <small *ngIf="j>10"> هفته {{j}} :</small>
+
+      <div class="col-md-2">
+        <label class="btn btn-default btn-outline-primary">
+          <input type="checkbox" (change)="selectWeekDays(j,$event)">
+          انتخاب همه
+        </label>
+      </div>
+
+
+      <div style="display: inline-flex" dir="ltr">
         <ng-template ngFor [ngForOf]="getWeekByNumber(j)" let-weekDay
                      let-i="index">
 
+
           <div *ngIf="!weekDay.IsRemoved" [class.card]="true"
-               [class.text-white]="weekDay.IsSelected && ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek!=ObligatedRange.OffDay"
-               [class.bg-success]="weekDay.IsSelected && ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek!=ObligatedRange.OffDay"
-               [class.bg-danger]="ObligatedRange.ObligatedRangeWeeks[i].DayOfWeek==ObligatedRange.OffDay"
+
+               [class.bg-danger]="weekDay.IsOffDay"
+               [class.border-success]="weekDay.IsSelected"
+               (click)="select(weekDay)"
+
           >
-            <div class="card-header">{{weekDay.DayOfWeekFaName}}</div>
+            <div class="card-header btn btn-outline-light" [class.text-white]="weekDay.IsSelected ||  weekDay.IsOffDay"
+                 [class.bg-success]="weekDay.IsSelected || weekDay.IsOffDay">
+
+
+              <input type="checkbox" [checked]="weekDay.IsSelected">
+              {{weekDay.DayOfWeekFaName}}
+            </div>
             <div class="card-body">
-              <button class="btn btn-primary" (click)="select(weekDay)" title="انتخاب"><span class="oi"
-                                                                                             data-glyph="check"></span>
-              </button>
-              <button class="btn btn-primary settimes" (click)="setTimes(weekDay)" title="تنظیم زمان ها"><span class="oi"
-                                                                                                      data-glyph="timer"></span>
+              &lt;!&ndash; <button class="btn btn-primary"  title="انتخاب"><span class="oi"
+                                                                                              data-glyph="check"></span>
+               </button>&ndash;&gt;
+              <button class="btn btn-primary settimes" (click)="setTimes(weekDay)" title="تنظیم زمان ها"><span
+                class="oi"
+                data-glyph="timer"></span>
               </button>
               <p class="card-text">
                 <ng-template ngFor [ngForOf]="weekDay.ObligatedRangeDayTimes" let-time>
                   <ng-template [ngIf]="!time.IsRemoved">
-                    ({{time.Start.getHours()}}:{{time.Start.getMinutes()}} -
-                    {{time.End.getHours()}}:{{time.End.getMinutes()}}) <br>
+                    &lt;!&ndash; ({{time.Start.getHours()}}:{{time.Start.getMinutes()}} -
+                     {{time.End.getHours()}}:{{time.End.getMinutes()}}) <br>&ndash;&gt;
+
+                    {{time.Start}} -
+                    {{time.End}}  -
+                    <span style="font-size: 10px"
+                          *ngIf="rangeTypes[time.RangeType]">{{getRangeTypeName(time.RangeType)}}</span>
+                    <span class="btn btn-default" style="font-size: 10px" (click)="remove(time)"><i
+                      class="c-deep-purple-500 ti-close "></i></span>
+                    <br>
+
+
                   </ng-template>
                 </ng-template>
               </p>
             </div>
+
+            <div class="card-footer">
+              <label class="btn btn-default " [class.btn-outline-danger]="!weekDay.IsOffDay">
+                <input type="checkbox" (change)="toggleOffday(weekDay)">
+
+
+                تعطیل
+              </label>
+            </div>
           </div>
         </ng-template>
       </div>
-      </div>
-    </ng-template>
+    </div>
+  </ng-template>-->
 
+  <br/>
+  <div class="col-md-6 form-group">
+    <button class="btn btn-primary" (click)="save()">ذخیره</button>
   </div>
-  <p-dialog [(visible)]="display" [draggable]="true" [maximizable]="true"
-            [closable]="true"
-            [minWidth]="700"
-            [responsive]="true" [rtl]="true" [resizable]="true" [height]="500">
-    <p-header>
-      تنظیم ساعت ها
-    </p-header>
+</div>
+<p-dialog [(visible)]="display" [draggable]="true" [maximizable]="true"
+          [closable]="true"
+          [minWidth]="700"
+          [responsive]="true" [rtl]="true" [resizable]="true"
 
-    <button class="btn btn-primary "  id="addrange" (click)="NewObligatedRangeDayTime()">بازه جدید</button>
+          [style]="{ width: '50vw', height: '300px' }">
+  <p-header>
+    تنظیم ساعت ها
+  </p-header>
+
+  <div class="container-fluid">
+
+    <button class="btn btn-primary " id="addrange" (click)="NewObligatedRangeDayTime()">بازه جدید</button>
+
     <hr/>
 
+    <table class="table " style="    overflow: auto;
+    height:  60vh; min-height: 15vh;
+    display: contents;">
+      <thead>
+      <tr>
+        <th>زمان شروع</th>
+        <th>زمان پایان</th>
+        <th>زمان پایان در فردا قرار دارد؟</th>
+        <th>نوع بازه زمانی</th>
+        <th>حذف</th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-template [ngIf]="selectedWeek && selectedWeek.ObligatedRangeDayTimes">
+        <ng-template ngFor [ngForOf]="selectedWeek.ObligatedRangeDayTimes" let-time let-i="index">
+          <ng-template [ngIf]="!selectedWeek.ObligatedRangeDayTimes[i].IsRemoved">
 
-    <ng-template [ngIf]="selectedWeek && selectedWeek.ObligatedRangeDayTimes">
-      <ng-template ngFor [ngForOf]="selectedWeek.ObligatedRangeDayTimes" let-time let-i="index">
-        <ng-template [ngIf]="!selectedWeek.ObligatedRangeDayTimes[i].IsRemoved">
-          <div class="row">
-            <div class="col-md-3" style="padding-top: 27px;">
-              <label>زمان شروع </label>
-              <p-calendar [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].Start" [timeOnly]="true"></p-calendar>
-            </div>
-            <div class="col-md-3">
-              <label>زمان پایان </label>
-              <p-calendar [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].End" [timeOnly]="true"></p-calendar>
-            </div>
-            <div class="col-md-3">
-              <label for="IsTwoDay" style="margin-top: 5px;">زمان پایان در فردا قرار دارد؟ </label>
-              <input id="IsTwoDay" type="checkbox" [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].IsTwoDay"/>
-            </div>
-            <div class="col-md-3">
-              <label for="rangetype" >نوع بازه زمانی</label>
-              <select id="rangetype"  [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].RangeType" >
-                <option *ngFor="let op of rangeTypes" [value]="op.type">{{op.name}}</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <br>
-              <button class="btn btn-danger" (click)="remove(selectedWeek.ObligatedRangeDayTimes[i])">حذف</button>
-            </div>
-          </div>
+            <tr>
+              <td>
 
+
+                <input class="form-control" [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].Start" type="time">
+                <!--<p-calendar  [timeOnly]="true"></p-calendar>-->
+              </td>
+              <td>
+                <input class="form-control" [min]="selectedWeek.ObligatedRangeDayTimes[i].Start"
+                       [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].End" type="time">
+                <!--<p-calendar [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].End" [timeOnly]="true"></p-calendar>-->
+
+              </td>
+              <td>
+                <input id="IsTwoDay" type="checkbox" [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].IsTwoDay"/>
+
+              </td>
+              <td>
+                <select id="rangetype" [(ngModel)]="selectedWeek.ObligatedRangeDayTimes[i].RangeType">
+                  <option *ngFor="let op of rangeTypes" [value]="op.type">{{op.name}}</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-danger" (click)="remove(selectedWeek.ObligatedRangeDayTimes[i])">حذف</button>
+
+              </td>
+            </tr>
+
+
+          </ng-template>
         </ng-template>
       </ng-template>
-    </ng-template>
-    <p-footer>
-      <button class="btn btn-info" (click)="display=false">بستن</button>
-    </p-footer>
-  </p-dialog>
+
+      </tbody>
+
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+
+
+    </table>
+
+  </div>
+  <p-footer>
+    <button class="btn btn-info m-sm-2" (click)="display=false">بستن</button>
+    <button class="btn btn-info m-sm-2" (click)="copyTimeToWholeWeekDays()">کپی به تمام هفته</button>
+    <button class="btn btn-info m-sm-2" (click)="copyTimeToWeekends()">کپی به های تعطیل</button>
+    <button class="btn btn-outline-info m-sm-2" (click)="copyTimeToAllWeeksNormalDays()">کپی به روز های هفته تمامی هفته ها</button>
+    <button class="btn btn-outline-info m-sm-2" (click)="copyTimeToAllWeeksNormalHolidays()">کپی به تمامی تعطیل های هفته ها</button>
+  </p-footer>
+
+
+</p-dialog>

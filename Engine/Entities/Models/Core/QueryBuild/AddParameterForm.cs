@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Engine.Entities.Models.ICore;
 using WebAppIDEEngine.Models.CoreEnum;
-using WebAppIDEEngine.Models.ICore;
 
 namespace WebAppIDEEngine.Models.Core.QueryBuild
 {

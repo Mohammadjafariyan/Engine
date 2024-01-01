@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 using Engine.DomainLayer.Models.Core.QueryBuild;
+using Engine.Entities.Models.ICore;
 using Newtonsoft.Json;
-using WebAppIDEEngine.Models.ICore;
 
 namespace WebAppIDEEngine.Models.Core
 {

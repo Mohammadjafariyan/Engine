@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Engine.Entities.Models.ICore;
 using WebAppIDEEngine.Models.Core;
 using WebAppIDEEngine.Models.CoreEnum;
-using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.DomainLayer.Models.Core.QueryBuild
 {

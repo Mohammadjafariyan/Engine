@@ -5,7 +5,7 @@ import {AbsenceRoutingModule} from "./abscence-routing.module";
 import {RouterModule} from "@angular/router";
 import {FormGeneratorModule} from "../form-generator/form-generator.module";
 import {DialogModule} from "primeng/dialog";
-import {CalendarModule} from "primeng/primeng";
+import {CalendarModule, MultiSelectModule} from "primeng/primeng";
 import {FormsModule} from "@angular/forms";
 
 @NgModule({
@@ -13,9 +13,9 @@ import {FormsModule} from "@angular/forms";
     CommonModule,
     AbsenceRoutingModule,
     RouterModule,
-    FormGeneratorModule,DialogModule,
+    FormGeneratorModule, DialogModule,
     CalendarModule,
-    FormsModule
+    FormsModule, MultiSelectModule
   ],
   declarations: [AbsenceIndexComponent],
   bootstrap:[AbsenceIndexComponent],

@@ -8,9 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.Core.QueryBuild;
+using Engine.Entities.Models.ICore;
 using WebAppIDEEngine.Models.Core.QueryBuild;
 using WebAppIDEEngine.Models.CoreEnum;
-using WebAppIDEEngine.Models.ICore;
 
 namespace WebAppIDEEngine.Models.Core
 {

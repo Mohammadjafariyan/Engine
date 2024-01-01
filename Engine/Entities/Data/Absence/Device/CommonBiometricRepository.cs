@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Engine.Absence.Models;
 using Engine.Areas.Absence.Models;
+using Engine.Entities.Data;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Absence.Device

@@ -47,14 +47,14 @@ export class ObligatedRange extends AbsenceBase {
   Name: string;
   ObligatedRangeWeeks: ObligatedRangeWeeks[];
   WorkGroupObligatedRanges: WorkGroupObligatedRange[];
-  OffDay: System.DayOfWeek;
+  OffDay: System.DayOfWeek[];
 }
 
 export class ObligatedRangeDayTimes extends AbsenceBase {
-  End: Date;
+  End: string ='08:00';
   ObligatedRangeWeek: ObligatedRangeWeeks;
   ObligatedRangeWeekId: number;
-  Start: Date;
+  Start:string= '16:00';
   IsRemoved: boolean;
   RangeType: RangeType;
   IsTwoDay: boolean;
@@ -62,7 +62,9 @@ export class ObligatedRangeDayTimes extends AbsenceBase {
 
 
 export enum RangeType {
-  Normal, Overtime, NightWork, HolidayWork, ShiftWorkMorningAndAfternoon,ShiftWorkMorningAndAfternoonAndNight,ShiftWorkMorningAndNightOrAfternoonAndNight, Interrupion
+  Normal, Overtime, NightWork, HolidayWork, ShiftWorkMorningAndAfternoon,ShiftWorkMorningAndAfternoonAndNight,ShiftWorkMorningAndNightOrAfternoonAndNight, Interrupion,
+  Authorized_Delay_Gap
+
 }
 
 
@@ -75,6 +77,7 @@ export class ObligatedRangeWeeks extends AbsenceBase {
   IsSelected: boolean;
   WeekNumber;
   IsRemoved: boolean;
+  IsOffDay: boolean=false;
 }
 
 export class Personnel extends AbsenceBase {

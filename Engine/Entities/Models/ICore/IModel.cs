@@ -1,11 +1,6 @@
-﻿using Engine.DomainLayer.Models.Core.ViewGeneration;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebAppIDEEngine.Models.ICore
+namespace Engine.Entities.Models.ICore
 {
     public interface IModel
     {
@@ -13,6 +8,7 @@ namespace WebAppIDEEngine.Models.ICore
         long Id { get; set; }
         
         string Name { get; set; }
+         string ApplicationUserId { get; set; }
 
     }
 
@@ -22,6 +18,9 @@ namespace WebAppIDEEngine.Models.ICore
         public long Id { get; set; }
 
         virtual public string Name { get; set; }
+        
+        public virtual string ApplicationUserId { get; set; }
+
     }
 
 

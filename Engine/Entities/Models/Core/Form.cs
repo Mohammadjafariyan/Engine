@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAppIDEEngine.Models.ICore;
+using Engine.Entities.Models.ICore;
 
 namespace WebAppIDEEngine.Models.Core
 {

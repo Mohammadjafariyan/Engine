@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AbsenceDataProviderService} from "./absence.DataProviderService";
 import {ActivatedRoute} from "@angular/router";
 import {CustomResultType} from "../../database/tables.service";
-import {ObligatedRange, ObligatedRangeDayTimes, ObligatedRangeWeeks, RangeType} from "./absence.models";
+import {ObligatedRange, ObligatedRangeDayTimes, ObligatedRangeWeeks, RangeType, System} from "./absence.models";
 import {AppComponent} from "../../app.component";
+import DayOfWeek = System.DayOfWeek;
 
 @Component({
   selector: 'app-absence-index',
@@ -13,14 +14,31 @@ import {AppComponent} from "../../app.component";
 })
 export class AbsenceIndexComponent implements OnInit {
 
-
+  weekNumNames = [
+    'اول',
+    'دوم',
+    'سوم',
+    'چهارم',
+    'پنجم',
+    'ششم',
+    'هفتم',
+    'هشتم',
+    'نهم',
+    'دهم',
+  ]
   ObligatedRange: ObligatedRange;
   selectedWeek: ObligatedRangeWeeks;
   rangeTypes: { name: string, type: RangeType }[];
 
+  getRangeTypeName(type) {
+    let item = this.rangeTypes.find(f => f.type == type);
+    if (item)
+      return item.name;
+    else return '';
+  }
 
   constructor(public absenceDataProviderService: AbsenceDataProviderService,
-              public  router: ActivatedRoute) {
+              public router: ActivatedRoute) {
 
   }
 
@@ -93,8 +111,9 @@ export class AbsenceIndexComponent implements OnInit {
     if (!this.selectedWeek.ObligatedRangeDayTimes) {
       this.selectedWeek.ObligatedRangeDayTimes = [];
     }
-    this.newNewObligatedRangeDayTime.Start = new Date();
-    this.newNewObligatedRangeDayTime.End = new Date();
+    this.newNewObligatedRangeDayTime.Start = '08:00';
+    this.newNewObligatedRangeDayTime.End = '16:00';
+    ;
 
     this.selectedWeek.ObligatedRangeDayTimes.push(this.newNewObligatedRangeDayTime);
   }
@@ -144,6 +163,8 @@ export class AbsenceIndexComponent implements OnInit {
     } else {
       this.reorder();
 
+      //this.ObligatedRange.OffDay=this.ObligatedRange.ObligatedRangeWeeks.find(f=>f.DayOfWeek==DayOfWeek.Friday).DayOfWeek;
+
     }
 
     this.initRangeTypes();
@@ -169,7 +190,7 @@ export class AbsenceIndexComponent implements OnInit {
 
   getWeekByNumber(num) {
     num++;
-    return this.ObligatedRange.ObligatedRangeWeeks.filter(o => o.WeekNumber == num)
+    return this.ObligatedRange.ObligatedRangeWeeks.filter(o => o.WeekNumber == num).reverse()
   }
 
   iterates: number[] = [];
@@ -193,6 +214,7 @@ export class AbsenceIndexComponent implements OnInit {
 
   private initRangeTypes() {
     this.rangeTypes = [];
+    this.rangeTypes.push({name: 'فاصله زمانی مجاز برای تأخیر', type: RangeType.Authorized_Delay_Gap})
     this.rangeTypes.push({name: 'شب کاری', type: RangeType.NightWork})
     this.rangeTypes.push({name: 'تعطیل کاری', type: RangeType.NightWork})
     this.rangeTypes.push({name: 'استراحت', type: RangeType.Interrupion})
@@ -201,5 +223,194 @@ export class AbsenceIndexComponent implements OnInit {
     this.rangeTypes.push({name: ' نوبت کاری : صبح و عصر', type: RangeType.ShiftWorkMorningAndAfternoon})
     this.rangeTypes.push({name: ' نوبت کاری : صبح و عصر و شب', type: RangeType.ShiftWorkMorningAndAfternoonAndNight})
     this.rangeTypes.push({name: ' نوبت کاری : صبح و شب یا عصر و شب', type: RangeType.ShiftWorkMorningAndAfternoon})
+  }
+
+  selectWeekDays(weekDay: number, event: any) {
+
+
+    weekDay++;
+
+    let checkBoxStatus = event.srcElement.checked;
+
+
+    for (let i = 1; i <= this.ObligatedRange.ObligatedRangeWeeks.length / 7; i++) {
+
+      if (weekDay == i) {
+        for (let j = i * 7 - 7; j < i * 7; j++) {
+
+
+          if (checkBoxStatus == undefined) {
+            checkBoxStatus = this.ObligatedRange.ObligatedRangeWeeks[j].IsSelected
+          }
+
+          this.ObligatedRange.ObligatedRangeWeeks[j].IsSelected = checkBoxStatus;
+        }
+      }
+    }
+  }
+
+  copyTimeToWholeWeekDays() {
+    this.copyTimeToWholeWeekDaysHelp(true)
+  }
+
+  copyTimeToWeekends() {
+
+    this.copyTimeToWholeWeekDaysHelp(false)
+  }
+
+  clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  private copyTimeToWholeWeekDaysHelp(skipOffDays) {
+    if (!this.selectedWeek.ObligatedRangeDayTimes || !this.selectedWeek.ObligatedRangeDayTimes.length) {
+      return;
+    }
+
+
+
+
+    //for every week
+    for (let i = 1; i <= this.ObligatedRange.ObligatedRangeWeeks.length / 7; i++) {
+
+      // find particular week
+      if (this.selectedWeek.WeekNumber == i) {
+
+        // that week inside array
+        for (let j = i * 7 - 7; j < i * 7; j++) {
+
+          let length = this.selectedWeek.ObligatedRangeDayTimes;
+
+          // make all empty
+          for (let k = 0; k < length.length; k++) {
+
+            // skip itself
+            if (this.selectedWeek == this.ObligatedRange.ObligatedRangeWeeks[j]) {
+              continue;
+            }
+
+            // skip these days
+            if (this.ObligatedRange.ObligatedRangeWeeks[i].IsOffDay == skipOffDays) {
+              continue;
+            }
+
+           // if (!this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes) {
+              this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes = [];
+           // }
+
+
+          }
+          // add every time defined in this selected week
+          for (let k = 0; k < length.length; k++) {
+
+            // maybe array is null
+            if (!this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes) {
+              this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes = [];
+            }
+
+            // skip itself
+            if (this.selectedWeek == this.ObligatedRange.ObligatedRangeWeeks[j]) {
+              continue;
+            }
+
+            // skip these days
+            if (this.ObligatedRange.ObligatedRangeWeeks[j].IsOffDay == skipOffDays) {
+              continue;
+            }
+            let clone1 = this.clone(this.selectedWeek.ObligatedRangeDayTimes[k]);
+            this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes.push(
+              // copy and paste
+              clone1
+            );
+          }
+        }
+      }
+    }
+  }
+
+  /*offDayChanged() {
+    for (let i = 0; i < this.ObligatedRange.ObligatedRangeWeeks.length; i++) {
+      this.ObligatedRange.ObligatedRangeWeeks[i]
+    }
+  }*/
+  toggleOffday(weekDay: ObligatedRangeWeeks) {
+    debugger;
+    weekDay.IsOffDay = !weekDay.IsOffDay;
+
+  }
+
+  copyTimeToAllDays_help(skipOffDays) {
+    if (!this.selectedWeek.ObligatedRangeDayTimes || !this.selectedWeek.ObligatedRangeDayTimes.length) {
+      return;
+    }
+
+
+
+
+    //for every week
+    for (let i =0; i < this.ObligatedRange.ObligatedRangeWeeks.length ; i++) {
+
+      // find particular week
+     // if (this.selectedWeek.WeekNumber == i) {
+
+        // that week inside array
+       // for (let j = i * 7 - 7; j < i * 7; j++) {
+
+          let length = this.selectedWeek.ObligatedRangeDayTimes;
+
+          // make all empty
+          for (let k = 0; k < length.length; k++) {
+
+            // skip itself
+            if (this.selectedWeek == this.ObligatedRange.ObligatedRangeWeeks[i]) {
+              continue;
+            }
+
+            // skip these days
+            if (this.ObligatedRange.ObligatedRangeWeeks[i].IsOffDay == skipOffDays) {
+              continue;
+            }
+
+            // if (!this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes) {
+            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes = [];
+            // }
+
+
+          }
+          // add every time defined in this selected week
+          for (let k = 0; k < length.length; k++) {
+
+            // maybe array is null
+            if (!this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes) {
+              this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes = [];
+            }
+
+            // skip itself
+            if (this.selectedWeek == this.ObligatedRange.ObligatedRangeWeeks[i]) {
+              continue;
+            }
+
+            // skip these days
+            if (this.ObligatedRange.ObligatedRangeWeeks[i].IsOffDay == skipOffDays) {
+              continue;
+            }
+            let clone1 = this.clone(this.selectedWeek.ObligatedRangeDayTimes[k]);
+            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes.push(
+              // copy and paste
+              clone1
+            );
+          }
+      //  }
+      //}
+    }
+  }
+
+  copyTimeToAllWeeksNormalDays() {
+    this.copyTimeToAllDays_help(true);
+  }
+
+  copyTimeToAllWeeksNormalHolidays() {
+    this.copyTimeToAllDays_help(false);
+
   }
 }

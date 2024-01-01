@@ -1,0 +1,37 @@
+
+
+#title::placeholder{
+  font-weight: lighter;
+}
+
+
+label:hover{
+  cursor: pointer;
+}
+
+
+.week * {
+  margin:2px;
+
+}
+
+
+.week.card:hover {
+  cursor: pointer;
+
+}
+
+
+:host >>> .ui-timepicker {
+  direction: ltr;
+}
+
+
+:host >>> .ui-multiselect-items-wrapper li{
+  text-align: right;
+
+}
+:host >>> label{
+  padding-right: 5px;
+
+}
