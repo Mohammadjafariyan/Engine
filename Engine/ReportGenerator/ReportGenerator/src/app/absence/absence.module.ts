@@ -5,19 +5,21 @@ import {AbsenceRoutingModule} from "./abscence-routing.module";
 import {RouterModule} from "@angular/router";
 import {FormGeneratorModule} from "../form-generator/form-generator.module";
 import {DialogModule} from "primeng/dialog";
-import {CalendarModule, MultiSelectModule} from "primeng/primeng";
+import {CalendarModule, InputTextModule, MultiSelectModule} from "primeng/primeng";
 import {FormsModule} from "@angular/forms";
+import {TableModule} from "primeng/table";
+import { WorkplacesComponent } from './workplaces/workplaces.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    AbsenceRoutingModule,
-    RouterModule,
-    FormGeneratorModule, DialogModule,
-    CalendarModule,
-    FormsModule, MultiSelectModule
-  ],
-  declarations: [AbsenceIndexComponent],
+    imports: [
+        CommonModule,
+        AbsenceRoutingModule,
+        RouterModule,
+        FormGeneratorModule, DialogModule,
+        CalendarModule,
+        FormsModule, MultiSelectModule, TableModule, InputTextModule
+    ],
+  declarations: [AbsenceIndexComponent, WorkplacesComponent],
   bootstrap:[AbsenceIndexComponent],
 })
 export class AbsenceModule { }

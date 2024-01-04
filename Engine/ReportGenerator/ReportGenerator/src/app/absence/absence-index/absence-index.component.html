@@ -12,7 +12,7 @@
         <div class="col-md-6 ">
           <div class="form-group">
             <label for="title">نام بازه موظفی </label>
-            <input class="form-control" type="text" placeholder="روزکار عادی" [(ngModel)]="ObligatedRange.Name"
+            <input class="form-control" type="text" placeholder="..." [(ngModel)]="ObligatedRange.Name"
                    class="form-control" id="title">
           </div>
 
@@ -50,12 +50,17 @@
   <h5> شیفت های چرخشی هفتگی :</h5>
 
   <div class="row">
-    <div class="col-md-4">
+
+    <div class="col-md-12">
       <button id="increaseWeek" class="btn btn-primary m-sm-2" (click)="increaseWeek()">افزایش هفته</button>
       <button id="decreaseWeek" class="btn btn-primary" (click)="decreaseWeek()"> کاهش هفته</button>
 
-    </div>
-    <div class="col-md-8">
+      <div style="float: left;">
+        <button id="addMacro" class="btn btn-outline-info m-sm-2" (click)="macroDisplay=true"> شیفت های متداول آماده <i class="c-deep-purple-500 ti-plus "></i></button>
+        <button id="exportMacro" class="btn btn-outline-info m-sm-2" (click)="exportMacro()">  دریافت <i class="c-deep-purple-500 ti-export "></i></button>
+
+        <!--<small class="alert alert-info">مانند شیفت چرخشی حراست ، شیفت چرخشی کارگران</small>-->
+      </div>
     </div>
   </div>
 <div class="row">
@@ -95,7 +100,7 @@
             </th>
             <th>
               <label class="btn btn-default " [class.btn-outline-danger]="weekDay.IsOffDay">
-                <input type="checkbox" (change)="toggleOffday(weekDay)">
+                <input type="checkbox" [checked]="weekDay.IsOffDay" (change)="toggleOffday(weekDay)">
 
 
                 تعطیل
@@ -107,8 +112,8 @@
                   <!-- ({{time.Start.getHours()}}:{{time.Start.getMinutes()}} -
                    {{time.End.getHours()}}:{{time.End.getMinutes()}}) <br>-->
 
-                  {{time.Start}} -
-                  {{time.End}}  -
+                  {{time.End}} -
+                  {{time.Start}}  -
                   <span style="font-size: 10px"
                         *ngIf="rangeTypes[time.RangeType]">{{getRangeTypeName(time.RangeType)}}</span>
                   <span class="btn btn-default" style="font-size: 10px" (click)="remove(time)"><i
@@ -214,7 +219,7 @@
           [closable]="true"
           [minWidth]="700"
           [responsive]="true" [rtl]="true" [resizable]="true"
-
+          id="hourset"
           [style]="{ width: '50vw', height: '300px' }">
   <p-header>
     تنظیم ساعت ها
@@ -293,6 +298,83 @@
     <button class="btn btn-info m-sm-2" (click)="copyTimeToWeekends()">کپی به های تعطیل</button>
     <button class="btn btn-outline-info m-sm-2" (click)="copyTimeToAllWeeksNormalDays()">کپی به روز های هفته تمامی هفته ها</button>
     <button class="btn btn-outline-info m-sm-2" (click)="copyTimeToAllWeeksNormalHolidays()">کپی به تمامی تعطیل های هفته ها</button>
+  </p-footer>
+
+
+</p-dialog>
+
+
+
+
+
+
+<p-dialog [(visible)]="macroDisplay" maximizable="true" id="macros"
+          [closable]="true" modal="true">
+  <p-header>
+  ماکرو های آماده ، شیفت های متداول آماده
+  </p-header>
+
+  <div class="row">
+
+
+    <div>
+
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <td>عنوان</td>
+        <td>توضیحات</td>
+        <td>انتخاب</td>
+      </tr>
+      </thead>
+      <tbody>
+
+      <ng-template ngFor [ngForOf]="macroList" let-macro>
+        <tr>
+<td>{{macro.title}}</td>
+<td>{{macro.description}}</td>
+<td><button class="btn btn-outline-info" (click)="import(macro);macroDisplay=false">انتخاب</button></td>
+        </tr>
+      </ng-template>
+
+      </tbody>
+    </table>
+   <!-- <p-table #dt [columns]="cols" [value]="macroList" [paginator]="true"
+
+             [rows]="10">
+      <ng-template pTemplate="caption">
+        <div style="text-align: right">
+          <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" pInputText size="50" placeholder="Global Filter" (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns">
+            {{col.header}}
+          </th>
+          <th >
+            انتخاب
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+          <td *ngFor="let col of columns">
+            {{rowData[col.field]}}
+          </td>
+          <td>
+            <button pButton icon="fa-search" ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>-->
+
+  </div>
+  <p-footer>
+    <button class="btn btn-info m-sm-2" (click)="macroDisplay=false">بستن</button>
   </p-footer>
 
 

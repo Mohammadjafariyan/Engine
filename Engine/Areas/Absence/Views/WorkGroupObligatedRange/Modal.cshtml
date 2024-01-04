@@ -1,0 +1,25 @@
+@using System.Collections.Specialized
+@using ViewModel.ActionTypes
+@using Engine.Attributes
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using ViewModel.ActionTypes
+@using Domain.Attributes
+@using Engine.Areas.JUiEngine.Controllers
+
+@model IDataTable
+@{
+    ViewBag.Title = "جدول کتاب ها";
+    var datatable = ViewData[UiHomeController.TableObject];
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+
+}
+
+<div class="modal-body">
+    @Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary">Save changes</button>
+</div>

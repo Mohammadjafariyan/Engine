@@ -5,6 +5,7 @@ import {CustomResultType} from "../../database/tables.service";
 import {ObligatedRange, ObligatedRangeDayTimes, ObligatedRangeWeeks, RangeType, System} from "./absence.models";
 import {AppComponent} from "../../app.component";
 import DayOfWeek = System.DayOfWeek;
+import {MacroService} from "../macro-service";
 
 @Component({
   selector: 'app-absence-index',
@@ -136,13 +137,13 @@ export class AbsenceIndexComponent implements OnInit {
             let temp: any = this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].End;
 
             var milli = temp.replace(/\/Date\((-?\d+)\)\//, '$1');
-            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].End = new Date(parseInt(milli));
+            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].End = new Date(parseInt(milli)).toTimeString().slice(0, 5);;
 
             //End
             let temp2: any = this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].Start;
 
             var milli = temp2.replace(/\/Date\((-?\d+)\)\//, '$1');
-            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].Start = new Date(parseInt(milli));
+            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].Start = new Date(parseInt(milli)).toTimeString().slice(0, 5);
 
           }
         }
@@ -157,7 +158,7 @@ export class AbsenceIndexComponent implements OnInit {
   ngOnInit() {
     this.ObligatedRange = new ObligatedRange();
     this.ObligatedRange.ObligatedRangeWeeks = this.absenceDataProviderService.getWeek(1);
-    var id = this.router.snapshot.queryParams["id"];
+    var id = this.router.snapshot.queryParams["recordId"];
     if (id) {
       this.loadById(id);
     } else {
@@ -170,6 +171,7 @@ export class AbsenceIndexComponent implements OnInit {
     this.initRangeTypes();
 
 
+    this.macroList= MacroService.getMacroList();
   }
 
   remove(time: ObligatedRangeDayTimes) {
@@ -333,6 +335,13 @@ export class AbsenceIndexComponent implements OnInit {
       this.ObligatedRange.ObligatedRangeWeeks[i]
     }
   }*/
+  macroDisplay: any;
+  cols = [
+    { field: 'title', header: 'عنوان' },
+    { field: 'description', header: 'توضیحات' },
+    { field: 'select', header: 'انتخاب' }
+  ];
+  macroList: any;
   toggleOffday(weekDay: ObligatedRangeWeeks) {
     debugger;
     weekDay.IsOffDay = !weekDay.IsOffDay;
@@ -412,5 +421,14 @@ export class AbsenceIndexComponent implements OnInit {
   copyTimeToAllWeeksNormalHolidays() {
     this.copyTimeToAllDays_help(false);
 
+  }
+
+  exportMacro() {
+    console.log(JSON.stringify(this.ObligatedRange));
+
+  }
+
+  import(macro: any) {
+    this.ObligatedRange= JSON.parse(macro.json);
   }
 }
