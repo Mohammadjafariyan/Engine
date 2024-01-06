@@ -1,5 +1,339 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["absence-absence-module"],{
 
+/***/ "./node_modules/primeng/api.js":
+/*!*************************************!*\
+  !*** ./node_modules/primeng/api.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* Shorthand */
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(/*! ./components/common/api */ "./node_modules/primeng/components/common/api.js"));
+
+/***/ }),
+
+/***/ "./node_modules/primeng/components/toast/toast.js":
+/*!********************************************************!*\
+  !*** ./node_modules/primeng/components/toast/toast.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var common_1 = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+var domhandler_1 = __webpack_require__(/*! ../dom/domhandler */ "./node_modules/primeng/components/dom/domhandler.js");
+var shared_1 = __webpack_require__(/*! ../common/shared */ "./node_modules/primeng/components/common/shared.js");
+var messageservice_1 = __webpack_require__(/*! ../common/messageservice */ "./node_modules/primeng/components/common/messageservice.js");
+var animations_1 = __webpack_require__(/*! @angular/animations */ "./node_modules/@angular/animations/fesm5/animations.js");
+var ToastItem = /** @class */ (function () {
+    function ToastItem() {
+        this.onClose = new core_1.EventEmitter();
+    }
+    ToastItem.prototype.ngAfterViewInit = function () {
+        this.initTimeout();
+    };
+    ToastItem.prototype.initTimeout = function () {
+        var _this = this;
+        if (!this.message.sticky) {
+            this.timeout = setTimeout(function () {
+                _this.onClose.emit({
+                    index: _this.index,
+                    message: _this.message
+                });
+            }, this.message.life || 3000);
+        }
+    };
+    ToastItem.prototype.clearTimeout = function () {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+    };
+    ToastItem.prototype.onMouseEnter = function () {
+        this.clearTimeout();
+    };
+    ToastItem.prototype.onMouseLeave = function () {
+        this.initTimeout();
+    };
+    ToastItem.prototype.onCloseIconClick = function (event) {
+        this.clearTimeout();
+        this.onClose.emit({
+            index: this.index,
+            message: this.message
+        });
+        event.preventDefault();
+    };
+    ToastItem.prototype.ngOnDestroy = function () {
+        this.clearTimeout();
+    };
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Object)
+    ], ToastItem.prototype, "message", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Number)
+    ], ToastItem.prototype, "index", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", core_1.TemplateRef)
+    ], ToastItem.prototype, "template", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], ToastItem.prototype, "showTransitionOptions", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], ToastItem.prototype, "hideTransitionOptions", void 0);
+    __decorate([
+        core_1.Output(),
+        __metadata("design:type", core_1.EventEmitter)
+    ], ToastItem.prototype, "onClose", void 0);
+    __decorate([
+        core_1.ViewChild('container'),
+        __metadata("design:type", core_1.ElementRef)
+    ], ToastItem.prototype, "containerViewChild", void 0);
+    ToastItem = __decorate([
+        core_1.Component({
+            selector: 'p-toastItem',
+            template: "\n        <div #container class=\"ui-toast-message ui-shadow\" [@messageState]=\"{value: 'visible', params: {showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions}}\"\n            [ngClass]=\"{'ui-toast-message-info': message.severity == 'info','ui-toast-message-warn': message.severity == 'warn',\n                'ui-toast-message-error': message.severity == 'error','ui-toast-message-success': message.severity == 'success'}\"\n                (mouseenter)=\"onMouseEnter()\" (mouseleave)=\"onMouseLeave()\">\n            <div class=\"ui-toast-message-content\">\n                <a href=\"#\" class=\"ui-toast-close-icon pi pi-times\" (click)=\"onCloseIconClick($event)\" *ngIf=\"message.closable !== false\"></a>\n                <ng-container *ngIf=\"!template\">\n                    <span class=\"ui-toast-icon pi\"\n                        [ngClass]=\"{'pi-info-circle': message.severity == 'info', 'pi-exclamation-triangle': message.severity == 'warn',\n                            'pi-times': message.severity == 'error', 'pi-check' :message.severity == 'success'}\"></span>\n                    <div class=\"ui-toast-message-text-content\">\n                        <div class=\"ui-toast-summary\">{{message.summary}}</div>\n                        <div class=\"ui-toast-detail\">{{message.detail}}</div>\n                    </div>\n                </ng-container>\n                <ng-container *ngTemplateOutlet=\"template; context: {$implicit: message}\"></ng-container>\n            </div>\n        </div>\n    ",
+            animations: [
+                animations_1.trigger('messageState', [
+                    animations_1.state('visible', animations_1.style({
+                        transform: 'translateY(0)',
+                        opacity: 1
+                    })),
+                    animations_1.transition('void => *', [
+                        animations_1.style({ transform: 'translateY(100%)', opacity: 0 }),
+                        animations_1.animate('{{showTransitionParams}}')
+                    ]),
+                    animations_1.transition('* => void', [
+                        animations_1.animate(('{{hideTransitionParams}}'), animations_1.style({
+                            height: 0,
+                            opacity: 0,
+                            transform: 'translateY(-100%)'
+                        }))
+                    ])
+                ])
+            ],
+            providers: [domhandler_1.DomHandler]
+        })
+    ], ToastItem);
+    return ToastItem;
+}());
+exports.ToastItem = ToastItem;
+var Toast = /** @class */ (function () {
+    function Toast(messageService, domHandler) {
+        this.messageService = messageService;
+        this.domHandler = domHandler;
+        this.autoZIndex = true;
+        this.baseZIndex = 0;
+        this.position = 'top-right';
+        this.showTransitionOptions = '300ms ease-out';
+        this.hideTransitionOptions = '250ms ease-in';
+        this.onClose = new core_1.EventEmitter();
+    }
+    Toast.prototype.ngOnInit = function () {
+        var _this = this;
+        this.messageSubscription = this.messageService.messageObserver.subscribe(function (messages) {
+            if (messages) {
+                if (messages instanceof Array) {
+                    var filteredMessages = messages.filter(function (m) { return _this.key === m.key; });
+                    _this.messages = _this.messages ? _this.messages.concat(filteredMessages) : filteredMessages.slice();
+                }
+                else if (_this.key === messages.key) {
+                    _this.messages = _this.messages ? _this.messages.concat([messages]) : [messages];
+                }
+                if (_this.modal && _this.messages && _this.messages.length) {
+                    _this.enableModality();
+                }
+            }
+        });
+        this.clearSubscription = this.messageService.clearObserver.subscribe(function (key) {
+            if (key) {
+                if (_this.key === key) {
+                    _this.messages = null;
+                }
+            }
+            else {
+                _this.messages = null;
+            }
+            if (_this.modal) {
+                _this.disableModality();
+            }
+        });
+    };
+    Toast.prototype.ngAfterContentInit = function () {
+        var _this = this;
+        this.templates.forEach(function (item) {
+            switch (item.getType()) {
+                case 'message':
+                    _this.template = item.template;
+                    break;
+                default:
+                    _this.template = item.template;
+                    break;
+            }
+        });
+    };
+    Toast.prototype.ngAfterViewInit = function () {
+        if (this.autoZIndex) {
+            this.containerViewChild.nativeElement.style.zIndex = String(this.baseZIndex + (++domhandler_1.DomHandler.zindex));
+        }
+    };
+    Toast.prototype.onMessageClose = function (event) {
+        this.messages.splice(event.index, 1);
+        if (this.messages.length === 0) {
+            this.disableModality();
+        }
+        this.onClose.emit({
+            message: event.message
+        });
+    };
+    Toast.prototype.enableModality = function () {
+        if (!this.mask) {
+            this.mask = document.createElement('div');
+            this.mask.style.zIndex = String(parseInt(this.containerViewChild.nativeElement.style.zIndex) - 1);
+            var maskStyleClass = 'ui-widget-overlay ui-dialog-mask';
+            this.domHandler.addMultipleClasses(this.mask, maskStyleClass);
+            document.body.appendChild(this.mask);
+        }
+    };
+    Toast.prototype.disableModality = function () {
+        if (this.mask) {
+            document.body.removeChild(this.mask);
+            this.mask = null;
+        }
+    };
+    Toast.prototype.ngOnDestroy = function () {
+        if (this.messageSubscription) {
+            this.messageSubscription.unsubscribe();
+        }
+        if (this.clearSubscription) {
+            this.clearSubscription.unsubscribe();
+        }
+        this.disableModality();
+    };
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], Toast.prototype, "key", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Boolean)
+    ], Toast.prototype, "autoZIndex", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Number)
+    ], Toast.prototype, "baseZIndex", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Object)
+    ], Toast.prototype, "style", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], Toast.prototype, "styleClass", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], Toast.prototype, "position", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Boolean)
+    ], Toast.prototype, "modal", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], Toast.prototype, "showTransitionOptions", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], Toast.prototype, "hideTransitionOptions", void 0);
+    __decorate([
+        core_1.Output(),
+        __metadata("design:type", core_1.EventEmitter)
+    ], Toast.prototype, "onClose", void 0);
+    __decorate([
+        core_1.ViewChild('container'),
+        __metadata("design:type", core_1.ElementRef)
+    ], Toast.prototype, "containerViewChild", void 0);
+    __decorate([
+        core_1.ContentChildren(shared_1.PrimeTemplate),
+        __metadata("design:type", core_1.QueryList)
+    ], Toast.prototype, "templates", void 0);
+    Toast = __decorate([
+        core_1.Component({
+            selector: 'p-toast',
+            template: "\n        <div #container [ngClass]=\"{'ui-toast ui-widget': true, \n                'ui-toast-top-right': position === 'top-right',\n                'ui-toast-top-left': position === 'top-left',\n                'ui-toast-bottom-right': position === 'bottom-right',\n                'ui-toast-bottom-left': position === 'bottom-left',\n                'ui-toast-top-center': position === 'top-center',\n                'ui-toast-bottom-center': position === 'bottom-center',\n                'ui-toast-center': position === 'center'}\" \n                [ngStyle]=\"style\" [class]=\"styleClass\">\n            <p-toastItem *ngFor=\"let msg of messages; let i=index\" [message]=\"msg\" [index]=\"i\" (onClose)=\"onMessageClose($event)\" [template]=\"template\" @toastAnimation [showTransitionOptions]=\"showTransitionOptions\" [hideTransitionOptions]=\"hideTransitionOptions\"></p-toastItem>\n        </div>\n    ",
+            animations: [
+                animations_1.trigger('toastAnimation', [
+                    animations_1.transition(':enter, :leave', [
+                        animations_1.query('@*', animations_1.animateChild())
+                    ])
+                ])
+            ],
+            providers: [domhandler_1.DomHandler]
+        }),
+        __metadata("design:paramtypes", [messageservice_1.MessageService, domhandler_1.DomHandler])
+    ], Toast);
+    return Toast;
+}());
+exports.Toast = Toast;
+var ToastModule = /** @class */ (function () {
+    function ToastModule() {
+    }
+    ToastModule = __decorate([
+        core_1.NgModule({
+            imports: [common_1.CommonModule],
+            exports: [Toast, shared_1.SharedModule],
+            declarations: [Toast, ToastItem]
+        })
+    ], ToastModule);
+    return ToastModule;
+}());
+exports.ToastModule = ToastModule;
+//# sourceMappingURL=toast.js.map
+
+/***/ }),
+
+/***/ "./node_modules/primeng/toast.js":
+/*!***************************************!*\
+  !*** ./node_modules/primeng/toast.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* Shorthand */
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__(/*! ./components/toast/toast */ "./node_modules/primeng/components/toast/toast.js"));
+
+/***/ }),
+
 /***/ "./src/app/absence/abscence-routing.module.ts":
 /*!****************************************************!*\
   !*** ./src/app/absence/abscence-routing.module.ts ***!
@@ -679,12 +1013,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(primeng_table__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _workplaces_workplaces_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./workplaces/workplaces.component */ "./src/app/absence/workplaces/workplaces.component.ts");
 /* harmony import */ var _crud_crud_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./crud/crud.component */ "./src/app/absence/crud/crud.component.ts");
+/* harmony import */ var _one_work_place_many_personnel_one_work_place_many_personnel_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./one-work-place-many-personnel/one-work-place-many-personnel.component */ "./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.ts");
+/* harmony import */ var _related_entities_related_entities_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./related-entities/related-entities.component */ "./src/app/absence/related-entities/related-entities.component.ts");
+/* harmony import */ var _one_personnel_many_workplaces_one_personnel_many_workplaces_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./one-personnel-many-workplaces/one-personnel-many-workplaces.component */ "./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.ts");
+/* harmony import */ var primeng_toast__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! primeng/toast */ "./node_modules/primeng/toast.js");
+/* harmony import */ var primeng_toast__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(primeng_toast__WEBPACK_IMPORTED_MODULE_15__);
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
+
 
 
 
@@ -708,9 +1051,9 @@ var AbsenceModule = /** @class */ (function () {
                 _angular_router__WEBPACK_IMPORTED_MODULE_4__["RouterModule"],
                 _form_generator_form_generator_module__WEBPACK_IMPORTED_MODULE_5__["FormGeneratorModule"], primeng_dialog__WEBPACK_IMPORTED_MODULE_6__["DialogModule"],
                 primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["CalendarModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_8__["FormsModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["MultiSelectModule"], primeng_table__WEBPACK_IMPORTED_MODULE_9__["TableModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["InputTextModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_8__["ReactiveFormsModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["ListboxModule"]
+                _angular_forms__WEBPACK_IMPORTED_MODULE_8__["FormsModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["MultiSelectModule"], primeng_table__WEBPACK_IMPORTED_MODULE_9__["TableModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["InputTextModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_8__["ReactiveFormsModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["ListboxModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["PickListModule"], primeng_toast__WEBPACK_IMPORTED_MODULE_15__["ToastModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["MessagesModule"], primeng_primeng__WEBPACK_IMPORTED_MODULE_7__["ConfirmDialogModule"]
             ],
-            declarations: [_absence_index_absence_index_component__WEBPACK_IMPORTED_MODULE_2__["AbsenceIndexComponent"], _workplaces_workplaces_component__WEBPACK_IMPORTED_MODULE_10__["WorkplacesComponent"], _crud_crud_component__WEBPACK_IMPORTED_MODULE_11__["CrudComponent"]],
+            declarations: [_absence_index_absence_index_component__WEBPACK_IMPORTED_MODULE_2__["AbsenceIndexComponent"], _workplaces_workplaces_component__WEBPACK_IMPORTED_MODULE_10__["WorkplacesComponent"], _crud_crud_component__WEBPACK_IMPORTED_MODULE_11__["CrudComponent"], _one_work_place_many_personnel_one_work_place_many_personnel_component__WEBPACK_IMPORTED_MODULE_12__["OneWorkPlaceManyPersonnelComponent"], _related_entities_related_entities_component__WEBPACK_IMPORTED_MODULE_13__["RelatedEntitiesComponent"], _one_personnel_many_workplaces_one_personnel_many_workplaces_component__WEBPACK_IMPORTED_MODULE_14__["OnePersonnelManyWorkplacesComponent"]],
             bootstrap: [_absence_index_absence_index_component__WEBPACK_IMPORTED_MODULE_2__["AbsenceIndexComponent"]],
         })
     ], AbsenceModule);
@@ -739,7 +1082,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p-table [columns]=\"cols\" [value]=\"models\" styleClass=\"table container\"\n\n         selectionMode=\"single\" [(selection)]=\"selectedModel\"\n          [paginator]=\"true\" [rows]=\"15\">\n  <ng-template pTemplate=\"caption\">\n    {{header}}\n  </ng-template>\n  <ng-template pTemplate=\"header\" let-columns>\n    <tr>\n      <th *ngFor=\"let col of columns\" [pSortableColumn]=\"col.field\">\n        {{col.header}}\n        <p-sortIcon [field]=\"col.field\"></p-sortIcon>\n      </th>\n      <ng-template [ngTemplateOutlet]=\"columnHeaderContent\" [ngTemplateOutletContext]=\"{$implicit: columns}\"></ng-template>\n\n      <th>\n        ویرایش / حذف\n      </th>\n    </tr>\n  </ng-template>\n  <ng-template pTemplate=\"body\" let-rowData let-columns=\"columns\">\n    <tr [pSelectableRow]=\"rowData\">\n      <td *ngFor=\"let col of columns\">\n\n        <div [ngSwitch]=\"getType(rowData[col.field])\">\n          <div *ngSwitchCase=\"'boolean'\">\n            <i *ngIf=\"rowData[col.field]\" class=\"fa fa-check text-success\"></i>\n            <i *ngIf=\"!rowData[col.field]\" class=\"fa fa-times text-danger\"></i>\n          </div>\n\n          <div *ngSwitchDefault>\n            {{rowData[col.field]}}\n          </div>\n        </div>\n\n      </td>\n\n      <ng-template [ngTemplateOutlet]=\"columnContent\" [ngTemplateOutletContext]=\"{$implicit: rowData}\"></ng-template>\n\n      <td>\n        <button class=\"btn btn-primary text-white\" (click)=\"selectCarWithButton(rowData)\">\n          <i class=\"fa fa-search\"></i>\n        </button>\n      </td>\n\n\n\n\n    </tr>\n  </ng-template>\n  <ng-template pTemplate=\"summary\" let-rowData>\n    <div style=\"text-align:left\">\n      <button type=\"button\" pButton icon=\"fa fa-plus\" (click)=\"showDialogToAdd()\" [label]=\"AddButtonTitle\"></button>\n    </div>\n  </ng-template>\n</p-table>\n\n<p-dialog [header]=\"newModel  ? newFormHeader : editFormHeader\" [(visible)]=\"displayDialog\" [responsive]=\"true\"\n          showEffect=\"fade\" [modal]=\"true\"\n          [style]=\"{width: '350px'}\">\n  <form [formGroup]=\"form\" (ngSubmit)=\"onSubmit()\">\n    <div class=\"row d-flex\" *ngIf=\"model\">\n      <div class=\"col-md-6\" *ngFor=\"let field of formFields\">\n        <label *ngIf=\"field.type != 'checkbox'\">{{ field.label }}</label>\n\n        <div [ngSwitch]=\"field.controlType\">\n\n\n           <div\n             *ngSwitchCase=\"'textbox'\"\n           >\n             <div *ngIf=\"field.type != 'checkbox'\">\n               <input\n                 [formControlName]=\"field.name\"\n                 [class]=\" field.type != 'checkbox' ?  'form-control' : 'form-check-input'\"\n                 [id]=\"field.name\"\n                 [type]=\"field.type\"\n               />\n             </div>\n             <div *ngIf=\"field.type =='checkbox'\">\n               <label >\n                 <input\n                   [formControlName]=\"field.name\"\n                   [class]=\" field.type != 'checkbox' ?  'form-control' : 'form-check-input'\"\n                   [id]=\"field.name\"\n                   type=\"checkbox\"\n\n                 />\n                 <span class=\"ms-2 mb-2\">{{ field.label }}</span>\n               </label>\n             </div>\n           </div>\n\n\n          <textarea\n            *ngSwitchCase=\"'textarea'\"\n            class=\"form-control\"\n            [formControlName]=\"field.name\"\n            [id]=\"field.name\"\n          ></textarea>\n\n          <select\n            *ngSwitchCase=\"'dropdown'\"\n            [formControlName]=\"field.name\"\n            class=\"form-control\"\n            [id]=\"field.name\"\n          >\n            <option *ngFor=\"let option of field.options\" [value]=\"option.value\">\n              {{ option.label }}\n            </option>\n          </select>\n\n            <p-listbox *ngSwitchCase=\"'listbox'\" [options]=\"field.options\"\n                       multiple=\"multiple\" checkbox=\"checkbox\" filter=\"filter\"\n                       [formControlName]=\"field.name\" optionLabel=\"label\"></p-listbox>\n\n        </div>\n\n\n\n\n        <div *ngIf=\"form.get(field.name)?.invalid && form.get(field.name)?.touched\">\n          {{ field.validationMessage }}\n        </div>\n\n\n      </div>\n\n      <ng-content select=\"[formContent]\"></ng-content>\n\n\n    </div>\n    <p-footer>\n      <div class=\"ui-dialog-buttonpane ui-helper-clearfix\">\n        <button type=\"button\" pButton icon=\"fa fa-close\" (click)=\"delete()\" label=\"حذف\"></button>\n        <button type=\"button\" pButton icon=\"fa fa-check\" (click)=\"save()\" label=\"ثبت\"></button>\n      </div>\n    </p-footer>\n  </form>\n\n</p-dialog>\n"
+module.exports = "\n<p-confirmDialog   acceptLabel=\"بله\" rejectLabel=\"خیر\" [style]=\"{width: '50vw'}\"></p-confirmDialog>\n\n\n<p-table [columns]=\"cols\" [value]=\"models\" styleClass=\"table container\"\n\n         selectionMode=\"single\" [(selection)]=\"selectedModel\"\n          [paginator]=\"true\" [rows]=\"15\">\n  <ng-template pTemplate=\"caption\">\n    {{header}}\n  </ng-template>\n  <ng-template pTemplate=\"header\" let-columns>\n    <tr>\n      <th *ngFor=\"let col of columns\" [pSortableColumn]=\"col.field\">\n        {{col.header}}\n        <p-sortIcon [field]=\"col.field\"></p-sortIcon>\n      </th>\n      <ng-template [ngTemplateOutlet]=\"columnHeaderContent\" [ngTemplateOutletContext]=\"{$implicit: columns}\"></ng-template>\n\n      <th>\n        ویرایش / حذف\n      </th>\n    </tr>\n  </ng-template>\n  <ng-template pTemplate=\"body\" let-rowData let-columns=\"columns\">\n    <tr [pSelectableRow]=\"rowData\">\n      <td *ngFor=\"let col of columns\">\n\n        <div [ngSwitch]=\"getType(rowData[col.field])\">\n          <div *ngSwitchCase=\"'boolean'\">\n            <i *ngIf=\"rowData[col.field]\" class=\"fa fa-check text-success\"></i>\n            <i *ngIf=\"!rowData[col.field]\" class=\"fa fa-times text-danger\"></i>\n          </div>\n\n          <div *ngSwitchDefault>\n            {{rowData[col.field]}}\n          </div>\n        </div>\n\n      </td>\n\n      <ng-template [ngTemplateOutlet]=\"columnContent\" [ngTemplateOutletContext]=\"{$implicit: rowData}\"></ng-template>\n\n      <td>\n        <button class=\"btn btn-primary text-white\" (click)=\"selectCarWithButton(rowData)\">\n          <i class=\"fa fa-search\"></i>\n        </button>\n      </td>\n\n\n\n\n    </tr>\n  </ng-template>\n  <ng-template pTemplate=\"summary\" let-rowData>\n    <div style=\"text-align:left\">\n      <button type=\"button\" pButton icon=\"fa fa-plus\" (click)=\"showDialogToAdd()\" [label]=\"AddButtonTitle\"></button>\n    </div>\n  </ng-template>\n</p-table>\n\n<p-dialog [header]=\"newModel  ? newFormHeader : editFormHeader\" [(visible)]=\"displayDialog\" [responsive]=\"true\"\n          showEffect=\"fade\" [modal]=\"true\"\n          [style]=\"{width: '350px'}\">\n  <p-messages [value]=\"msgs\"></p-messages>\n\n  <form [formGroup]=\"form\" (ngSubmit)=\"onSubmit()\">\n\n    <div class=\"row d-flex\" *ngIf=\"model\">\n      <div class=\"col-md-6\" *ngFor=\"let field of formFields\">\n        <label *ngIf=\"field.type != 'checkbox'\">{{ field.label }}</label>\n\n        <div [ngSwitch]=\"field.controlType\">\n\n\n           <div\n             *ngSwitchCase=\"'textbox'\"\n           >\n             <div *ngIf=\"field.type != 'checkbox'\">\n               <input\n                 [formControlName]=\"field.name\"\n                 [class]=\" field.type != 'checkbox' ?  'form-control' : 'form-check-input'\"\n                 [id]=\"field.name\"\n                 [type]=\"field.type\"\n               />\n             </div>\n             <div *ngIf=\"field.type =='checkbox'\">\n               <label >\n                 <input\n                   [formControlName]=\"field.name\"\n                   [class]=\" field.type != 'checkbox' ?  'form-control' : 'form-check-input'\"\n                   [id]=\"field.name\"\n                   type=\"checkbox\"\n\n                 />\n                 <span class=\"ms-2 mb-2\">{{ field.label }}</span>\n               </label>\n             </div>\n           </div>\n\n\n          <textarea\n            *ngSwitchCase=\"'textarea'\"\n            class=\"form-control\"\n            [formControlName]=\"field.name\"\n            [id]=\"field.name\"\n          ></textarea>\n\n          <select\n            *ngSwitchCase=\"'dropdown'\"\n            [formControlName]=\"field.name\"\n            class=\"form-control\"\n            [id]=\"field.name\"\n          >\n            <option *ngFor=\"let option of field.options\" [value]=\"option.value\">\n              {{ option.label }}\n            </option>\n          </select>\n\n            <p-listbox *ngSwitchCase=\"'listbox'\" [options]=\"field.options\"\n                       multiple=\"multiple\" checkbox=\"checkbox\" filter=\"filter\"\n                       [formControlName]=\"field.name\" optionLabel=\"label\"></p-listbox>\n\n        </div>\n\n\n\n\n        <div *ngIf=\"form.get(field.name)?.invalid && form.get(field.name)?.touched\">\n          {{ field.validationMessage }}\n        </div>\n\n\n      </div>\n\n      <ng-content select=\"[formContent]\"></ng-content>\n\n\n    </div>\n    <p-footer>\n      <div class=\"ui-dialog-buttonpane ui-helper-clearfix\">\n        <button *ngIf=\"model\" type=\"button\" class=\"bg-danger text-white\" pButton icon=\"fa fa-close\" (click)=\"delete()\" label=\"حذف\"></button>\n        <button *ngIf=\"model\" type=\"button\" pButton icon=\"fa fa-check\" (click)=\"save()\" label=\"ثبت\"></button>\n\n        <div *ngIf=\" selectedModel\">\n        {{selectedModel.Id}}\n        </div>\n        <button *ngIf=\"model\" type=\"button\" class=\"bg-secondary text-white\" pButton  (click)=\"this.model = null;this.displayDialog = false;\" label=\"بستن\"></button>\n      </div>\n    </p-footer>\n  </form>\n\n</p-dialog>\n"
 
 /***/ }),
 
@@ -756,6 +1099,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _database_tables_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../database/tables.service */ "./src/app/database/tables.service.ts");
+/* harmony import */ var primeng_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! primeng/api */ "./node_modules/primeng/api.js");
+/* harmony import */ var primeng_api__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(primeng_api__WEBPACK_IMPORTED_MODULE_3__);
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -768,8 +1113,10 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var CrudComponent = /** @class */ (function () {
-    function CrudComponent() {
+    function CrudComponent(confirmationService) {
+        this.confirmationService = confirmationService;
         this.model = {};
         this.cols = [
             { field: 'vin', header: 'Vin' },
@@ -779,6 +1126,7 @@ var CrudComponent = /** @class */ (function () {
         ];
         // ----------------------------- form builder
         this.formFields = [];
+        this.msgs = [];
         // ----------------------------- form builder
         this.newFormHeader = 'ثبت رکورد جدید';
         this.editFormHeader = 'ویرایش رکورد';
@@ -818,17 +1166,30 @@ var CrudComponent = /** @class */ (function () {
             .then(function (s) {
             _this.model = null;
             _this.displayDialog = false;
+            _this.msgs = [{ severity: 'success', summary: 'پیغام', detail: 'با موفقیت ثبت شد' }];
             _this.reload();
         });
     };
     CrudComponent.prototype.delete = function () {
         var _this = this;
-        var index = this.models.indexOf(this.selectedModel);
-        this.service.delete(this.models[index]).toPromise()
-            .then(function (s) {
-            _this.model = null;
-            _this.displayDialog = false;
-            _this.reload();
+        var deleteFunc = function () {
+            var index = _this.models.indexOf(_this.selectedModel);
+            debugger;
+            _this.service.delete(_this.models[index]).toPromise()
+                .then(function (s) {
+                _this.model = null;
+                _this.displayDialog = false;
+                _this.msgs = [{ severity: 'info', summary: 'تائید شد', detail: 'رکورد حذف شد' }];
+                _this.reload();
+            });
+        };
+        this.confirmationService.confirm({
+            message: 'آیا از حذف این رکورد اطمینان دارید ؟',
+            header: 'تاکید',
+            icon: 'pi pi-exclamation-triangle',
+            accept: function () { return deleteFunc(); },
+            reject: function () {
+            }
         });
     };
     CrudComponent.prototype.cloneModel = function (c) {
@@ -896,9 +1257,10 @@ var CrudComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-crud',
             template: __webpack_require__(/*! ./crud.component.html */ "./src/app/absence/crud/crud.component.html"),
-            styles: [__webpack_require__(/*! ./crud.component.css */ "./src/app/absence/crud/crud.component.css")]
+            styles: [__webpack_require__(/*! ./crud.component.css */ "./src/app/absence/crud/crud.component.css")],
+            providers: [primeng_api__WEBPACK_IMPORTED_MODULE_3__["ConfirmationService"]]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [primeng_api__WEBPACK_IMPORTED_MODULE_3__["ConfirmationService"]])
     ], CrudComponent);
     return CrudComponent;
 }());
@@ -926,6 +1288,364 @@ var MacroService = /** @class */ (function () {
         ];
     };
     return MacroService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.css":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.css ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.html":
+/*!****************************************************************************************************!*\
+  !*** ./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.html ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  one-personnel-many-workplaces works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.ts":
+/*!**************************************************************************************************!*\
+  !*** ./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.ts ***!
+  \**************************************************************************************************/
+/*! exports provided: OnePersonnelManyWorkplacesComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OnePersonnelManyWorkplacesComponent", function() { return OnePersonnelManyWorkplacesComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var OnePersonnelManyWorkplacesComponent = /** @class */ (function () {
+    function OnePersonnelManyWorkplacesComponent() {
+    }
+    OnePersonnelManyWorkplacesComponent.prototype.ngOnInit = function () {
+    };
+    OnePersonnelManyWorkplacesComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-one-personnel-many-workplaces',
+            template: __webpack_require__(/*! ./one-personnel-many-workplaces.component.html */ "./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.html"),
+            styles: [__webpack_require__(/*! ./one-personnel-many-workplaces.component.css */ "./src/app/absence/one-personnel-many-workplaces/one-personnel-many-workplaces.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], OnePersonnelManyWorkplacesComponent);
+    return OnePersonnelManyWorkplacesComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.css":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.css ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.html":
+/*!****************************************************************************************************!*\
+  !*** ./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.html ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n\n\n\n<app-related-entities [service]=\"oneWorkplaceManyPersonnelService\" [oneId]=\"oneId\"\n                      sourceFilterPlaceholder=\"جستجو با عنوان\"\n                      targetFilterPlaceholder=\"جستجو با عنوان\"\n                      sourceHeader=\"لیست کل پرسنل\" targetHeader=\"پرسنل این محل کار\"\n                      [oneTitle]=\"oneTitle\"\n                      manyTitle=\"پرسنل\"\n                      filterBy=\"Name,LastName,Code\"\n\n>\n  <ng-template #itemTemplate let-item>\n    <td>\n      {{item.Name}} {{item.LastName}} ({{item.Code}})\n    </td>\n\n\n  </ng-template>\n</app-related-entities>\n\n\n"
+
+/***/ }),
+
+/***/ "./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.ts":
+/*!**************************************************************************************************!*\
+  !*** ./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.ts ***!
+  \**************************************************************************************************/
+/*! exports provided: OneWorkPlaceManyPersonnelComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OneWorkPlaceManyPersonnelComponent", function() { return OneWorkPlaceManyPersonnelComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _services_one_workplace_many_personnel_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/one-workplace-many-personnel.service */ "./src/app/absence/services/one-workplace-many-personnel.service.ts");
+/* harmony import */ var _related_entities_related_entities_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../related-entities/related-entities.component */ "./src/app/absence/related-entities/related-entities.component.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var OneWorkPlaceManyPersonnelComponent = /** @class */ (function () {
+    function OneWorkPlaceManyPersonnelComponent(oneWorkplaceManyPersonnelService) {
+        this.oneWorkplaceManyPersonnelService = oneWorkplaceManyPersonnelService;
+    }
+    OneWorkPlaceManyPersonnelComponent.prototype.ngOnInit = function () {
+    };
+    OneWorkPlaceManyPersonnelComponent.prototype.submit = function () {
+        this.relatedEntitiesComponent.submit();
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], OneWorkPlaceManyPersonnelComponent.prototype, "oneId", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], OneWorkPlaceManyPersonnelComponent.prototype, "oneTitle", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_related_entities_related_entities_component__WEBPACK_IMPORTED_MODULE_2__["RelatedEntitiesComponent"]),
+        __metadata("design:type", _related_entities_related_entities_component__WEBPACK_IMPORTED_MODULE_2__["RelatedEntitiesComponent"])
+    ], OneWorkPlaceManyPersonnelComponent.prototype, "relatedEntitiesComponent", void 0);
+    OneWorkPlaceManyPersonnelComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-one-work-place-many-personnel',
+            template: __webpack_require__(/*! ./one-work-place-many-personnel.component.html */ "./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.html"),
+            styles: [__webpack_require__(/*! ./one-work-place-many-personnel.component.css */ "./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.css")]
+        }),
+        __metadata("design:paramtypes", [_services_one_workplace_many_personnel_service__WEBPACK_IMPORTED_MODULE_1__["OneWorkplaceManyPersonnelService"]])
+    ], OneWorkPlaceManyPersonnelComponent);
+    return OneWorkPlaceManyPersonnelComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/absence/related-entities/related-entities.component.css":
+/*!*************************************************************************!*\
+  !*** ./src/app/absence/related-entities/related-entities.component.css ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/absence/related-entities/related-entities.component.html":
+/*!**************************************************************************!*\
+  !*** ./src/app/absence/related-entities/related-entities.component.html ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p-messages [(value)]=\"msgs\" showTransitionOptions=\"300ms ease-out\"></p-messages>\n\n<h4>\n  مدیریت\n  {{manyTitle}}\n  برای\n  {{oneTitle}}\n</h4>\n<p-pickList [source]=\"sourceModels\" [target]=\"targetModels\"\n            [sourceHeader]=\"sourceHeader\" [targetHeader]=\"targetHeader\" [responsive]=\"true\"\n            [filterBy]=\"filterBy\"\n            dragdrop=\"true\" [sourceFilterPlaceholder]=\"sourceFilterPlaceholder\" [targetFilterPlaceholder]=\"targetFilterPlaceholder\"\n            [sourceStyle]=\"{'height':'300px'}\" [targetStyle]=\"{'height':'300px'}\">\n  <ng-template let-item pTemplate=\"item\">\n\n    <ng-template [ngTemplateOutlet]=\"itemTemplate\" [ngTemplateOutletContext]=\"{$implicit: item}\"></ng-template>\n\n\n  </ng-template>\n</p-pickList>\n\n"
+
+/***/ }),
+
+/***/ "./src/app/absence/related-entities/related-entities.component.ts":
+/*!************************************************************************!*\
+  !*** ./src/app/absence/related-entities/related-entities.component.ts ***!
+  \************************************************************************/
+/*! exports provided: RelatedEntitiesComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RelatedEntitiesComponent", function() { return RelatedEntitiesComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _database_tables_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../database/tables.service */ "./src/app/database/tables.service.ts");
+/* harmony import */ var primeng_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! primeng/api */ "./node_modules/primeng/api.js");
+/* harmony import */ var primeng_api__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(primeng_api__WEBPACK_IMPORTED_MODULE_2__);
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var RelatedEntitiesComponent = /** @class */ (function () {
+    /*
+      @Output()
+      onSubmitEnd: EventEmitter<any> = new EventEmitter<any>();*/
+    function RelatedEntitiesComponent(messageService) {
+        this.messageService = messageService;
+        this.loading = false;
+        this.msgs = [];
+    }
+    RelatedEntitiesComponent.prototype.ngOnInit = function () {
+        this.sourceModels = [];
+        this.targetModels = [];
+        this.reload();
+    };
+    RelatedEntitiesComponent.prototype.save = function () {
+        var _this = this;
+        this.loading = true;
+        this.service.save({
+            oneId: this.oneId,
+            sourceModels: this.sourceModels,
+            targetModels: this.targetModels,
+        }).toPromise().then(function (result) {
+            _this.loading = false;
+            if (result.Status == _database_tables_service__WEBPACK_IMPORTED_MODULE_1__["CustomResultType"].success) {
+                _this.reload();
+                _this.msgs = [];
+                _this.msgs.push({ severity: 'success', summary: 'پیغام', detail: 'با موفقیت ثبت شد' });
+                //this.messageService.add({severity:'success', summary: 'پیغام', detail: 'با موفقیت ثبت شد' , sticky:true});
+            }
+        }).catch(function (s) {
+            _this.loading = false;
+        });
+    };
+    RelatedEntitiesComponent.prototype.reload = function () {
+        var _this = this;
+        this.loading = true;
+        this.service.get(this.oneId).toPromise().then(function (result) {
+            _this.loading = false;
+            if (result.Status == _database_tables_service__WEBPACK_IMPORTED_MODULE_1__["CustomResultType"].success) {
+                _this.sourceModels = result.result.sourceModels;
+                _this.targetModels = result.result.targetModels;
+            }
+        }).catch(function (s) {
+            _this.loading = false;
+        });
+    };
+    RelatedEntitiesComponent.prototype.submit = function () {
+        this.save();
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "service", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "sourceHeader", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "targetHeader", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "targetFilterPlaceholder", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "sourceFilterPlaceholder", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "oneId", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ContentChild"])('itemTemplate'),
+        __metadata("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_0__["TemplateRef"])
+    ], RelatedEntitiesComponent.prototype, "itemTemplate", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "oneTitle", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "manyTitle", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", Object)
+    ], RelatedEntitiesComponent.prototype, "filterBy", void 0);
+    RelatedEntitiesComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-related-entities',
+            template: __webpack_require__(/*! ./related-entities.component.html */ "./src/app/absence/related-entities/related-entities.component.html"),
+            styles: [__webpack_require__(/*! ./related-entities.component.css */ "./src/app/absence/related-entities/related-entities.component.css")],
+            providers: [primeng_api__WEBPACK_IMPORTED_MODULE_2__["MessageService"]]
+        }),
+        __metadata("design:paramtypes", [primeng_api__WEBPACK_IMPORTED_MODULE_2__["MessageService"]])
+    ], RelatedEntitiesComponent);
+    return RelatedEntitiesComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/absence/services/one-workplace-many-personnel.service.ts":
+/*!**************************************************************************!*\
+  !*** ./src/app/absence/services/one-workplace-many-personnel.service.ts ***!
+  \**************************************************************************/
+/*! exports provided: OneWorkplaceManyPersonnelService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OneWorkplaceManyPersonnelService", function() { return OneWorkplaceManyPersonnelService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var OneWorkplaceManyPersonnelService = /** @class */ (function () {
+    function OneWorkplaceManyPersonnelService(http) {
+        this.http = http;
+    }
+    OneWorkplaceManyPersonnelService.prototype.delete = function (model) {
+        return undefined;
+    };
+    OneWorkplaceManyPersonnelService.prototype.get = function (oneId) {
+        var url = "/Mobile/Workplaces/GetOneWorkplaceManyPersonnel?oneId=" + oneId;
+        return this.http.get(url, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
+                'Content-Type': 'application/json'
+            })
+        });
+    };
+    OneWorkplaceManyPersonnelService.prototype.save = function (model) {
+        var url = "/Mobile/Workplaces/SaveOneWorkplaceManyPersonnel";
+        return this.http.post(url, model, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
+                'Content-Type': 'application/json'
+            })
+        });
+    };
+    OneWorkplaceManyPersonnelService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
+    ], OneWorkplaceManyPersonnelService);
+    return OneWorkplaceManyPersonnelService;
 }());
 
 
@@ -961,7 +1681,12 @@ var WorkplacesService = /** @class */ (function () {
         this.http = http;
     }
     WorkplacesService.prototype.delete = function (model) {
-        return undefined;
+        var url = "/Mobile/Workplaces/Delete?id=" + model.Id;
+        return this.http.post(url, model, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
+                'Content-Type': 'application/json'
+            })
+        });
     };
     WorkplacesService.prototype.get = function () {
         var url = "/Mobile/Workplaces/Get";
@@ -1016,7 +1741,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n\n\n<app-crud [header]=\"'لیست محل های کار'\" [cols]=\"cols\" [form]=\"form\"\n          [formFields]=\"fields\"   [service]=\"workplacesService\">\n\n  <ng-template #columnHeaderContent let-columns>\n    <th>پرسنل</th>\n  </ng-template>\n\n  <ng-template #columnContent let-item>\n    <td>{{item.Name}}</td>\n\n  </ng-template>\n\n</app-crud>\n"
+module.exports = "\n\n\n\n<app-crud [header]=\"'لیست محل های کار'\" [cols]=\"cols\" [form]=\"form\"\n          [formFields]=\"fields\"   [service]=\"workplacesService\"\n\n\n>\n\n  <ng-template #columnHeaderContent let-columns>\n    <th>ویرایش پرسنل</th>\n  </ng-template>\n\n  <ng-template #columnContent let-item>\n    <td>\n      <a (click)=\"showDialog(item)\" >\n        {{item.PersonnelCount}}\n        پرسنل\n      </a>\n      </td>\n\n\n\n  </ng-template>\n\n</app-crud>\n\n\n\n\n<p-dialog header=\"انتخاب پرسنل این محل کار\" [(visible)]=\"display\"\n          [modal]=\"true\"\n          [responsive]=\"true\" [style]=\"{width: '350px', minWidth: '200px'}\"\n          [minY]=\"70\" (onHide)=\"reload()\"\n>\n\n  <div *ngIf=\"display\">\n    <app-one-work-place-many-personnel  [oneId]=\"selectedOneId\"  [oneTitle]=\"oneTitle\">\n\n    </app-one-work-place-many-personnel>\n  </div>\n\n  <p-footer>\n    <button type=\"button\" pButton icon=\"pi pi-check\" (click)=\"submitOneToManyForm(); \" label=\"ثبت\"></button>\n    <button type=\"button\" pButton icon=\"pi pi-close\" (click)=\"display=false;\" label=\"لغو\" ></button>\n  </p-footer>\n</p-dialog>\n\n"
 
 /***/ }),
 
@@ -1033,6 +1758,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _services_workplaces_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/workplaces.service */ "./src/app/absence/services/workplaces.service.ts");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _crud_crud_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../crud/crud.component */ "./src/app/absence/crud/crud.component.ts");
+/* harmony import */ var _one_work_place_many_personnel_one_work_place_many_personnel_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../one-work-place-many-personnel/one-work-place-many-personnel.component */ "./src/app/absence/one-work-place-many-personnel/one-work-place-many-personnel.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1042,6 +1769,8 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
 
 
 
@@ -1111,6 +1840,8 @@ var WorkplacesComponent = /** @class */ (function () {
                 validationMessage: 'Category is required',
             }
         ];
+        this.display = false;
+        this.shouldRenderOneWorkPlaceManyPersonnel = false;
     }
     WorkplacesComponent.prototype.ngOnInit = function () {
         this.form = this.createFormGroup();
@@ -1125,6 +1856,26 @@ var WorkplacesComponent = /** @class */ (function () {
         var fg = this.fb.group(group);
         return fg;
     };
+    WorkplacesComponent.prototype.showDialog = function (item) {
+        this.selectedOneId = item.Id;
+        this.oneTitle = item.Name;
+        this.display = true;
+        this.selected = item;
+    };
+    WorkplacesComponent.prototype.submitOneToManyForm = function () {
+        this.oneToManyForm.submit();
+    };
+    WorkplacesComponent.prototype.reload = function () {
+        this.crudComponent.reload();
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_one_work_place_many_personnel_one_work_place_many_personnel_component__WEBPACK_IMPORTED_MODULE_4__["OneWorkPlaceManyPersonnelComponent"]),
+        __metadata("design:type", _one_work_place_many_personnel_one_work_place_many_personnel_component__WEBPACK_IMPORTED_MODULE_4__["OneWorkPlaceManyPersonnelComponent"])
+    ], WorkplacesComponent.prototype, "oneToManyForm", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])(_crud_crud_component__WEBPACK_IMPORTED_MODULE_3__["CrudComponent"]),
+        __metadata("design:type", _crud_crud_component__WEBPACK_IMPORTED_MODULE_3__["CrudComponent"])
+    ], WorkplacesComponent.prototype, "crudComponent", void 0);
     WorkplacesComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-workplaces',

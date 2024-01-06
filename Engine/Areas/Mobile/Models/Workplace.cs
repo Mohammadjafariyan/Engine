@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Engine.Areas.Mobile.ViewModel;
 using Engine.Entities.Data;
 using Engine.Entities.Data.Absence.Models;
@@ -26,6 +27,8 @@ namespace Engine.Areas.Mobile.Models
         public virtual ICollection<WorkplaceSetting> WorkplaceSettings { get; set; }
         public virtual List<MyLocation> Locations { get; set; }
         public bool IsFaceRecognationEnabled { get;  set; }
+        [NotMapped]
+        public int PersonnelCount { get; set; }
     }
 
     public class WorkplaceSetting : Engine.Entities.Models.ICore.BaseEntity,AbsenceBase

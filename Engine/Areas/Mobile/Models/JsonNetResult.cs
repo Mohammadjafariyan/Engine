@@ -2,12 +2,13 @@
 using System.Web.Mvc;
 using Newtonsoft.Json;
 
-namespace Engine.Areas.Mobile.Controllers
+namespace Engine.Areas.Mobile.Models
 {
     public class JsonNetResult : JsonResult
     {
         public JsonSerializerSettings SerializerSettings { get; set; }
 
+        
         public JsonNetResult()
         {
             SerializerSettings = new JsonSerializerSettings

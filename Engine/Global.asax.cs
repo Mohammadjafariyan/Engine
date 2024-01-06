@@ -18,6 +18,7 @@ using Entities.Data;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
 using WebAppIDEEngine.Models;
 
 namespace Engine
@@ -48,6 +49,19 @@ namespace Engine
 
 
             GenerateSuperUserIfNotExists();
+            
+            
+            
+            var jsonSettings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                Formatting = Formatting.Indented
+            };
+
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings = jsonSettings;
+            
+            
+
         }
 
 

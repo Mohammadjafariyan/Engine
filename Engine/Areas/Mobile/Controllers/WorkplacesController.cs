@@ -10,8 +10,12 @@ using Engine.Areas.JUiEngine.Controllers;
 using Engine.Areas.Mobile.Models;
 using Engine.Areas.Mobile.Service;
 using Engine.Areas.Mobile.ViewModel;
+using Engine.Areas.ReportGenerator.Controllers;
 using Engine.Controllers.AbstractControllers.ObjectBased;
 using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
+using Engine.Entities.Models;
+using Engine.ServiceLayer.Engine;
 using MvcContrib.TestHelper.Ui;
 using Newtonsoft.Json;
 using Rhino.Mocks.Constraints;
@@ -33,10 +37,8 @@ namespace Engine.Areas.Mobile.Controllers
         [AllowAnonymous]
         public ActionResult WorkplaceInMapAndroid(long id, string token)
         {
-
             using (var db = new EngineContext())
             {
-
                 string username = SecurityService.GetUsernameFromToken(token);
 
 
@@ -68,8 +70,6 @@ namespace Engine.Areas.Mobile.Controllers
         {
             using (var db = new EngineContext())
             {
-
-
                 // دسترسی موبایلی
                 if (!Request.IsAuthenticated)
                 {
@@ -83,12 +83,12 @@ namespace Engine.Areas.Mobile.Controllers
 
                     if (workplacePersonnel.WorkplaceId != vm.WorkplaceId)
                         throw new Exception("شما به این شرکت دسترسی ندارید");
-
                 }
             }
 
             return WorkplaceInMap(vm);
-            }
+        }
+
         [HttpGet]
         public ActionResult WorkplaceInMap(long id)
         {
@@ -116,8 +116,6 @@ namespace Engine.Areas.Mobile.Controllers
 
                 using (var db = new EngineContext())
                 {
-
-
                     // دسترسی موبایلی
                     if (!Request.IsAuthenticated)
                     {
@@ -131,7 +129,6 @@ namespace Engine.Areas.Mobile.Controllers
 
                         if (workplacePersonnel.WorkplaceId != vm.WorkplaceId)
                             throw new Exception("شما به این شرکت دسترسی ندارید");
-
                     }
 
 
@@ -155,29 +152,124 @@ namespace Engine.Areas.Mobile.Controllers
             }
             catch (Exception e)
             {
-                Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 GenErrorMessage(ViewData, e.Message);
             }
 
-            return Json(vm.WorkplaceId,JsonRequestBehavior.AllowGet);
+            return Json(vm.WorkplaceId, JsonRequestBehavior.AllowGet);
         }
 
-        public override Task<ActionResult> Save(Workplace model)
+
+
+        public ActionResult SaveOneWorkplaceManyPersonnel(IRelatedModel<Personnel> model)
+        {
+            SaveOneToMany<Workplace, Personnel, WorkplacePersonnel>(new OneToManyViewModel
+                {
+                    Many = model.targetModels?.Select(s => s.Id).ToList() ?? new List<long>(),
+                    OneId = model.oneId,
+                    ManyBool = model.targetModels?.Select(s => true).ToList() ?? new List<bool>()
+                },
+                "WorkplacePersonnels"
+                , db => db, (db, one, many, User) =>
+                {
+                    return new WorkplacePersonnel
+                    {
+                        Name = null,
+                        ApplicationUserId = User.Id,
+                        PersonnelId = many.Id,
+                        WorkplaceId = one.Id,
+                        //  ObligatedRange = obligatedRange,
+                        //WorkGroup = workGroup,
+                        // ApplicationUser = applicationUser,
+                    };
+                });
+
+            return Json(new ApiResult<bool>
+            {
+                result = true,
+                Status = CustomResultType.success,
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        protected override IQueryable<Workplace> GetInclution(IQueryable<Workplace> entities)
+        {
+            return entities
+                .Include(s => s.WorkplacePersonnels);
+        }
+
+        protected override List<Workplace> GetSelectList(List<Workplace> entities)
+        {
+            return entities.Select(s =>
+            {
+                s.PersonnelCount = s.WorkplacePersonnels.Count;
+
+                return s;
+            }).ToList();
+        }
+
+        public ActionResult GetOneWorkplaceManyPersonnel(long oneId)
+        {
+            using (var db = new EngineContext())
+            {
+                var workplace = db.QueryNoTrack<Workplace>()
+                    .Include(s => s.WorkplacePersonnels)
+                    .Include(s => s.WorkplacePersonnels.Select(w => w.Personnel))
+                    .FirstOrDefault(f => f.Id == oneId);
+
+                if (workplace == null)
+                {
+                    return HttpNotFound();
+                }
+
+                var personnels = workplace.WorkplacePersonnels.Select(w => w.Personnel).ToList();
+
+                var ids=personnels.Select(p => p.Id);
+                var list = db.QueryNoTrack<Personnel>()
+                    .Where(s=>!ids.Any(id=>id==s.Id)).ToList();
+
+                var jsonSettings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    Formatting = Formatting.Indented
+                };
+
+                var json = new JsonNetResult();
+                json.Data = new ApiResult<IRelatedModel<Personnel>>
+                {
+                    result = new IRelatedModel<Personnel>
+                    {
+                        sourceModels = list,
+                        targetModels = personnels,
+                        oneId = workplace.Id,
+
+                        oneTitle = workplace.Name
+                    },
+                    Status = CustomResultType.success,
+                };
+
+                json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+                json.SerializerSettings = jsonSettings;
+
+                return json;
+            }
+        }
+
+        public override async Task<ActionResult> Save(Workplace model)
         {
             string[] array = Request.Form.GetValues("UserClockTypesarr");
 
             int c = 0;
             model.UserClockTypes = new List<UserClockTypeViewModel>();
 
-            if(array!=null)
-            foreach (var ct in array)
-            {
-                model.UserClockTypes.Add(new UserClockTypeViewModel
+            if (array != null)
+                foreach (var ct in array)
                 {
-                    type = (ClockType) long.Parse(ct),
-                    order = c++,
-                });
-            }
+                    model.UserClockTypes.Add(new UserClockTypeViewModel
+                    {
+                        type = (ClockType)long.Parse(ct),
+                        order = c++,
+                    });
+                }
 
 
             if (model.UserClockTypes.Count == 0 && !model.oneDeviceEnabled)
@@ -187,7 +279,17 @@ namespace Engine.Areas.Mobile.Controllers
 
             //  var array2 = Request.Form["UserClockTypes"];
 
-            return base.Save(model);
+            await base.Save(model);
+             
+             return Json(new ApiResult<bool>
+             {
+                 result = true,
+                 Status = CustomResultType.success,
+             }, JsonRequestBehavior.AllowGet);
+
         }
     }
 }
+
+
+    

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Engine.Areas.JUiEngine.Controllers;
+using Engine.Areas.Mobile.Models;
 using Engine.Areas.ReportGenerator.Controllers;
 using Engine.Attributes;
 using Engine.Controllers.AbstractControllers.AttributeBased;
@@ -20,6 +20,7 @@ using Engine.Entities.Models.UiGeneratorModels;
 using Engine.Service.AbstractControllers;
 using Engine.ServiceLayer.Engine;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
 using ServiceLayer.Absence;
 using ViewModel.ActionTypes;
 using WebAppIDEEngine.Models.UiGeneratorModels;
@@ -79,9 +80,6 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
         }
 
 
-
-        
-
         [System.Web.Http.HttpGet]
         public virtual ActionResult Get(PagingViewModel paging = null)
         {
@@ -102,39 +100,65 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                         entities = entities.Skip(paging.SelectedPage * paging.Take);
                     }
 
-                    if (paging.Take<=0)
+                    if (paging.Take <= 0)
                     {
                         paging.Take = 20;
                     }
+
                     entities = entities.Take(paging.Take);
 
+                    entities = GetInclution(entities);
+
                     result = entities.ToList();
-                   
+                    result = GetSelectList(result);
                 }
                 else
                 {
-                    result=  entities.ToList();
-
+                    entities = GetInclution(entities);
+                    result = entities.ToList();
+                    result = GetSelectList(result);
                 }
-
-               
             }
 
-            if (paging!=null)
+            var json = new JsonNetResult();
+            var apiResult = new ApiResult<List<T>>();
+            if (paging != null)
             {
-                return Json(new ApiResult<List<T>>
+                apiResult = new ApiResult<List<T>>
                 {
-                    result =result  , Status = CustomResultType.success,
+                    result = result, Status = CustomResultType.success,
                     total = count,
                     totalPages = count / paging.Take
-                }, JsonRequestBehavior.AllowGet);
+                };
             }
-            
-            return Json(new ApiResult<List<T>>
+            else
             {
-                result = result, Status = CustomResultType.success,
-                total = result.Count
-            }, JsonRequestBehavior.AllowGet);
+                apiResult.result = result;
+                apiResult.Status = CustomResultType.success;
+                apiResult.total = result.Count;
+            }
+
+
+            json.Data = apiResult;
+            json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            json.SerializerSettings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                Formatting = Formatting.Indented
+            };
+            ;
+
+            return json;
+        }
+
+        protected virtual List<T> GetSelectList(List<T> entities)
+        {
+            return entities;
+        }
+
+        protected virtual IQueryable<T> GetInclution(IQueryable<T> entities)
+        {
+            return entities;
         }
 
 
