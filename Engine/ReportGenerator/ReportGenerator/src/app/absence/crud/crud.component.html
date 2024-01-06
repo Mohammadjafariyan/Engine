@@ -1,3 +1,7 @@
+
+<p-confirmDialog   acceptLabel="بله" rejectLabel="خیر" [style]="{width: '50vw'}"></p-confirmDialog>
+
+
 <p-table [columns]="cols" [value]="models" styleClass="table container"
 
          selectionMode="single" [(selection)]="selectedModel"
@@ -58,7 +62,10 @@
 <p-dialog [header]="newModel  ? newFormHeader : editFormHeader" [(visible)]="displayDialog" [responsive]="true"
           showEffect="fade" [modal]="true"
           [style]="{width: '350px'}">
+  <p-messages [value]="msgs"></p-messages>
+
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
     <div class="row d-flex" *ngIf="model">
       <div class="col-md-6" *ngFor="let field of formFields">
         <label *ngIf="field.type != 'checkbox'">{{ field.label }}</label>
@@ -132,8 +139,13 @@
     </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" pButton icon="fa fa-close" (click)="delete()" label="حذف"></button>
-        <button type="button" pButton icon="fa fa-check" (click)="save()" label="ثبت"></button>
+        <button *ngIf="model" type="button" class="bg-danger text-white" pButton icon="fa fa-close" (click)="delete()" label="حذف"></button>
+        <button *ngIf="model" type="button" pButton icon="fa fa-check" (click)="save()" label="ثبت"></button>
+
+        <div *ngIf=" selectedModel">
+        {{selectedModel.Id}}
+        </div>
+        <button *ngIf="model" type="button" class="bg-secondary text-white" pButton  (click)="this.model = null;this.displayDialog = false;" label="بستن"></button>
       </div>
     </p-footer>
   </form>

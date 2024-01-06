@@ -1,10 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CustomResult} from "../../database/tables.service";
 import {Global} from "../absence-index/absence.DataProviderService";
 import {Workplace, WorkplacesService} from "../services/workplaces.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {IField} from "../crud/crud.component";
+import {CrudComponent, IField} from "../crud/crud.component";
+import {
+  OneWorkPlaceManyPersonnelComponent
+} from "../one-work-place-many-personnel/one-work-place-many-personnel.component";
 
 @Component({
   selector: 'app-workplaces',
@@ -109,5 +112,31 @@ export class WorkplacesComponent implements OnInit {
 
 
 
+  display: boolean = false;
 
+  selectedOneId;
+  oneTitle;
+  @ViewChild(OneWorkPlaceManyPersonnelComponent) oneToManyForm: OneWorkPlaceManyPersonnelComponent;
+  @ViewChild(CrudComponent) crudComponent: CrudComponent;
+  shouldRenderOneWorkPlaceManyPersonnel: boolean = false;
+
+
+  selected;
+  showDialog(item: Workplace) {
+    this.selectedOneId =item.Id;
+    this.oneTitle =item.Name;
+    this.display = true;
+
+    this.selected=item;
+
+  }
+
+  submitOneToManyForm() {
+    this.oneToManyForm.submit();
+
+  }
+
+  reload(){
+    this.crudComponent.reload();
+  }
 }

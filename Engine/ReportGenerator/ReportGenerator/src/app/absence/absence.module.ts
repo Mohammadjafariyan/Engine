@@ -5,7 +5,14 @@ import {AbsenceRoutingModule} from "./abscence-routing.module";
 import {RouterModule} from "@angular/router";
 import {FormGeneratorModule} from "../form-generator/form-generator.module";
 import {DialogModule} from "primeng/dialog";
-import {CalendarModule, InputTextModule, ListboxModule, MultiSelectModule} from "primeng/primeng";
+import {
+    CalendarModule, ConfirmDialogModule,
+    InputTextModule,
+    ListboxModule,
+    MessagesModule,
+    MultiSelectModule,
+    PickListModule
+} from "primeng/primeng";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TableModule} from "primeng/table";
 import { WorkplacesComponent } from './workplaces/workplaces.component';
@@ -13,6 +20,7 @@ import { CrudComponent } from './crud/crud.component';
 import { OneWorkPlaceManyPersonnelComponent } from './one-work-place-many-personnel/one-work-place-many-personnel.component';
 import { RelatedEntitiesComponent } from './related-entities/related-entities.component';
 import { OnePersonnelManyWorkplacesComponent } from './one-personnel-many-workplaces/one-personnel-many-workplaces.component';
+import {ToastModule} from "primeng/toast";
 
 @NgModule({
     imports: [
@@ -21,7 +29,7 @@ import { OnePersonnelManyWorkplacesComponent } from './one-personnel-many-workpl
         RouterModule,
         FormGeneratorModule, DialogModule,
         CalendarModule,
-        FormsModule, MultiSelectModule, TableModule, InputTextModule, ReactiveFormsModule, ListboxModule
+        FormsModule, MultiSelectModule, TableModule, InputTextModule, ReactiveFormsModule, ListboxModule, PickListModule, ToastModule, MessagesModule, ConfirmDialogModule
     ],
   declarations: [AbsenceIndexComponent, WorkplacesComponent, CrudComponent, OneWorkPlaceManyPersonnelComponent, RelatedEntitiesComponent, OnePersonnelManyWorkplacesComponent],
   bootstrap:[AbsenceIndexComponent],

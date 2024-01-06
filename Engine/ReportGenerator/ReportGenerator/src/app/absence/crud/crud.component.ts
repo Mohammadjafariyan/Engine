@@ -2,6 +2,7 @@ import {Component, ContentChild, Input, OnInit, TemplateRef} from '@angular/core
 import {Observable} from "rxjs";
 import {FormGroup} from "@angular/forms";
 import {ApiResult, CustomResultType} from "../../database/tables.service";
+import {ConfirmationService, Message} from "primeng/api";
 
 export interface IService{
 
@@ -29,7 +30,9 @@ export interface IField{
 @Component({
   selector: 'app-crud',
   templateUrl: './crud.component.html',
-  styleUrls: ['./crud.component.css']
+  styleUrls: ['./crud.component.css'],
+  providers: [ConfirmationService]
+
 })
 export class CrudComponent implements OnInit {
 
@@ -64,6 +67,7 @@ export class CrudComponent implements OnInit {
   @Input() formFields: IField[]  = [ ];
   @Input()
   form!: FormGroup;
+  msgs: Message[] = [];
 
   onSubmit(): void {
     if (this.form.valid) {
@@ -81,7 +85,7 @@ export class CrudComponent implements OnInit {
   AddButtonTitle: any ='رکورد جدید';
 
 
-  constructor() {}
+  constructor(private confirmationService: ConfirmationService) {}
 
   reload(){
     this.service.get().toPromise().then(res => {
@@ -116,6 +120,7 @@ export class CrudComponent implements OnInit {
 
         this.model = null;
         this.displayDialog = false;
+        this.msgs = [{severity:'success', summary:'پیغام', detail:'با موفقیت ثبت شد'}];
 
         this.reload();
 
@@ -124,16 +129,29 @@ export class CrudComponent implements OnInit {
   }
 
   delete() {
-    let index = this.models.indexOf(this.selectedModel);
 
-    this.service.delete(this.models[index]).toPromise()
-      .then(s=>{
+    let deleteFunc = ()=>{
+      let index = this.models.indexOf(this.selectedModel);
 
-        this.model = null;
-        this.displayDialog = false;
-        this.reload();
+      debugger
+      this.service.delete(this.models[index]).toPromise()
+        .then(s=>{
 
-      });
+          this.model = null;
+          this.displayDialog = false;
+          this.msgs = [{severity:'info', summary:'تائید شد', detail:'رکورد حذف شد'}];
+          this.reload();
+
+        });
+    }
+    this.confirmationService.confirm({
+      message: 'آیا از حذف این رکورد اطمینان دارید ؟',
+      header: 'تاکید',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => deleteFunc(),
+      reject: () => {
+      }
+    });
 
   }
 

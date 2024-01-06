@@ -1,3 +1,23 @@
-<p>
-  one-work-place-many-personnel works!
-</p>
+
+
+
+
+<app-related-entities [service]="oneWorkplaceManyPersonnelService" [oneId]="oneId"
+                      sourceFilterPlaceholder="جستجو با عنوان"
+                      targetFilterPlaceholder="جستجو با عنوان"
+                      sourceHeader="لیست کل پرسنل" targetHeader="پرسنل این محل کار"
+                      [oneTitle]="oneTitle"
+                      manyTitle="پرسنل"
+                      filterBy="Name,LastName,Code"
+
+>
+  <ng-template #itemTemplate let-item>
+    <td>
+      {{item.Name}} {{item.LastName}} ({{item.Code}})
+    </td>
+
+
+  </ng-template>
+</app-related-entities>
+
+

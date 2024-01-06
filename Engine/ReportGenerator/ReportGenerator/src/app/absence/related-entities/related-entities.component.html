@@ -1,3 +1,21 @@
-<p>
-  related-entities works!
-</p>
+<p-messages [(value)]="msgs" showTransitionOptions="300ms ease-out"></p-messages>
+
+<h4>
+  مدیریت
+  {{manyTitle}}
+  برای
+  {{oneTitle}}
+</h4>
+<p-pickList [source]="sourceModels" [target]="targetModels"
+            [sourceHeader]="sourceHeader" [targetHeader]="targetHeader" [responsive]="true"
+            [filterBy]="filterBy"
+            dragdrop="true" [sourceFilterPlaceholder]="sourceFilterPlaceholder" [targetFilterPlaceholder]="targetFilterPlaceholder"
+            [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
+  <ng-template let-item pTemplate="item">
+
+    <ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
+
+
+  </ng-template>
+</p-pickList>
+

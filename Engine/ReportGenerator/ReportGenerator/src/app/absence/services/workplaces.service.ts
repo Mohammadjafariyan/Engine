@@ -15,7 +15,13 @@ export class WorkplacesService implements IService{
 
 
   delete(model: any): Observable<ApiResult<any>> {
-    return undefined;
+    var url =`/Mobile/Workplaces/Delete?id=${model.Id}`
+    return this.http.post<ApiResult<any>>(url, model,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      });
   }
 
   get(): Observable<ApiResult<any[]>> {
@@ -29,7 +35,7 @@ export class WorkplacesService implements IService{
 
   save(model: any): Observable<ApiResult<any>> {
     var url =`/Mobile/Workplaces/Save`
-    return this.http.post<ApiResult<Workplace[]>>(url, model,
+    return this.http.post<ApiResult<any>>(url, model,
       {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'

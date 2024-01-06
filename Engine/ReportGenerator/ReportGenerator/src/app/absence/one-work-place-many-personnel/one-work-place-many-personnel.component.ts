@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {OneWorkplaceManyPersonnelService} from "../services/one-workplace-many-personnel.service";
+import {RelatedEntitiesComponent} from "../related-entities/related-entities.component";
 
 @Component({
   selector: 'app-one-work-place-many-personnel',
@@ -7,9 +9,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OneWorkPlaceManyPersonnelComponent implements OnInit {
 
-  constructor() { }
+  @Input()
+  oneId: any;
+
+  @Input()
+  oneTitle: any;
+
+  constructor(public oneWorkplaceManyPersonnelService:OneWorkplaceManyPersonnelService) { }
 
   ngOnInit() {
   }
+
+
+  @ViewChild(RelatedEntitiesComponent) relatedEntitiesComponent: RelatedEntitiesComponent;
+  submit() {
+    this.relatedEntitiesComponent.submit();
+  }
+
 
 }
