@@ -6,7 +6,7 @@ using System.Web;
 using Engine.Entities.Models.Core.AppGeneration;
 using StructureMap.Query;
 using WebAppIDEEngine.Models.Core;
-using IModel = WebAppIDEEngine.Models.ICore.IModel;
+using IModel = Engine.Entities.Models.ICore.IModel;
 
 namespace Engine.Utitliy
 {

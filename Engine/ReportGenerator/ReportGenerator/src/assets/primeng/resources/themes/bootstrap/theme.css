@@ -35,9 +35,9 @@ body .ui-icon {
 }
 body .ui-state-disabled,
 body .ui-widget:disabled {
-    opacity: .35; 
-    filter: Alpha(Opacity= 35); 
-    background-image: none; 
+    opacity: .35;
+    filter: Alpha(Opacity= 35);
+    background-image: none;
     cursor: default !important;
 }
 body .ui-state-disabled *,
@@ -437,8 +437,9 @@ body .ui-listbox:not(.ui-state-disabled) .ui-listbox-item:hover {
     color: #373a3c;
 }
 body .ui-listbox .ui-listbox-item.ui-state-highlight {
-    background-color: #0275d8;
-    color: #ffffff;
+  background-color: #e6e6e6;
+  color: #212529;
+
 }
 body .ui-listbox .ui-listbox-item.ui-state-highlight .ui-chkbox {
     border: 1px solid #108ffd;
@@ -2210,9 +2211,9 @@ body .ui-inputgroup .ui-inputgroup-addon {
 
 body  .ui-inputgroup .ui-inputgroup-addon:first-child {
     border-top-left-radius: 0.25em;
-    border-bottom-left-radius: 0.25em; 
+    border-bottom-left-radius: 0.25em;
 }
- 
+
 body .ui-inputgroup .ui-inputgroup-addon:last-child {
     border-top-right-radius: 0.25em;
     border-bottom-right-radius: 0.25em;

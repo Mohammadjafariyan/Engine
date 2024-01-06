@@ -5,9 +5,10 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Engine.Absence.Models;
 using Engine.Areas.Mobile.ViewModel;
 using Engine.Controllers.AbstractControllers;
+using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Areas.Mobile.Controllers

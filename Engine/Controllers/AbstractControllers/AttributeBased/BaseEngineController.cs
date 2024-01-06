@@ -2,8 +2,8 @@
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Engine.Entities.Models.ICore;
 using ViewModel.ActionTypes;
-using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Controllers.AbstractControllers.AttributeBased
 {
@@ -13,7 +13,24 @@ namespace Engine.Controllers.AbstractControllers.AttributeBased
         protected Service.AbstractControllers.IEngineService<T> _engineService;
         protected Utitliy.Injector _injector;
 
+        /*
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            // Log the exception
+            //Logger.LogError(filterContext.Exception);
 
+            // Redirect to the error view
+            filterContext.Result = new ViewResult
+            {
+                ViewName = "Error"
+            };
+
+            ViewData["errorMessage"] = filterContext.Exception?.Message;
+            ViewData["stackTrace"] = filterContext.Exception?.StackTrace;
+            // Mark the exception as handled
+            filterContext.ExceptionHandled = true;
+        }
+        */
         
         [HttpGet]
         public virtual ActionResult GetDropDown(IDropDownParameter p)

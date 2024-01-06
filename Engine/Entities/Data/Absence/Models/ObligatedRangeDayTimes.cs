@@ -4,10 +4,10 @@ using Engine.Areas.Absence.Models;
 using Newtonsoft.Json;
 using TypeLite;
 
-namespace Engine.Absence.Models
+namespace Engine.Entities.Data.Absence.Models
 {
     [TsClass]
-    public class ObligatedRangeDayTimes: AbsenceBase
+    public class ObligatedRangeDayTimes: Engine.Entities.Models.ICore.BaseEntity,AbsenceBase
     {
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
@@ -21,6 +21,8 @@ namespace Engine.Absence.Models
         
         public RangeType RangeType { get; set; }
         public bool IsTwoDay { get; set; }
+        public  ApplicationUser ApplicationUser { get; set; }
+
 
         public ObligatedRangeDayTimes()
         {

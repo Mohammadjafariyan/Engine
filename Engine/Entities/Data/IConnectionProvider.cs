@@ -1,6 +1,6 @@
 ﻿namespace Entities.Data
 {
-    public interface IConnectionProvider
+    public interface  IConnectionProvider
     {
         string GetConnectionString();
     }

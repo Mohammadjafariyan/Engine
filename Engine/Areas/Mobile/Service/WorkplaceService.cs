@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Engine.Areas.Mobile.Models;
+using Engine.Entities.Data;
 using Engine.Service.AbstractControllers;
 using ServiceLayer.Absence;
 using WebAppIDEEngine.Models;

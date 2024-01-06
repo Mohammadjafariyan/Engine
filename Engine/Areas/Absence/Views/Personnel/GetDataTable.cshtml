@@ -1,14 +1,13 @@
 @using System.Collections.Specialized
 @using ViewModel.ActionTypes
-@using WebAppIDEEngine.Models.ICore
 @using Engine.Attributes
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 @using ViewModel.ActionTypes
 @using Domain.Attributes
 @using Engine.Areas.JUiEngine.Controllers
+@model ObjectDataTable<Engine.Entities.Data.Absence.Models.Personnel>
 
-@model IDataTable
 @{
     ViewBag.Title = "پرسنل";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
@@ -18,4 +17,35 @@
 }
 
 
-@Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)
+@*@Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)*@
+
+
+
+@Html.ActionLink("رکورد جدید","ForEdit",new {},new {@class="btn btn-primary"})
+<br/>
+<br/>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">نام</th>
+        <th scope="col">نام خانوادگی</th>
+        <th scope="col">کد ملی</th>
+        <th scope="col">گروه کاری</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.RecordsList)
+    {
+
+        <tr>
+            <th scope="row">@item.Name</th>
+            <td>@item.LastName</td>
+            <td>@item.Code</td>
+            <td>@item.WorkGroup.Name</td>
+            <td>@Html.ActionLink("ویرایش", "ForEdit", new { id = item.Id })</td>
+            <td>@Html.ActionLink("حذف", "Delete", new { id = item.Id })</td>
+        </tr>
+    }
+   
+    </tbody>
+</table>

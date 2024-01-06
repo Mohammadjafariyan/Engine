@@ -1,4 +1,3 @@
-using Engine.Absence.Models;
 using Engine.Areas.ReportGenerator.Controllers;
 using System.Linq;
 using System;
@@ -17,7 +16,6 @@ using System.Web.Mvc;
 using ViewModel.ActionTypes;
 using ViewModel.Parameters;
 using WebAppIDEEngine.Models;
-using WebAppIDEEngine.Models.ICore;
 using System.Collections.Specialized;
 using Engine.Areas.JUiEngine.Controllers;
 using Engine.Entities.Models.UiGeneratorModels;
@@ -28,6 +26,7 @@ using WebAppIDEEngine.Models;
 using System.Web.Mvc;
 using Engine.Areas.Absence.UiConstructs;
 using Engine.Controllers.AbstractControllers.ObjectBased;
+using Engine.Entities.Data.Absence.Models;
 using ServiceLayer.Absence;
 
 
@@ -44,6 +43,15 @@ namespace Engine.Areas.Absence.Controllers
             _engineService=new PersonnelService();
             FormConstructProvider = new PersonnelConstructs();
             TableConstructProvider = new PersonnelConstructs();
+        }
+
+        public override Func<IQueryable<Personnel>, IQueryable<Personnel>> GetWhereExp()
+        {
+            return (query) =>
+            {
+                query=query.Include(s => s.WorkGroup);
+                return query;
+            };
         }
     }
 }

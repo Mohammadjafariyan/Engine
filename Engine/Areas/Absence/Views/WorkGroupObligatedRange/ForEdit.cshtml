@@ -11,8 +11,8 @@
     ViewBag.SaveAction = ViewBag.SaveAction ?? "Save";
     ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
     ViewData["inline"] = true;
-    var form=ViewData[UiHomeController.Form] as UiForm;  
-    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    var form=ViewData[UiHomeController.Form] as UiForm;
+    Layout = null;// "~/Views/Shared/_Layout_Admin.cshtml";
 
     
 }

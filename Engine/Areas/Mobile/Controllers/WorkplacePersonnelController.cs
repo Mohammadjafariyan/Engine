@@ -15,6 +15,7 @@ using Engine.Service.AbstractControllers;
 using Microsoft.AspNet.Identity;
 using System;
 using Engine.Entities.Data;
+using EngineContext = Engine.Entities.Data.EngineContext;
 
 namespace Engine.Areas.Mobile.Controllers
 {

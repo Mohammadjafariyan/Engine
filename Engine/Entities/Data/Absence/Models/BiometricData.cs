@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Engine.Absence.Models;
 using Engine.Areas.Mobile.Models;
 using Engine.Areas.Mobile.ViewModel;
 using TypeLite;
 
-namespace Engine.Absence.Models
+namespace Engine.Entities.Data.Absence.Models
 {
     [TsClass]
-    public class BiometricData : AbsenceBase
+    public class BiometricData : Engine.Entities.Models.ICore.BaseEntity,AbsenceBase
     {
         public BiometricData()
         {
             BiometricDataTimes = new List<BiometricDataTime>();
             Date = DateTime.Now;
         }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
         public long? UserId { get; set; }
         public DateTime Date { get; set; }
@@ -28,7 +27,7 @@ namespace Engine.Absence.Models
         public virtual ICollection<BiometricDataTime> BiometricDataTimes { get; set; }
     }
 
-    public class BiometricDataTime : AbsenceBase
+    public class BiometricDataTime : Engine.Entities.Models.ICore.BaseEntity, AbsenceBase
     {
         public BiometricDataTime()
         {
@@ -51,7 +50,7 @@ namespace Engine.Absence.Models
 
 
     [TsClass]
-    public class BiometricRawData : AbsenceBase
+    public class BiometricRawData : Engine.Entities.Models.ICore.BaseEntity,AbsenceBase
     {
         public long UserId { get; set; }
         public long MachineId { get; set; }

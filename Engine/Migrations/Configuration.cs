@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Engine.Entities.Data;
 using Engine.Entities.Models.Core.AppGeneration;
 using Entities;
 
@@ -9,7 +10,7 @@ namespace Engine.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<WebAppIDEEngine.Models.EngineContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<EngineContext>
     {
         public Configuration()
         {
@@ -17,7 +18,7 @@ namespace Engine.Migrations
             AutomaticMigrationDataLossAllowed = true;
         }
 
-        protected override void Seed(WebAppIDEEngine.Models.EngineContext context)
+        protected override void Seed(EngineContext context)
         {
 
             var r=new Rent {Name = "Rent  in Mount"};

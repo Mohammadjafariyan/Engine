@@ -1,2 +1,133 @@
-﻿@model dynamic
+﻿@using System.Collections.Specialized
+@using System.Web.Mvc.Html
+@using Engine.Areas.JUiEngine.Controllers
+@using Engine.Entities.Data.Absence.Models
+@using Engine.Entities.Models.UiGeneratorModels
+@using Engine.HtmlExtentions
+@using Engine.Localization
+@using WebAppIDEEngine.Models.Core
+@model Engine.Entities.Models.WorkGroupObligatedRangeOneToManyViewModel
 
+@{
+    Layout = null; // "~/Views/Shared/_Layout_Admin.cshtml";
+    string id = Guid.NewGuid().ToString();
+
+}
+
+@{
+    var one = ViewBag.one as ObligatedRange;
+    var many = ViewBag.many as List<WorkGroup >;
+    var selectedList = ViewBag.selected as long[];
+}
+
+
+<style>
+    .checkboxHover:hover{
+    cursor: pointer;
+    }
+</style>
+
+@using (Ajax.BeginForm("SaveOneObligatedRangeToManyWorkGroups", new AjaxOptions
+{
+    UpdateTargetId = @id,
+    OnSuccess = $"modalSucceed('{id}')"
+
+}))
+{
+    <div class="modal-body" id="@id">
+
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+
+                <div class="col form-group">
+                    <label>
+                        شیفت :
+
+                    </label>
+                                            @Html.DropDownListFor(m => m.OneId, (SelectList)ViewBag.oneItems, new { placeholder = Request.GetText("S2 *"), @class = "form-control" })
+
+                </div>
+                <div class="col form-group">
+
+                    
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th colspan="2" style="text-align: center">
+                                شیفت های کاری
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+
+
+                            @if (many != null)
+                            {
+                                for (var index = 0; index < many.Count; index++)
+                                {
+                                    var manyItem = many[index];
+                                    if (index / 2 > 0 && (index) % 2 == 0)
+                                    {
+                                        @Html.Raw("<tr>")
+                                    }
+                                    <td>
+                                        <label class="checkboxHover">
+                                            @manyItem.Name
+                                            @Html.HiddenFor(model => model.Many[index])
+                                            @Html.CheckBox(
+                                                $"ManyBool[{index}]",
+                                                selectedList != null && selectedList.Any(l => manyItem.Id == l),
+                                                new { @class = "form-check-input" })
+
+                                        </label>
+
+                                    </td>
+
+                                    if (index / 2 > 0 && (index) % 2 == 0)
+                                    {
+                                        @Html.Raw("</tr>")
+                                    }
+                                }
+                            }
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="col-md-12">
+
+
+                <div class="form-group mt-3">
+
+                    <label>
+                        تاریخ شروع :
+                        @*//@Html.TextBoxFor(m => m.DateTimeIran, new { placeholder = Request.GetText(" *"), @class = "form-control" })*@
+                        @Html.DatePicker(m => m.DateTimeIran)
+                    </label>
+                </div>
+
+                <div class="form-group mt-3">
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button id="dismiss_@id" type="button" class="btn btn-secondary" data-bs-dismiss="modal">لغو</button>
+        <button id="submit_@id" type="submit" class="btn btn-primary">ثبت</button>
+    </div>
+}
+
+<script>
+ function modalSucceed(target){
+    $('#submit_'+target).remove();
+    $('#dismiss_'+target).text('اتمام');
+}
+</script>

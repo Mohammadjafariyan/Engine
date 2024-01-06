@@ -1,12 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using Engine.Areas.Mobile.Models;
 using TypeLite;
 
-namespace Engine.Absence.Models
+namespace Engine.Entities.Data.Absence.Models
 {
     [TsClass]
-    public class Personnel: AbsenceBase
+    public class Personnel: Engine.Entities.Models.ICore.BaseEntity,AbsenceBase
     {
         public Personnel()
         {
@@ -23,5 +22,7 @@ namespace Engine.Absence.Models
         public virtual WorkGroup WorkGroup { get; set; }
         public virtual long WorkGroupId { get; set; }
         public ICollection<WorkplacePersonnel> WorkplacePersonnels { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+
     }
 }

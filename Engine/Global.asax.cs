@@ -24,6 +24,15 @@ namespace Engine
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        /*void Application_Error(object sender, EventArgs e)
+        {
+            // Code to handle the exception
+            Exception ex = Server.GetLastError();
+            // Log the exception, notify administrators, etc.
+            // Redirect the user to a custom error page
+            Server.ClearError();
+            Response.Redirect("~/Error");
+        }*/
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -44,7 +53,7 @@ namespace Engine
 
         public static async Task<ApplicationUser> GenerateSuperUserIfNotExists()
         {
-            using (var context = new ApplicationDbContext())
+            using (var context = new EngineContext())
             {
                 var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
                 var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));

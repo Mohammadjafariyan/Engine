@@ -2,8 +2,9 @@
 @using System.Web.Mvc.Html
 @using Engine.Areas.JUiEngine.Controllers
 @using Engine.Entities.Models.UiGeneratorModels
+@using Engine.Localization
 @using WebAppIDEEngine.Models.Core
-@model dynamic
+@model Engine.Entities.Data.Absence.Models.ObligatedRange
 
 @{
 
@@ -16,9 +17,305 @@
 
 }
 
+
+@*
+<style>
+    .days td:hover , .days label:hover{
+    cursor: pointer;
+    }
+    
+    .timeline {
+        border-left: 3px solid #727cf5;
+        border-bottom-right-radius: 4px;
+        border-top-right-radius: 4px;
+        background: rgba(114, 124, 245, 0.09);
+        margin: 0 auto;
+        letter-spacing: 0.2px;
+        position: relative;
+        line-height: 1.4em;
+        font-size: 1.03em;
+        padding: 50px;
+        list-style: none;
+        text-align: left;
+        max-width: 40%;
+    }
+    
+    .between {
+        background: rgba(220,224,255,0.66);
+
+    }
+    
+    @@media (max-width: 767px) {
+        .timeline {
+            max-width: 98%;
+            padding: 25px;
+        }
+    }
+    
+    .timeline h1 {
+        font-weight: 300;
+        font-size: 1.4em;
+    }
+    
+    .timeline h2,
+    .timeline h3 {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+    
+    .timeline .event {
+        position: relative;
+    }
+    
+    @@media (max-width: 767px) {
+        .timeline .event {
+            padding-top: 30px;
+        }
+    }
+    
+    .timeline .event:last-of-type {
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border: none;
+    }
+    
+    .timeline .event:before,
+    .timeline .event:after {
+        position: absolute;
+        display: block;
+        top: 0;
+    }
+    
+    .timeline .event:before {
+        left: -207px;
+        content: attr(data-date);
+        text-align: right;
+        font-weight: 100;
+        font-size: 0.9em;
+        min-width: 120px;
+    }
+    
+    @@media (max-width: 767px) {
+        .timeline .event:before {
+            left: 0px;
+            text-align: left;
+        }
+    }
+    
+    .timeline .event:after {
+        -webkit-box-shadow: 0 0 0 3px #727cf5;
+        box-shadow: 0 0 0 3px #727cf5;
+        left: -55.8px;
+        background: #fff;
+        border-radius: 50%;
+        height: 9px;
+        width: 9px;
+        content: "";
+        top: 5px;
+    }
+    
+    @@media (max-width: 767px) {
+        .timeline .event:after {
+            left: -31.8px;
+        }
+    }
+    
+    .rtl .timeline {
+        border-left: 0;
+        text-align: right;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+        border-right: 3px solid #727cf5;
+    }
+    
+    .rtl .timeline .event::before {
+        left: 0;
+        right: -170px;
+    }
+    
+    .rtl .timeline .event::after {
+        left: 0;
+        right: -55.8px;
+    }
+</style>
+
+
 @{
 
    
 }
+
+<div class="container" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+        <div class="col-md-4">
+
+            <div class="form-group">
+                <label>زمان</label>
+                <input class="form-control" type="time" name="Time"/>
+            </div>
+
+                        <div class="form-group">
+                            
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th colspan="7">
+                                        <label class="btn btn-info"> <input onclick="function everyDayToggle() {
+                                        
+                                                $('.days input')
+                                                .not('[name=Thursday]')
+                                                .not('[name=Friday]').each(function(i,item) {
+                                                  
+                                                    $(item).prop('checked', !$(item).prop('checked'));
+                                                });
+            
+                                        }
+                                        everyDayToggle()"  type="checkbox">
+                                             روز های هفته 
+                                      </label>
+                                        <label class="btn btn-info"> <input  onclick="function holidaysToggle() {
+                                        
+                                            $('.days input')
+                                            .not('[name=Saturday]')
+                                            .not('[name=Sunday]')
+                                            .not('[name=Monday]')
+                                            .not('[name=Tuesday]')
+                                            .not('[name=Wednesday]').each(function(i,item) {
+                                            
+                                            $(item).prop('checked', !$(item).prop('checked'));
+                                            });
+            
+                                                
+                                        }
+                                        holidaysToggle()" class="btn btn-info" type="checkbox" /> پنج شنبه و جمعه ها 
+                                            </label>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr  class="days">
+                                    <td>
+                                        <label> شنبه @Html.CheckBoxFor(m => m.Saturday, new { placeholder = Request.GetText(" شنبه "), @class = "form-check-input" })</label>                        </td>
+            
+                                       <td> <label> یکشنبه @Html.CheckBoxFor(m => m.Sunday, new { placeholder = Request.GetText(" شنبه "), @class = "form-check-input" })</label> </td>
+                                       <td> <label> دوشنبه @Html.CheckBoxFor(m => m.Monday, new { placeholder = Request.GetText(" شنبه "), @class = "form-check-input" })</label> </td>
+                                       <td> <label> سه شنبه @Html.CheckBoxFor(m => m.Tuesday, new { placeholder = Request.GetText(" شنبه "), @class = "form-check-input" })</label> </td>
+                                       <td> <label> چهارشنبه @Html.CheckBoxFor(m => m.Wednesday, new { placeholder = Request.GetText(" شنبه "), @class = "form-check-input" })</label> </td>
+                                       <td> <label> پنج شنبه @Html.CheckBoxFor(m => m.Thursday, new { placeholder = Request.GetText(" شنبه "), @class = "form-check-input" })</label> </td>
+                                       <td> <label> جمعه @Html.CheckBoxFor(m => m.Friday, new { placeholder = Request.GetText(" شنبه "), @class = "form-check-input" })</label> </td>
+            
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+              <div class="form-group">
+                            <input type="submit" class="btnRegister" value="ثبت "/>
+            
+                        </div>
+        </div>
+        <div class="col-md-8">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                                                       <div id="content">
+                                                           <ul class="timeline">
+                                                               @{
+                                                                   DateTime dt = DateTime.Now.Date;
+                                                                   DateTime between = DateTime.Now.Date;
+                                                                   between=between.AddHours(8) ;
+                                                                   between=between.AddMinutes(37) ;
+                                                                   
+                                                                   DateTime between2 = DateTime.Now.Date;
+                                                                   between2=between2.AddHours(16) ;
+                                                                   between2=between2.AddMinutes(24) ;
+                                                                   
+                                                                   
+                                                               }
+                                                               @for (int i = 1; i < 24; i++)
+                                                               {
+                                                                   if (between>=dt && between<=dt.AddHours(1))
+                                                                   {
+                                                                       <li class="event between" data-date="@dt.AddHours(1).ToString("HH:mm") - @between.ToString("HH:mm")">
+                                                                           <h3>Registration</h3>
+                                                                       </li>
+                                                                   }
+                                                                   else if (between2>=dt && between2<=dt.AddHours(1))
+                                                                   {
+                                                                       <li class="event" data-date="@dt.AddHours(1).ToString("HH:mm") - @between2.ToString("HH:mm")">
+                                                                           <h3>Registration</h3>
+                                                                       </li>
+                                                                   }
+                                                                   else
+                                                                   {
+                                                                       if (between<=dt && between2>=dt )
+                                                                       {
+                                                                           <li class="event between" data-date="@dt.AddHours(1).ToString("HH:mm") - @dt.ToString("HH:mm")">
+                                                                               <h3>Registration</h3>
+                                                                           </li>
+                                                                       }
+                                                                       else
+                                                                       {
+                                                                           <li class="event" data-date="@dt.AddHours(1).ToString("HH:mm") - @dt.ToString("HH:mm")">
+                                                                               <h3>Registration</h3>
+                                                                           </li>
+                                                                       }
+                                                                   }
+                                                               
+                                                                   dt = dt.AddHours(1);
+                                                               }
+                                                               
+                                                           </ul>
+                                                       </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+            </div>
+            $1$<div class="form-group" style="    height: calc(2.25rem + 2px);">
+                                    1<select class="form-control" >
+                                        <option class="hidden" selected disabled>یک سوال امنیتی انتخاب نمایید</option>
+                                        <option>What is your Birthdate?</option>
+                                        <option>What is Your old Phone Number</option>
+                                        <option>What is your Pet Name?</option>
+                                    </select>#2#
+                                </div>#1#
+            $1$<div class="form-group" style="    height: calc(2.25rem + 2px);">
+                                    @#2#Html.PasswordFor(m => m.Password, new { placeholder = Request.GetText("پاسخ امنیتی *"), @class = "form-control" })#2#
+                                </div>#1#
+            $1$<div class="form-group" style="text-align: right">
+
+
+                <div class="maxl">
+                    <label class="radio inline">
+                        <input type="radio" name="Gender" value="male" checked>
+                        <span> @Request.GetText("مرد") </span>
+                    </label>
+                    <label class="radio inline">
+                        <input type="radio" name="Gender" value="female">
+                        <span>@Request.GetText("زن") </span>
+                    </label>
+                </div>
+            </div>#1#
+
+
+
+            <div class="form-group">
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+
+            </div>
+
+          
+        </div>
+    </div>
+</div>
+*@
+
 
 @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowView.cshtml", form)

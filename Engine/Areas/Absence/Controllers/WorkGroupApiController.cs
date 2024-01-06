@@ -1,6 +1,3 @@
-
-using Engine.Absence.Models;
-
 using Engine.Areas.ReportGenerator.Controllers;
 using System.Linq;
 using System;
@@ -19,7 +16,6 @@ using System.Web.Mvc;
 using ViewModel.ActionTypes;
 using ViewModel.Parameters;
 using WebAppIDEEngine.Models;
-using WebAppIDEEngine.Models.ICore;
 using System.Collections.Specialized;
 using Engine.Areas.JUiEngine.Controllers;
 using Engine.Entities.Models.UiGeneratorModels;
@@ -28,6 +24,7 @@ using Engine.Service.AbstractControllers;
 using WebGrease.Css.Extensions;
 using WebAppIDEEngine.Models;
 using System.Web.Http;
+using Engine.Entities.Data.Absence.Models;
 using ServiceLayer.Absence;
 
 

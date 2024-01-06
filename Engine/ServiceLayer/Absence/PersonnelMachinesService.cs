@@ -3,7 +3,7 @@ using ServiceLayer.Systems;
 using System.Collections.Generic;
 using ViewModel.ActionTypes;
 using System.Data.SqlClient;
-using Engine.Absence.Models;
+using Engine.Entities.Data.Absence.Models;
 
 namespace ServiceLayer.Absence
 {

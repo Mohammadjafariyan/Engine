@@ -2,7 +2,6 @@
 @using System.Globalization
 @using WebAppIDEEngine.Models.Core
 @using ViewModel.ActionTypes
-@using WebAppIDEEngine.Models.ICore
 @using Engine.Attributes
 @using System.Web.Mvc
 @using ViewModel.ActionTypes
@@ -27,7 +26,7 @@
 
 @{
     var uiFormInputs = (List<UiFormInput>) ViewData[UiFormEngineController.DynamicFormUiFormInputs];
-    var formGroupClass = ViewData["form-group"] as string ?? "col-md-3";
+    var formGroupClass = ViewData["form-group"] as string ?? "col";
 
     Layout = null;
     // var modelNameValue = ViewData[UiFormEngineController.ModelNameValue] as NameValueCollection;
@@ -116,7 +115,10 @@
             val = modelNameValue[uiFormInput.UiInput.Name].ToString();
         }
         <div class="form-group @formGroupClass @uiFormInput.Css">
-            <label>@uiFormInput.Name</label>
+            @if (uiFormInput.UiInput.InputType != InputType.Checkbox)
+            {
+                <label>@uiFormInput.Name</label>
+            }
             @{
 
                 string scripts = "";
@@ -151,7 +153,10 @@
                         type = @"checkbox";
                         styleClass = "";
                         bool d = (modelNameValue[uiFormInput.UiInput.Name] as bool?).HasValue ? (modelNameValue[uiFormInput.UiInput.Name] as bool?).Value : false;
+                      
+                        <label class="hover-cursor">@uiFormInput.Name
                         @Html.CheckBox(uiFormInput.UiInput.Name,d,new {@id=uiFormInput.UiInput.Name, @onchange="@onchange" })
+            </label>
                     }
 
 

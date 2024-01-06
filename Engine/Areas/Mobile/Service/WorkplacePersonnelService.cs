@@ -2,6 +2,7 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using Engine.Areas.Mobile.Models;
+using Engine.Entities.Data;
 using ServiceLayer.Absence;
 using ServiceLayer.Systems;
 using WebAppIDEEngine.Models;

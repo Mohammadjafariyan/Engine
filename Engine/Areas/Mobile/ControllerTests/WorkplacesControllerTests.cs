@@ -1,10 +1,11 @@
 using System.Data.Entity;
 using System.Linq;
-using Engine.Absence.Models;
 using Engine.Areas.Mobile.Controllers;
 using Engine.Areas.Mobile.Models;
 using Engine.Areas.Mobile.Service;
 using Engine.Areas.Mobile.ViewModel;
+using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using WebAppIDEEngine.Models;

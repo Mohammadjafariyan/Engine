@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using ViewModel.ActionTypes;
 using System.Data.SqlClient;
-using Engine.Absence.Models;
 using Engine.Areas.ReportGenerator.Controllers;
 using Engine.Controllers.AbstractControllers;
+using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using WebAppIDEEngine.Models;
-using WebAppIDEEngine.Models.ICore;
 
 namespace ServiceLayer.Absence
 {
@@ -23,6 +23,28 @@ namespace ServiceLayer.Absence
         {
             using (var db = new EngineContext())
             {
+
+                #region set user
+
+                var user = db.Users.Find(ApplicationUser?.Id);
+                obligatedRange.ApplicationUser = user;
+                obligatedRange.ApplicationUserId = user.Id;
+                    
+                foreach (var obligatedRangeObligatedRangeWeek in obligatedRange.ObligatedRangeWeeks)
+                {
+                    obligatedRangeObligatedRangeWeek.ApplicationUser = user;
+                    obligatedRangeObligatedRangeWeek.ApplicationUserId = user.Id;
+                        
+                    foreach (var obligatedRangeDayTimes in obligatedRangeObligatedRangeWeek.ObligatedRangeDayTimes)
+                    {
+                        obligatedRangeDayTimes.ApplicationUser = user;
+                        obligatedRangeDayTimes.ApplicationUserId = user.Id;
+
+                    }
+                }
+
+                #endregion
+                
                 if (obligatedRange.Id == 0)
                 {
                     db.ObligatedRanges.Add(obligatedRange);
@@ -97,7 +119,7 @@ namespace ServiceLayer.Absence
 
      
 
-        public override IDataTable GetDataTable(ObligatedRange p)
+        public override IDataTable GetDataTable(ObligatedRange p,Func<IQueryable<ObligatedRange>,IQueryable<ObligatedRange>> whereExpression=null)
         {
             using (var db = new EngineContext())
             {
@@ -111,15 +133,14 @@ namespace ServiceLayer.Absence
                 var dt = db.ObligatedRanges.ToList();
 
                 var list = dt.Select(s =>
-                    new
+                    new ObligatedRange
                     {
                         Id = s.Id,
                         Name = s.Name,
-                        OffDay = EngineUtility.GetTranslate(s.OffDay)
                     }
-                ).Cast<dynamic>().ToList();
+                ).ToList();
 
-                var dyna = new DynaDataTable
+                var dyna = new ObjectDataTable<ObligatedRange>()
                 {
                     Headers = dict,
                     RecordsList = list

@@ -1,7 +1,7 @@
 using System;
-using Engine.Absence.Models;
 using Engine.Areas.ImportExport.Models;
 using Engine.Areas.ImportExport.ServiceTests;
+using Engine.Entities.Data.Absence.Models;
 using NotImplementedException = System.NotImplementedException;
 
 namespace Engine.Areas.ImportExport.Service

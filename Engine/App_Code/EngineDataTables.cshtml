@@ -2,7 +2,6 @@
 @using System.Reflection
 @using WebAppIDEEngine.Models.Core
 @using ViewModel.ActionTypes
-@using WebAppIDEEngine.Models.ICore
 @using Engine.Attributes
 @using System.Web.Mvc
 @using ViewModel.ActionTypes
@@ -11,13 +10,14 @@
 @using System.Web.Routing
 @using Engine.Service.AbstractControllers
 @using System.Linq
+@using Engine.Entities.Models.ICore
 
 
 
 @*HtmlHelper<dynamic>*@
 
 @helper DataTable(IDataTable datatableTmp, ViewDataDictionary ViewData, System.Web.Mvc.HtmlHelper _html
-    , string TableId, ViewContext ViewContext, bool showToolsButtons = true)
+    , string TableId, ViewContext ViewContext, bool showToolsButtons )
 {
     dynamic datatable = null;
 
@@ -199,7 +199,12 @@ if ((datatable is IDataTable))
 
                 @if (showToolsButtons)
                 {
-                    <td>@_html.ActionLink("ویرایش", $"ForEdit", new {id = record.Id})</td>
+
+                    
+                    Type type=record.GetType();
+                    var Id=type?.GetProperty("Id")?.GetValue(rec);
+                    
+                    <td>@_html.ActionLink("ویرایش", $"ForEdit", new {id = Id})</td>
 
 
                 @*
@@ -207,7 +212,7 @@ if ((datatable is IDataTable))
                    
                         </form>*@
 
-                    using (_html.BeginForm("delete", currentController, new {id = record.Id}))
+                    using (_html.BeginForm("delete", currentController, new {id = Id}))
                     {
                         @_html.AntiForgeryToken()
                         <td>

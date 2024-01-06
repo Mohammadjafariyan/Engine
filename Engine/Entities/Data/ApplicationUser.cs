@@ -13,6 +13,22 @@ namespace Engine.Entities.Data
 {
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            WorkGroups = new List<WorkGroup>();
+            Machines = new List<Machine>();
+            ObligatedRanges = new List<ObligatedRange>();
+            ObligatedRangeWeekss = new List<ObligatedRangeWeeks>();
+            ObligatedRangeDayTimess = new List<ObligatedRangeDayTimes>();
+            Personnels = new List<Personnel>();
+            PersonnelMachines = new List<PersonnelMachine>();
+            WorkGroupObligatedRanges = new List<WorkGroupObligatedRange>();
+            Workplaces = new List<Workplace>();
+            WorkplacePersonnels = new List<WorkplacePersonnel>();
+            WorkplaceSettings = new List<WorkplaceSetting>();
+            BiometricDatas = new List<BiometricData>();
+        }
+
         public string Avatar { get; set; }
         public string Hometown { get; set; }
         public string FirstName { get; set; }

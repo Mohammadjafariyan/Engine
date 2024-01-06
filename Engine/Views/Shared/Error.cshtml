@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "عدم دسترسی به صفحه مورد نظر";
+    Layout = null;
 }
 
 <h1 class="text-danger">خطا.</h1>
@@ -15,5 +16,15 @@
 
     </div>
 
+
 }
+
+
+    <div class="alert">
+        <p class="alert-danger">@ViewData["errorMessage"] </p>
+        <p class="alert-danger">@ViewData["stackTrace"] </p>
+    </div>
+
+
+
 

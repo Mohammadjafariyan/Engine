@@ -8,7 +8,6 @@
 <style>
     .register{
         background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-        
   
     }
     .register-left{
@@ -101,6 +100,8 @@
         margin-bottom: -15%;
         color: #495057;
     }
+    
+    
 </style>
 @*
 <style>
@@ -274,6 +275,7 @@
 
             <p>خوش آمدید </p>
 
+            
             <input type="button" onclick="window.location.href='@Url.Action("Register", "Account")'" name="" value="ثبت نام"/><br/>
             <input style="margin: 0px" type="button" onclick="window.location.href='@Url.Action("Login", "Account")'" name="" value="ورود"/><br/>
 
@@ -292,10 +294,10 @@
 
                         <div class="row register-form">
 
-                            <div class="col-md-3">
+                            <div class="col-md-3" style="    line-height: 10vh;">
                                 <h5>برنامه کارفرما </h5>
 
-                                <div class="row">
+                                <div class="col-md-12">
                                     <a href="#">
                                         <img style="width: 70px;height: auto" src="/Content/attendance images/andriod.png" alt="">
                                         دانلود مستقیم
@@ -303,7 +305,7 @@
 
                                 </div>
 
-                                <div class="row">
+                                <div class="col-md-12">
                                     <a href="#">
                                         <img style="width: 70px;height: auto" src="/Content/attendance images/myket.png" alt="">
                                         دانلود از مایکت
@@ -316,17 +318,27 @@
 
                                     <style>
                                                                     #carouselExampleControls img {
-                                                                    width: 198px !important;
-                                                                        height: 437px;
+                                                                       width: 197px !important;
+                                                                                                            height: 437px;
+                                                                                                            margin-right: 5%;
+                                                                                                            margin-top: 6%;
                               }
                                                                 </style>
 
-                                    <img src="/Content/attendance images/mobile.png">
+                                    @*<img src="/Content/attendance images/mobile.png">*@
 
 
-                                    <div style="    position: absolute;
-                                                                                left: 26px;
-                                                                                top: 14px;" id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                    <div style="   
+                                                                                                        left: 26px;
+                                                                                                        top: 14px;
+                                                    
+                                                        background-image: url('/Content/attendance images/mobile.png');
+                                                        width: 220px;
+                                                        height: 510px;
+                                                        background-repeat: no-repeat;
+
+
+" id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                                         <div class="carousel-inner">
                                             <div class="carousel-item active">
                                                 <img class="d-block w-100" src="~/Content/attendance images/mobile/1.jpeg" alt="First slide">
@@ -364,9 +376,9 @@
                             </div>
 
 
-                            <div class="col-md-3">
+                            <div class="col-md-3" style="    line-height: 10vh;">
                                 <h5>برنامه پرسنل</h5>
-                                <div class="row">
+                                <div class="col-md-12">
                                     <a href="#">
                                         <img style="width: 70px;height: auto" src="/Content/attendance images/andriod.png" alt="">
                                         دانلود مستقیم
@@ -374,7 +386,7 @@
 
                                 </div>
 
-                                <div class="row">
+                                <div class="col-md-12">
                                     <a href="#">
                                         <img style="width: 70px;height: auto" src="/Content/attendance images/myket.png" alt="">
                                         دانلود از مایکت
@@ -386,17 +398,26 @@
 
                                     <style>
                                         #carouselExampleControls2 img {
-                                        width: 198px !important;
-                                            height: 437px;
+                                       width: 197px !important;
+                                           height: 437px;
+                                           margin-right: 5%;
+                                           margin-top: 6%;
   }
                                     </style>
 
-                                    <img src="/Content/attendance images/mobile.png">
+                                    @*<img src="/Content/attendance images/mobile.png">*@
 
 
-                                    <div style="    position: absolute;
+                                    <div style="   
                                                     left: 26px;
-                                                    top: 14px;" id="carouselExampleControls2" class="carousel slide" data-ride="carousel">
+                                                    top: 14px;
+
+    background-image: url('/Content/attendance images/mobile.png');
+    width: 220px;
+    height: 510px;
+    background-repeat: no-repeat;
+
+" id="carouselExampleControls2" class="carousel slide" data-ride="carousel">
                                         <div class="carousel-inner">
                                             <div class="carousel-item active">
                                                 <img class="d-block w-100" src="~/Content/attendance images/mobile/1.jpeg" alt="First slide">
@@ -458,6 +479,85 @@
     </div>
 
 </div>
+
+
+<style>
+    
+    .print {
+        background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+}
+     .print-right{
+            background: #f8f9fa;
+            border-top-right-radius: 30% 50%;
+            border-bottom-right-radius: 30% 50%;
+
+        }
+        
+        .muy  ul {
+            list-style: none;
+        }
+        
+       .muy   li:before {
+            content: "+";
+            margin-right: 4px;
+        }
+</style>
+
+<div class="div container-fluid">
+
+    <div class="row print">
+         <div class="col-md-9 print-right">
+          
+             <div class="row" style="margin-top: 5vh">
+                 <div class="col-md-8">
+                                              <img style="width: 100%;height: auto" class="img-responsive" src="/Content/attendance images/paycheck.PNG"/>
+                 </div>
+                 <div class="col-md-4 muy">
+                     <h4 style="padding-top: 20%;">
+                         بهمراه ماژول 
+                         <span style="color:green;font-size: 37px">حقوق دستمزد</span>
+
+
+
+
+                     </h4>
+                   
+                     <ul style="padding-top: 10%;direction: rtl;text-align: right;font-weight: bold;    line-height: 40px;">
+                                              
+                                              <li> با چند کلیک ساده ، بدون خطا و آنلاین فیش حقوقی صادر کنید </li> 
+                                              <li> فرمول های آماده و پشتیبانی از فرمول نویسی</li> 
+                                              <li> پشتیبانی از پیچیده ترین و انواع شیفت ها</li> 
+                                              <li> دریافت اطلاعات کارکرد، به‌صورت فردی و گروهی</li> 
+                                              <li> پشتیبانی از کلیه امکانات یک سیستم حقوق و دستمزد </li> 
+                                            
+                                              
+                                          </ul>
+
+                 </div>
+             </div>
+
+         </div>
+        <div class="col-md-3">
+  <ul style="padding-top: 20%;direction: rtl;text-align: right;color: white;font-weight: bold;    line-height: 40px;">
+                         
+                         <li> افزایش بهره وری پرسنل با حذف روش های محاسبه کارکرد قدیمی و کاهش زمان محاسبه</li> 
+                         <li> جلوگیری از اشتباهات محاسباتی و کاهش هزینه</li> 
+                         <li> کنترل پرسنل روی نقشه و پشتیبانی دورکاری</li> 
+                         <li> دسترسی آنلاین به داده ها و مانیتورینگ پرسنل</li> 
+                         <li> با رایانش ابری هیچ نیازی به نصب و نگهداری نیست</li> 
+                         <li> دسترسی با موبایل و وب همه جا و همه وقت</li> 
+                         <li> جلوگیری از GPS  های مصنوعی</li> 
+                         <li> پشتیبانی از پیچیده ترین و انواع شیفت ها</li> 
+                         <li> مدیریت همه چیز با موبایل</li> 
+                         <li> کاهش هزینه ها با حذف خرید دستگاه تردد و کاغذ</li> 
+                         
+                     </ul>
+                        
+        </div>
+
+    </div>
+</div>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -15,18 +15,44 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using WebAppIDEEngine.Models.ICore;
 using Engine.Attributes;
 using ViewModel.ActionTypes;
 using Domain.Attributes;
 using Engine.Areas.ImportExport.Service;
+using Engine.Entities.Data;
+using Engine.Entities.Models.ICore;
 using Engine.ServiceLayer.Engine;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using WebAppIDEEngine.Models;
+using EngineContext = Engine.Entities.Data.EngineContext;
 
 namespace Engine.Service.AbstractControllers
 {
     public abstract class BaseEngineService<T> : IEngineService<T> where T : class, IModel
     {
+        private ApplicationUserManager _userManager;
+
+        protected ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set { _userManager = value; }
+        }
+
+        protected ApplicationUser ApplicationUser
+        {
+            get
+            {
+                return HttpContext.Current.User.Identity.IsAuthenticated
+                    ? UserManager.FindByName(HttpContext.Current.User.Identity.Name)
+                    : null;
+            }
+        }
+
+
         public virtual Injector Injector { get; set; }
 
         public BaseEngineService()
@@ -36,8 +62,8 @@ namespace Engine.Service.AbstractControllers
 
 
         public virtual void SaveRemoveableList<TBase, T>(TBase record, List<T> recordNodes,
-            EngineContext db) where T : class,IRemovableNode 
-            where TBase :class, IRemovable<T>
+            EngineContext db) where T : class, IRemovableNode
+            where TBase : class, IRemovable<T>
         {
             foreach (var weekDay in recordNodes)
             {
@@ -110,7 +136,7 @@ namespace Engine.Service.AbstractControllers
             var names = typeof(B).GetProperties()
                 .SelectMany(property => property.GetCustomAttributes(true)
                     .Where(c => c is Result)
-                    .Select(c => new {attr = c as Result, Name = property.Name}))
+                    .Select(c => new { attr = c as Result, Name = property.Name }))
                 .ToList().ToDictionary(o => o.Name, o => o.attr);
 
             return names;
@@ -304,19 +330,28 @@ namespace Engine.Service.AbstractControllers
         }
 
 
+       
+        
         /// <summary>
         /// دیتای جدول مدل را بر میگرداند
         /// </summary>
         /// <typeparam name="B"></typeparam>
         /// <returns></returns>
-        public virtual IDataTable GetDataTable(T p)
+        public virtual IDataTable GetDataTable(T p,Func<IQueryable<T>,IQueryable<T>> whereExpression=null)
         {
             using (var db = new EngineContext())
             {
-                var dt = db.Set<T>();
+                var UserId = ApplicationUser?.Id;
+                var dt = db.Set<T>().AsNoTracking().Where(s => UserId == null || s.ApplicationUserId == ApplicationUser.Id);
+
+
+                if (whereExpression!=null)
+                {
+                    dt= whereExpression(dt);
+                }
                 db.Configuration.ProxyCreationEnabled = false;
 
-            //    var dt = Search(p, set.ToList().AsQueryable());
+                //    var dt = Search(p, set.ToList().AsQueryable());
 
                 IDataTable dataTable = new ObjectDataTable<T>
                 {
@@ -339,8 +374,9 @@ namespace Engine.Service.AbstractControllers
             using (var EngineContext = new EngineContext())
             {
                 var _entities = EngineContext.Set<T>();
+                
                 return _entities.Select(d =>
-                    new IDropDownOption {Id = d.Id.ToString(), Value = d.Name}).ToList();
+                    new IDropDownOption { Id = d.Id.ToString(), Value = d.Name }).ToList();
             }
         }
 
@@ -349,9 +385,9 @@ namespace Engine.Service.AbstractControllers
             return this.GetDropDown(p);
         }
 
-        public virtual async Task<IDataTable> GetDataTableAsync(T p)
+        public virtual async Task<IDataTable> GetDataTableAsync(T p,Func<IQueryable<T>,IQueryable<T>> whereExpression=null)
         {
-            return await Task.FromResult(GetDataTable(p));
+            return await Task.FromResult(GetDataTable(p,whereExpression));
         }
 
         public virtual async Task<ITreeNode> GetTreeAsync(ITreeParameter p)
@@ -371,6 +407,11 @@ namespace Engine.Service.AbstractControllers
 
         public virtual void Save(T p)
         {
+            if (p != null)
+            {
+                p.ApplicationUserId = ApplicationUser?.Id;
+            }
+
             using (var db = new EngineContext())
             {
                 if (p.Id == 0)
@@ -391,7 +432,12 @@ namespace Engine.Service.AbstractControllers
         {
             using (var EngineContext = new EngineContext())
             {
-                var entity = EngineContext.Set<T>().Find(id);
+                var UserId = ApplicationUser?.Id;
+
+                var entity =    EngineContext
+                    .Set<T>()
+                    .Where(s => UserId == null || s.ApplicationUserId == ApplicationUser.Id).FirstOrDefault(s => s.Id == id);
+                ;
                 if (entity == null)
                 {
                     throw new BaseEngineException("رکورد یافت نشد");
@@ -404,16 +450,20 @@ namespace Engine.Service.AbstractControllers
             }
         }
 
-        protected virtual void ValidateDelete(EngineContext engineContext, T entity) 
+        protected virtual void ValidateDelete(EngineContext engineContext, T entity)
         {
-           
         }
 
         public virtual T GetForEdit(long id)
         {
             using (var EngineContext = new EngineContext())
             {
-                return EngineContext.Set<T>().Find(id);
+                var UserId = ApplicationUser?.Id;
+
+                return EngineContext
+                    .Set<T>()
+                    .Where(s => UserId == null || s.ApplicationUserId == ApplicationUser.Id).FirstOrDefault(s => s.Id == id);
+
             }
         }
 
@@ -421,7 +471,11 @@ namespace Engine.Service.AbstractControllers
         {
             using (var EngineContext = new EngineContext())
             {
-                return EngineContext.Set<T>().Find(id);
+                var UserId = ApplicationUser?.Id;
+
+                return EngineContext
+                    .Set<T>()
+                    .Where(s => UserId == null || s.ApplicationUserId == ApplicationUser.Id).FirstOrDefault(s => s.Id == id);
             }
         }
 
@@ -448,9 +502,9 @@ namespace Engine.Service.AbstractControllers
                 var values = (Enum.GetValues(enm.PropertyType) as Array)?.OfType<object>().ToArray();
                 var Names = (Enum.GetNames(enm.PropertyType) as Array).OfType<object>().ToArray();
                 var prop = enm
-                               .GetCustomAttributes(typeof(DescriptionAttribute), true)
-                               .Select(c => c as DescriptionAttribute)
-                               .Select(c => c.Description).FirstOrDefault() ?? enm.Name;
+                    .GetCustomAttributes(typeof(DescriptionAttribute), true)
+                    .Select(c => c as DescriptionAttribute)
+                    .Select(c => c.Description).FirstOrDefault() ?? enm.Name;
                 var prevalue = model != null ? enm.GetValue(model) : null;
                 //var everyEnumWithValuesAndPreValue = enm.PropertyType.GetType().GetProperties()
                 //            .Select(property => 
@@ -529,7 +583,7 @@ namespace Engine.Service.AbstractControllers
         {
         }
     }
-    
+
     public interface IRemovable<T> : IModel where T : IRemovableNode
     {
         List<T> Nodes { get; set; }
@@ -546,7 +600,7 @@ public static class Extentions
 {
     public static string GetTableName<T>(this EngineContext context) where T : class
     {
-        ObjectContext objectContext = ((IObjectContextAdapter) context).ObjectContext;
+        ObjectContext objectContext = ((IObjectContextAdapter)context).ObjectContext;
 
         return objectContext.GetTableName<T>();
     }

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Absence.Models;
 using Engine.Areas.Absence.Models;
+using Engine.Entities.Data.Absence.Models;
 using Microsoft.Ajax.Utilities;
 using WebGrease.Css.Extensions;
 

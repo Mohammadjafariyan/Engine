@@ -23,6 +23,8 @@ namespace Engine
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js"));
 
+                /*<link rel="stylesheet" href="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css">
+                <script type="text/javascript" src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"></script>*/
             /*bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.css",
                 "~/Content/Site.css"));*/
@@ -45,7 +47,8 @@ namespace Engine
                 "~/Content/DataTables/Select-1.2.6/css/select.bootstrap.min.css",
                 "~/Content/Datepicker/jquery.Bootstrap-PersianDateTimePicker.css",
                 "~/Content/timepicker/bootstrap-clockpicker.min.css",
-                "~/Content/Site.css"
+                "~/Content/Site.css",
+                "~/Scripts/jquery.unobtrusive-ajax.min.js"
                 ));
             
             bundles.Add(new ScriptBundle("~/Content/Bootstrap3js").Include(
@@ -67,7 +70,8 @@ namespace Engine
                 "~/Content/DataTables/Select-1.2.6/js/select.bootstrap.min.js",
                 "~/Content/timepicker/bootstrap-clockpicker.min.js",
                 "~/Content/Datepicker/jalaali.js",
-                "~/Content/Datepicker/jquery.Bootstrap-PersianDateTimePicker.js"                                    
+                "~/Content/Datepicker/jquery.Bootstrap-PersianDateTimePicker.js"  ,
+                "~/Scripts/jquery.unobtrusive-ajax.min.js"
                                                         
             ));
             
@@ -85,8 +89,11 @@ namespace Engine
             
             bundles.Add(new ScriptBundle("~/Content/Bootstrap4js").Include(
                 "~/Content/Bootstrap4/bootstrap4.min.js",                                
-                "~/Content/Bootstrap4/jquery3.2.1.min.js"                                        
+                "~/Content/Bootstrap4/jquery3.2.1.min.js"   ,                                     
+                "~/Scripts/jquery.unobtrusive-ajax.min.js"                                     
             ));
         }
+        
+        
     }
 }

@@ -11,6 +11,7 @@ using Engine.Areas.Mobile.Models;
 using Engine.Areas.Mobile.Service;
 using Engine.Areas.Mobile.ViewModel;
 using Engine.Controllers.AbstractControllers.ObjectBased;
+using Engine.Entities.Data;
 using MvcContrib.TestHelper.Ui;
 using Newtonsoft.Json;
 using Rhino.Mocks.Constraints;

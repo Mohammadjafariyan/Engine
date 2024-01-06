@@ -1,6 +1,6 @@
 ﻿using System;
 using Domain.Attributes;
-using WebAppIDEEngine.Models.ICore;
+using Engine.Entities.Models.ICore;
 
 namespace Engine.Entities.Models.UiGeneratorModels
 {

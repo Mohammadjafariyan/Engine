@@ -1,20 +1,150 @@
-@using System.Collections.Specialized
-@using ViewModel.ActionTypes
-@using WebAppIDEEngine.Models.ICore
-@using Engine.Attributes
-@using System.Web.Mvc
-@using System.Web.Mvc.Html
-@using ViewModel.ActionTypes
-@using Domain.Attributes
 @using Engine.Areas.JUiEngine.Controllers
+@using Engine.HtmlExtentions
+@model List<Engine.Entities.Data.Absence.Models.ObligatedRange>
 
-@model IDataTable
+
 @{
-    ViewBag.Title = "جدول کتاب ها";
-    var datatable= ViewData[UiHomeController.TableObject];
+    ViewBag.Title = "لیست شیفت کاری تعریف شده";
+    var datatable = ViewData[UiHomeController.TableObject];
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 
 }
 
 
-@Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)
+@{ var modalId = Guid.NewGuid().ToString(); }
+
+@Html.Modal($@"<div id=""{modalId}""> </div>", "WorkGroupObligatedRange", "تغییر گروه کاری")
+<!-- Button trigger modal -->
+<script>
+document.getElementById('WorkGroupObligatedRange_panel').addEventListener('hidden.bs.modal', function (event) {
+   $("#loading").show();
+              
+                    $.ajax({
+                      url: '@Url.Action("GetWorkGroupsById")?id='+window['selectedRecordId'] +'&modalId=@modalId',
+                      type: "GET",
+                      dataType: "html",
+                      beforeSend: function () {
+                        // This function will be called before the request is sent
+                        // You can perform any setup or modification here
+                      },
+                      success: function (data) {
+                        // Handle the successful response here
+                        console.log(data);
+                      
+                        $(window['selectedRecordIdElement']).parent().html(data);
+                      },
+                      error: function (jqXHR, textStatus, errorThrown) {
+                        // Handle errors here
+                        console.error("Error: " + textStatus, errorThrown);
+                         $(window['selectedRecordIdElement']).parent().html(`<div class="alert alert-danger">خطایی رخ داد لطفا مجدد امتحان کنید</div>`);
+                        
+                      },
+                      complete: function () {
+                        // Hide loading indicator after the request is complete
+                        $("#loading").hide();
+                        
+                      }
+                    });
+})
+
+</script>
+
+@{ var id = Guid.NewGuid().ToString(); }
+
+
+@Html.ActionLink("تعریف شیفت جدید", "Index", "ObligatedRange", new { }, new { @class = "btn btn-primary" })
+<br/>
+<br/>
+<table id="@id" class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">عنوان</th>
+        <th scope="col">گروه کاری</th>
+        <th scope="col">ویرایش</th>
+        <th scope="col">حذف</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        var scopeId = Guid.NewGuid().ToString();
+
+        <tr>
+            <th scope="row">@item.Name</th>
+            <td>
+
+                <a href="#" onclick="window['selectedRecordIdElement']=this;  window['selectedRecordId']='@item.Id';openModal('#WorkGroupObligatedRange','@Url.Action("OneObligatedRangeToManyWorkGroupsModal", "WorkGroupObligatedRange", new { obligatedRangeId = item.Id })','@modalId');">گرو های کاری @item.Name </a>
+                @{
+                    foreach (var joinTable in item.WorkGroupObligatedRanges)
+                    {
+                        <a class="btn btn-outline-light text-black-50" href="#">@joinTable.WorkGroup.Name </a>
+                    }
+                }
+
+            </td>
+            <td>@Html.ActionLink("ویرایش", "Index", "ObligatedRange", new { recordId = item.Id }, new { id = item.Id })</td>
+            <td id="@scopeId">
+                <a id="delete" onclick="$('#del_form_@scopeId').toggle()" href="#">حذف</a>
+                <div style="display: none" id="del_form_@scopeId">
+                    @using (Ajax.BeginForm("Delete", new { id = item.Id }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = scopeId }, new { }))
+                    {
+                        <p >
+                            آیا از حذف این رکورد اطمینان دارید ؟
+                        </p>
+                        <input class="btn btn-danger" type="submit" value="حذف"/>
+                    }
+                </div>
+
+            </td>
+        </tr>
+    }
+
+    </tbody>
+</table>
+
+
+<script>
+
+ConvertToDataTable('#@id');
+</script>
+
+@*@Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)*@
+
+
+@*
+@{ var id = Guid.NewGuid().ToString(); }
+
+@Html.ActionLink("رکورد جدید", "ForEdit", new { }, new { @class = "btn btn-primary" })
+<br/>
+<br/>
+<table id="@id" class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">نام</th>
+        <th scope="col">نام خانوادگی</th>
+        <th scope="col">کد ملی</th>
+        <th scope="col">گروه کاری</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.RecordsList)
+    {
+
+        <tr>
+            <th scope="row">@item.Name</th>
+            <td>@item.OffDay</td>
+            <td>@item.OffDay</td>
+            <td>@item.OffDay</td>
+            <td>@Html.ActionLink("ویرایش", "ForEdit", new { id = item.Id })</td>
+            <td>@Html.ActionLink("حذف", "Delete", new { id = item.Id })</td>
+        </tr>
+    }
+
+    </tbody>
+</table>
+
+
+<script>
+ConvertToDataTable('#@id');
+</script>
+*@

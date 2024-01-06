@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Engine.Absence.Models;
-using WebAppIDEEngine.Models.ICore;
+using Engine.Entities.Data.Absence.Models;
+using Engine.Entities.Models.ICore;
 
 namespace Engine.Areas.Absence.Models
 {
@@ -62,6 +62,7 @@ namespace Engine.Areas.Absence.Models
         public BiometryCalculatedDetailTimeType Type { get; set; }
         public long Id { get; set; }
         public string Name { get; set; }
+        public string ApplicationUserId { get; set; }
     }
 
     public enum BiometryCalculatedDetailTimeType
@@ -75,7 +76,7 @@ namespace Engine.Areas.Absence.Models
     }
 
 
-    public class BiometryCalculatedDetail : IModel
+    public class BiometryCalculatedDetail : BaseEntity
     {
         public BiometryCalculatedDetail()
         {
@@ -218,6 +219,7 @@ namespace Engine.Areas.Absence.Models
 
         public long Id { get; set; }
         public string Name { get; set; }
+        public string ApplicationUserId { get; set; }
     }
 
     public enum PersonnelTaradodInfoStatus

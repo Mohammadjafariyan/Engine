@@ -1,40 +1,242 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using Engine.Areas.JUiEngine.Controllers;
 using Engine.Areas.ReportGenerator.Controllers;
 using Engine.Attributes;
 using Engine.Controllers.AbstractControllers.AttributeBased;
+using Engine.Entities.Data;
+using Engine.Entities.Models;
+using Engine.Entities.Models.ICore;
 using Engine.Entities.Models.UiGeneratorModels;
 using Engine.Service.AbstractControllers;
-using Engine.ServiceLayer.Systems.Engine;
+using Engine.ServiceLayer.Engine;
+using Microsoft.AspNet.Identity.Owin;
 using ServiceLayer.Absence;
 using ViewModel.ActionTypes;
-using WebAppIDEEngine.Models.ICore;
 using WebAppIDEEngine.Models.UiGeneratorModels;
-using WebGrease.Css.Extensions;
 using BaseEngineException = Engine.Controllers.AbstractControllers.AttributeBased.BaseEngineException;
 
 namespace Engine.Controllers.AbstractControllers.ObjectBased
 {
-    [Authorize(Roles = "SuperUser,SystemAdmin")]
+    [System.Web.Http.Authorize(Roles = "SuperUser,SystemAdmin")]
     public abstract class EBaseAppController<T, Parameter> : BaseEngineController<T, Parameter>
-        where Parameter : IActionParameter where T : IModel, new()
+        where Parameter : IActionParameter where T : BaseEntity, new()
     {
         protected IUiEngineDataProvider UiEngineDataProvider = new UiEngineDataProvider();
         protected IUiFormDataProvider UiFormDataProvider = new UiFormDataProvider();
 
         protected IFormConstructProvider FormConstructProvider;
         protected ITableConstructProvider TableConstructProvider;
+        private ApplicationUserManager _userManager;
 
+
+        public ApplicationUserManager UserManager
+        {
+            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { _userManager = value; }
+        }
+
+
+        protected OneToManyViewModel OneToManyModal<T, TMany>(long entityOneId,
+            Func<EngineContext, long[]> selectedWhere)
+            where T : BaseEntity where TMany : BaseEntity
+        {
+            using (var db = new EngineContext())
+            {
+                var oneQuery = db.QueryNoTrack<T>().Where(f => f.Id == entityOneId);
+                var one = oneQuery.FirstOrDefault();
+                if (one == null) throw new ArgumentNullException(nameof(one));
+                long[] selected = selectedWhere(db);
+                var many = db.QueryNoTrack<TMany>().ToList();
+
+                ViewBag.one = one;
+                ViewBag.selected = selected;
+                ViewBag.many = many;
+
+                ViewBag.oneItems = new SelectList(oneQuery.ToList(), nameof(one.Id), nameof(one.Name));
+
+                var manyBoolList = many.OrderByDescending(o => o.Id)
+                    .Select(manyItem => selected.Any(sel => sel == manyItem.Id))
+                    .ToList();
+                var longs = many.OrderByDescending(o => o.Id)
+                    .Select(s => s.Id).ToList();
+                return new OneToManyViewModel
+                {
+                    Many = longs,
+                    OneId = one.Id,
+                    ManyBool = manyBoolList
+                };
+            }
+        }
+
+
+
+        
+
+        [System.Web.Http.HttpGet]
+        public virtual ActionResult Get(PagingViewModel paging = null)
+        {
+            List<T> result;
+            int count = 0;
+            using (var db = new EngineContext())
+            {
+                var entities = db.QueryNoTrack<T>();
+
+                if (paging != null)
+                {
+                    count = entities.Count();
+                    entities = entities.OrderByDescending(o => o.Id);
+
+
+                    if (paging.SelectedPage > 1)
+                    {
+                        entities = entities.Skip(paging.SelectedPage * paging.Take);
+                    }
+
+                    if (paging.Take<=0)
+                    {
+                        paging.Take = 20;
+                    }
+                    entities = entities.Take(paging.Take);
+
+                    result = entities.ToList();
+                   
+                }
+                else
+                {
+                    result=  entities.ToList();
+
+                }
+
+               
+            }
+
+            if (paging!=null)
+            {
+                return Json(new ApiResult<List<T>>
+                {
+                    result =result  , Status = CustomResultType.success,
+                    total = count,
+                    totalPages = count / paging.Take
+                }, JsonRequestBehavior.AllowGet);
+            }
+            
+            return Json(new ApiResult<List<T>>
+            {
+                result = result, Status = CustomResultType.success,
+                total = result.Count
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public virtual Func<IQueryable<T>, IQueryable<T>> GetWhereExp()
+        {
+            return null;
+        }
 
         public EBaseAppController()
         {
             _injector = new Engine.Utitliy.Injector();
+        }
+
+        protected void SaveOneToMany<TOne, TMany, TJoinTable>(OneToManyViewModel model, string collectionName,
+            Func<EngineContext, EngineContext> func,
+            Func<EngineContext, TOne, TMany, ApplicationUser, TJoinTable> funcNewItem)
+            where TOne : BaseEntity where TMany : BaseEntity where TJoinTable : BaseEntity
+        {
+            using (var db = new EngineContext())
+            {
+                if (model.ManyBool == null)
+                {
+                    throw new Exception("model.ManyBool is null");
+                }
+
+                for (var i = 0; i < model.ManyBool.Count; i++)
+                {
+                    if (!model.ManyBool[i])
+                    {
+                        model.Many[i] = -1;
+                    }
+                }
+
+                model.Many = model.Many.Where(m => m != -1).ToList();
+
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var one = db.Query<TOne>().FirstOrDefault(f => f.Id == model.OneId);
+                        if (one == null) throw new ArgumentNullException(nameof(one));
+
+                        db.Entry(one).Collection<TJoinTable>(collectionName).Load();
+
+                        // one.ClearListProperty(collectionName);
+                        PropertyInfo listProperty = one.GetType().GetProperty(collectionName);
+
+                        if (listProperty != null && listProperty.PropertyType.IsGenericType &&
+                            listProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                        {
+                            // Use reflection to get the list value
+                            var listValue = (IEnumerable<TJoinTable>)listProperty.GetValue(one);
+
+                            // Iterate through each item in the list
+                            foreach (var item in listValue.ToList())
+                            {
+                                db.Set<TJoinTable>().Remove(item);
+                            }
+                        }
+
+                        if (listProperty != null && listProperty.PropertyType.IsGenericType &&
+                            listProperty.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
+                        {
+                            // Use reflection to get the list value
+                            var listValue = (ICollection<TJoinTable>)listProperty.GetValue(one);
+
+                            // Iterate through each item in the list
+                            foreach (var item in listValue.ToList())
+                            {
+                                db.Set<TJoinTable>().Remove(item);
+                            }
+                        }
+
+                        db.SaveChanges();
+
+                        var selectedList = db.Query<TMany>()
+                            .Where(record => model.Many.Any(selectedId => record.Id == selectedId))
+                            .ToList();
+
+                        var applicationUser = db.GetCurrentUser();
+
+
+                        func(db);
+
+                        foreach (var manyItem in selectedList)
+                        {
+                            var newItem = funcNewItem(db, one, manyItem, applicationUser);
+                            /*one.AddItemToListProperty<TOne, TJoinTable>(newItem, collectionName);*/
+                            db.Set<TJoinTable>().Add(newItem);
+                        }
+
+                        db.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        // An error occurred, rollback the transaction
+                        transaction.Rollback();
+                        throw; // You may choose to handle or log the exception as needed
+                    }
+                }
+            }
         }
 
 
@@ -45,7 +247,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             EjTable ejtable = TableConstructProvider.GetDataTable(actionName);
 
             ejtable.UiTableForms.Add(new UiTableForm
-                {EjTable = ejtable, UiForm = form});
+                { EjTable = ejtable, UiForm = form });
 
             UiEngineDataProvider.GetTable(ejtable, ViewData, Request,
                 controllerName, controllerMethod, null, table);
@@ -98,7 +300,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
         // GET: App/Models
         public virtual async Task<ActionResult> GetDataTable(T p, bool? isajax)
         {
-            var res = await _engineService.GetDataTableAsync(p);
+            var res = await _engineService.GetDataTableAsync(p, GetWhereExp());
 
             if (isajax == true)
             {
@@ -164,6 +366,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
 
             return View(model);
         }
+
         protected virtual async void beforeSave(T model)
         {
         }
@@ -179,6 +382,17 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                 ViewData[GlobalNames.PostedModel] = model;
                 if (ModelState.IsValid)
                 {
+                    if (model != null)
+                    {
+                        var user = await UserManager.FindByNameAsync(User.Identity.Name);
+
+                        if (User.Identity.IsAuthenticated == false)
+                        {
+                            return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                        }
+
+                        model.ApplicationUserId = user.Id;
+                    }
 
                     beforeSave(model);
                     _engineService.Save(model);
@@ -196,7 +410,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                                             GetCurrentControllerName(),GetCurrentActionName(),
                                             GetCurrentAreaName());*/
 
-                     await afterSave(model);
+                    await afterSave(model);
                     return RedirectToAction("GetDataTable");
                 }
                 else
@@ -222,7 +436,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             }
             catch (Exception e)
             {
-                GenErrorMessage(ViewData,e.Message);
+                GenErrorMessage(ViewData, e.Message);
             }
 
 
@@ -237,7 +451,6 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
         public static IEnumerable<ModelError>
             GenErrorMessage(ViewDataDictionary viewData, params string[] eMessage)
         {
-            
             List<ModelError> allErrors = new List<ModelError>();
             foreach (var s in eMessage)
             {
@@ -281,7 +494,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
         {
             string areaName = "";
             if (string.IsNullOrEmpty(MockAreaName))
-                areaName = (string) HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
+                areaName = (string)HttpContext.Request.RequestContext.RouteData.DataTokens["area"];
             else
             {
                 areaName = MockAreaName;
@@ -357,19 +570,23 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             return null;
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public virtual ActionResult Delete(long id)
         {
-            try
-            {
-                _engineService.Delete(id);
+            // try
+            // {
+            _engineService.Delete(id);
 
-                return Json(new CustomResult
-                {
-                    Status = CustomResultType.success,
-                    Message = "با موفقیت حذف شد"
-                }, JsonRequestBehavior.AllowGet);
-            }
+
+            return Content(@"
+<p class=""text-danger "">با موفقیت حذف شد</p>
+");
+            /*return Json(new CustomResult
+            {
+                Status = CustomResultType.success,
+                Message = "با موفقیت حذف شد"
+            }, JsonRequestBehavior.AllowGet);*/
+            /*}
             catch (JServiceException e)
             {
                 return Json(new CustomResult
@@ -385,7 +602,7 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
                     Status = CustomResultType.fail,
                     Message = " حذف با خطا مواجه شد " + e.Message
                 }, JsonRequestBehavior.AllowGet);
-            }
+            }*/
         }
     }
 }

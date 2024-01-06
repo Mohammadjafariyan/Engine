@@ -1,6 +1,5 @@
 ﻿@using WebAppIDEEngine.Models.Core
 @using ViewModel.ActionTypes
-@using WebAppIDEEngine.Models.ICore
 @using Engine.Attributes
 @using System.Web.Mvc
 @using ViewModel.ActionTypes
@@ -28,7 +27,7 @@
 <hr/>
 
 
-@EngineDataTables.DataTable(dataTable, ViewData, Html, "table_"+ejTableObject.Id, ViewContext, false)
+@EngineDataTables.DataTable(dataTable, ViewData, Html, "table_"+ejTableObject.Id, ViewContext,false )
 
 <script>
     var table;
@@ -166,6 +165,7 @@
              $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
          } );*/
 
+debugger
         MakeDataTable('#table_@Html.Raw(ejTableObject.Id)');
 
 

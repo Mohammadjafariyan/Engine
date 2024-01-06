@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using Engine.Entities.Data.Absence.Models;
 using TypeLite;
 
-namespace Engine.Entities.Data
+namespace Engine.Entities.Data.Absence.Models
 {
     [TsClass]
-    public sealed class Machine:AbsenceBase
+    public sealed class Machine:Engine.Entities.Models.ICore.BaseEntity,AbsenceBase
     {
 
         public Machine()
@@ -16,6 +15,8 @@ namespace Engine.Entities.Data
         public long MachineId { get; set; }
         public string IP { get; set; }
         public string Port { get; set; }
+        public  ApplicationUser ApplicationUser { get; set; }
+
 
         public ICollection<PersonnelMachine> PersonnelMachines { get; set; }
     }

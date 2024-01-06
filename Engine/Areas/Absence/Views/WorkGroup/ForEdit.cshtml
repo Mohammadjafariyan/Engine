@@ -7,7 +7,7 @@
 
 @{
 
-    ViewBag.Title = "ثبت کتاب";
+    ViewBag.Title = "فرم ثبت";
     ViewBag.SaveAction = ViewBag.SaveAction ?? "Save";
     ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
@@ -23,3 +23,8 @@
 }
 
 @Html.Partial("~/Areas/JUiEngine/Views/UiFormEngine/ShowView.cshtml", form)
+
+<br/>
+<div class="alert alert-info text-muted">
+    برای مثال روز کار عادی ، حراست و ...
+</div>

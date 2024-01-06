@@ -74,14 +74,17 @@
     //  var action = $@"/{PostSubsystemUrl}/{PostControllerUrl}/{PostActionUrl}" + Request.Url.Query;
       var action = $@"/{PostSubsystemUrl}/{PostControllerUrl}/{PostActionUrl}" + Request.Url.Query;
     <form action="@action"
-          class="" id="@formId" method="post">
+          class="form row " id="@formId" method="post">
         @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
         <br>
         
-        <input id="isAjax_@Model.Id" value="true" name="isajax" type="hidden" class="btn btn-primary"> 
-
-        <button id="search_@Model.Id" type="submit" class="btn btn-primary">جستجو </button>
-        <button id="reset_@Model.Id" type="reset" class="btn btn-primary">ریست</button>
+        
+        <div class="col">
+            <input id="isAjax_@Model.Id" value="true" name="isajax" type="hidden" class="btn btn-primary"> 
+            
+                    <button id="search_@Model.Id" type="submit" class="btn btn-primary">جستجو </button>
+                    <button id="reset_@Model.Id" type="reset" class="btn btn-primary">ریست</button>
+        </div>
     </form>
    @* using (Ajax.BeginForm(PostActionUrl, PostControllerUrl, new {area = PostSubsystemUrl}, new AjaxOptions {HttpMethod = "post",OnComplete = OnCompleteFunction, OnFailure = "alert('خطا در سیستم');console.log(e);"},new {@class=""}))
     {
@@ -115,11 +118,13 @@
 }
 else
 {
-    using (Html.BeginForm(PostActionUrl, PostControllerUrl, new {BackUrl = BackUrl, area = PostSubsystemUrl}, FormMethod.Post, new {@class = "", @Id = formId}))
+    using (Html.BeginForm(PostActionUrl, PostControllerUrl, new {BackUrl = BackUrl, area = PostSubsystemUrl}, FormMethod.Post, new {@class = "row form", @Id = formId}))
     {
         @Html.Partial("~/Areas/JUiEngine/Views/Shared/DynamicFormPartial.cshtml")
         <br/>
-        <button type="submit" class="btn btn-primary">@submitName</button>
-        <button type="reset" class="btn btn-primary">ریست</button>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">@submitName</button>
+                    <button type="reset" class="btn btn-primary">ریست</button>
+        </div>
     }
 }

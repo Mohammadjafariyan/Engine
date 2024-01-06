@@ -1,20 +1,114 @@
 @using System.Collections.Specialized
 @using ViewModel.ActionTypes
-@using WebAppIDEEngine.Models.ICore
 @using Engine.Attributes
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 @using ViewModel.ActionTypes
 @using Domain.Attributes
 @using Engine.Areas.JUiEngine.Controllers
+@using Engine.HtmlExtentions
 
-@model IDataTable
+@model ObjectDataTable<Engine.Entities.Data.Absence.Models.WorkGroup>
 @{
-    ViewBag.Title = "جدول کتاب ها";
-    var datatable= ViewData[UiHomeController.TableObject];
+    ViewBag.Title = "لیست گروه های کاری";
+    var datatable = ViewData[UiHomeController.TableObject];
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 
 }
 
 
-@Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)
+@{ var modalId = Guid.NewGuid().ToString(); }
+
+@Html.Modal($@"<div id=""{modalId}""> </div>", "WorkGroupObligatedRange", "تغییر شیفت")
+<script>
+document.getElementById('WorkGroupObligatedRange_panel').addEventListener('hidden.bs.modal', function (event) {
+   $("#loading").show();
+              
+                    $.ajax({
+                      url: '@Url.Action("GetObligatedRangesById")?id='+window['selectedRecordId'] +'&modalId=@modalId',
+                      type: "GET",
+                      dataType: "html",
+                      beforeSend: function () {
+                        // This function will be called before the request is sent
+                        // You can perform any setup or modification here
+                      },
+                      success: function (data) {
+                        // Handle the successful response here
+                        console.log(data);
+                      
+                        $(window['selectedRecordIdElement']).parent().html(data);
+                      },
+                      error: function (jqXHR, textStatus, errorThrown) {
+                        // Handle errors here
+                        console.error("Error: " + textStatus, errorThrown);
+                         $(window['selectedRecordIdElement']).parent().html(`<div class="alert alert-danger">خطایی رخ داد لطفا مجدد امتحان کنید</div>`);
+                        
+                      },
+                      complete: function () {
+                        // Hide loading indicator after the request is complete
+                        $("#loading").hide();
+                        
+                      }
+                    });
+})
+
+</script>
+@{ var id = Guid.NewGuid().ToString(); }
+
+
+@Html.ActionLink("تعریف گروه کاری جدید", "ForEdit", "WorkGroup", new { }, new { @class = "btn btn-primary" })
+
+<table class="table table-bordered" id="@id">
+    <thead>
+    <tr>
+        <th scope="col">عنوان</th>
+        <th scope="col">شیفت</th>
+        <th scope="col">ویرایش</th>
+        <th scope="col">حذف</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.RecordsList)
+    {
+        <tr>
+            <td >@item.Name</td>
+            <td>
+
+                <a href="#" onclick="window['selectedRecordIdElement']=this;  window['selectedRecordId']='@item.Id';openModal('#WorkGroupObligatedRange','@Url.Action("OneWorkGroupToManyObligatedRangesModal", "WorkGroupObligatedRange", new { workGroupId = item.Id })','@modalId');">شیفت های  @item.Name  </a>
+
+                @{
+                    foreach (var joinTable in item.WorkGroupObligatedRanges)
+                    {
+                        <a class="btn btn-outline-light text-black-50" href="#">@joinTable.ObligatedRange.Name </a>
+                    }
+                }
+            </td>
+            <td>@Html.ActionLink("ویرایش", "ForEdit", new { id = item.Id })</td>
+
+            @{
+                var scopeId = Guid.NewGuid().ToString();
+            }
+
+            <td id="@scopeId">
+                <a id="delete" onclick="$('#del_form_@scopeId').toggle()" href="#">حذف</a>
+                <div style="display: none" id="del_form_@scopeId">
+                    @using (Ajax.BeginForm("Delete", new { id = item.Id }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = scopeId }, new { }))
+                    {
+                        <p >
+                            آیا از حذف این رکورد اطمینان دارید ؟
+                        </p>
+                        <input class="btn btn-danger" type="submit" value="حذف"/>
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+
+    </tbody>
+</table>
+
+@*@Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)*@
+
+<script>
+ConvertToDataTable('#@id');
+</script>

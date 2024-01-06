@@ -1,2 +1,9 @@
-﻿@model dynamic
+﻿@model Engine.Entities.Data.Absence.Models.ObligatedRange
 
+<a href="#" onclick=" window['selectedRecordIdElement']=this;  window['selectedRecordId']='@Model.Id';openModal('#WorkGroupObligatedRange','@Url.Action("OneObligatedRangeToManyWorkGroupsModal", "WorkGroupObligatedRange", new { obligatedRangeId = Model.Id })','@ViewBag.modalId');">گروه های کاری @Model.Name </a>
+@{
+    foreach (var joinTable in Model.WorkGroupObligatedRanges)
+    {
+        <a class="btn btn-outline-light text-black-50" href="#">@joinTable.WorkGroup.Name </a>
+    }
+}

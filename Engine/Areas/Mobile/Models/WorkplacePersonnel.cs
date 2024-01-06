@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using Engine.Absence.Models;
 using Engine.Areas.Mobile.ViewModel;
+using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using Entities.Data;
-using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Areas.Mobile.Models
 {
-    public class WorkplacePersonnel : BaseEntity
+    public class WorkplacePersonnel : Engine.Entities.Models.ICore.BaseEntity,AbsenceBase
     {
         public WorkplacePersonnel()
         {
@@ -29,5 +29,6 @@ namespace Engine.Areas.Mobile.Models
         public long? BiometricDataId { get; set; }
         public virtual List<BiometricData> BiometricDatas { get; set; }
         public virtual ICollection<WorkplaceSetting> WorkplaceSettings { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

@@ -1,15 +1,12 @@
-using System.ComponentModel.DataAnnotations;
-using Engine.Entities.Data;
+using Engine.Entities.Models.ICore;
 using TypeLite;
-using WebAppIDEEngine.Models.ICore;
 
-namespace Engine.Absence.Models
+namespace Engine.Entities.Data.Absence.Models
 {
-    [TsClass]
-    public class AbsenceBase :BaseEntity
+  
+    public interface AbsenceBase 
     {
         
-        public virtual ApplicationUser ApplicationUser { get; set; }
 
     }
 }

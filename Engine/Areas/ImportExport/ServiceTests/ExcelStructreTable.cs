@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Engine.Areas.ImportExport.Models;
 using Engine.Areas.ImportExport.Service;
+using Engine.Entities.Models.ICore;
 using Engine.Service.AbstractControllers;
-using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Areas.ImportExport.ServiceTests
 {
-    public class ExcelStructreTable:IModel,IRemovable<ExcelStructreTableNode>
+    public class ExcelStructreTable:BaseEntity,IRemovable<ExcelStructreTableNode>
     {
         public ExcelStructreTable()
         {
@@ -27,5 +27,7 @@ namespace Engine.Areas.ImportExport.ServiceTests
         public long Id { get; set; }
         [DisplayName(" نام ساختار")]
         public string Name { get; set; }
+
+        public string ApplicationUserId { get; set; }
     }
 }

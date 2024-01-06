@@ -7,14 +7,16 @@ using Engine.Service.AbstractControllers;
 using ViewModel.ActionTypes;
 using WebAppIDEEngine.Models.Core;
 using System.Data.Entity;
+using Engine.Entities.Data;
 using Engine.Entities.Models.Core.AppGeneration;
+using Engine.Entities.Models.ICore;
 using Engine.Entities.Models.UiGeneratorModels;
 using WebAppIDEEngine.Models;
 using WebAppIDEEngine.Models.UiGeneratorModels;
 
 namespace ServiceLayer.Systems
 {
-    public class CommonService<M> : BaseEngineService<M> where M : class, WebAppIDEEngine.Models.ICore.IModel
+    public class CommonService<M> : BaseEngineService<M> where M : class, IModel
     { 
         
         public override async Task<List<IDropDownOption>> GetDropDownAsync(IDropDownParameter p)

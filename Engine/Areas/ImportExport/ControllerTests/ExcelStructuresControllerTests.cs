@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Engine.Areas.ImportExport.Controllers;
 using Engine.Areas.ImportExport.Models;
 using Engine.Areas.ImportExport.ServiceTests;
+using Engine.Entities.Data;
 using WebAppIDEEngine.Models;
 using Xunit;
 

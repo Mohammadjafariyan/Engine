@@ -2,9 +2,10 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
-using Engine.Absence.Models;
 using Engine.Areas.ReportGenerator.Controllers;
 using Engine.Controllers.AbstractControllers.ObjectBased;
+using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using Newtonsoft.Json;
 using ServiceLayer.Absence;
 using ViewModel.Parameters;
@@ -22,10 +23,12 @@ namespace Engine.Areas.Absence.Controllers
         }
 
         // GET
-        public ActionResult Index(long? Id)
+        public ActionResult Index()
         {
             return View();
         }
+        
+        
 
 
         [HttpGet]

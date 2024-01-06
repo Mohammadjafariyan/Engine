@@ -5,15 +5,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebAppIDEEngine.Models.ICore;
+using Engine.Entities.Models.ICore;
 
 namespace Entities
 {
-    public class Book : IModel
+    public class Book : BaseEntity
     {
         [Key]
         public long Id { get; set; }
         public string Name { get; set; }
+        public string ApplicationUserId { get; set; }
         public string Author { get; set; }
         [DropDown(Service = "", MethodName = "GetDropDownList",Ajax= "GetDropDownList",Controller="Rent")]
         public ICollection<Rent> Rents { get; set; }

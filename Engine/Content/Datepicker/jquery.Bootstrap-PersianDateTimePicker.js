@@ -1337,7 +1337,7 @@
     if ($element == undefined || $element.attr(mdDateTimeIsShowingAttributeName) == 'true') return;
     $element.attr(mdDateTimeIsShowingAttributeName, true);
     $element.popover('show');
-  };
+  }
 
   // مخفی کردن popover
   function hidePopover($elements) {
@@ -1349,7 +1349,7 @@
       $element.attr(mdDateTimeIsShowingAttributeName, false);
       $element.popover('hide');
     });
-  };
+  }
 
   // مخفی کردن سایر تقویم ها به جز تقویم مورد نظر
   function hideOthers($exceptThis) {
@@ -1358,7 +1358,7 @@
       if ($exceptThis != undefined && $exceptThis.is($thisPopover)) return;
       hidePopover($thisPopover);
     });
-  };
+  }
 
   var isGregorianState = false;
 
@@ -1701,7 +1701,7 @@
       $.each(e.target.attributes, function () {
         if (this.specified && regex.test(this.name) && !hasFlag) {
           hasFlag = true;
-          return;
+          
         }
       });
 
@@ -1710,7 +1710,7 @@
         $.each($parentTarget1[i].attributes, function () {
           if (this.specified && regex.test(this.name) && !hasFlag) {
             hasFlag = true;
-            return;
+            
           }
         });
       }

@@ -4,14 +4,16 @@ using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using Engine.Areas.JUiEngine.Controllers;
 using Engine.Attributes;
+using Engine.Entities.Models.ICore;
 using Engine.Entities.Models.UiGeneratorModels;
 using Engine.Service.AbstractControllers;
 using Engine.ServiceLayer.Systems.Engine;
+using Microsoft.AspNet.Identity.Owin;
 using ViewModel.ActionTypes;
-using WebAppIDEEngine.Models.ICore;
 using WebGrease.Css.Extensions;
 
 namespace Engine.Controllers.AbstractControllers.AttributeBased
@@ -26,6 +28,14 @@ namespace Engine.Controllers.AbstractControllers.AttributeBased
 
         protected IUiEngineDataProvider _uiEngineDataProvider = new UiEngineDataProvider();
         protected IUiFormDataProvider _uiFormDataProvider = new UiFormDataProvider();
+        private ApplicationUserManager _userManager;
+
+        protected ApplicationUserManager UserManager
+        {
+            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { _userManager = value; }
+        }
+
 
         public AppController()
         {

@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Absence.Models;
+using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using ServiceLayer.Absence;
 using WebAppIDEEngine.Models;
 

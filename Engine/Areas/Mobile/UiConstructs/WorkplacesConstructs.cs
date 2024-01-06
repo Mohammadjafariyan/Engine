@@ -75,7 +75,7 @@ namespace Engine.Areas.Absence.UiConstructs
             });
 
 
-            UiFormInput input = GetDropDownInput("UserClockTypesarr", "نواع ساعت زنی", FieldType.MultiSelect,
+            UiFormInput input = GetDropDownInput("UserClockTypesarr", "انواع ساعت زنی", FieldType.MultiSelect,
                 GetEnumSelectList<ClockType>());
 
 

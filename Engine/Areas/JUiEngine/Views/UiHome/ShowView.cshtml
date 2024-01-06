@@ -50,12 +50,11 @@
     <div class="panel-heading">
 
         <div class="row">
-            <span class="col-md-1"> اطلاعات</span>
             <span class="col-md-11">
 
                 @if (uiTableItems != null && uiTableItems.Count > 0)
                 {
-                    <div class="btn-group">
+                    <div class="btn-">
 
                         @foreach (var item in uiTableItems)
                         {
@@ -127,6 +126,7 @@
             alert('لیست دیتا خالی است');
         }
 
+        debugger;
         MakeDataTable('#table_@Html.Raw(ejTableObject.Id)', headers, response.RecordsList);
 
 

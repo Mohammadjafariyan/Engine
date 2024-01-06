@@ -8,6 +8,7 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using Engine.Models;
 using Entities.Data;
+using WebAppIDEEngine.Models;
 
 namespace Engine
 {
@@ -17,7 +18,7 @@ namespace Engine
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context, user manager and signin manager to use a single instance per request
-            app.CreatePerOwinContext(ApplicationDbContext.Create);
+            app.CreatePerOwinContext(EngineContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 

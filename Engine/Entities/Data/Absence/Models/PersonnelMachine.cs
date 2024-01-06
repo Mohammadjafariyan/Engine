@@ -1,12 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
-using Engine.Absence.Device;
 using TypeLite;
 
-namespace Engine.Absence.Models
+namespace Engine.Entities.Data.Absence.Models
 {
     [TsClass]
-    public class PersonnelMachine:AbsenceBase
+    public class PersonnelMachine:Engine.Entities.Models.ICore.BaseEntity,AbsenceBase
     {
         public  virtual Machine Machine{ get; set; }
         public virtual Personnel   Personnel{ get; set; }
@@ -23,6 +21,9 @@ namespace Engine.Absence.Models
         public long   UserIdInMachine{ get; set; }
 
         public virtual ICollection<BiometricData> BiometricDatas { get; set; }
+        
+        public  ApplicationUser ApplicationUser { get; set; }
+
         
     }
 }

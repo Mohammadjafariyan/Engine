@@ -1,4 +1,7 @@
 ﻿
+.hover-cursor:hover{
+    cursor: pointer;
+}
 @font-face {
     font-family: "bykan";
     src: url('font/byekan.ttf') format('truetype');
@@ -10,7 +13,10 @@ p,h1,h2,h3,h4,h5,h6,th,input,title,footer,select,option ,a ,b {
     font-family: "iranyekanwebregular" !important;
     font-weight: bold;
 }
-
+.dataTables_wrapper .dataTables_filter{
+    float: unset !important;
+    margin:10px
+}
 
 
 

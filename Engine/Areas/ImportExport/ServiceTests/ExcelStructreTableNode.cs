@@ -1,7 +1,7 @@
 using Engine.Areas.ImportExport.Service;
+using Engine.Entities.Models.ICore;
 using Engine.Service.AbstractControllers;
 using Newtonsoft.Json;
-using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Areas.ImportExport.ServiceTests
 {
@@ -13,7 +13,8 @@ namespace Engine.Areas.ImportExport.ServiceTests
         public string ColumnTranslate { get; set; }
         public long Id { get; set; }
         public string Name { get; set; }
-        
+        public string ApplicationUserId { get; set; }
+
         public bool IsRemoved { get; set; }
         
         [JsonIgnore]

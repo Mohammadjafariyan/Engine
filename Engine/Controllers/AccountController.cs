@@ -14,6 +14,7 @@ using Engine.Models;
 using Engine.Service.AbstractControllers;
 using Entities.Data;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WebAppIDEEngine.Models;
 
 namespace Engine.Controllers
 {
@@ -22,6 +23,7 @@ namespace Engine.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        
 
         public AccountController()
         {
@@ -170,7 +172,7 @@ namespace Engine.Controllers
                     Gender=model.Gender,
                 };
                 
-                using (var context = new ApplicationDbContext())
+                using (var context = new EngineContext())
                 {
 
                     var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));

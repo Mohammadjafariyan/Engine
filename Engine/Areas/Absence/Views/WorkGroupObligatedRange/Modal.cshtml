@@ -1,25 +1,112 @@
 @using System.Collections.Specialized
-@using ViewModel.ActionTypes
-@using Engine.Attributes
-@using System.Web.Mvc
 @using System.Web.Mvc.Html
-@using ViewModel.ActionTypes
-@using Domain.Attributes
 @using Engine.Areas.JUiEngine.Controllers
+@using Engine.Entities.Data.Absence.Models
+@using Engine.Entities.Models.UiGeneratorModels
+@using Engine.HtmlExtentions
+@using Engine.Localization
+@using WebAppIDEEngine.Models.Core
+@model Engine.Entities.Data.Absence.Models.WorkGroupObligatedRange
 
-@model IDataTable
 @{
-    ViewBag.Title = "جدول کتاب ها";
-    var datatable = ViewData[UiHomeController.TableObject];
-    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    ViewBag.Title = "ثبت کتاب";
+    ViewBag.SaveAction = ViewBag.SaveAction ?? "Save";
+    ViewBag.SaveController = ViewBag.SaveController ?? this.ViewContext.RouteData.Values["controller"].ToString();
+    ViewData["inline"] = true;
+    var form = ViewData[UiHomeController.Form] as UiForm;
+    Layout = null; // "~/Views/Shared/_Layout_Admin.cshtml";
+    string id = Guid.NewGuid().ToString();
+
+
+    var workGroups = ViewBag.workGroups as List<WorkGroup>;
+    var obligatedRanges = ViewBag.obligatedRanges as List<ObligatedRange>;
 
 }
 
-<div class="modal-body">
-    @Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)
+@using (Ajax.BeginForm("Save",new AjaxOptions
+{
+    UpdateTargetId = @id,
+    OnSuccess = $"modalSucceed({id})"
+}))
+{
+    <div class="modal-body" id="@id">
 
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary">Save changes</button>
-</div>
+        <div class="row">
+              <div class="col-md-12">
+            
+                        <div class="form-group">
+                            <label> شیفت :
+                                @Html.DropDownListFor(m => m.ObligatedRangeId, (SelectList)ViewBag.ObligatedRangeIdItems, new { placeholder = Request.GetText("S2 *"), @class = "form-control" })
+                            </label>
+                            
+                            @if (ViewBag.obligatedRangeCheckbox)
+                                {
+                                    if (obligatedRanges != null)
+                                    {
+                                        foreach (var obligatedRange in obligatedRanges)
+                                        {
+                                            <label>
+                                                @obligatedRange.Name
+                                                <input type="checkbox" value="@obligatedRange.Id" checked="@()"/>
+                                            </label>
+                                        }
+                                    }
+                                }
+                        </div>
+<div class="form-group">
+    <label>  گروه کاری :
+        @Html.DropDownListFor(m => m.WorkGroupId, (SelectList)ViewBag.WorkGroupIdItems, new { placeholder = Request.GetText("S2 *"), @class = "form-control" })
+            
+    </label>
+    
+    @if (ViewBag.workGroupsCheckbox)
+    {
+        if (workGroups != null)
+        {
+            foreach (var workGroup in workGroups)
+            {
+                <label>
+                    @workGroup.Name
+                    <input type="checkbox" value="@workGroup.Id"/>
+                </label>
+            }
+        }
+    }
+</div>            
+            
+                    </div>
+                    <div class="col-md-12">
+                        
+            
+                                                <div class="form-group mt-3">
+                                                    
+                                                    <label> تاریخ شروع :
+                                                        @*//@Html.TextBoxFor(m => m.DateTimeIran, new { placeholder = Request.GetText(" *"), @class = "form-control" })*@
+                                                        @Html.DatePicker(m=>m.DateTimeIran)
+                                                    </label>
+                                                    <small>برای مثال : 1401/05/07</small>
+                                                </div>
+
+                        <div class="form-group mt-3">
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+            
+                        </div>
+            
+                    </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button id="dismiss_@id"  type="button" class="btn btn-secondary" data-bs-dismiss="modal">لغو</button>
+        <button id="submit_@id" type="submit" class="btn btn-primary">ثبت</button>
+    </div>
+}
+
+<script>
+ function modalSucceed(target){
+    $('#submit_'+target).click();
+}
+
+
+
+</script>

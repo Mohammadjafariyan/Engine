@@ -15,6 +15,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using WebAppIDEEngine.Models;
 
 namespace Engine
 {
@@ -164,6 +165,7 @@ namespace Engine
             msg.From = new MailAddress("support@bulus.ir");
             msg.To.Add(new MailAddress(message.Destination));
             msg.Subject = message.Subject;
+            msg.IsBodyHtml = true;
             msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(text, null, MediaTypeNames.Text.Html));
            // msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html));
 
@@ -204,7 +206,7 @@ namespace Engine
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<EngineContext>()));
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {

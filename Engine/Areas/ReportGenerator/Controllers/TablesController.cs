@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Engine.Entities.Data;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Areas.ReportGenerator.Controllers

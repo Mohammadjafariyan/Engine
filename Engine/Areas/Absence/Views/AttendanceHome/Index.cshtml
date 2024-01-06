@@ -32,7 +32,7 @@
                 <a class="card col-md-2" href="@Url.Action("GetDataTable", "ObligatedRanges", new {Area = "Absence"})">
                     <img class="img-thumbnail" src="~/Content/attendance images/what_are_time_intervals.png" />
                     <div >
-                        <h4><b class="btn btn-primary desc">بازه های موظفی</b></h4>
+                        <h4><b class="btn btn-primary desc">شیفت کاری</b></h4>
                         $1$<p>در صورت فراموشی کارت توسط پرسنل </p> #1#
                     </div>
                 </a>
@@ -151,7 +151,7 @@
                      <div class="btn-group-vertical">
                              @Html.ActionLink(" فراموشی کارت", "GetDataTable", "ManualAttendance", new {Area = "Absence"}, new {@class = "btn btn-primary"})
                              @Html.ActionLink("تعریف بازه موظفی", "Index", "ObligatedRange", new {Area = "Absence"}, new {@class = "btn btn-primary"})
-                             @Html.ActionLink("بازه های موظفی", "GetDataTable", "ObligatedRanges", new {Area = "Absence"}, new {@class = "btn btn-primary"})
+                             @Html.ActionLink("شیفت کاری", "GetDataTable", "ObligatedRanges", new {Area = "Absence"}, new {@class = "btn btn-primary"})
                              @Html.ActionLink("پرسنل", "GetDataTable", "Personnel", new {Area = "Absence"}, new {@class = "btn btn-primary"})
                              @Html.ActionLink("گروه کاری", "GetDataTable", "WorkGroup", new {Area = "Absence"}, new {@class = "btn btn-primary"})
                              @Html.ActionLink("دستگاه ها", "GetDataTable", "Machines", new {Area = "Absence"}, new {@class = "btn btn-primary"})

@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Engine.Absence.Models;
 using Engine.Areas.ImportExport.ServiceTests;
+using Engine.Entities.Data;
 using Microsoft.Ajax.Utilities;
 using ServiceLayer.Absence;
 using ServiceLayer.Systems;
 using WebAppIDEEngine.Models;
-using WebAppIDEEngine.Models.ICore;
 
 namespace Engine.Areas.ImportExport.Service
 {

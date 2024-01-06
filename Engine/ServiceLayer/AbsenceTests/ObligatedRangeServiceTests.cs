@@ -1,6 +1,7 @@
 using System.Linq;
 using Engine.Absence.Device;
 using Engine.Areas.Absence.Controllers;
+using Engine.Entities.Data;
 using ServiceLayer.Absence;
 using WebAppIDEEngine.Models;
 using WebGrease.Css.Extensions;

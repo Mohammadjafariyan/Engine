@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Absence.Models;
 using Engine.Areas.Absence.Models;
 using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Absence.Device

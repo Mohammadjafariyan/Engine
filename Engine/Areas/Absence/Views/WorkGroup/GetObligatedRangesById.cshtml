@@ -1,2 +1,10 @@
 ﻿@model Engine.Entities.Data.Absence.Models.WorkGroup
 
+
+<a href="#" onclick=" window['selectedRecordIdElement']=this;  window['selectedRecordId']='@Model.Id';openModal('#WorkGroupObligatedRange','@Url.Action("OneWorkGroupToManyObligatedRangesModal", "WorkGroupObligatedRange", new { workGroupId = Model.Id })','@ViewBag.modalId');"> شیفت های @Model.Name </a>
+@{
+    foreach (var joinTable in Model.WorkGroupObligatedRanges)
+    {
+        <a class="btn btn-outline-light text-black-50" href="#">@joinTable.ObligatedRange.Name </a>
+    }
+}

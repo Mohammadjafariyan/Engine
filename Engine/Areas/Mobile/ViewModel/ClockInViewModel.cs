@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Engine.Absence.Models;
 using Engine.Areas.Mobile.Models;
+using Engine.Entities.Data.Absence.Models;
 
 namespace Engine.Areas.Mobile.ViewModel
 {

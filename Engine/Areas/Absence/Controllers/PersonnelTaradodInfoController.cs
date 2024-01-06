@@ -8,6 +8,7 @@ using Engine.Areas.Absence.Service;
 using Engine.Areas.Absence.UiConstructs;
 using Engine.Areas.JUiEngine.Controllers;
 using Engine.Controllers.AbstractControllers.ObjectBased;
+using Engine.Entities.Data;
 using Engine.Entities.Models.UiGeneratorModels;
 using ViewModel.ActionTypes;
 using ViewModel.Parameters;

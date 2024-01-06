@@ -1,2 +1,74 @@
-﻿@model dynamic
+﻿@using System.Globalization
+@model dynamic
 
+@{
+    Layout = null;
+}
+
+@{
+
+    System.DateTime date = System.DateTime.Today;
+    System.Globalization.PersianCalendar p = new System.Globalization.PersianCalendar();
+
+    int year = p.GetYear(date);
+    int month = p.GetMonth(date);
+    int day = p.GetDayOfMonth(date);
+    
+    string name = ViewBag.name;
+    List<SelectListItem> years = new List<SelectListItem>();
+    for (int i = year - 10; i < year + 10; i++)
+    {
+        years.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString(), Selected = i == year });
+    }
+
+
+    List<SelectListItem> months = new List<SelectListItem>();
+    for (int i = 1; i < 12; i++)
+    {
+        months.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString(), Selected = i == month });
+    }
+
+    List<SelectListItem> days = new List<SelectListItem>();
+    for (int i = 1; i < 31; i++)
+    {
+        days.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString(), Selected = i == day });
+    }
+}
+<style>
+    .datee select {
+    
+    border: none;
+    }
+</style>
+
+<div class="form-group datee" dir="ltr">
+    <label>
+        @Html.DropDownList(name + "Year", years, new { @onchange = $"window['{name}DatePickerChange']()" })
+    </label>
+    <label>
+        @Html.DropDownList(name + "Month", months, new { @onchange = $"window['{name}DatePickerChange']()" })
+    </label>
+    <label>
+        @Html.DropDownList(name + "Day", days, new { @onchange =  $"window['{name}DatePickerChange']()" })
+    </label>
+    <input type="hidden" name="@name">
+</div>
+
+@{
+    var nameMonth= name + "Month";
+    var nameYear= name + "Year";
+    var nameDay= name + "Day";
+    var funcName= name + "DatePickerChange";
+}
+<script>
+    window["@funcName"]= function(){
+        let year = $('[name="@nameYear"]').val();
+        let month = $('[name="@nameMonth"]').val();
+        let day = $('[name="@nameDay"]').val();
+        
+        let format=`${year}/${month}/${day}`;
+        $('[name="@name"]').val(format);
+    }
+    
+     window["@funcName"]();
+</script>

@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+﻿import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Model, Property} from "../model/model";
 import {Observable} from "rxjs";
@@ -13,6 +13,7 @@ export class TablesService {
       'Content-Type': 'application/json'
     })
   }
+
   constructor(public http: HttpClient) {
   }
 
@@ -30,37 +31,46 @@ export class TablesService {
   }
 
 
-
-  getAllNames(searchTerm?, lastIndex?,  count?):Observable<CustomResultGeneric<Model[]>>{
+  getAllNames(searchTerm?, lastIndex?, count?): Observable<CustomResultGeneric<Model[]>> {
     return this.http.get<CustomResultGeneric<Model[]>>
-    (`${this.getRootUrl}${this.getAreaAndPath}/GetAllNames?SearchTerm=&lastIndex=&count=`,  this.headers
+    (`${this.getRootUrl}${this.getAreaAndPath}/GetAllNames?SearchTerm=&lastIndex=&count=`, this.headers
     );
   }
 
   GetWithProperties(Id: number) {
-    return this.http.get<CustomResultGeneric< Model>>(`${this.getRootUrl}${this.getAreaAndPath}/GetWithProperties?Id=${Id}`,  this.headers);
+    return this.http.get<CustomResultGeneric<Model>>(`${this.getRootUrl}${this.getAreaAndPath}/GetWithProperties?Id=${Id}`, this.headers);
   }
 }
 
 
-export class CustomResultGeneric<T>
-{
-  result:T;
+export class CustomResultGeneric<T> {
+  result: T;
 
   Message;
-  Status:CustomResultType;
+  Status: CustomResultType;
 }
 
-export class CustomResult
-{
-  result:any;
+export class CustomResult {
+  result: any;
 
-   Message;
-Status:CustomResultType;
+  Message;
+  Status: CustomResultType;
+  total: number;
+  totalPages: number;
 }
 
-export enum CustomResultType
-{
+
+
+export class ApiResult<T> {
+  result: T;
+
+  Message;
+  Status: CustomResultType;
+  total: number;
+  totalPages: number;
+}
+
+export enum CustomResultType {
   success, fail
 }
 

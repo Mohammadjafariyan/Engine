@@ -8,6 +8,7 @@ using System.Web.Routing;
 using Engine.Areas.ImportExport.Controllers;
 using Engine.Areas.ImportExport.Service;
 using Engine.Areas.ImportExport.ServiceTests;
+using Engine.Entities.Data;
 using MvcContrib.TestHelper;
 using Rhino.Mocks;
 using WebAppIDEEngine.Models;

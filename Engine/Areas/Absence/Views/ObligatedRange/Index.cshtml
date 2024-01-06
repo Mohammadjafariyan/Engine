@@ -10,21 +10,33 @@
     Scripts.Render("~/bundles/knockout")
     Scripts.Render("~/bundles/app")
     }*@
-@model Engine.Absence.Models.ObligatedRange
+@model Engine.Entities.Data.Absence.Models.ObligatedRange
 @{ 
     
-    Layout = "~/Areas/ReportGenerator/Views/Shared/_Layout.cshtml";
+    //Layout = "~/Areas/ReportGenerator/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 @Html.Partial("~/Areas/Absence/Views/ObligatedRange/_Home.cshtml")
 
-
+@{
+    var list = Request.QueryString.AllKeys.Select(s=>$"{s}={Request.QueryString[s]}").ToList();
+    string querystring= string.Join("&", list);
+    if (list.Any())
+    {
+        querystring = "?" + querystring;
+    }
+    else
+    {
+        querystring = "";
+    }
+}
 <script>
     var path = "@Request.Url.AbsoluteUri";
     var modelId = "@Model?.Id";
     $(document).ready(function() {
         
         if (window.location.href.indexOf("Absence/ObligatedRange/Index/#/absence/home") ==-1) {
-            window.location.href = path+ "/#/absence/home";
+            window.location.href = path+ "/#/absence/home" + '@querystring';
         }
        // window.location.href += "Absence/Index" + modelId;
     });

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Engine.Absence.Device;
-using Engine.Absence.Models;
 using Engine.Areas.Absence.Controllers;
 using Engine.Areas.Absence.Models;
 using Engine.Areas.Absence.Service;
 using Engine.Controllers.AbstractControllers;
+using Engine.Entities.Data.Absence.Models;
 using Xunit;
 
 namespace Engine.Areas.Absence.ControllerTests

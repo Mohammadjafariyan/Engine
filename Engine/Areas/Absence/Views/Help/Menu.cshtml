@@ -1,2 +1,153 @@
 ﻿@model dynamic
 
+@{
+    var d = 1;
+}
+
+<style>
+    .diactive{
+    color: #c5c5c5 !important;
+    }
+</style>
+
+<li class="nav-item">
+    <a class="sidebar-link "
+       href="@(ViewBag.workgroupCount > 0 ? Url.Action("GetDataTable", "ObligatedRanges", new { Area = "Absence" }) : "#")">
+        <span class="icon-holder">
+            <i class="c-deep-orange-500 ti-calendar"></i>
+        </span>
+        <span class="title">تقویم</span>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="sidebar-link" href="@Url.Action("GetDataTable", "WorkGroup", new { Area = "Absence" })">
+        <span class="icon-holder">
+            <i class="c-deep-purple-500 ti-direction"></i>
+        </span>
+        <span class="title">گروه کاری</span>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "Personnel", new { Area = "Absence" }) : "#")">
+        <span class="icon-holder">
+            <i class="c-cyan-500 ti-mobile"></i>
+        </span>
+        <span class="title">پرسنل</span>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "ObligatedRanges", new { Area = "Absence" }) : "#")">
+        <span class="icon-holder">
+            <i class="c-pink-500 ti-time"></i>
+        </span>
+        <span class="title">شیفت کاری</span>
+    </a>
+</li>
+
+@*
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "WorkGroupObligatedRange", new { Area = "Absence" }) : "#")">
+        <span class="icon-holder">
+            <i class="c-red-500 ti-timer"></i>
+        </span>
+        <span class="title">بازه موظفی گروه های کاری</span>
+    </a>
+</li>*@
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "Workplaces", new { Area = "Mobile" }) : "#")">
+
+
+        <span class="icon-holder">
+            <i class="c-indigo-500 ti-location-pin"></i>
+        </span>
+        <span class="title">  
+            مکان یابی محل کار 
+(GPS) 
+
+        </span>
+    </a>
+</li>@*
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "ManualAttendance", new { Area = "Absence" }) : "#")">
+
+        <span class="icon-holder">
+            <i class="c-teal-500 ti-credit-card"></i>
+        </span>
+        <span class="title">فراموشی کارت</span>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "PersonnelMachines", new { Area = "Absence" }) : "#")">
+
+
+        <span class="icon-holder">
+            <i class="c-light-blue-500 ti-id-badge"></i>
+        </span>
+        <span class="title">پرسنل دستگاه ها</span>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "Machines", new { Area = "Absence" }) : "#")">
+
+
+        <span class="icon-holder">
+            <i class="c-cyan-500 ti-harddrive"></i>
+        </span>
+        <span class="title">دستگاه ها</span>
+    </a>
+</li>*@
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "workplacePersonnel", new { Area = "Mobile" }) : "#")">
+
+
+        <span class="icon-holder">
+            <i class="c-orange-500 ti-key"></i>
+        </span>
+        <span class="title">رمز عبور و نام کاربری پرسنل</span>
+    </a>
+</li>
+
+
+<li class="nav-item">
+
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("Index", "PersonnelTaradodInfo", new { Area = "Absence" }) : "#")">
+        <span class="icon-holder">
+            <i class="c-yellow-500 ti-bag"></i>
+        </span>
+        <span class="title">گزارش کارکرد پرسنل</span>
+    </a>
+</li>
+<li class="nav-item">
+
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetAllPersonnelTotalSummaryTimesheetView", "PersonnelTaradodInfo", new { Area = "Absence" }) : "#")">
+
+        <span class="icon-holder">
+            <i class="c-green-500 ti-stats-up"></i>
+        </span>
+        <span class="title">گزارش خلاصه لیست کارکرد </span>
+    </a>
+</li>

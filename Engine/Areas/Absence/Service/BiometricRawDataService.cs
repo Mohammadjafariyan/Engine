@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
-using Engine.Absence.Models;
+using Antlr.Runtime.Misc;
+using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using ServiceLayer.Absence;
 using ServiceLayer.Systems;
 using ViewModel.ActionTypes;
@@ -63,7 +65,7 @@ namespace Engine.Areas.Absence.Service
             base.Save(model);
         }
 
-        public override IDataTable GetDataTable(BiometricRawData p)
+        public override IDataTable GetDataTable(BiometricRawData p, global::System.Func<IQueryable<BiometricRawData>, IQueryable<BiometricRawData>> whereExpression = null)
         {
             using (var db = new EngineContext())
             {
