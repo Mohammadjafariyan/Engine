@@ -1,3 +1,17 @@
-<p>
-  workplaces works!
-</p>
+
+
+
+
+<app-crud [header]="'لیست محل های کار'" [cols]="cols" [form]="form"
+          [formFields]="fields"   [service]="workplacesService">
+
+  <ng-template #columnHeaderContent let-columns>
+    <th>پرسنل</th>
+  </ng-template>
+
+  <ng-template #columnContent let-item>
+    <td>{{item.Name}}</td>
+
+  </ng-template>
+
+</app-crud>

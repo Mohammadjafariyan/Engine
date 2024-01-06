@@ -70,3 +70,15 @@ export class AbsenceDataProviderService {
       ObligatedRange,  this.headers );
   }
 }
+
+
+
+export class Global{
+  static __API_URL__() {
+    const rootUrl = window['rootUrl'];
+    if (!rootUrl) {
+      console.error('rootUrl is null');
+    }
+    return rootUrl;
+  }
+}
