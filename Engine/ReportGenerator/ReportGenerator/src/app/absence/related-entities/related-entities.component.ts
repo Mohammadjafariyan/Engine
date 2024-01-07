@@ -1,7 +1,7 @@
 import {Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
 import {Observable} from "rxjs";
-import {ApiResult, CustomResultType} from "../../database/tables.service";
 import {Message, MessageService} from "primeng/api";
+import {ApiResult, CustomResultType} from "../services/models";
 
 
 export interface IRelatedService {

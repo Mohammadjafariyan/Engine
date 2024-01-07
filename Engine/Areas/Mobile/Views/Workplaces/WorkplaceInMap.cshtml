@@ -16,6 +16,11 @@
 <script src="~/Content/leaflet/leaflet-bing-layer.js"></script>
 <style>
     #mapid { height: 500px; }
+    
+    #mapid a {
+    
+    background-color: white;
+    }
 
 </style>
 
@@ -26,18 +31,20 @@
         <div class="col-md-4">
             <div class="form">
                 <div class="form-group">
-                    <label for="email">کد محل کار</label>
-                    <input readonly="readonly" name="id" id="id" value="@ViewData["id"]" type="text" class="form-control" id="email">
+                    @*<label for="email">کد محل کار</label>*@
+                    <input readonly="readonly" name="id" id="id" value="@ViewData["id"]" type="hidden" class="form-control" id="email">
                 </div>
                 <div class="form-group">
                     <label for="pwd">نام محل کار:</label>
                     <input name="name" id="name" value="@ViewData["name"]" type="text" class="form-control" id="pwd">
                 </div>
 
+                <br/>
 
                 <input name="token" value="@ViewData["token"]" type="hidden" style="display:none" />
 
                 <button type="submit" class="btn btn-primary"  onclick="mysubmit()"> ثبت</button>
+                <button type="submit" class="btn btn-primary"  onclick="resetMap()"> ریست</button>
                 <hr/>
                 </div>
 
@@ -47,6 +54,16 @@
 
     </div>
     <div class="row">
+        
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-primary"  onclick="findMe()">من را در نقشه پیدا کن</button>
+                <button type="button" class="btn btn-primary"  onclick="goToDefinedLocation()">نمایش مکان تعریف شده بعدی</button>
+            </div>
+            <div class="col-md-4"></div>
+
+        </div>
 
         <div id="mapid"></div>
 
@@ -59,6 +76,44 @@
 
 
 <script>
+function zoomToShape(shape) {
+    if (shape instanceof L.Circle) {
+        mymap.fitBounds(shape.getBounds());
+    } else if (shape instanceof L.Polygon) {
+        mymap.fitBounds(shape.getBounds());
+    } else {
+        // Handle other types of shapes as needed
+    }
+}
+let displayDefinedLocationCounter=0;
+function goToDefinedLocation() {
+// Function to zoom to a specific shape
+
+let length = drawnItems.getLayers().length;
+
+if (length>0){
+    
+    if (displayDefinedLocationCounter>=length){
+        displayDefinedLocationCounter=0;
+        }
+    // Example: Zoom to the first shape in drawnItems
+    var firstShape = drawnItems.getLayers()[displayDefinedLocationCounter];
+    if (firstShape) {
+        zoomToShape(firstShape);
+    }
+    
+    displayDefinedLocationCounter++;
+   }
+}
+
+
+function resetMap(){
+    mymap.off();
+    mymap.remove();
+    
+    showDefault();
+    
+    }
     var mymap;
     var options = {
         enableHighAccuracy: true,
@@ -115,9 +170,9 @@ var drawnItems;
             drawnItems.addLayer(layer);
         });
 
-        if (existData) {
+      /*  if (existData) {
 
-            var c = 0;
+          /!*  var c = 0;
                 existData.data.forEach(function(e) {
                     c++;
                     var pol=L.polygon([]);
@@ -130,10 +185,32 @@ var drawnItems;
 
 
 
-                });
+                });*!/
 
-        }
+        }*/
+        
+      // Check if there's previously saved data in localStorage
+     // var savedData = localStorage.getItem('drawnItemsData');
+      
+      // If there's saved data, add it to the map
+      if (existData) {
+          var parsedData = JSON.parse(existData);
+          L.geoJSON(parsedData, {
+              onEachFeature: function (feature, layer) {
+                  // Ensure circles are loaded as circles
+                  
+                  
+                  console.log(feature.geometry.type,feature.properties.radius)
+                  if (feature.geometry.type === 'Point' && feature.properties.radius) {
+                      L.circle(layer.getLatLng(), { radius: feature.properties.radius }).addTo(drawnItems);
+                  } else {
+                      drawnItems.addLayer(layer);
+                  }
+              }
+          });
+      }
 
+        
         var drawControl = new L.Control.Draw({
             edit: {
                 featureGroup: drawnItems
@@ -150,13 +227,75 @@ var drawnItems;
                     }
                 },
                 polyline: false,
-                circle: false, // Turns off this drawing tool
-                rectangle: false,
+                circle: true, // Turns off this drawing tool
+                rectangle: true,
                 marker: false
             }
 
         });
         mymap.addControl(drawControl);
+        
+        L.FeatureGroup.include({
+            toGeoJSON: function () {
+                var geojson = {
+                    type: 'FeatureCollection',
+                    features: []
+                };
+        
+                this.eachLayer(function (layer) {
+                    var feature;
+        
+                    if (layer instanceof L.Circle) {
+                        feature = {
+                            type: 'Feature',
+                            properties: {
+                                radius: layer.getRadius()
+                            },
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [layer.getLatLng().lng, layer.getLatLng().lat]
+                            }
+                        };
+                    } else {
+                        feature = layer.toGeoJSON();
+                    }
+        
+                    geojson.features.push(feature);
+                });
+        
+                return geojson;
+            }
+        });
+        
+        
+        mymap.on('draw:created draw:edited', function (e) {
+            var type = e.layerType;
+            var layer = e.layer;
+                    console.trace('---------------------------')
+                    console.trace( e)
+
+            // Add the drawn/edited layer to the feature group
+            drawnItems.addLayer(layer);
+        
+            // Save the updated drawn items data to localStorage
+            
+        if (type === 'circle') {
+               // If the drawn shape is a circle, prompt the user for the radius
+               var radius = prompt('لطفا شعاع دایره را وارد نمایید ( به متر ):');
+               if (radius !== null) {
+                   layer.setRadius(parseFloat(radius));
+               } else {
+                   // If the user cancels the prompt, remove the layer
+                   drawnItems.removeLayer(layer);
+                   return;
+               }
+           }
+            // var drawnItemsData = drawnItems.toGeoJSON();
+
+           // console.trace( JSON.stringify(drawnItemsData))
+           // localStorage.setItem('drawnItemsData', JSON.stringify(drawnItemsData));
+        });
+        
     }
 
     function getLocation() {
@@ -164,7 +303,6 @@ var drawnItems;
 
         showDefault();
 
-        debugger;
         if (navigator && navigator.geolocation) {
             
             navigator.geolocation.getCurrentPosition(showPosition);
@@ -182,13 +320,13 @@ var drawnItems;
         var marker = L.marker(latlng).addTo(mymap);
         init();
 
-        if (existData && existData.data && existData.data.features && existData.data.features.length > 0) {
+       /* if (existData && existData.data && existData.data.features && existData.data.features.length > 0) {
             debugger;
             data = existData.data;
             area = existData.area;
             updateAreaHelp(data);
             draw.add(data);
-        }
+        }*/
     }
 
 
@@ -210,10 +348,14 @@ var drawnItems;
         var name = $("#name").val();
         var arr = [];
         drawnItems.getLayers().forEach(function(e) {
-            arr.push(e.getLatLngs());
+            console.trace(e);
+            //arr.push(e.getLatLngs());
         });
 
-        var body = { WorkplaceId: id, data: arr, Name: name };
+         let drawnItemsData = drawnItems.toGeoJSON();
+         let _data=JSON.stringify(drawnItemsData)
+         //_data=btoa(_data);
+        var body = { WorkplaceId: id, MapData: _data, Name: name };
 
 
 
@@ -240,12 +382,12 @@ var drawnItems;
     var existData;
     @{
 
-        var gps = ViewData["gps"] as string;
+        var gps = ViewData["gps"] as WorkplaceGps;
 
         if (gps != null)
         {
             <text>
-                existData = JSON.parse('@Html.Raw(gps)');
+                existData = '@Html.Raw(gps.MapData)';
             </text>
         }
     }
@@ -253,6 +395,34 @@ var drawnItems;
 
 
 
+
+function findMe() {
+    
+  function onLocationFound(e) {
+      var radius = Math.round(e.accuracy);
+  
+      L.marker(e.latlng).addTo(mymap)
+          .bindPopup("شما در " + radius + " متری این نقطه هستید").openPopup();
+  
+     let circle= L.circle(e.latlng, radius).addTo(mymap);
+      
+     
+     var newZoomLevel = 23;
+     
+     mymap.setView(e.latlng, newZoomLevel);
+     
+      setTimeout(()=>{
+           mymap.removeLayer(circle);
+      },5000);
+  }
+
+  mymap.locate({setView: true, maxZoom: 16})
+  .on('locationfound', onLocationFound)
+          .on('locationerror', function(e){
+              console.log(e);
+              alert("دسترسی به لوکیشن داده نشد");
+          });
+}
 
 
     getLocation();

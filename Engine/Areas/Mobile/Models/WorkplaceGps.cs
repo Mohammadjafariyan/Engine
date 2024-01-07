@@ -20,6 +20,10 @@ namespace Engine.Areas.Mobile.Models
 
         [JsonProperty("Name")]
         public string Name { get; set; }
+        
+        [JsonProperty("MapData")]
+        public string MapData { get;  set; }
+
 
         [NotMapped]
         public string token { get;  set; }
@@ -93,6 +97,44 @@ namespace Engine.Areas.Mobile.Models
         public virtual  ICollection<Feature> features { get; set; }
     }
 */
+    
+    
+    public partial class Map
+    {
+        public string Type { get; set; }
+        public Feature[] Features { get; set; }
+    }
+
+    public partial class Feature
+    {
+        public FeatureType Type { get; set; }
+        public Properties Properties { get; set; }
+        public Geometry Geometry { get; set; }
+    }
+
+    public partial class Geometry
+    {
+        public GeometryType Type { get; set; }
+        public Coordinate[] Coordinates { get; set; }
+    }
+
+    public partial class Properties
+    {
+        public double? Radius { get; set; }
+    }
+
+    public enum GeometryType { Point, Polygon };
+
+    public enum FeatureType { Feature };
+
+    public partial struct Coordinate
+    {
+        public double? Double;
+        public double[][] DoubleArrayArray;
+
+        public static implicit operator Coordinate(double Double) => new Coordinate { Double = Double };
+        public static implicit operator Coordinate(double[][] DoubleArrayArray) => new Coordinate { DoubleArrayArray = DoubleArrayArray };
+    }
 
    
 }

@@ -12,7 +12,7 @@ export class OneWorkPlaceManyPersonnelComponent implements OnInit {
   @Input()
   oneId: any;
 
-  @Input()
+  @Input('oneTitle')
   oneTitle: any;
 
   constructor(public oneWorkplaceManyPersonnelService:OneWorkplaceManyPersonnelService) { }

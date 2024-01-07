@@ -3,11 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Engine.Areas.Mobile.ViewModel;
 using Engine.Entities.Data;
 using Engine.Entities.Data.Absence.Models;
+using Newtonsoft.Json;
 
 namespace Engine.Areas.Mobile.Models
 {
     public class Workplace : Engine.Entities.Models.ICore.BaseEntity,AbsenceBase
     {
+        public string _userClockTypes { get; set; }
+
+        [NotMapped]
+        public List<UserClockTypesarr> UserClockTypesarr { get; set; }
         public Workplace()
         {
             WorkplacePersonnels = new List<WorkplacePersonnel>();
@@ -23,7 +28,12 @@ namespace Engine.Areas.Mobile.Models
         public bool oneDeviceEnabled { get; set; }
         public bool IsNotificationsEnabled { get; set; }
 
-        public virtual List<UserClockTypeViewModel> UserClockTypes { get; set; }
+        public virtual List<UserClockTypeViewModel> UserClockTypes
+        {
+            get { return JsonConvert.DeserializeObject<List<UserClockTypeViewModel>>(_userClockTypes ?? ""); }
+            set { _userClockTypes = JsonConvert.SerializeObject(value); }
+        }
+
         public virtual ICollection<WorkplaceSetting> WorkplaceSettings { get; set; }
         public virtual List<MyLocation> Locations { get; set; }
         public bool IsFaceRecognationEnabled { get;  set; }

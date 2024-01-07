@@ -1,4 +1,27 @@
-﻿.ui-picklist{
+﻿
+.p-datatable-header{
+    text-align: center;
+}
+
+.p-picklist{
+    direction: ltr;
+    text-align: right;
+}
+.p-picklist::placeholder{
+    direction: ltr;
+    text-align: right;
+}
+.table > :not(caption) > * > *{
+    padding:unset !important;
+}
+.p-datatable .p-datatable-tbody > tr > td{
+    text-align: unset !important;
+}
+.p-paginator{
+ direction: ltr;   
+}
+
+.ui-picklist{
     direction: ltr;
 }
 a {
@@ -18,8 +41,8 @@ body .ui-widget, body .ui-widget .ui-widget, body .ui-widget input, body .ui-wid
 }
 body .ui-state-active,
 body .ui-state-highlight {
-    background-color: #e6e6e6 !important;
-    color: #070707 !important;
+   /* background-color: #e6e6e6 !important;
+    color: #070707 !important;*/
 }
 body .ui-paginator .ui-paginator-pages .ui-paginator-page{
     padding:unset !important;

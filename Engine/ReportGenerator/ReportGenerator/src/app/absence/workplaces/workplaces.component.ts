@@ -1,7 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {CustomResult} from "../../database/tables.service";
-import {Global} from "../absence-index/absence.DataProviderService";
 import {Workplace, WorkplacesService} from "../services/workplaces.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CrudComponent, IField} from "../crud/crud.component";
@@ -22,8 +19,17 @@ export class WorkplacesComponent implements OnInit {
     { field: 'IsNotificationsEnabled', header: 'اطلاع رسانی' },
     { field: 'IsFaceRecognationEnabled', header: 'تشخیص چهره' },
     { field: 'oneDeviceEnabled', header: 'استفاده از یک دستگاه برای ورود برای این گروه کاری' },
-    { field: 'oneDeviceEnabled', header: 'استفاده از یک دستگاه برای ورود برای این گروه کاری' },
-    { field: 'UserClockTypesarr', header: 'انواع ساعت زنی' },
+    { field: 'UserClockTypesarr', header: 'انواع ساعت زنی' , display:(row:Workplace)=>{
+
+      let str="<ul>";
+      if(row.UserClockTypesarr)
+        for (let i = 0; i < row.UserClockTypesarr.length; i++) {
+            str+= '<li>'+ row.UserClockTypesarr[i].label +'</li>';
+        }
+
+      return str + '</ul>';
+
+}},
 
   ];
 
@@ -73,7 +79,7 @@ export class WorkplacesComponent implements OnInit {
       label: 'انواع ساعت زنی',
       name: 'UserClockTypesarr',
       type:'listbox',
-      value:true,
+      value:null,
       options: [
         { label: 'GPS در محدوده مکان شرکت با', value: 0 },
         { label: 'گرفتن سلفی هنگام کارت زنی', value: 1 },
@@ -114,7 +120,7 @@ export class WorkplacesComponent implements OnInit {
 
   display: boolean = false;
 
-  selectedOneId;
+  public selectedOneId;
   oneTitle;
   @ViewChild(OneWorkPlaceManyPersonnelComponent) oneToManyForm: OneWorkPlaceManyPersonnelComponent;
   @ViewChild(CrudComponent) crudComponent: CrudComponent;

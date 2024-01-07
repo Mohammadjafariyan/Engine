@@ -2,13 +2,31 @@
 <p-confirmDialog   acceptLabel="بله" rejectLabel="خیر" [style]="{width: '50vw'}"></p-confirmDialog>
 
 
-<p-table [columns]="cols" [value]="models" styleClass="table container"
+
+
+
+<p-table [columns]="cols" [value]="models"
+         tableStyleClass="  container "
+
 
          selectionMode="single" [(selection)]="selectedModel"
           [paginator]="true" [rows]="15">
   <ng-template pTemplate="caption">
-    {{header}}
+
+    <div class="row">
+      <div class="col-4"></div>
+      <div class="col-4">
+        {{header}}
+      </div>
+      <div class="col-4">
+        <p-button  (click)="reload()" icon="pi pi-refresh"></p-button>
+
+      </div>
+    </div>
+
   </ng-template>
+
+
   <ng-template pTemplate="header" let-columns>
     <tr>
       <th *ngFor="let col of columns" [pSortableColumn]="col.field">
@@ -31,6 +49,12 @@
             <i *ngIf="rowData[col.field]" class="fa fa-check text-success"></i>
             <i *ngIf="!rowData[col.field]" class="fa fa-times text-danger"></i>
           </div>
+          <div *ngSwitchCase="'object'">
+            <div *ngIf="col.display" [innerHTML]="col.display(rowData)" >
+
+            </div>
+          </div>
+
 
           <div *ngSwitchDefault>
             {{rowData[col.field]}}
@@ -61,7 +85,7 @@
 
 <p-dialog [header]="newModel  ? newFormHeader : editFormHeader" [(visible)]="displayDialog" [responsive]="true"
           showEffect="fade" [modal]="true"
-          [style]="{width: '350px'}">
+          [style]="{width: '40vw'}">
   <p-messages [value]="msgs"></p-messages>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -83,16 +107,22 @@
                  [id]="field.name"
                  [type]="field.type"
                />
+
              </div>
              <div *ngIf="field.type =='checkbox'">
                <label >
-                 <input
+
+                 <p-inputSwitch
+                   [formControlName]="field.name"
+                 >
+                 </p-inputSwitch>
+               <!--  <input
                    [formControlName]="field.name"
                    [class]=" field.type != 'checkbox' ?  'form-control' : 'form-check-input'"
                    [id]="field.name"
                    type="checkbox"
 
-                 />
+                 />-->
                  <span class="ms-2 mb-2">{{ field.label }}</span>
                </label>
              </div>
@@ -117,9 +147,21 @@
             </option>
           </select>
 
-            <p-listbox *ngSwitchCase="'listbox'" [options]="field.options"
-                       multiple="multiple" checkbox="checkbox" filter="filter"
-                       [formControlName]="field.name" optionLabel="label"></p-listbox>
+           <!-- <p-listbox *ngSwitchCase="'listbox'" [options]="field.options"
+                       [multiple]="true" [checkbox]="true" [filter]="true"
+                       [formControlName]="field.name" optionLabel="label"></p-listbox>-->
+
+          <p-listbox  *ngSwitchCase="'listbox'"  [options]="field.options"
+                      [formControlName]="field.name"
+                     optionLabel="label"
+
+                      [selectAll]="true"
+                      [filter]="true"
+                      [multiple]="true"
+                      [checkbox]="true"
+                      [showToggleAll]="true"
+          ></p-listbox>
+
 
         </div>
 
@@ -137,17 +179,17 @@
 
 
     </div>
-    <p-footer>
-      <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button *ngIf="model" type="button" class="bg-danger text-white" pButton icon="fa fa-close" (click)="delete()" label="حذف"></button>
-        <button *ngIf="model" type="button" pButton icon="fa fa-check" (click)="save()" label="ثبت"></button>
 
-        <div *ngIf=" selectedModel">
-        {{selectedModel.Id}}
-        </div>
-        <button *ngIf="model" type="button" class="bg-secondary text-white" pButton  (click)="this.model = null;this.displayDialog = false;" label="بستن"></button>
-      </div>
-    </p-footer>
+
+
   </form>
+  <ng-template pTemplate="footer">
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button *ngIf="model" type="button" pButton icon="fa fa-check" (click)="save()" label="ثبت"></button>
+      <button *ngIf="model" type="button" class="bg-danger text-white" pButton icon="fa fa-close" (click)="delete()" label="حذف"></button>
+
+      <button *ngIf="model" type="button" class="bg-secondary text-white" pButton  (click)="this.model = null;this.displayDialog = false;" label="بستن"></button>
+    </div>
+  </ng-template>
 
 </p-dialog>

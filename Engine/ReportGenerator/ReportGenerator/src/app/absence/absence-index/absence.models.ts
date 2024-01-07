@@ -1,7 +1,3 @@
-import {InputField} from "../../form-generator/models";
-import {FieldType, PropertyType} from "../../model/model";
-import {SettingDFormInputsService} from "../../query-generator/select-columns-and-join/column-setting/setting-dform-inputs.service";
-
 
 export const enum BiometricDataType {
   In = 0,

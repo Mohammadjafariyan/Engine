@@ -99,7 +99,19 @@ namespace Engine.Areas.Mobile.Controllers
                     throw new Exception("یافن نشد");
                 ViewData["id"] = wp.Id;
                 ViewData["name"] = wp.Name;
-                ViewData["gps"] = wp.Gps;
+
+                if (wp.Gps!=null)
+                {
+                    try
+                    {
+                        var workplaceGps = JsonConvert.DeserializeObject<WorkplaceGps>(wp.Gps);
+                        ViewData["gps"] = workplaceGps;
+                    }
+                    catch (Exception e)
+                    {
+                        
+                    }
+                }
             }
 
             return View(id);
@@ -160,7 +172,6 @@ namespace Engine.Areas.Mobile.Controllers
         }
 
 
-
         public ActionResult SaveOneWorkplaceManyPersonnel(IRelatedModel<Personnel> model)
         {
             SaveOneToMany<Workplace, Personnel, WorkplacePersonnel>(new OneToManyViewModel
@@ -194,7 +205,9 @@ namespace Engine.Areas.Mobile.Controllers
         protected override IQueryable<Workplace> GetInclution(IQueryable<Workplace> entities)
         {
             return entities
-                .Include(s => s.WorkplacePersonnels);
+                    .Include(s => s.WorkplacePersonnels)
+                   // .Include(s => s.UserClockTypes)
+                ;
         }
 
         protected override List<Workplace> GetSelectList(List<Workplace> entities)
@@ -203,6 +216,12 @@ namespace Engine.Areas.Mobile.Controllers
             {
                 s.PersonnelCount = s.WorkplacePersonnels.Count;
 
+                s.UserClockTypesarr = s.UserClockTypes?.Select(c =>
+                    new UserClockTypesarr
+                    {
+                        label = c.label,
+                        value = (int)c.type
+                    }).ToList();
                 return s;
             }).ToList();
         }
@@ -223,9 +242,9 @@ namespace Engine.Areas.Mobile.Controllers
 
                 var personnels = workplace.WorkplacePersonnels.Select(w => w.Personnel).ToList();
 
-                var ids=personnels.Select(p => p.Id);
+                var ids = personnels.Select(p => p.Id);
                 var list = db.QueryNoTrack<Personnel>()
-                    .Where(s=>!ids.Any(id=>id==s.Id)).ToList();
+                    .Where(s => !ids.Any(id => id == s.Id)).ToList();
 
                 var jsonSettings = new JsonSerializerSettings
                 {
@@ -256,20 +275,22 @@ namespace Engine.Areas.Mobile.Controllers
 
         public override async Task<ActionResult> Save(Workplace model)
         {
-            string[] array = Request.Form.GetValues("UserClockTypesarr");
+           // string[] array = Request.Form.GetValues("UserClockTypesarr");
+
+
 
             int c = 0;
             model.UserClockTypes = new List<UserClockTypeViewModel>();
 
-            if (array != null)
-                foreach (var ct in array)
+            if (model.UserClockTypesarr != null)
+            {
+                model.UserClockTypes = model.UserClockTypesarr.Select(ct=>new UserClockTypeViewModel
                 {
-                    model.UserClockTypes.Add(new UserClockTypeViewModel
-                    {
-                        type = (ClockType)long.Parse(ct),
-                        order = c++,
-                    });
-                }
+                    type = (ClockType)ct.value,
+                    order = c++,
+                    label = ct.label
+                }).ToList();
+            }
 
 
             if (model.UserClockTypes.Count == 0 && !model.oneDeviceEnabled)
@@ -279,17 +300,16 @@ namespace Engine.Areas.Mobile.Controllers
 
             //  var array2 = Request.Form["UserClockTypes"];
 
-            await base.Save(model);
-             
-             return Json(new ApiResult<bool>
-             {
-                 result = true,
-                 Status = CustomResultType.success,
-             }, JsonRequestBehavior.AllowGet);
+             _engineService.Save(model);
 
+
+            var byId = this._engineService.GetById(model.Id);
+
+            return Json(new ApiResult<bool>
+            {
+                result = true,
+                Status = CustomResultType.success,
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }
-
-
-    

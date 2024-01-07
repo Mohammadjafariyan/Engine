@@ -1,8 +1,8 @@
 import {Component, ContentChild, Input, OnInit, TemplateRef} from '@angular/core';
 import {Observable} from "rxjs";
 import {FormGroup} from "@angular/forms";
-import {ApiResult, CustomResultType} from "../../database/tables.service";
 import {ConfirmationService, Message} from "primeng/api";
+import {ApiResult, CustomResultType} from "../services/models";
 
 export interface IService{
 
@@ -133,7 +133,6 @@ export class CrudComponent implements OnInit {
     let deleteFunc = ()=>{
       let index = this.models.indexOf(this.selectedModel);
 
-      debugger
       this.service.delete(this.models[index]).toPromise()
         .then(s=>{
 

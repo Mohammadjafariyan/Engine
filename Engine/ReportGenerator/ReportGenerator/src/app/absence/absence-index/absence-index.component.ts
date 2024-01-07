@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AbsenceDataProviderService} from "./absence.DataProviderService";
 import {ActivatedRoute} from "@angular/router";
-import {CustomResultType} from "../../database/tables.service";
 import {ObligatedRange, ObligatedRangeDayTimes, ObligatedRangeWeeks, RangeType, System} from "./absence.models";
 import {AppComponent} from "../../app.component";
 import DayOfWeek = System.DayOfWeek;
 import {MacroService} from "../macro-service";
+import {CustomResultType} from "../services/models";
 
 @Component({
   selector: 'app-absence-index',
@@ -180,7 +180,6 @@ export class AbsenceIndexComponent implements OnInit {
 
   save() {
     this.absenceDataProviderService.Save(this.ObligatedRange).toPromise().then(res => {
-      AppComponent.ShowMsgByType('توجه', res.Status, res.Message);
 
       if (res.Status == CustomResultType.success) {
         this.loadById(res.result);

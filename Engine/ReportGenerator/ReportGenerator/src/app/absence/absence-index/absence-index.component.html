@@ -215,9 +215,9 @@
     <button class="btn btn-primary" (click)="save()">ذخیره</button>
   </div>
 </div>
+
 <p-dialog [(visible)]="display" [draggable]="true" [maximizable]="true"
           [closable]="true"
-          [minWidth]="700"
           [responsive]="true" [rtl]="true" [resizable]="true"
           id="hourset"
           [style]="{ width: '50vw', height: '300px' }">
@@ -308,8 +308,8 @@
 
 
 
-<p-dialog [(visible)]="macroDisplay" maximizable="true" id="macros"
-          [closable]="true" modal="true">
+<p-dialog [(visible)]="macroDisplay"  [maximizable]="true" id="macros"
+          [closable]="true" [modal]="true">
   <p-header>
   ماکرو های آماده ، شیفت های متداول آماده
   </p-header>

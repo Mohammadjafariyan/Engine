@@ -1,25 +1,31 @@
-
-
-
+لیست محل های کار
 
 <app-crud [header]="'لیست محل های کار'" [cols]="cols" [form]="form"
-          [formFields]="fields"   [service]="workplacesService"
-
+          [formFields]="fields" [service]="workplacesService"
 
 >
 
   <ng-template #columnHeaderContent let-columns>
-    <th>ویرایش پرسنل</th>
+    <th>مکان در نقشه</th>
+    <th>انتخاب پرسنل</th>
   </ng-template>
 
   <ng-template #columnContent let-item>
     <td>
-      <a (click)="showDialog(item)" >
+      <a target="_blank" [href]="'/Mobile/Workplaces/WorkplaceInMap?id='+item.Id" class="btn btn-outline-success " *ngIf="item.Gps">
+        تعیین شده
+      </a>
+      <a  target="_blank"  [href]="'/Mobile/Workplaces/WorkplaceInMap?id='+item.Id" class="btn  btn-outline-danger " *ngIf="!item.Gps">
+تعیین نشده
+      </a>
+
+    </td>
+    <td>
+      <a (click)="showDialog(item)">
         {{item.PersonnelCount}}
         پرسنل
       </a>
-      </td>
-
+    </td>
 
 
   </ng-template>
@@ -27,23 +33,26 @@
 </app-crud>
 
 
-
-
 <p-dialog header="انتخاب پرسنل این محل کار" [(visible)]="display"
           [modal]="true"
-          [responsive]="true" [style]="{width: '350px', minWidth: '200px'}"
-          [minY]="70" (onHide)="reload()"
+          [responsive]="true"
+          (onHide)="reload()"
 >
 
   <div *ngIf="display">
-    <app-one-work-place-many-personnel  [oneId]="selectedOneId"  [oneTitle]="oneTitle">
+    <!--todo:ss-->
+    <!---->
+    <app-one-work-place-many-personnel [oneId]="selectedOneId" [oneTitle]="oneTitle">
+
 
     </app-one-work-place-many-personnel>
   </div>
 
-  <p-footer>
+
+  <ng-template pTemplate="footer">
     <button type="button" pButton icon="pi pi-check" (click)="submitOneToManyForm(); " label="ثبت"></button>
-    <button type="button" pButton icon="pi pi-close" (click)="display=false;" label="لغو" ></button>
-  </p-footer>
+    <button type="button" pButton icon="pi pi-close" (click)="display=false;" label="لغو"></button>
+  </ng-template>
+
 </p-dialog>
 

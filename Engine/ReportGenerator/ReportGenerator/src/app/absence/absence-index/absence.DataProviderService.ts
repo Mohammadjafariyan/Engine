@@ -1,10 +1,9 @@
 import {Injectable} from "@angular/core";
 import {Observable, of} from "rxjs";
-import {CustomResult, CustomResultGeneric} from "../../database/tables.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ObligatedRange, ObligatedRangeWeeks, System} from "./absence.models";
-import {Query} from "../../model/model";
 import DayOfWeek = System.DayOfWeek;
+import {ApiResult} from "../services/models";
 
 
 @Injectable()
@@ -35,8 +34,8 @@ export class AbsenceDataProviderService {
     return weeks.reverse();
   }
 
-  GetById(id: any):Observable<CustomResult> {
-    return this.http.get<CustomResult>(`${this.getRootUrl}${this.getAreaAndPath}/getById?id=${id}`,  this.headers );
+  GetById(id: any):Observable<ApiResult<any>> {
+    return this.http.get<ApiResult<any>>(`${this.getRootUrl}${this.getAreaAndPath}/getById?id=${id}`,  this.headers );
   }
 
 
@@ -60,12 +59,9 @@ export class AbsenceDataProviderService {
   }
 
 
-  getAllQueries(searchTerm?, lastIndex?,  count?):Observable<CustomResultGeneric<Query[]>>{
-    return this.http.get<CustomResultGeneric<Query[]>>(`${this.getRootUrl}${this.getAreaAndPath}/getAll?lastIndex=&count=`,  this.headers );
-  }
 
-  Save(ObligatedRange: ObligatedRange) :Observable<CustomResultGeneric<string>>{
-    return this.http.post<CustomResultGeneric<string>>
+  Save(ObligatedRange: ObligatedRange) :Observable<ApiResult<string>>{
+    return this.http.post<ApiResult<string>>
     (`${this.getRootUrl}${this.getAreaAndPath}/Save`,
       ObligatedRange,  this.headers );
   }
