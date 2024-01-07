@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {IRelatedModel, IRelatedService} from "../related-entities/related-entities.component";
 import {Observable} from "rxjs";
-import {ApiResult} from "../../database/tables.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Workplace} from "./workplaces.service";
+import {ApiResult} from "./models";
 
 @Injectable({
   providedIn: 'root'

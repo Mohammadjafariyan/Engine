@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {ApiResult, CustomResult} from "../../database/tables.service";
 import {Global} from "../absence-index/absence.DataProviderService";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {IService} from "../crud/crud.component";
 import {Observable} from "rxjs";
+import {ApiResult} from "./models";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -58,5 +58,6 @@ export class Workplace {
   Id;
   Name;
   ApplicationUserId;
+  UserClockTypesarr:any[]
 
 }
