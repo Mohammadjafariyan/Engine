@@ -1,7 +1,7 @@
-﻿
-
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Diagnostics;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 using Engine.Areas.ImportExport.ServiceTests;
 using Engine.Areas.Mobile.Models;
 using Engine.Areas.Mobile.ViewModel;
@@ -11,6 +11,7 @@ using Engine.Entities.Models.Core.AppGeneration;
 using Engine.Entities.Models.Core.QueryBuild;
 using Engine.Entities.Models.UiGeneratorModels;
 using Engine.Migrations;
+using Engine.ServiceLayer.Engine;
 using Entities;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WebAppIDEEngine.Models.Core;
@@ -21,13 +22,13 @@ namespace Engine.Entities.Data
 {
     public class EngineContext : IdentityDbContext<ApplicationUser>
     {
-      //  public EngineContext() : base(EngineUtility.ContextName())
+        //  public EngineContext() : base(EngineUtility.ContextName())
         public EngineContext() : base("EngineContext")
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<EngineContext, Configuration>());
-             //   Database.SetInitializer(new DropCreateDatabaseIfModelChanges<EngineContext>());
+            //   Database.SetInitializer(new DropCreateDatabaseIfModelChanges<EngineContext>());
 
-             this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.LazyLoadingEnabled = false;
 
 
             //Database.Connection.ConnectionString = ConnectionProvider.GetEntityConnectionString();
@@ -43,7 +44,7 @@ namespace Engine.Entities.Data
             modelBuilder.Entity<Panel>().HasMany(f => f.Children).WithOptional(f => f.Parent)
                 .HasForeignKey(f => f.ParentId);
 
-            #region QueryGenerator 
+            #region QueryGenerator
 
             modelBuilder.Entity<Model>().HasMany(f => f.Forms).WithOptional(f => f.Model).HasForeignKey(f => f.ModelId);
 
@@ -59,28 +60,35 @@ namespace Engine.Entities.Data
             modelBuilder.Entity<WebAppIDEEngine.Models.Core.Query>().HasMany(f => f.Actions).WithOptional(f => f.Query)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<WebAppIDEEngine.Models.Core.Query>().HasMany(f => f.addParameterFields).WithRequired(f => f.Query)
+            modelBuilder.Entity<WebAppIDEEngine.Models.Core.Query>().HasMany(f => f.addParameterFields)
+                .WithRequired(f => f.Query)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<WebAppIDEEngine.Models.Core.Query>().HasMany(f => f.models).WithRequired(f => f.Query)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<WebAppIDEEngine.Models.Core.Query>().HasMany(f => f.selectedProperties).WithRequired(f => f.Query)
+            modelBuilder.Entity<WebAppIDEEngine.Models.Core.Query>().HasMany(f => f.selectedProperties)
+                .WithRequired(f => f.Query)
                 .HasForeignKey(f => f.QueryId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<WebAppIDEEngine.Models.Core.Property>().HasMany(f => f.UsedInQueries).WithRequired(f => f.Property)
+            modelBuilder.Entity<WebAppIDEEngine.Models.Core.Property>().HasMany(f => f.UsedInQueries)
+                .WithRequired(f => f.Property)
                 .HasForeignKey(f => f.PropertyId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<WebAppIDEEngine.Models.Core.QueryModel>().HasMany(f => f.RightJoinTables).WithOptional(f => f.rightTable)
+            modelBuilder.Entity<WebAppIDEEngine.Models.Core.QueryModel>().HasMany(f => f.RightJoinTables)
+                .WithOptional(f => f.rightTable)
                 .HasForeignKey(f => f.rightTableId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<WebAppIDEEngine.Models.Core.QueryModel>().HasMany(f => f.LeftJoinTables).WithOptional(f => f.leftTable)
+            modelBuilder.Entity<WebAppIDEEngine.Models.Core.QueryModel>().HasMany(f => f.LeftJoinTables)
+                .WithOptional(f => f.leftTable)
                 .HasForeignKey(f => f.leftTableId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<WebAppIDEEngine.Models.Core.QueryProperty>().HasMany(f => f.JoinRightTables).WithOptional(f => f.rightProperty)
+            modelBuilder.Entity<WebAppIDEEngine.Models.Core.QueryProperty>().HasMany(f => f.JoinRightTables)
+                .WithOptional(f => f.rightProperty)
                 .HasForeignKey(f => f.rightPropertyId).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<WebAppIDEEngine.Models.Core.QueryProperty>().HasMany(f => f.JoinLeftTables).WithOptional(f => f.leftProperty)
+            modelBuilder.Entity<WebAppIDEEngine.Models.Core.QueryProperty>().HasMany(f => f.JoinLeftTables)
+                .WithOptional(f => f.leftProperty)
                 .HasForeignKey(f => f.leftPropertyId).WillCascadeOnDelete(false);
 
             #endregion
@@ -268,7 +276,7 @@ namespace Engine.Entities.Data
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<WorkGroup>().HasMany(f => f.Personnels)
-                .WithRequired(f => f.WorkGroup).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
+                .WithOptional(f => f.WorkGroup).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<WorkGroupObligatedRange>().HasRequired(f => f.WorkGroup)
                 .WithMany(f => f.WorkGroupObligatedRanges).HasForeignKey(f => f.WorkGroupId).WillCascadeOnDelete(false);
@@ -280,12 +288,10 @@ namespace Engine.Entities.Data
             #endregion
 
 
-
             #region filters
 
-            
-
             #endregion
+
             #region ExcelImporter
 
             modelBuilder.Entity<ExcelStructreTable>().HasMany(f => f.Nodes)
@@ -367,39 +373,52 @@ namespace Engine.Entities.Data
                 .WithOptional(f => f.Workplace)
                 .HasForeignKey(f => f.WorkplaceId).WillCascadeOnDelete(false);
 
-
-        
-            
-           
             #endregion
 
             this.Database.Log = s => Debug.WriteLine(s);
 
             #region ApplicationUsers
+
             modelBuilder.Entity<Machine>().ToTable("Machines", "dbo");
 
-            
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.Machines).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.ObligatedRanges).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.ObligatedRangeWeekss).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.ObligatedRangeDayTimess).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.Personnels).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.PersonnelMachines).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.WorkGroups).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-        
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.WorkGroupObligatedRanges).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-         
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.Workplaces).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.WorkplacePersonnels).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.WorkplaceSettings).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.BiometricDatas).WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
-            
 
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.Machines).WithRequired(f => f.ApplicationUser)
+                .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.ObligatedRanges).WithRequired(f => f.ApplicationUser)
+                .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.ObligatedRangeWeekss)
+                .WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId)
+                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.ObligatedRangeDayTimess)
+                .WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId)
+                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.Personnels).WithRequired(f => f.ApplicationUser)
+                .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.PersonnelMachines)
+                .WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId)
+                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.WorkGroups).WithRequired(f => f.ApplicationUser)
+                .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.WorkGroupObligatedRanges)
+                .WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.Workplaces).WithRequired(f => f.ApplicationUser)
+                .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.WorkplacePersonnels)
+                .WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId)
+                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.WorkplaceSettings)
+                .WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId)
+                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.BiometricDatas).WithRequired(f => f.ApplicationUser)
+                .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
 
             #endregion
+
             base.OnModelCreating(modelBuilder);
         }
-
 
 
         public DbSet<Panel> Panels { get; set; }
@@ -420,6 +439,7 @@ namespace Engine.Entities.Data
         public DbSet<Personnel> Personnels { get; set; }
         public DbSet<PersonnelMachine> PersonnelMachines { get; set; }
         public DbSet<WorkGroup> WorkGroups { get; set; }
+
         public DbSet<WorkGroupObligatedRange> WorkGroupObligatedRanges { get; set; }
         //  public DbSet<BiometryCalculatedDetail> BiometryCalculatedDetails { get; set; }
 
@@ -505,9 +525,46 @@ namespace Engine.Entities.Data
         //public DbSet<WebAppIDEEngine.Models.Core.QueryBuild.SelectColumn> SelectColumns { get; set; }
         //public DbSet<WebAppIDEEngine.Models.Core.QueryBuild.Sort> Sorts { get; set; }
         //public DbSet<WebAppIDEEngine.Models.Core.QueryBuild.Where> Wheres { get; set; }
-       
+
         public static EngineContext Create()
         {
             return new EngineContext();
-        }    }
+        }
+
+        public Personnel GetCurrentUserPersonnel(string userId, bool includeWorkplace = false)
+        {
+            var applicationUser =  Users.Find(userId);
+            if (userId != null)
+            {
+                var personnelQuery = Personnels
+                    .Where(s => s.ApplicationUserId == applicationUser.Id);
+
+                if (includeWorkplace)
+                {
+                    personnelQuery = personnelQuery.Include(s => s.WorkplacePersonnels)
+                        .Include(s => s.WorkplacePersonnels.Select(d => d.Workplace));
+                }
+
+                var personnel = personnelQuery.FirstOrDefault();
+
+                if (personnel == null)
+                {
+                    personnel = new Personnel
+                    {
+                        ApplicationUserId = applicationUser.Id,
+                        Name = applicationUser.FirstName,
+                        LastName = applicationUser.LastName,
+                        Code = applicationUser.Code,
+                    };
+                    Personnels.Add(personnel);
+
+                    SaveChanges();
+                }
+
+                return personnel;
+            }
+
+            return null;
+        }
+    }
 }

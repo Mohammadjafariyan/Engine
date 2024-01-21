@@ -47,6 +47,8 @@ namespace Engine.Entities.Data
         public virtual ICollection<WorkplacePersonnel> WorkplacePersonnels { get; set; }
         public virtual ICollection<WorkplaceSetting> WorkplaceSettings { get; set; }
         public ICollection<BiometricData> BiometricDatas { get; set; }
+        public string Code { get; set; }
+        public bool IsAdmin { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

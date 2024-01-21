@@ -24,6 +24,15 @@
     @RenderSection("scripts", required: false)
 
 
+    <style>
+            @@media (max-width:320px)  {  .navbar {display: none}/* smartphones, iPhone, portrait 480x320 phones */ }
+            @@media (max-width:481px)  {  .navbar {display: none}/* portrait e-readers (Nook/Kindle), smaller tablets @@ 600 or @@ 640 wide. */ }
+            @@media (max-width:641px)  {  .navbar {display: none}/* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
+            @@media (max-width:961px)  { .navbar {display: none}/* tablet, landscape iPad, lo-res laptops ands desktops */ }
+            @@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ }
+            @@media (min-width:1281px) { /* hi-res laptops and desktops */ }
+    </style>
+
 
 
 
@@ -72,13 +81,17 @@
     }
     else if (ViewBag.Bootstrap == 4)
     {
+        
+        
+      
+        
         <nav class="  navbar navbar-expand-lg navbar-light bg-light">
             @*<a class="navbar-brand" href="#">Navbar</a>*@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse container navbar-collapse container" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                                                            @Html.ActionLink(Request.GetText(" سیستم مدیریت تردد بلوسافت"), "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
  @Html.Partial("_LanguagePartial")
             

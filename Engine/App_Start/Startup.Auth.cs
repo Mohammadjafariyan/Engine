@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Engine.Entities.Data;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -8,6 +9,10 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using Engine.Models;
 using Entities.Data;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataHandler.Encoder;
+using Microsoft.Owin.Security.Jwt;
 using WebAppIDEEngine.Models;
 
 namespace Engine
@@ -17,6 +22,29 @@ namespace Engine
         // For more information on configuring authentication, please visit https://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
+
+            
+            // Configure JWT authentication
+            var key = Encoding.UTF8.GetBytes("^5H!@#$%^&*(سکبمنترOSEH;561/*-+BNM<>?/SVNNNSSklsdv651vsdvs");
+            var securityKey = new SymmetricSecurityKey(key);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = "your-issuer",            // Replace with your issuer
+                ValidAudience = "your-audience",        // Replace with your audience
+                IssuerSigningKey = securityKey
+            };
+
+            // Configure the JwtBearer authentication middleware
+            app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
+            {
+                AuthenticationMode = AuthenticationMode.Active,
+                TokenValidationParameters = tokenValidationParameters
+            });
+            
+            
             // Configure the db context, user manager and signin manager to use a single instance per request
             app.CreatePerOwinContext(EngineContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);

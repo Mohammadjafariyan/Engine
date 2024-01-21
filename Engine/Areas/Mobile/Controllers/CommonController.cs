@@ -21,7 +21,17 @@ namespace Engine.Areas.Mobile.Controllers
         [ResponseType(typeof(List<UserClockTypeViewModel>))]
         public List<UserClockTypeViewModel> GetUserClockTypeList(ObjectPostViewModel vm)
         {
-            try
+
+            List<UserClockTypeViewModel> UserClockTypes = new List<UserClockTypeViewModel>
+            {
+                new UserClockTypeViewModel
+                {
+                    type = ClockType.GPS
+                }
+            };
+
+            return UserClockTypes;
+            /*try
             {
                 if(vm==null)
                     throw new Exception("اطلاعات ارسالی نال است");
@@ -35,7 +45,7 @@ namespace Engine.Areas.Mobile.Controllers
             catch (Exception e)
             {
                 return null;
-            }
+            }*/
         }
 
      

@@ -2,11 +2,17 @@
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Engine.Entities.Data;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Areas.Mobile.Controllers
@@ -39,6 +45,8 @@ namespace Engine.Areas.Mobile.Controllers
             get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
             private set { _userManager = value; }
         }
+        
+        
 
         [AllowAnonymous]
         [HttpPost]
@@ -48,21 +56,47 @@ namespace Engine.Areas.Mobile.Controllers
 
             try
             {
+                
+                var jwtHandler = new JwtSecurityTokenHandler();
+                var jsonToken = jwtHandler.ReadToken(token) as JwtSecurityToken;
+
+                // ValidateIssuer, ValidateAudience, ValidateLifetime, etc. can be configured as needed
+                var tokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("^5H!@#$%^&*(سکبمنترOSEH;561/*-+BNM<>?/SVNNNSSklsdv651vsdvs")), // Replace with your actual secret key
+                    ValidateIssuer = true,
+                    ValidIssuer = "your-issuer", // Replace with your actual issuer
+                    ValidateAudience = true,
+                    ValidAudience = "your-audience", // Replace with your actual audience
+                    ValidateLifetime = true,
+                    // Other parameters
+                    NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+                    RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+
+                };
+
+                SecurityToken _;
+                var claimsPrincipal = jwtHandler.ValidateToken(token, tokenValidationParameters, out _);
+
+                // Sign in the user using ASP.NET Identity
+           
 
                 using (var db=new EngineContext())
                 {
-                    var workplacePersonnel = BaseMobileApiController.GetWorkplacePersonnelFromToken(db, token);
+                   
+                    
+
+                    var user = UserManager.Users
+                        .FirstOrDefault(s =>
+                            s.UserName == claimsPrincipal.Identity.Name || s.Mobile == claimsPrincipal.Identity.Name ||
+                            s.Email == claimsPrincipal.Identity.Name);
 
 
-                 var   lastpassword = SecurityUtility.DecodeAndDecrypt(workplacePersonnel.Password);
+                    SignInManager.SignIn(user, true, true);
+                    return  RedirectToAction("Index", "AttendanceHome",new { area = "Absence" });
 
-
-
-                    // This doesn't count login failures towards account lockout
-                    // To enable password failures to trigger account lockout, change to shouldLockout: true
-                    var result = await SignInManager.PasswordSignInAsync(workplacePersonnel.Username
-                    , lastpassword, false,shouldLockout: false);
-                    switch (result)
+                    /*switch (result)
                     {
                         case SignInStatus.Success:
                             return  RedirectToAction("Index", "AttendanceHome",new { area = "Absence" });
@@ -71,7 +105,7 @@ namespace Engine.Areas.Mobile.Controllers
                         case SignInStatus.Failure:
                         default:
                             throw new Exception("نام کاربری یا رمز عبور اشتباه است");
-                    }
+                    }*/
                 }
 
                 

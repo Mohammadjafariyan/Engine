@@ -33,7 +33,7 @@ namespace Engine.Areas.Mobile.ServiceTests
             };
 
             var ss = new SecurityService();
-            string token = ss.GenerateToken(vm);
+            string token = ss.GenerateToken(vm.username);
 
             DateTime dt = ss.parseToken(token);
 

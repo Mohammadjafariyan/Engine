@@ -1,4 +1,5 @@
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 using Engine.Areas.Mobile.Models;
@@ -9,7 +10,8 @@ using WebAppIDEEngine.Models;
 namespace Engine.Areas.Mobile.Controllers
 {
 
-    [TokenFilter]
+   // [TokenFilter]
+   [Authorize]
     public class BaseMobileApiController:ApiController
     {
         public static WorkplacePersonnel GetWorkplacePersonnelFromToken(EngineContext db, string token)
@@ -18,6 +20,7 @@ namespace Engine.Areas.Mobile.Controllers
 
 
             //یافتن پرسنل
+            
             var workplacePersonnel = db.WorkplacePersonnels.FirstOrDefault(p => p.Username == username);
             if (workplacePersonnel == null)
                 throw new Exception("کاربر یافت نشد");

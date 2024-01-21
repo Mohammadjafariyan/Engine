@@ -20,7 +20,7 @@ namespace Engine.Entities.Data.Absence.Models
         /// </summary>
         public virtual ICollection<PersonnelMachine> PersonnelMachines { get; set; }
         public virtual WorkGroup WorkGroup { get; set; }
-        public virtual long WorkGroupId { get; set; }
+        public virtual long? WorkGroupId { get; set; }
         public ICollection<WorkplacePersonnel> WorkplacePersonnels { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 

@@ -59,10 +59,40 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=7.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.7.0.3\lib\net462\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=7.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.7.0.3\lib\net462\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=7.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.7.0.3\lib\net462\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=7.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.7.0.3\lib\net462\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Jwt, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Jwt.4.2.2\lib\net45\Microsoft.Owin.Security.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.2.2\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -80,6 +110,7 @@
       <HintPath>..\packages\Mvc2Futures.2.0.50217.0\lib\Microsoft.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="MvcContrib, Version=2.0.95.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
       <Private>True</Private>
@@ -131,12 +162,41 @@
       <HintPath>..\packages\structuremap.web.3.1.0.133\lib\net40\StructureMap.Web.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=7.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.7.0.3\lib\net462\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
     <Reference Include="System.Linq.Dynamic.Core, Version=1.3.7.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.Core.1.3.7\lib\net46\System.Linq.Dynamic.Core.dll</HintPath>
     </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=4.0.5.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.4.7.2\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -245,23 +305,14 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security">
-      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Facebook">
       <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Cookies">
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Google">
       <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
@@ -396,6 +447,7 @@
     <Compile Include="Areas\Mobile\Controllers\DashboardItemController.cs" />
     <Compile Include="Areas\Mobile\Controllers\LoginController.cs" />
     <Compile Include="Areas\Mobile\Controllers\OfficeLocationsController.cs" />
+    <Compile Include="Areas\Mobile\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Mobile\Controllers\SettingsController.cs" />
     <Compile Include="Areas\Mobile\Controllers\WebController.cs" />
     <Compile Include="Areas\Mobile\Controllers\WorkplacePersonnelController.cs" />
@@ -703,21 +755,13 @@
     <Content Include="Content\attendance images\importdata.jpg" />
     <Content Include="Content\attendance images\mobile.png" />
     <Content Include="Content\attendance images\mobile\1.jpeg" />
-    <Content Include="Content\attendance images\mobile\1.webp" />
     <Content Include="Content\attendance images\mobile\2.jpeg" />
-    <Content Include="Content\attendance images\mobile\2.webp" />
     <Content Include="Content\attendance images\mobile\3.jpeg" />
-    <Content Include="Content\attendance images\mobile\3.webp" />
     <Content Include="Content\attendance images\mobile\4.jpeg" />
-    <Content Include="Content\attendance images\mobile\4.webp" />
     <Content Include="Content\attendance images\mobile\5.jpeg" />
-    <Content Include="Content\attendance images\mobile\5.webp" />
     <Content Include="Content\attendance images\mobile\6.jpeg" />
-    <Content Include="Content\attendance images\mobile\6.webp" />
     <Content Include="Content\attendance images\mobile\7.jpeg" />
-    <Content Include="Content\attendance images\mobile\7.webp" />
     <Content Include="Content\attendance images\mobile\8.jpeg" />
-    <Content Include="Content\attendance images\mobile\8.webp" />
     <Content Include="Content\attendance images\myket.png" />
     <Content Include="Content\attendance images\paycheck.PNG" />
     <Content Include="Content\attendance images\SmartAttendanceManagemntsystem.jpg" />
@@ -1069,6 +1113,29 @@
     <Content Include="Content\Datepicker\jquery.Bootstrap-PersianDateTimePicker.css" />
     <Content Include="Content\Datepicker\jquery.Bootstrap-PersianDateTimePicker.js" />
     <Content Include="Content\Datepicker\jquery.md.bootstrap.datetimepicker.style.css" />
+    <Content Include="Content\designassets\115-1154100_fingerprint-transparent-background-svg-hd-png-download.png" />
+    <Content Include="Content\designassets\locationmarker.png" />
+    <Content Include="Content\designassets\location_marker.png" />
+    <Content Include="Content\designassets\pin-location-icon-sign-symbol-design-free.png" />
+    <Content Include="Content\designassets\_0624d78c-4d81-47fe-b0f3-f572c27b3f40.jfif" />
+    <Content Include="Content\designassets\_119e98ae-43a1-4499-8f76-fed38331ed3a.jfif" />
+    <Content Include="Content\designassets\_1c6debef-c4c7-495e-aa4d-e76c591e53f1.jfif" />
+    <Content Include="Content\designassets\_26da59f9-03b5-4137-8071-2eb371f49ad7.jfif" />
+    <Content Include="Content\designassets\_27bfe332-0de8-464e-aa1d-00bec30b759d.jfif" />
+    <Content Include="Content\designassets\_5fbe6464-a013-407a-a413-7c52249b9fc2.jfif" />
+    <Content Include="Content\designassets\_6d58ef13-de61-4553-a19d-9cb4022cc50f.jfif" />
+    <Content Include="Content\designassets\_9abfd8c6-6266-4bd4-90ad-e952324da29f.jfif" />
+    <Content Include="Content\designassets\_9c3a873f-4664-4d23-9cd0-757e59c40f83.jfif" />
+    <Content Include="Content\designassets\_a0aa6a1c-7966-4bd7-a957-21c470396e0d.jfif" />
+    <Content Include="Content\designassets\_ab0131ef-d7fb-405b-8571-8025cb921db7.jfif" />
+    <Content Include="Content\designassets\_ac732d03-c7de-4f9e-bc83-283da0a0f93b.jfif" />
+    <Content Include="Content\designassets\_bc3d360d-d0bd-4aed-bbdf-7e11e9366121.jfif" />
+    <Content Include="Content\designassets\_bcd335f7-8e0e-4e0f-82e4-e0ffeae4cd2a.jfif" />
+    <Content Include="Content\designassets\_ca3bf173-ce23-4800-9c88-7f4d6a447fbb.jfif" />
+    <Content Include="Content\designassets\_e68bc1f3-343e-4b4c-9a87-9cd5b11240f6.jfif" />
+    <Content Include="Content\designassets\_ebfdc27e-ac75-4e1f-8d4f-fa27ca5797be.jfif" />
+    <Content Include="Content\designassets\_f310d789-5d4b-482e-9b3e-10688399e835.jfif" />
+    <Content Include="Content\designassets\_f659f297-9d64-476e-ac07-04200eec00b4.jfif" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
@@ -1103,6 +1170,55 @@
     <Content Include="Content\mapbox\mapbox.css" />
     <Content Include="Content\mapbox\mapbox.js" />
     <Content Include="Content\mapbox\turf.js" />
+    <Content Include="Content\mobile\background1\background_hdpi.png" />
+    <Content Include="Content\mobile\background1\background_ldpi.png" />
+    <Content Include="Content\mobile\background1\background_mdpi.png" />
+    <Content Include="Content\mobile\background1\background_xhdpi.png" />
+    <Content Include="Content\mobile\background1\background_xxhdpi.png" />
+    <Content Include="Content\mobile\background1\background_xxxhdpi.png" />
+    <Content Include="Content\mobile\background2\background1_hdpi.png" />
+    <Content Include="Content\mobile\background2\background1_ldpi.png" />
+    <Content Include="Content\mobile\background2\background1_mdpi.png" />
+    <Content Include="Content\mobile\background2\background1_xhdpi.png" />
+    <Content Include="Content\mobile\background2\background1_xxhdpi.png" />
+    <Content Include="Content\mobile\background3\background.psd" />
+    <Content Include="Content\mobile\background3\background2_hdpi.png" />
+    <Content Include="Content\mobile\background3\background2_ldpi.png" />
+    <Content Include="Content\mobile\background3\background2_mdpi.png" />
+    <Content Include="Content\mobile\background3\background2_xhdpi.png" />
+    <Content Include="Content\mobile\background3\background2_xxhdpi.png" />
+    <Content Include="Content\mobile\background3\background2_xxxhdpi.png" />
+    <Content Include="Content\mobile\background4\background3_hdpi.png" />
+    <Content Include="Content\mobile\background4\background3_ldpi.png" />
+    <Content Include="Content\mobile\background4\background3_mdpi.png" />
+    <Content Include="Content\mobile\background4\background3_xhdpi.png" />
+    <Content Include="Content\mobile\background4\background3_xxhdpi.png" />
+    <Content Include="Content\mobile\background4\background3_xxxhdpi.png" />
+    <Content Include="Content\mobile\background5\Untitled-3_hdpi.png" />
+    <Content Include="Content\mobile\background5\Untitled-3_ldpi.png" />
+    <Content Include="Content\mobile\background5\Untitled-3_mdpi.png" />
+    <Content Include="Content\mobile\background5\Untitled-3_xhdpi.png" />
+    <Content Include="Content\mobile\background5\Untitled-3_xxhdpi.png" />
+    <Content Include="Content\mobile\background5\Untitled-3_xxxhdpi.png" />
+    <Content Include="Content\mobile\background6\background6_hdpi.png" />
+    <Content Include="Content\mobile\background6\background6_ldpi.png" />
+    <Content Include="Content\mobile\background6\background6_mdpi.png" />
+    <Content Include="Content\mobile\background6\background6_xhdpi.png" />
+    <Content Include="Content\mobile\background6\background6_xxhdpi.png" />
+    <Content Include="Content\mobile\background6\background6_xxxhdpi.png" />
+    <Content Include="Content\mobile\background7\bgfingerprint_hdpi.png" />
+    <Content Include="Content\mobile\background7\bgfingerprint_ldpi.png" />
+    <Content Include="Content\mobile\background7\bgfingerprint_mdpi.png" />
+    <Content Include="Content\mobile\background7\bgfingerprint_xhdpi.png" />
+    <Content Include="Content\mobile\background7\bgfingerprint_xxhdpi.png" />
+    <Content Include="Content\mobile\background7\bgfingerprint_xxxhdpi.png" />
+    <Content Include="Content\mobile\logo\Artboard1_hdpi.png" />
+    <Content Include="Content\mobile\logo\Artboard1_ldpi.png" />
+    <Content Include="Content\mobile\logo\Artboard1_mdpi.png" />
+    <Content Include="Content\mobile\logo\Artboard1_xhdpi.png" />
+    <Content Include="Content\mobile\logo\Artboard1_xxhdpi.png" />
+    <Content Include="Content\mobile\logo\Artboard1_xxxhdpi.png" />
+    <Content Include="Content\mobile\Untitled-2.psd" />
     <Content Include="Content\multiselect\dist\css\bootstrap-multiselect.css" />
     <Content Include="Content\multiselect\dist\js\bootstrap-multiselect.js" />
     <Content Include="Content\multiselect\dist\less\bootstrap-multiselect.less" />
@@ -1248,10 +1364,281 @@
     <Content Include="ReportGenerator\ReportGenerator\src\assets\primeicons\package.json" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\primeicons\primeicons.css" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\primeicons\README.md" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\accordion\accordion.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\autocomplete\autocomplete.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\avatargroup\avatargroup.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\avatar\avatar.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\badge\badge.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\blockui\blockui.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\breadcrumb\breadcrumb.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\button\button.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\calendar\calendar.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\card\card.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\carousel\carousel.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\cascadeselect\cascadeselect.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\checkbox\checkbox.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\chips\chips.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\chip\chip.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\colorpicker\colorpicker-images.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\colorpicker\colorpicker.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\colorpicker\images\color.png" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\colorpicker\images\hue.png" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\common\common.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\confirmpopup\confirmpopup.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\contextmenu\contextmenu.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\dataview\dataview.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\dialog\dialog.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\divider\divider.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\dock\dock.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\dropdown\dropdown.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\editor\editor.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\fieldset\fieldset.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\fileupload\fileupload.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\galleria\galleria.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\image\image.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\inplace\inplace.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\inputmask\inputmask.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\inputnumber\inputnumber.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\inputswitch\inputswitch.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\inputtextarea\inputtextarea.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\inputtext\inputtext.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\knob\knob.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\listbox\listbox.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\megamenu\megamenu.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\menubar\menubar.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\menu\menu.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\messages\messages.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\message\message.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\multiselect\multiselect.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\orderlist\orderlist.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\organizationchart\organizationchart.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\overlaypanel\overlaypanel.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\overlay\overlay.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\paginator\paginator.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\panelmenu\panelmenu.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\panel\panel.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\password\images\password-meter.png" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\password\password.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\picklist\picklist.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\progressbar\progressbar.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\progressspinner\progressspinner.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\radiobutton\radiobutton.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\rating\rating.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\ripple\ripple.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\scroller\scroller.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\scrollpanel\scrollpanel.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\scrolltop\scrolltop.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\sidebar\sidebar.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\skeleton\skeleton.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\slidemenu\slidemenu.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\slider\slider.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\speeddial\speeddial.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\spinner\spinner.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\splitbutton\splitbutton.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\splitter\splitter.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\steps\steps.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\table\table.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\tabmenu\tabmenu.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\tabview\tabview.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\tag\tag.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\terminal\terminal.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\tieredmenu\tieredmenu.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\timeline\timeline.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\toast\toast.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\toolbar\toolbar.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\tooltip\tooltip.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\treeselect\treeselect.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\treetable\treetable.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\tree\images\line.gif" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\components\tree\tree.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\images\color.png" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\images\hue.png" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\images\line.gif" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\images\password-meter.png" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\primeng.css" />
     <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\primeng.min.css" />
-    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\bootstrap\theme.css" />
-    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\_theme.scss" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\arya-blue\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\arya-green\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\arya-orange\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\arya-purple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\bootstrap4-dark-blue\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\bootstrap4-dark-purple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\bootstrap4-light-blue\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\bootstrap4-light-purple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\fluent-light\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-amber\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-amber\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-amber\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-blue\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-blue\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-blue\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-cyan\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-cyan\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-cyan\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-green\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-green\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-green\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-indigo\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-indigo\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-indigo\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-pink\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-pink\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-pink\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-purple\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-purple\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-purple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-teal\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-teal\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-dark-teal\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-amber\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-amber\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-amber\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-blue\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-blue\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-blue\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-cyan\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-cyan\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-cyan\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-green\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-green\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-green\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-indigo\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-indigo\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-indigo\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-pink\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-pink\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-pink\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-purple\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-purple\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-purple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-teal\fonts\Inter-italic.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-teal\fonts\Inter-roman.var.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\lara-light-teal\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\luna-amber\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\luna-blue\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\luna-green\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\luna-pink\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-deeppurple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-indigo\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-indigo\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-indigo\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-indigo\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-indigo\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-indigo\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-dark-indigo\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-deeppurple\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-deeppurple\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-deeppurple\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-deeppurple\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-deeppurple\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-deeppurple\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-deeppurple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-indigo\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-indigo\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-indigo\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-indigo\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-indigo\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-indigo\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\md-light-indigo\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-deeppurple\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-deeppurple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-indigo\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-indigo\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-indigo\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-indigo\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-indigo\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-indigo\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-dark-indigo\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-deeppurple\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-deeppurple\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-deeppurple\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-deeppurple\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-deeppurple\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-deeppurple\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-deeppurple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-indigo\fonts\roboto-v20-latin-ext_latin-500.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-indigo\fonts\roboto-v20-latin-ext_latin-500.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-indigo\fonts\roboto-v20-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-indigo\fonts\roboto-v20-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-indigo\fonts\roboto-v20-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-indigo\fonts\roboto-v20-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mdc-light-indigo\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\fonts\Inter-Bold.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\fonts\Inter-Bold.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\fonts\Inter-Medium.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\fonts\Inter-Medium.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\fonts\Inter-Regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\fonts\Inter-Regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\fonts\Inter-SemiBold.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\fonts\Inter-SemiBold.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\mira\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\nano\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\nova-accent\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\nova-alt\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\nova\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\rhea\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\saga-blue\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\saga-green\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\saga-orange\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\saga-purple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-dark\fonts\lato-v17-latin-ext_latin-300.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-dark\fonts\lato-v17-latin-ext_latin-300.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-dark\fonts\lato-v17-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-dark\fonts\lato-v17-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-dark\fonts\lato-v17-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-dark\fonts\lato-v17-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-dark\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-light\fonts\lato-v17-latin-ext_latin-300.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-light\fonts\lato-v17-latin-ext_latin-300.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-light\fonts\lato-v17-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-light\fonts\lato-v17-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-light\fonts\lato-v17-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-light\fonts\lato-v17-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\soho-light\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-Bold.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-Bold.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-Light.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-Light.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-Medium.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-Medium.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-Regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-Regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-SemiBold.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\fonts\Inter-SemiBold.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\tailwind-light\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\vela-blue\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\vela-green\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\vela-orange\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\vela-purple\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\fonts\poppins-v15-latin-ext_latin-300.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\fonts\poppins-v15-latin-ext_latin-300.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\fonts\poppins-v15-latin-ext_latin-600.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\fonts\poppins-v15-latin-ext_latin-600.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\fonts\poppins-v15-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\fonts\poppins-v15-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\fonts\poppins-v15-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\fonts\poppins-v15-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-dark\theme.css" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\fonts\poppins-v15-latin-ext_latin-300.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\fonts\poppins-v15-latin-ext_latin-300.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\fonts\poppins-v15-latin-ext_latin-600.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\fonts\poppins-v15-latin-ext_latin-600.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\fonts\poppins-v15-latin-ext_latin-700.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\fonts\poppins-v15-latin-ext_latin-700.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\fonts\poppins-v15-latin-ext_latin-regular.woff" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\fonts\poppins-v15-latin-ext_latin-regular.woff2" />
+    <Content Include="ReportGenerator\ReportGenerator\src\assets\primeng\resources\themes\viva-light\theme.css" />
     <Content Include="ReportGenerator\ReportGenerator\src\browserslist" />
     <Content Include="ReportGenerator\ReportGenerator\src\favicon.ico" />
     <Content Include="ReportGenerator\ReportGenerator\src\index.html" />
@@ -1502,9 +1889,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>53817</DevelopmentServerPort>
+          <DevelopmentServerPort>5002</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:53817/</IISUrl>
+          <IISUrl>http://localhost:5002/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
