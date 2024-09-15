@@ -114,6 +114,11 @@ namespace Engine.Areas.Absence.Controllers
                 dt = new DateTime(dt.Year, dt.Month, dt.Day, new GregorianCalendar());
             }
 
+            if (!ModelState.IsValid)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
+                    "اطلاعات ارسالی اشتباه است لطفا صحت اطلاعات ورودی خود را بررسی کنید");
+            }
 
             SaveOneToMany<WorkGroup , ObligatedRange, WorkGroupObligatedRange>(new OneToManyViewModel
                 {

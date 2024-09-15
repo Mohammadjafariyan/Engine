@@ -41,7 +41,7 @@
             <th scope="row">@item.Name</th>
             <td>@item.LastName</td>
             <td>@item.Code</td>
-            <td>@item.WorkGroup.Name</td>
+            <td>@Html.Raw(item.WorkGroup?.Name ?? "<span class='text-danger'>تعریف نشده</span>")</td>
             <td>@Html.ActionLink("ویرایش", "ForEdit", new { id = item.Id })</td>
             <td>@Html.ActionLink("حذف", "Delete", new { id = item.Id })</td>
         </tr>

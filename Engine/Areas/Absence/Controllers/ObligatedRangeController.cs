@@ -39,7 +39,10 @@ namespace Engine.Areas.Absence.Controllers
                 var  json="";
                 using (var db = new EngineContext())
                 {
-                    var obl = db.ObligatedRanges.Find(Id);
+                    var obl = db.ObligatedRanges.Where(f=>f.Id== Id)
+                        .Include(s=>s.ObligatedRangeWeeks)
+                        .Include(s=>s.ObligatedRangeWeeks.Select(d=>d.ObligatedRangeDayTimes))
+                        .FirstOrDefault();
                     if (obl == null)
                     {
                         throw new Exception("یافت نشد");

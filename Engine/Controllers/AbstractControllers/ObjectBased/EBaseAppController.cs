@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -177,89 +178,106 @@ namespace Engine.Controllers.AbstractControllers.ObjectBased
             Func<EngineContext, TOne, TMany, ApplicationUser, TJoinTable> funcNewItem)
             where TOne : BaseEntity where TMany : BaseEntity where TJoinTable : BaseEntity
         {
-            using (var db = new EngineContext())
+            try
             {
-                if (model.ManyBool == null)
+                using (var db = new EngineContext())
                 {
-                    throw new Exception("model.ManyBool is null");
-                }
-
-                for (var i = 0; i < model.ManyBool.Count; i++)
-                {
-                    if (!model.ManyBool[i])
+                    if (model.ManyBool == null)
                     {
-                        model.Many[i] = -1;
+                        throw new Exception("model.ManyBool is null");
                     }
-                }
 
-                model.Many = model.Many.Where(m => m != -1).ToList();
-
-                using (var transaction = db.Database.BeginTransaction())
-                {
-                    try
+                    for (var i = 0; i < model.ManyBool.Count; i++)
                     {
-                        var one = db.Query<TOne>().FirstOrDefault(f => f.Id == model.OneId);
-                        if (one == null) throw new ArgumentNullException(nameof(one));
-
-                        db.Entry(one).Collection<TJoinTable>(collectionName).Load();
-
-                        // one.ClearListProperty(collectionName);
-                        PropertyInfo listProperty = one.GetType().GetProperty(collectionName);
-
-                        if (listProperty != null && listProperty.PropertyType.IsGenericType &&
-                            listProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                        if (!model.ManyBool[i])
                         {
-                            // Use reflection to get the list value
-                            var listValue = (IEnumerable<TJoinTable>)listProperty.GetValue(one);
+                            model.Many[i] = -1;
+                        }
+                    }
 
-                            // Iterate through each item in the list
-                            foreach (var item in listValue.ToList())
+                    model.Many = model.Many.Where(m => m != -1).ToList();
+
+                    using (var transaction = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var one = db.Query<TOne>().FirstOrDefault(f => f.Id == model.OneId);
+                            if (one == null) throw new ArgumentNullException(nameof(one));
+
+                            db.Entry(one).Collection<TJoinTable>(collectionName).Load();
+
+                            // one.ClearListProperty(collectionName);
+                            PropertyInfo listProperty = one.GetType().GetProperty(collectionName);
+
+                            if (listProperty != null && listProperty.PropertyType.IsGenericType &&
+                                listProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
                             {
-                                db.Set<TJoinTable>().Remove(item);
+                                // Use reflection to get the list value
+                                var listValue = (IEnumerable<TJoinTable>)listProperty.GetValue(one);
+
+                                // Iterate through each item in the list
+                                foreach (var item in listValue.ToList())
+                                {
+                                    db.Set<TJoinTable>().Remove(item);
+                                }
                             }
-                        }
 
-                        if (listProperty != null && listProperty.PropertyType.IsGenericType &&
-                            listProperty.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
-                        {
-                            // Use reflection to get the list value
-                            var listValue = (ICollection<TJoinTable>)listProperty.GetValue(one);
-
-                            // Iterate through each item in the list
-                            foreach (var item in listValue.ToList())
+                            if (listProperty != null && listProperty.PropertyType.IsGenericType &&
+                                listProperty.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
                             {
-                                db.Set<TJoinTable>().Remove(item);
+                                // Use reflection to get the list value
+                                var listValue = (ICollection<TJoinTable>)listProperty.GetValue(one);
+
+                                // Iterate through each item in the list
+                                foreach (var item in listValue.ToList())
+                                {
+                                    db.Set<TJoinTable>().Remove(item);
+                                }
                             }
+
+                            db.SaveChanges();
+
+                            var selectedList = db.Query<TMany>()
+                                .Where(record => model.Many.Any(selectedId => record.Id == selectedId))
+                                .ToList();
+
+                            var applicationUser = db.GetCurrentUser();
+
+
+                            func(db);
+
+                            foreach (var manyItem in selectedList)
+                            {
+                                var newItem = funcNewItem(db, one, manyItem, applicationUser);
+                                /*one.AddItemToListProperty<TOne, TJoinTable>(newItem, collectionName);*/
+                                db.Set<TJoinTable>().Add(newItem);
+                            }
+
+                            db.SaveChanges();
+                            transaction.Commit();
                         }
-
-                        db.SaveChanges();
-
-                        var selectedList = db.Query<TMany>()
-                            .Where(record => model.Many.Any(selectedId => record.Id == selectedId))
-                            .ToList();
-
-                        var applicationUser = db.GetCurrentUser();
-
-
-                        func(db);
-
-                        foreach (var manyItem in selectedList)
+                        catch (Exception)
                         {
-                            var newItem = funcNewItem(db, one, manyItem, applicationUser);
-                            /*one.AddItemToListProperty<TOne, TJoinTable>(newItem, collectionName);*/
-                            db.Set<TJoinTable>().Add(newItem);
+                            // An error occurred, rollback the transaction
+                            transaction.Rollback();
+                            throw; // You may choose to handle or log the exception as needed
                         }
-
-                        db.SaveChanges();
-                        transaction.Commit();
-                    }
-                    catch (Exception)
-                    {
-                        // An error occurred, rollback the transaction
-                        transaction.Rollback();
-                        throw; // You may choose to handle or log the exception as needed
                     }
                 }
+            }
+            catch (DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
             }
         }
 

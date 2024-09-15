@@ -55,17 +55,37 @@
                             }
                         </select>
                     </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="email">تاریخ از</label>
+                                                @{
+                                                                                        ViewBag.name = "fromdate";
+                                                                                    }
+                                                                                    
+                                                                                    @Html.Partial("~/Views/Utils/DatePicker.cshtml")
+                                                
+                                            @*
+                                            <input type="text" onchange="fromdateChanged(this)" value="@fromdateStr" name="fa_fromdate" class="form-control" id="fa_fromdate">
+                                            <input type="hidden" hidden="hidden" value="@fromdate" name="fromdate" class="form-control" id="fromdate">
+                                            *@
+                                        
+                                            </div>
+
+                    
                     <div class="form-group col-md-4">
                         <label for="email">تاریخ تا</label>
+                        
+                             @{
+                                            ViewBag.name = "dateto";
+                                        }
+                                        
+                                        @Html.Partial("~/Views/Utils/DatePicker.cshtml")
+                        @*
                         <input type="text" onchange="dateToChanged(this)" value="@todateStr" name="fa_dateto" class="form-control" id="fa_dateto">
                         <input type="hidden" hidden="hidden" value="@todate" name="dateto" class="form-control" id="dateto">
-                    </div>
+                        *@
+                 
+                        </div>
 
-                    <div class="form-group col-md-4">
-                        <label for="email">تاریخ از</label>
-                        <input type="text" onchange="fromdateChanged(this)" value="@fromdateStr" name="fa_fromdate" class="form-control" id="fa_fromdate">
-                        <input type="hidden" hidden="hidden" value="@fromdate" name="fromdate" class="form-control" id="fromdate">
-                    </div>
 
                 </div>
 

@@ -170,6 +170,7 @@ namespace Engine.Controllers
                     LastName=model.LastName,
                     Mobile=model.Mobile,
                     Gender=model.Gender,
+                    PersonnelType = model.PersonnelType
                 };
                 
                 using (var context = new EngineContext())

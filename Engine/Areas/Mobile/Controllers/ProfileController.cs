@@ -36,6 +36,7 @@ namespace Engine.Areas.Mobile.Controllers
                     user.Id = null;
                     return new ApiResult<ApplicationUser>
                     {
+                        Status = CustomResultType.success,
                         result = user
                     };
                 }

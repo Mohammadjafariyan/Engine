@@ -381,6 +381,8 @@ namespace Engine.Entities.Data
 
             modelBuilder.Entity<Machine>().ToTable("Machines", "dbo");
 
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.Children).WithOptional(f => f.Parent)
+                .HasForeignKey(f => f.ParentId).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ApplicationUser>().HasMany(f => f.Machines).WithRequired(f => f.ApplicationUser)
                 .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
@@ -413,6 +415,12 @@ namespace Engine.Entities.Data
                 .WithRequired(f => f.ApplicationUser).HasForeignKey(f => f.ApplicationUserId)
                 .WillCascadeOnDelete(false);
             modelBuilder.Entity<ApplicationUser>().HasMany(f => f.BiometricDatas).WithRequired(f => f.ApplicationUser)
+                .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
+   
+            
+            
+            modelBuilder.Entity<ApplicationUser>().HasMany(f => f.ClockInViewModel)
+                .WithOptional(f => f.ApplicationUser)
                 .HasForeignKey(f => f.ApplicationUserId).WillCascadeOnDelete(false);
 
             #endregion

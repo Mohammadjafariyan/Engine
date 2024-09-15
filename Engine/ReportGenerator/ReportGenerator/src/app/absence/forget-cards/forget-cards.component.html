@@ -1,0 +1,77 @@
+<h3 style="text-align:center">فراموشی کارت</h3>
+
+
+<div class="row">
+
+  <div class="col-4 ">
+    <app-datepicker label="تاریخ از" (dateValueChanged)="dateFromChanged($event)"></app-datepicker>
+  </div>
+  <div class="col-4 ">
+    <app-datepicker label="تاریخ تا" (dateValueChanged)="dateToChanged($event)"></app-datepicker>
+  </div>
+
+  <div class="col-4">
+
+    <label>پرسنل</label> <br/>
+    <p-dropdown [options]="users" [(ngModel)]="selectedUser" optionLabel="name"
+                [filter]="true" filterBy="name"
+                [showClear]="true" placeholder="انتخاب پرسنل">
+    </p-dropdown>
+  </div>
+  <div class="col-4 m-4">
+    <br/>
+    <p-checkbox label="فقط تعیین نشده ها" name="onlyNotAccepted" [binary]="true" inputId="binary"
+                [(ngModel)]="onlyNotAccepted"></p-checkbox>
+
+
+  </div>
+
+
+</div>
+
+
+
+<div class="row m-4 ">
+
+  <p-button (onClick)="filter()">جستجو</p-button>
+  
+</div>
+
+<p-table [value]="clocksDataTable" [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>نام و نام خانوادگی</th>
+      <th>ساعت ورود</th>
+      <th>ساعت خروج</th>
+      <th>از نوع فراموشی کارت</th>
+      <th>تعیین شده</th>
+      <th>ساعت دستی</th>
+      <th>دقیقه دستی</th>
+      <th>تاریخ</th>
+      <th>نوع ساعت</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-product>
+    <tr>
+      <td>{{product.UserFirstLastName}}</td>
+      <td>{{product.TimeIn}}</td>
+      <td>{{product.TimeOut}}</td>
+      <td>
+
+            <i *ngIf="product.IsForgotten==true" class="fa fa-check text-success"></i>
+            <i *ngIf="product.IsForgotten==false" class="fa fa-times text-danger"></i>
+
+
+</td>
+      <td>
+        <i *ngIf="product.IsAccepted==true" class="fa fa-check text-success"></i>
+        <i *ngIf="product.IsAccepted==false" class="fa fa-times text-danger"></i>
+
+      </td>
+      <td>{{product.manualHourOfDay}}</td>
+      <td>{{product.manualMinute}}</td>
+      <td>{{product.datetime}}</td>
+      <td>{{product.clockType}}</td>
+    </tr>
+  </ng-template>
+</p-table>

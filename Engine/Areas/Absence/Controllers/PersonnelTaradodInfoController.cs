@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Engine.Areas.Absence.Models;
@@ -9,7 +10,9 @@ using Engine.Areas.Absence.UiConstructs;
 using Engine.Areas.JUiEngine.Controllers;
 using Engine.Controllers.AbstractControllers.ObjectBased;
 using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
 using Engine.Entities.Models.UiGeneratorModels;
+using Engine.Models;
 using ViewModel.ActionTypes;
 using ViewModel.Parameters;
 using WebAppIDEEngine.Models;
@@ -55,26 +58,88 @@ namespace Engine.Areas.Absence.Controllers
         {
             using (var db = new EngineContext())
             {
-                ViewData[PersonnelTaradodInfoController.Personnel] = db.Personnels.ToList();
+                var user = db.Users
+                    .Where(s => s.UserName == User.Identity.Name)
+                    .FirstOrDefault();
+
+                if (user == null)
+                {
+                    throw new Exception("اکانت شما یافت نشد لطفا مجدد ثبت نام یا دوباره وارد شوید");
+                }
+
+                var query = db.Personnels.AsQueryable();
+              
+                query = query.Where(s=>s.ApplicationUserId==user.Id);
+
+                if (user.PersonnelType==PersonnelTypeEnm.Employee)
+                {
+                    Personnel personnel = db.GetCurrentUserPersonnel(user.Id, false);
+
+                    query = query.Where(s=>s.WorkplacePersonnels.Any(p=>p.PersonnelId==personnel.Id));
+                }
+
+                
+                
+                ViewData[PersonnelTaradodInfoController.Personnel] = query.ToList();
             }
         }
 
 
-        public ActionResult Detail(long personnelId, DateTime fromdate, DateTime dateto)
+        public ActionResult Detail(long personnelId, string fromdate, string dateto)
         {
             try
             {
+                
+                
+                CultureInfo persianCulture = new CultureInfo("fa-IR");
+                DateTime from_dt = DateTime.ParseExact(fromdate,
+                    "yyyy/MM/dd", persianCulture);
+
+                DateTime to_dt = DateTime.ParseExact(dateto,
+                    "yyyy/MM/dd", persianCulture);
+
+
+                using (var db=new EngineContext())
+                {
+                    var user = db.Users
+                        .Where(s => s.UserName == User.Identity.Name)
+                        .FirstOrDefault();
+
+                    if (user == null)
+                    {
+                        throw new Exception("اکانت شما یافت نشد لطفا مجدد ثبت نام یا دوباره وارد شوید");
+                    }
+
+                    var query = db.Personnels.AsQueryable();
+              
+                    query = query.Where(s=>s.ApplicationUserId==user.Id);
+
+                    if (user.PersonnelType==PersonnelTypeEnm.Employee)
+                    {
+                        Personnel personnel = db.GetCurrentUserPersonnel(user.Id, false);
+
+                        query = query.Where(s=>s.WorkplacePersonnels.Any(p=>p.PersonnelId==personnel.Id));
+                    }
+
+
+                    if (query.Any(s=>s.Id==personnelId)==false)
+                    {
+                        throw new Exception("دسترسی ندارید");
+                    }
+                }
+                
+                
                 GenForm();
                 ViewData["personnelId"] = personnelId;
-                ViewData["fromdate"] = fromdate;
-                ViewData["dateto"] = dateto;
+                ViewData["fromdate"] = from_dt;
+                ViewData["dateto"] = to_dt;
 
-                var biometricData = _service.GetBiometricData(personnelId, fromdate, dateto);
+                var biometricData = _service.GetBiometricData(personnelId, from_dt, to_dt);
 
                 var obligatedRange = _service.GetObligatedRange(personnelId);
 
                 List<BiometryCalculatedDetail> taradodInfoCalculated =
-                    _service.CompareAndJoin(fromdate, dateto, biometricData, obligatedRange);
+                    _service.CompareAndJoin(from_dt, to_dt, biometricData, obligatedRange);
 
                 BiometryCalculatedDetail totalCalculated = _service.CalculateTotal(taradodInfoCalculated);
 
@@ -96,23 +161,54 @@ namespace Engine.Areas.Absence.Controllers
         {
             var dt = GetAllPersonnelTotalSummaryTimesheetDataTable(
                 new List<BiometryCalculatedDetail>(), true);
-            return View("GetAllPersonnelTotalSummaryTimesheet", dt);
+            return View("GetAllPersonnelTotalSummaryTimesheet", new WorkSummary());
         }
 
         [HttpPost]
-        public JsonResult GetAllPersonnelTotalSummaryTimesheet(DateTime from, DateTime to)
+        public JsonResult GetAllPersonnelTotalSummaryTimesheet(string from, string to)
         {
-            ViewData["from"] = Engine.Controllers.AbstractControllers.EngineUtility.ConvertToShamsiDate(from, false, false);
-            ViewData["to"] = Engine.Controllers.AbstractControllers.EngineUtility.ConvertToShamsiDate(to, false, false);
+            CultureInfo persianCulture = new CultureInfo("fa-IR");
+            DateTime from_dt = DateTime.ParseExact(from,
+                "yyyy/MM/dd", persianCulture);
+
+            DateTime to_dt = DateTime.ParseExact(to,
+                "yyyy/MM/dd", persianCulture);
+
+            ViewData["from"] =
+                from_dt; // Engine.Controllers.AbstractControllers.EngineUtility.ConvertToShamsiDate(from, false, false);
+            ViewData["to"] =
+                to_dt; //Engine.Controllers.AbstractControllers.EngineUtility.ConvertToShamsiDate(to, false, false);
 
             List<BiometryCalculatedDetail> summaries = new List<BiometryCalculatedDetail>();
             using (var db = new EngineContext())
             {
-                var personnels = db.Personnels.Where(q => q.WorkGroup.WorkGroupObligatedRanges.Count > 0)
+                
+                var user = db.Users
+                    .Where(s => s.UserName == User.Identity.Name)
+                    .FirstOrDefault();
+
+                if (user == null)
+                {
+                    throw new Exception("اکانت شما یافت نشد لطفا مجدد ثبت نام یا دوباره وارد شوید");
+                }
+
+                var query = db.Personnels.AsQueryable();
+              
+                query = query.Where(s=>s.ApplicationUserId==user.Id);
+
+                if (user.PersonnelType==PersonnelTypeEnm.Employee)
+                {
+                    Personnel personnel = db.GetCurrentUserPersonnel(user.Id, false);
+
+                    query = query.Where(s=>s.WorkplacePersonnels.Any(p=>p.PersonnelId==personnel.Id));
+                }
+
+
+                var personnels = query.Where(q => q.WorkGroup.WorkGroupObligatedRanges.Count > 0)
                     .ToList();
                 foreach (var personnel in personnels)
                 {
-                    var det = SummaryHelperGetTimeSheetForOnePersonnel(personnel.Id, from, to);
+                    var det = SummaryHelperGetTimeSheetForOnePersonnel(personnel.Id, from_dt, to_dt);
                     det.PersonnelName = personnel.Name + " " + personnel.LastName;
                     det.Id = personnel.Id;
                     summaries.Add(det);
@@ -133,18 +229,18 @@ namespace Engine.Areas.Absence.Controllers
                 RecordsList = summaries.Cast<dynamic>().ToList(),
                 Headers = new Dictionary<string, string>
                 {
-                    {"Id", "شماره پرسنلی"},
-                    {"PersonnelName", "نام پرسنل"},
-                    {"TotalStr", "کل ساعت حظور"},
-                    {"TotalAbsenceStr", "کسری کار وغیبت"},
-                    {"TotalOvertimeStr", "اضافه کاری"},
-                    {"InValidStr", "غیر مجاز"},
-                    {"ShiftWorkStr", "نوبت کاری"},
-                    {"NightWorkStr", "شب کاری"},
-                    {"MissionWorkStr", "ماموریت"},
-                    {"HolidayWorkStr", "تعطیل کاری"},
-                    {"VacationStr", "مرخصی"},
-                    {"TotalValidStr", "کارکرد موظف"},
+                    { "Id", "شماره پرسنلی" },
+                    { "PersonnelName", "نام پرسنل" },
+                    { "TotalStr", "کل ساعت حظور" },
+                    { "TotalAbsenceStr", "کسری کار وغیبت" },
+                    { "TotalOvertimeStr", "اضافه کاری" },
+                    { "InValidStr", "غیر مجاز" },
+                    { "ShiftWorkStr", "نوبت کاری" },
+                    { "NightWorkStr", "شب کاری" },
+                    { "MissionWorkStr", "ماموریت" },
+                    { "HolidayWorkStr", "تعطیل کاری" },
+                    { "VacationStr", "مرخصی" },
+                    { "TotalValidStr", "کارکرد موظف" },
                 }
             };
             SetDynamicTableViewDataHelper(res,
@@ -167,5 +263,11 @@ namespace Engine.Areas.Absence.Controllers
 
             return totalCalculated;
         }
+    }
+
+    public class WorkSummary
+    {
+        public DateTime from { get; set; }
+        public DateTime to { get; set; }
     }
 }

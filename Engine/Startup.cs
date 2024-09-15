@@ -13,6 +13,7 @@ namespace Engine
         public void Configuration(IAppBuilder app)
         {
             
+            
             var key = Encoding.UTF8.GetBytes("your-secret-key");
 
             var tokenValidationParameters = new TokenValidationParameters()

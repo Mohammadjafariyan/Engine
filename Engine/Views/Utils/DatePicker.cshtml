@@ -6,32 +6,79 @@
 }
 
 @{
-
+    
     System.DateTime date = System.DateTime.Today;
     System.Globalization.PersianCalendar p = new System.Globalization.PersianCalendar();
+
+    
+    if (ViewData[ViewBag.name]!=null && ViewData[ViewBag.name] is System.DateTime  )
+    {
+        try
+        {
+            date = ViewData[ViewBag.name] is DateTime ? (DateTime)ViewData[ViewBag.name] : System.DateTime.Today;
+        }
+        catch (Exception e)
+        {
+            //Console.WriteLine(e);
+            
+        }
+    }
+
 
     int year = p.GetYear(date);
     int month = p.GetMonth(date);
     int day = p.GetDayOfMonth(date);
     
+    
+    
     string name = ViewBag.name;
+    
+    
+    
     List<SelectListItem> years = new List<SelectListItem>();
     for (int i = year - 10; i < year + 10; i++)
     {
-        years.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString(), Selected = i == year });
+        string value = "";
+        if (i<10)
+        {
+            value = "0" + i.ToString();
+        }
+        else
+        {
+            value = i.ToString();
+        }
+        years.Add(new SelectListItem { Text = i.ToString(), Value = value, Selected = i == year });
     }
 
 
     List<SelectListItem> months = new List<SelectListItem>();
     for (int i = 1; i < 12; i++)
     {
-        months.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString(), Selected = i == month });
+        string value = "";
+        if (i<10)
+        {
+            value = "0" + i.ToString();
+        }
+        else
+        {
+            value = i.ToString();
+        }
+        months.Add(new SelectListItem { Text = i.ToString(), Value = value, Selected = i == month });
     }
 
     List<SelectListItem> days = new List<SelectListItem>();
     for (int i = 1; i < 31; i++)
     {
-        days.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString(), Selected = i == day });
+        string value = "";
+        if (i<10)
+        {
+            value = "0" + i.ToString();
+        }
+        else
+        {
+            value = i.ToString();
+        }
+        days.Add(new SelectListItem { Text = i.ToString(), Value = value, Selected = i == day });
     }
 }
 <style>

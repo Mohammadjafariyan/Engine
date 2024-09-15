@@ -41,6 +41,7 @@ namespace Engine
             Database.SetInitializer<EngineContext>(null);
 
 
+            
             // <----- Add this line
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

@@ -1,5 +1,6 @@
 @using Engine.Areas.JUiEngine.Controllers
-@model ViewModel.ActionTypes.IDataTable
+@using Engine.HtmlExtentions
+@model Engine.Areas.Absence.Controllers.WorkSummary
 @{
 }
 
@@ -36,5 +37,39 @@
     <h3 class="alert alert-info">     ViewData["to"]  خلاصه لیست کارکرد پرسنل از تاریخ @ViewData["from"] تا تاریخ </h3>
 }
 
+
+@*
+<div class="form-group mt-3">
+                                                    
+    <label> تاریخ شروع :
+        $1$//@Html.TextBoxFor(m => m.DateTimeIran, new { placeholder = Request.GetText(" *"), @class = "form-control" })#1#
+        @{
+            ViewBag.name = "from";
+        }
+        
+        @Html.Partial("~/Views/Utils/DatePicker.cshtml")
+    </label>
+    <small>برای مثال : 1401/05/07</small>
+</div>
+<div class="form-group mt-3">
+                                                    
+    <label> تاریخ شروع :
+        $1$//@Html.TextBoxFor(m => m.DateTimeIran, new { placeholder = Request.GetText(" *"), @class = "form-control" })#1#
+        
+         @{
+                    ViewBag.name = "to";
+                }
+                
+                @Html.Partial("~/Views/Utils/DatePicker.cshtml")
+        
+    </label>
+    <small>برای مثال : 1401/05/07</small>
+</div>*@
+
+
+<div class="form-group mt-3">
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+            
+</div>
 
 @Html.Partial("~/Areas/JUiEngine/Views/UiHome/ShowView.cshtml", datatable)

@@ -114,7 +114,6 @@ export class AbsenceIndexComponent implements OnInit {
     }
     this.newNewObligatedRangeDayTime.Start = '08:00';
     this.newNewObligatedRangeDayTime.End = '16:00';
-    ;
 
     this.selectedWeek.ObligatedRangeDayTimes.push(this.newNewObligatedRangeDayTime);
   }
@@ -137,7 +136,8 @@ export class AbsenceIndexComponent implements OnInit {
             let temp: any = this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].End;
 
             var milli = temp.replace(/\/Date\((-?\d+)\)\//, '$1');
-            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].End = new Date(parseInt(milli)).toTimeString().slice(0, 5);;
+            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].End = new Date(parseInt(milli)).toTimeString().slice(0, 5);
+            ;
 
             //End
             let temp2: any = this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes[j].Start;
@@ -156,6 +156,12 @@ export class AbsenceIndexComponent implements OnInit {
   }
 
   ngOnInit() {
+
+debugger
+    if (window["onAngularLoadEnd"]) {
+      window["onAngularLoadEnd"]();
+    }
+
     this.ObligatedRange = new ObligatedRange();
     this.ObligatedRange.ObligatedRangeWeeks = this.absenceDataProviderService.getWeek(1);
     var id = this.router.snapshot.queryParams["recordId"];
@@ -171,7 +177,7 @@ export class AbsenceIndexComponent implements OnInit {
     this.initRangeTypes();
 
 
-    this.macroList= MacroService.getMacroList();
+    this.macroList = MacroService.getMacroList();
   }
 
   remove(time: ObligatedRangeDayTimes) {
@@ -179,6 +185,7 @@ export class AbsenceIndexComponent implements OnInit {
   }
 
   save() {
+    console.trace(this.ObligatedRange)
     this.absenceDataProviderService.Save(this.ObligatedRange).toPromise().then(res => {
 
       if (res.Status == CustomResultType.success) {
@@ -269,8 +276,6 @@ export class AbsenceIndexComponent implements OnInit {
     }
 
 
-
-
     //for every week
     for (let i = 1; i <= this.ObligatedRange.ObligatedRangeWeeks.length / 7; i++) {
 
@@ -295,9 +300,9 @@ export class AbsenceIndexComponent implements OnInit {
               continue;
             }
 
-           // if (!this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes) {
-              this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes = [];
-           // }
+            // if (!this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes) {
+            this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes = [];
+            // }
 
 
           }
@@ -336,11 +341,12 @@ export class AbsenceIndexComponent implements OnInit {
   }*/
   macroDisplay: any;
   cols = [
-    { field: 'title', header: 'عنوان' },
-    { field: 'description', header: 'توضیحات' },
-    { field: 'select', header: 'انتخاب' }
+    {field: 'title', header: 'عنوان'},
+    {field: 'description', header: 'توضیحات'},
+    {field: 'select', header: 'انتخاب'}
   ];
   macroList: any;
+
   toggleOffday(weekDay: ObligatedRangeWeeks) {
     debugger;
     weekDay.IsOffDay = !weekDay.IsOffDay;
@@ -353,61 +359,59 @@ export class AbsenceIndexComponent implements OnInit {
     }
 
 
-
-
     //for every week
-    for (let i =0; i < this.ObligatedRange.ObligatedRangeWeeks.length ; i++) {
+    for (let i = 0; i < this.ObligatedRange.ObligatedRangeWeeks.length; i++) {
 
       // find particular week
-     // if (this.selectedWeek.WeekNumber == i) {
+      // if (this.selectedWeek.WeekNumber == i) {
 
-        // that week inside array
-       // for (let j = i * 7 - 7; j < i * 7; j++) {
+      // that week inside array
+      // for (let j = i * 7 - 7; j < i * 7; j++) {
 
-          let length = this.selectedWeek.ObligatedRangeDayTimes;
+      let length = this.selectedWeek.ObligatedRangeDayTimes;
 
-          // make all empty
-          for (let k = 0; k < length.length; k++) {
+      // make all empty
+      for (let k = 0; k < length.length; k++) {
 
-            // skip itself
-            if (this.selectedWeek == this.ObligatedRange.ObligatedRangeWeeks[i]) {
-              continue;
-            }
+        // skip itself
+        if (this.selectedWeek == this.ObligatedRange.ObligatedRangeWeeks[i]) {
+          continue;
+        }
 
-            // skip these days
-            if (this.ObligatedRange.ObligatedRangeWeeks[i].IsOffDay == skipOffDays) {
-              continue;
-            }
+        // skip these days
+        if (this.ObligatedRange.ObligatedRangeWeeks[i].IsOffDay == skipOffDays) {
+          continue;
+        }
 
-            // if (!this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes) {
-            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes = [];
-            // }
+        // if (!this.ObligatedRange.ObligatedRangeWeeks[j].ObligatedRangeDayTimes) {
+        this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes = [];
+        // }
 
 
-          }
-          // add every time defined in this selected week
-          for (let k = 0; k < length.length; k++) {
+      }
+      // add every time defined in this selected week
+      for (let k = 0; k < length.length; k++) {
 
-            // maybe array is null
-            if (!this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes) {
-              this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes = [];
-            }
+        // maybe array is null
+        if (!this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes) {
+          this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes = [];
+        }
 
-            // skip itself
-            if (this.selectedWeek == this.ObligatedRange.ObligatedRangeWeeks[i]) {
-              continue;
-            }
+        // skip itself
+        if (this.selectedWeek == this.ObligatedRange.ObligatedRangeWeeks[i]) {
+          continue;
+        }
 
-            // skip these days
-            if (this.ObligatedRange.ObligatedRangeWeeks[i].IsOffDay == skipOffDays) {
-              continue;
-            }
-            let clone1 = this.clone(this.selectedWeek.ObligatedRangeDayTimes[k]);
-            this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes.push(
-              // copy and paste
-              clone1
-            );
-          }
+        // skip these days
+        if (this.ObligatedRange.ObligatedRangeWeeks[i].IsOffDay == skipOffDays) {
+          continue;
+        }
+        let clone1 = this.clone(this.selectedWeek.ObligatedRangeDayTimes[k]);
+        this.ObligatedRange.ObligatedRangeWeeks[i].ObligatedRangeDayTimes.push(
+          // copy and paste
+          clone1
+        );
+      }
       //  }
       //}
     }
@@ -428,6 +432,6 @@ export class AbsenceIndexComponent implements OnInit {
   }
 
   import(macro: any) {
-    this.ObligatedRange= JSON.parse(macro.json);
+    this.ObligatedRange = JSON.parse(macro.json);
   }
 }

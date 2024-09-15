@@ -1,0 +1,38 @@
+
+<div >
+  <label style="text-align:right">{{label}}</label>
+
+  <div>
+
+    <p-dropdown [options]="days" [(ngModel)]="day" optionLabel="name"
+                [filter]="true"
+                filterBy="value"
+                (onChange)="dateChange()"
+                placeholder="انتخاب روز">
+
+    </p-dropdown>
+
+    <p-dropdown [options]="months" [(ngModel)]="month" optionLabel="name"
+                [filter]="true"
+                filterBy="value"
+                (onChange)="monthChange();dateChange()"
+                placeholder="انتخاب ماه">
+
+    </p-dropdown>
+
+
+
+
+    <p-dropdown [options]="years" [(ngModel)]="year" optionLabel="name"
+                [filter]="true"
+                filterBy="value"
+                (onChange)="dateChange()"
+                placeholder="انتخاب سال">
+
+    </p-dropdown>
+
+
+    {{dateValue}}
+
+  </div>
+</div>

@@ -370,11 +370,15 @@ namespace Engine.Areas.Absence.Service
         {
             using (EngineContext db = new EngineContext())
             {
-                var dt = db.BiometricDatas.Include("BiometricDataTimes").AsQueryable();
-                dt = dt.Where(b => b.Date > fromDate);
-                dt = dt.Where(b => b.Date < toDate);
-                dt = dt.Where(b => b.PersonnelMachine.PersonnelId == personnelId || 
-                b.WorkplacePersonnelId==personnelId);
+                
+                var dt = db.BiometricDatas
+                    .Where(b => b.PersonnelMachine.PersonnelId == personnelId || 
+                                b.WorkplacePersonnel.PersonnelId==personnelId)
+                    .Where(b => b.Date > fromDate)
+                    .Where(b => b.Date < toDate)
+                    .Include("BiometricDataTimes")
+                    .Include(m=>m.WorkplacePersonnel)
+                    .AsQueryable();
 
                 return dt.ToList();
             }

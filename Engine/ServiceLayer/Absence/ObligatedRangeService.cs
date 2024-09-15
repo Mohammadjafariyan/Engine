@@ -51,7 +51,10 @@ namespace ServiceLayer.Absence
                 }
                 else
                 {
-                    var record = db.ObligatedRanges.Find(obligatedRange.Id);
+                    var record = db.ObligatedRanges.Where(f=>f.Id== obligatedRange.Id)
+                        .Include(s=>s.ObligatedRangeWeeks)
+                        .Include(s=>s.ObligatedRangeWeeks.Select(d=>d.ObligatedRangeDayTimes))
+                        .FirstOrDefault();
 
                     if (record == null)
                     {

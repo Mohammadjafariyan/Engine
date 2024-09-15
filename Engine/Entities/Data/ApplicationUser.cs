@@ -6,6 +6,7 @@ using Engine.Areas.Mobile.Models;
 using Engine.Areas.Mobile.ViewModel;
 using Engine.Controllers.AbstractControllers;
 using Engine.Entities.Data.Absence.Models;
+using Engine.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -49,6 +50,11 @@ namespace Engine.Entities.Data
         public ICollection<BiometricData> BiometricDatas { get; set; }
         public string Code { get; set; }
         public bool IsAdmin { get; set; }
+        public PersonnelTypeEnm PersonnelType { get; set; }
+        public ICollection<ClockInViewModel> ClockInViewModel { get; set; }
+        public ICollection<ApplicationUser> Children { get; set; }
+        public string ParentId { get; set; }
+        public ApplicationUser Parent { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

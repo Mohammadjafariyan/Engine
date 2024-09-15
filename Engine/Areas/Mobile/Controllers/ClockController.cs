@@ -8,9 +8,14 @@ using System.Web.Http.Description;
 using Engine.Areas.Mobile.Models;
 using Engine.Areas.Mobile.Service;
 using Engine.Areas.Mobile.ViewModel;
+using Engine.Areas.ReportGenerator.Controllers;
 using Engine.Controllers.AbstractControllers;
 using Engine.Entities.Data;
+using Engine.Entities.Data.Absence.Models;
+using GeoJSON.Net.Feature;
+using GeoJSON.Net.Geometry;
 using Newtonsoft.Json;
+using TurfCS;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Areas.Mobile.Controllers
@@ -19,6 +24,52 @@ namespace Engine.Areas.Mobile.Controllers
     {
         private ClockService _clockService = new ClockService();
         private SecurityService _securityService = new SecurityService();
+
+
+        [ActionName("Get")]
+        [HttpGet]
+        [ResponseType(typeof(ApiResult<List<BiometricDataTime>>))]
+        public async Task<IHttpActionResult> Get()
+        {
+            using (var db = new EngineContext())
+            {
+                // get user
+                var user = await db.Users
+                    .Where(s => s.UserName == User.Identity.Name)
+                    .FirstOrDefaultAsync();
+
+                if (user == null)
+                {
+                    throw new Exception("اکانت شما یافت نشد لطفا مجدد ثبت نام یا دوباره وارد شوید");
+                }
+
+                var biometricDate =
+                    db.BiometricDatas
+                        .Where(b =>
+                            b.ApplicationUserId == user.Id &&
+                            b.Date.Year == DateTime.Now.Year &&
+                            b.Date.Month == DateTime.Now.Month &&
+                            b.Date.Day == DateTime.Now.Day
+                        ).Include(s => s.BiometricDataTimes).FirstOrDefault();
+
+                var biometricDataTimes = biometricDate?.BiometricDataTimes?.ToList();
+                if (biometricDataTimes!=null)
+                {
+                    foreach (var time in biometricDataTimes)
+                    {
+                        time.BiometricData = null;
+                        time.ClockInViewModels = null;
+                        
+                    }
+                }
+                
+                return Ok(new ApiResult<List<BiometricDataTime>>
+                {
+                    Status = CustomResultType.success,
+                    result = biometricDataTimes ?? new List<BiometricDataTime>()
+                });
+            }
+        }
 
 
         /*[ActionName("ClockOut")]
@@ -93,30 +144,50 @@ namespace Engine.Areas.Mobile.Controllers
         [ActionName("ClockIn")]
         [HttpPost]
         [ResponseType(typeof(ClockInViewModelResult))]
-        public async Task<ClockInViewModelResult> ClockIn(ClockInViewModel vm)
+        public async Task<ClockInViewModelResult> ClockIn([FromBody] ClockInViewModel vm)
         {
             try
             {
                 using (var db = new EngineContext())
                 {
-                    string username = SecurityService.GetUsernameFromToken(vm.token);
+                    // get user
+                    var user = await db.Users
+                        .Where(s => s.UserName == User.Identity.Name)
+                        .Include(s => s.Personnels)
+                        .Include(s => s.Personnels.Select(d => d.WorkplacePersonnels))
+                        .Include(s => s.Personnels.Select(d => d.WorkplacePersonnels.Select(w => w.Workplace)))
+                        .FirstOrDefaultAsync();
+
+                    if (user == null)
+                    {
+                        throw new Exception("اکانت شما یافت نشد لطفا مجدد ثبت نام یا دوباره وارد شوید");
+                    }
+
+                    vm.ApplicationUserId = user.Id;
+                    
+                    var personnel = db.GetCurrentUserPersonnel(user.Id, true);
+
+                    string username = user.UserName; // SecurityService.GetUsernameFromToken(vm.token);
 
 
                     //یافتن پرسنل
-                    var workplacePersonnel = db.WorkplacePersonnels.FirstOrDefault(p => p.Username == username);
-                    if (workplacePersonnel == null)
+                    var workplacePersonnels = user.Personnels.SelectMany(s => s.WorkplacePersonnels).ToList();
+                    if (workplacePersonnels == null || workplacePersonnels.Any() == false)
                         throw new Exception("کاربر یافت نشد");
 
 
+                    var workplacePersonnelIds =
+                        workplacePersonnels.Select(s => s.Id).ToList();
                     // کلاک ورود
                     // آیا قبلا وارد شده است
                     var biometricDate =
-                        db.BiometricDatas.FirstOrDefault(b =>
-                        b.WorkplacePersonnelId == workplacePersonnel.Id && 
-                        b.Date.Year==DateTime.Now.Year &&
-                        b.Date.Month==DateTime.Now.Month &&
-                        b.Date.Day==DateTime.Now.Day 
-                        );
+                        db.BiometricDatas
+                            .Where(b =>
+                                workplacePersonnelIds.Any(id => id == b.WorkplacePersonnelId) &&
+                                b.Date.Year == DateTime.Now.Year &&
+                                b.Date.Month == DateTime.Now.Month &&
+                                b.Date.Day == DateTime.Now.Day
+                            ).Include(s => s.BiometricDataTimes).FirstOrDefault();
 
                     if (biometricDate == null)
                         biometricDate = db.BiometricDatas.Create();
@@ -125,23 +196,82 @@ namespace Engine.Areas.Mobile.Controllers
                         biometricDate.BiometricDataTimes.OrderBy(d => d.InsertDateTime).LastOrDefault();
 
 
+                    biometricDate.ApplicationUserId = user.Id;
+
+                    var workplaces = workplacePersonnels.Select(s => s.Workplace).ToList();
+                    bool isInDefinedArea = false;
+                    Workplace currWorkplace = null;
+                    foreach (Workplace workplace in workplaces)
+                    {
+                        try
+                        {
+                            var location = JsonConvert.DeserializeObject<WorkplaceGps>(workplace.Gps);
+
+                            if (location != null)
+                            {
+                                try
+                                {
+                                    // var data = JsonConvert.DeserializeObject<PunchModels.MapData>(location.MapData);
+
+                                    var fc = JsonConvert.DeserializeObject<FeatureCollection>(location.MapData);
+
+                                    var point = Turf.Point(new double[]
+                                        { vm.punch.point.coordinates[0], vm.punch.point.coordinates[1] });
+
+                                    if (fc?.Features != null)
+                                    {
+                                        foreach (var fcFeature in fc?.Features)
+                                        {
+                                            isInDefinedArea = Turf.Inside(point, fcFeature);
+                                            if (isInDefinedArea)
+                                            {
+                                                currWorkplace = workplace;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (isInDefinedArea)
+                                    {
+                                        break;
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    // ignore todo:log
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            // ignore todo:log
+                        }
+                    }
+
+
+                    if (!isInDefinedArea || currWorkplace == null)
+                        throw new Exception("در محدوده تعیین شده قرار ندارید ");
+
                     string clocktypestr = "وارد";
                     if (lastBiometricDateTime == null ||
                         (lastBiometricDateTime.TimeIn.HasValue && lastBiometricDateTime.TimeOut.HasValue))
                     {
-                        var clocktypes = workplacePersonnel.Workplace.UserClockTypes;
+                        var clocktypes = currWorkplace.UserClockTypes;
 
                         // ولیدیشن نوع کلاک ها
-                        ValidateClocks(clocktypes, vm, workplacePersonnel, db);
+                        //ValidateClocks(clocktypes, vm, workplacePersonnel, db); todo:clocks
 
                         // هیچ کلاکی نزده است
                         lastBiometricDateTime = db.BiometricDataTimes.Create();
+                        lastBiometricDateTime.ApplicationUserId = user.Id;
                         lastBiometricDateTime.TimeIn = DateTime.Now;
                         lastBiometricDateTime.ClockInViewModels.Add(vm);
 
 
                         //ذخیره
                         biometricDate.BiometricDataTimes.Add(lastBiometricDateTime);
+
+                        var workplacePersonnel = currWorkplace.WorkplacePersonnels.FirstOrDefault();
                         workplacePersonnel.BiometricDatas.Add(biometricDate);
 
                         db.Entry(workplacePersonnel).State = EntityState.Modified;
@@ -173,7 +303,7 @@ namespace Engine.Areas.Mobile.Controllers
                     return await Task.FromResult(new ClockInViewModelResult
                     {
                         success = true,
-                        message = $@" {clocktypestr } در {hour} "
+                        message = $@" {clocktypestr} در {hour} "
                     });
                 }
             }
@@ -281,7 +411,7 @@ namespace Engine.Areas.Mobile.Controllers
                     t.Lng
                 }).ToArray();
 
-                var y = IsInside(new double[] {myLocation.latitude, myLocation.longitude}, arr);
+                var y = IsInside(new double[] { myLocation.latitude, myLocation.longitude }, arr);
                 if (y)
                     return true;
             }
@@ -289,7 +419,7 @@ namespace Engine.Areas.Mobile.Controllers
             throw new Exception("شما در داخل محدوده تعیین شده محل کار نیستید");
 
 
-           // throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public bool IsInside(double[] point, double[][] vs)
@@ -315,6 +445,34 @@ namespace Engine.Areas.Mobile.Controllers
             }
 
             return inside;
+        }
+    }
+
+
+    public class PunchModels
+    {
+        public class Feature
+        {
+            public string type { get; set; }
+            public Map properties { get; set; }
+            public Geometry geometry { get; set; }
+        }
+
+        public class Geometry
+        {
+            public string type { get; set; }
+            public List<List<List<double>>> coordinates { get; set; }
+        }
+
+        public class Properties
+        {
+            public string name { get; set; }
+        }
+
+        public class MapData
+        {
+            public string type { get; set; }
+            public List<Feature> features { get; set; }
         }
     }
 }

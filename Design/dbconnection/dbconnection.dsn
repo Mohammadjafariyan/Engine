@@ -1,0 +1,7 @@
+[ODBC]
+DRIVER=SQL Server Native Client 11.0
+DATABASE=buluterp
+WSID=DESKTOP-IG45SV0
+APP=Enterprise Architect 15
+Trusted_Connection=Yes
+SERVER=DESKTOP-IG45SV0\SQLSERVEREXPRESS

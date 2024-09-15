@@ -39,6 +39,8 @@ namespace Engine.Areas.Mobile.Models
         public bool IsFaceRecognationEnabled { get;  set; }
         [NotMapped]
         public int PersonnelCount { get; set; }
+
+        public string ErrorInParsingGeoJsonData { get; set; }
     }
 
     public class WorkplaceSetting : Engine.Entities.Models.ICore.BaseEntity,AbsenceBase

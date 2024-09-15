@@ -15,8 +15,8 @@
 }
 
 @{
-    var one = ViewBag.one as WorkGroup ;
-    var many = ViewBag.many as List<ObligatedRange >;
+    var one = ViewBag.one as WorkGroup;
+    var many = ViewBag.many as List<ObligatedRange>;
     var selectedList = ViewBag.selected as long[];
 }
 
@@ -31,11 +31,13 @@
 {
     UpdateTargetId = @id,
     OnSuccess = $"modalSucceed('{id}')"
-
 }))
 {
     <div class="modal-body" id="@id">
 
+        <div style="display: none">
+            <input type="checkbox" name="ManyBool[0]" value="true" checked="checked"/>
+        </div>
         <div class="container">
             <div class="row d-flex justify-content-center">
 
@@ -44,23 +46,24 @@
                         گروه کاری :
 
                     </label>
-                                            @Html.DropDownListFor(m => m.OneId, (SelectList)ViewBag.oneItems, new { placeholder = Request.GetText("S2 *"), @class = "form-control" })
+                    @Html.DropDownListFor(m => m.OneId, (SelectList)ViewBag.oneItems, new { placeholder = Request.GetText("S2 *"), @class = "form-control" })
 
                 </div>
                 <div class="col form-group">
 
-                    
+
                     <table class="table">
                         <thead>
                         <tr>
                             <th colspan="2" style="text-align: center">
-                                گروه های کاری
+                                شیفت های کاری
                             </th>
                         </tr>
                         </thead>
                         <tbody>
 
                         <tr>
+
 
 
                             @if (many != null)
@@ -75,11 +78,21 @@
                                     <td>
                                         <label class="checkboxHover">
                                             @manyItem.Name
-                                            @Html.HiddenFor(model => model.Many[index])
-                                            @Html.CheckBox(
-                                                $"ManyBool[{index}]",
-                                                selectedList != null && selectedList.Any(l => manyItem.Id == l),
-                                                new { @class = "form-check-input" })
+                                            @*@Html.HiddenFor(model => model.Many[0])*@
+
+                                            <input type="radio" lass="form-check-input" value="@manyItem.Id" name="Many[0]"
+                                                   @Html.Raw((selectedList != null && selectedList.Any(l => manyItem.Id == l) ? @"checked=""checked""" : ""))/>
+                                            @*
+                                            @Html.RadioButton(
+                                                $"Many[{0}]",
+                                                manyItem.Id,
+                                                new
+                                                {
+                                                    @class = "form-check-input",
+                                                    @checked=(selectedList != null && selectedList.Any(l => manyItem.Id == l) ? "checked" : null)
+                                                })
+                                                *@
+
 
                                         </label>
 

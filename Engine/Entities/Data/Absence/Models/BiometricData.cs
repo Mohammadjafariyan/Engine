@@ -46,6 +46,8 @@ namespace Engine.Entities.Data.Absence.Models
         /// clock logs 
         /// </summary>
         public virtual List<ClockInViewModel> ClockInViewModels { get; set; }
+
+        public bool IsForgotten { get; set; }
     }
 
 

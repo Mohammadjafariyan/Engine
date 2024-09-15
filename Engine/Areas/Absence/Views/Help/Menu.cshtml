@@ -63,7 +63,7 @@
         <span class="title">بازه موظفی گروه های کاری</span>
     </a>
 </li>*@
-<li class="nav-item">
+@*<li class="nav-item">
     <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
        title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
        href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? Url.Action("GetDataTable", "Workplaces", new { Area = "Mobile" }) : "#")">
@@ -74,11 +74,30 @@
         </span>
         <span class="title">  
             مکان یابی محل کار 
-(GPS) 
+            (GPS) 
 
         </span>
     </a>
-</li>@*
+</li>*@
+
+<li class="nav-item">
+    <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
+       title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"
+       href="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => s) ? "/Absence/ObligatedRange/Index/#/absence/workplaces" : "#")">
+        <span class="icon-holder">
+            <i class="c-indigo-500 ti-location-pin"></i>
+        </span>
+        <span class="title">
+            مکان یابی محل کار 
+            (GPS) 
+            </span>
+    </a>
+</li>
+
+
+
+
+@*
 <li class="nav-item">
     <a class="sidebar-link @(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "diactive" : null)"
        title="@(new bool[] { ViewBag.workgroupCount > 0 }.All(s => !s) ? "ابتدا گروه کاری باید ثبت شود" : "")"

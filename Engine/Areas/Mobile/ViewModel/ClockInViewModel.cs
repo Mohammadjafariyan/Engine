@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Engine.Areas.Mobile.Models;
+using Engine.Entities.Data;
 using Engine.Entities.Data.Absence.Models;
 
 namespace Engine.Areas.Mobile.ViewModel
@@ -10,21 +11,51 @@ namespace Engine.Areas.Mobile.ViewModel
     {
     }
 
+    
+    public class Point
+    {
+     [Key] public long Id { get; set; }
+
+     public List<double> coordinates { get; set; }
+     public string type { get; set; }
+    }
+
+    public class Punch
+    {
+     [Key] public long Id { get; set; }
+     public Point point { get; set; }
+    }
+
+    
+    
     public class ClockInViewModel : BaseViewModel
     {
         public long BiometricDataTimeId { get; set; }
 
 
+        public bool IsAccepted { get; set; }
+
+        public Punch punch { get; set; }
         public List<ScanResult> scanResults { get; set; }
 
         public List<MyLocation> location { get; set; }
 
 
         public string qRCodeContent { get; set; }
+   
+        public int manualHourOfDay{ get; set; }
+        public int manualMinute{ get; set; }
+        public long clockType { get; set; }
 
         public long[] bitmapdata { get; set; }
         public DateTime? datetime { get; set; }
+        
+        public DateTime CreationDateTime { get; set; } = DateTime.Now;
+
+        
         public virtual BiometricDataTime BiometricDataTime { get; set; }
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 
     public class MyLocation

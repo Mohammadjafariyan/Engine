@@ -230,10 +230,18 @@
                         }
                     }
 
-                    <input type="hidden" value="@val" name="@uiFormInput.UiInput.Name"
+                    
+                    ViewBag.name =uiFormInput.UiInput.Name;
+                    ViewData[uiFormInput.UiInput.Name] = @val;
+                    
+                    <div>
+                        @Html.Partial("~/Views/Utils/DatePicker.cshtml")
+                    </div>
+                    
+                    @*<input type="hidden" value="@val" name="@uiFormInput.UiInput.Name"
                            class="form-control" hidden="hidden" id="@uiFormInput.UiInput.Name">
                     <input type="text" onchange="dateToChanged(this, 'fa_@uiFormInput.UiInput.Name', '@uiFormInput.UiInput.Name')" value="@val" name="fa_@uiFormInput.UiInput.Name" class="form-control"
-                           id="fa_@uiFormInput.UiInput.Name">
+                           id="fa_@uiFormInput.UiInput.Name">*@
                 }
 
                 if (uiFormInput.UiInput.FieldType == FieldType.Time)

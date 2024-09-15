@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -10,6 +12,8 @@ using Engine.Areas.Mobile.ViewModel;
 using Engine.Entities.Data;
 using Engine.ServiceLayer.Engine;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
+using Spire.Pdf.Exporting.XPS.Schema;
 using WebAppIDEEngine.Models;
 
 namespace Engine.Areas.Mobile.Controllers
@@ -82,10 +86,39 @@ namespace Engine.Areas.Mobile.Controllers
                                 }
                             }
 
-
                             var token=_securityService.GenerateToken(user.UserName);
 
+                            var workplaces = personnel.WorkplacePersonnels.Select(s=>s.Workplace).ToList();
 
+                            List<WorkplaceGps> geoJsonList = new List<WorkplaceGps>();
+                            foreach (var workplace in workplaces)
+                            {
+                                try
+                                {
+                                    var workplaceGps = JsonConvert.DeserializeObject<WorkplaceGps>(workplace.Gps);
+                                    if (workplaceGps?.MapData !=null )
+                                    {
+                                        workplaceGps.Data = null;
+                                        geoJsonList.Add(workplaceGps);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    // log 
+
+                                    try
+                                    {
+                                        workplace.ErrorInParsingGeoJsonData = e.Message;
+                                        db.Entry(workplace.ErrorInParsingGeoJsonData).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception exception)
+                                    {
+                                        // skip
+                                    }
+                                }
+                            }
+                            
                             return new LoginViewModelResult
                             {
                                 success = true,
@@ -93,6 +126,7 @@ namespace Engine.Areas.Mobile.Controllers
                                 isAdmin = user?.IsAdmin ?? false,
                                 loggedIn = true,
                                 message= msg,
+                                geoJsonList=geoJsonList
                             };
                         }
                     case SignInStatus.LockedOut:
@@ -115,7 +149,6 @@ namespace Engine.Areas.Mobile.Controllers
                             message = "شماره موبایل / ایمیل یا رمز عبور اشتباه است"
                         };
                 }
-
                 
             }
             catch (Exception e)

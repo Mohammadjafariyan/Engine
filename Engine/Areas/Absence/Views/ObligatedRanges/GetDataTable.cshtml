@@ -52,7 +52,9 @@ document.getElementById('WorkGroupObligatedRange_panel').addEventListener('hidde
 @{ var id = Guid.NewGuid().ToString(); }
 
 
-@Html.ActionLink("تعریف شیفت جدید", "Index", "ObligatedRange", new { }, new { @class = "btn btn-primary" })
+@*@Html.ActionLink("تعریف شیفت جدید", "Index", "ObligatedRange", new { }, new { @class = "btn btn-primary" })*@
+
+<a href="/Absence/ObligatedRange/Index/#/absence/home">تعریف شیفت جدید</a>
 <br/>
 <br/>
 <table id="@id" class="table table-bordered">
@@ -73,7 +75,7 @@ document.getElementById('WorkGroupObligatedRange_panel').addEventListener('hidde
             <th scope="row">@item.Name</th>
             <td>
 
-                <a href="#" onclick="window['selectedRecordIdElement']=this;  window['selectedRecordId']='@item.Id';openModal('#WorkGroupObligatedRange','@Url.Action("OneObligatedRangeToManyWorkGroupsModal", "WorkGroupObligatedRange", new { obligatedRangeId = item.Id })','@modalId');">گرو های کاری @item.Name </a>
+                <a href="#"  class="btn btn-outline-info " onclick="window['selectedRecordIdElement']=this;  window['selectedRecordId']='@item.Id';openModal('#WorkGroupObligatedRange','@Url.Action("OneObligatedRangeToManyWorkGroupsModal", "WorkGroupObligatedRange", new { obligatedRangeId = item.Id })','@modalId');">گرو های کاری @item.Name </a>
                 @{
                     foreach (var joinTable in item.WorkGroupObligatedRanges)
                     {
@@ -82,7 +84,10 @@ document.getElementById('WorkGroupObligatedRange_panel').addEventListener('hidde
                 }
 
             </td>
-            <td>@Html.ActionLink("ویرایش", "Index", "ObligatedRange", new { recordId = item.Id }, new { id = item.Id })</td>
+            <td>
+                <a href="/Absence/ObligatedRange/Index/#/absence/home?recordId=@item.Id">ویرایش</a>
+                @*@Html.ActionLink("ویرایش", "Index", "ObligatedRange", new { recordId = item.Id }, new { id = item.Id })*@
+            </td>
             <td id="@scopeId">
                 <a id="delete" onclick="$('#del_form_@scopeId').toggle()" href="#">حذف</a>
                 <div style="display: none" id="del_form_@scopeId">

@@ -74,7 +74,7 @@ document.getElementById('WorkGroupObligatedRange_panel').addEventListener('hidde
             <td >@item.Name</td>
             <td>
 
-                <a href="#" onclick="window['selectedRecordIdElement']=this;  window['selectedRecordId']='@item.Id';openModal('#WorkGroupObligatedRange','@Url.Action("OneWorkGroupToManyObligatedRangesModal", "WorkGroupObligatedRange", new { workGroupId = item.Id })','@modalId');">شیفت های  @item.Name  </a>
+                <a href="#" class="btn btn-outline-info " onclick="window['selectedRecordIdElement']=this;  window['selectedRecordId']='@item.Id';openModal('#WorkGroupObligatedRange','@Url.Action("OneWorkGroupToManyObligatedRangesModal", "WorkGroupObligatedRange", new { workGroupId = item.Id })','@modalId');">شیفت های  @item.Name  </a>
 
                 @{
                     foreach (var joinTable in item.WorkGroupObligatedRanges)

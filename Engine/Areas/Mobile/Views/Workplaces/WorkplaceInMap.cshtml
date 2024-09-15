@@ -108,10 +108,21 @@ if (length>0){
 
 
 function resetMap(){
-    mymap.off();
+  /*  mymap.off();
     mymap.remove();
     
-    showDefault();
+    showDefault();*/
+    
+    
+    // Remove all other layers (polylines, polygons, etc.)
+    mymap.eachLayer(function (layer) {
+        if (!(layer instanceof L.TileLayer)) {
+            mymap.removeLayer(layer);
+        }
+    });
+    
+    
+
     
     }
     var mymap;
@@ -227,7 +238,7 @@ var drawnItems;
                     }
                 },
                 polyline: false,
-                circle: true, // Turns off this drawing tool
+                circle: false, // Turns off this drawing tool
                 rectangle: true,
                 marker: false
             }
@@ -315,6 +326,7 @@ var drawnItems;
         console.warn("success position.coords.latitude", position.coords.latitude);
 
         mymap = L.map('mapid').setView([position.coords.latitude, position.coords.longitude], 13);
+        
 
         var latlng = new L.LatLng(position.coords.latitude, position.coords.longitude);
         var marker = L.marker(latlng).addTo(mymap);

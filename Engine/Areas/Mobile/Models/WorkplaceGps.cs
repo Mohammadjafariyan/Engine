@@ -15,6 +15,7 @@ namespace Engine.Areas.Mobile.Models
         [JsonProperty("WorkplaceId")]
         public long WorkplaceId { get; set; }
 
+        [NotMapped]
         [JsonProperty("data")]
         public Datum[][][] Data { get; set; }
 

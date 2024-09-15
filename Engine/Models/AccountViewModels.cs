@@ -97,7 +97,14 @@ namespace Engine.Models
         [EmailAddress(ErrorMessage = "ایمیل صحیح نیست لطفا یک ایمیل درست وارد نمایید")]
         //[DataType(DataType.Password)]
         [Display(Name = "ایمیل")]
-        public string Email { get; set; }
+        public string Email { get; set; }     
+        
+        
+        [Required]
+        [EmailAddress(ErrorMessage = "نوع شخص صحیح نیست لطفا فرم را دوباره لود کرده و مجدد امتحان کنید")]
+        //[DataType(DataType.Password)]
+        [Display(Name = "نوع شخص")]
+        public PersonnelTypeEnm PersonnelType { get; set; }
         
         
         
@@ -111,6 +118,12 @@ namespace Engine.Models
         //[DataType(DataType.Password)]
         [Display(Name = "جنسیت")]
         public string Gender { get; set; }
+    }
+
+    public enum PersonnelTypeEnm
+    {
+        Employee=1,
+        Employer= 2
     }
 
     public class ResetPasswordViewModel

@@ -21,7 +21,7 @@
 
     </td>
     <td>
-      <a (click)="showDialog(item)">
+      <a (click)="showDialog(item)" class="btn btn-outline-info ">
         {{item.PersonnelCount}}
         پرسنل
       </a>
@@ -51,7 +51,7 @@
 
   <ng-template pTemplate="footer">
     <button type="button" pButton icon="pi pi-check" (click)="submitOneToManyForm(); " label="ثبت"></button>
-    <button type="button" pButton icon="pi pi-close" (click)="display=false;" label="لغو"></button>
+    <button type="button" pButton icon="pi pi-close" (click)="display=false;" label="بستن"></button>
   </ng-template>
 
 </p-dialog>
